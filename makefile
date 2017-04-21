@@ -8,6 +8,10 @@ ifeq ($(shell uname -s),Linux)
 	
 	# general cpp flags
 	CFLAGS += -c -fmessage-length=0 -std=c++11
+	
+	# ROOT
+	CFLAGS += `root-config --cflags`
+	LFLAGS += `root-config --libs --glibs`
 
 	CC = g++
 
