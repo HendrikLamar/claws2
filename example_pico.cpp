@@ -113,7 +113,7 @@ int main()
         checkStatus(ret, 6);
 
         // pass a proper data buffer to store the data
-        uint32_t bufferLthA{210};
+        uint32_t bufferLthA{1000000};
         int16_t *buffA = new int16_t[bufferLthA];
         int32_t timebase{2};
         float samplingTime;
@@ -131,8 +131,8 @@ int main()
         std::cout << "Starting capturing data..." << "\n\n";
 
         int32_t aqTime;
-        uint32_t preTriggers    {100};
-        uint32_t postTriggers   {100};
+        uint32_t preTriggers    {100000};
+        uint32_t postTriggers   {900000};
         ret = ps6000RunBlock(psHndl,preTriggers,postTriggers,timebase,1,&aqTime,\
                 segmentIndex,CallBackBlock,nullptr);
         checkStatus(ret, 9);
