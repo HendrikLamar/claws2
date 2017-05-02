@@ -1,4 +1,4 @@
-
+-include ./src/subdir.mk
 
 ifeq ($(shell uname -s),Linux)
 	
@@ -12,6 +12,10 @@ ifeq ($(shell uname -s),Linux)
 	# ROOT
 	CFLAGS += `root-config --cflags`
 	LFLAGS += `root-config --libs --glibs`
+
+	# DAQ stuff
+	CFLAGS += -I./include
+	LFLAGS += -L./libs
 
 	CC = g++
 
@@ -32,20 +36,22 @@ release: CFLAGS += -O3
 release: clean build
 
 
+VERSION = 1.0
 INCLUDES += -I"./include"
-PICO_OBJS += ./build/src/pico.o
+PICO_OBJS += ./build/src/main.o
 
 
+# Link
 build: $(PICO_OBJS)
 	@echo 'Linking target: $@ from: $<'
 	@mkdir -p './build/src'
 	@echo 'Calling GCC C++ Linker'
-	$(CC) -o "build/pico" $(PICO_OBJS) $(LFLAGS)
+	$(CC) -o "build/pico" $(PICO_OBJS) $(MAIN_OBJS) $(LFLAGS)
 	@echo 'Finished linking: $@ from: $<'
 	@echo ' '
 
 # compile but don't link
-build/src/%.o: ./%.cpp
+build/src/%.o: ./main.cpp
 	@echo 'Building target: $@ from: $<'
 	@mkdir -p './build/src'
 	@echo 'Calling GCC C++ Compiler'
@@ -53,8 +59,13 @@ build/src/%.o: ./%.cpp
 	@echo 'Finished building: $@ from: $<'
 	@echo ' '
 
+
 clean:
 	@echo 'Cleaning up...'
 	rm -rf './build'
 	@echo ' '
 
+doc:
+	@echo 'Building docs...'
+	doxygen config_doxygen
+	@echo ' '

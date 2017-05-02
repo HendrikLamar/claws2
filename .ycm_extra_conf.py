@@ -22,6 +22,23 @@ import ycm_core
 # compilation database set (by default, one is not set).
 # CHANGE THIS LIST OF FLAGS. YES, THIS IS THE DROID YOU HAVE BEEN LOOKING FOR.
 flags = [
+##################################################################
+#
+#               DAQ RELATED
+#
+#################################################################
+
+'-I/home/claws/workspace/include',
+
+
+
+
+##################################################################
+#
+#               END DAQ RELATED
+#
+#################################################################
+
 
 #ROOT flags - only absolute paths are allowed (?!)
 '-I/home/claws/software/root/root-6.08.06/build/include',
@@ -29,6 +46,7 @@ flags = [
 '-pthread',
 #'-I/opt/root/6.00/include/',
 '-I/opt/picoscope/include',
+
 
 '-Wall',
 '-Wextra',
