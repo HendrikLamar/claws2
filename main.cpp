@@ -47,7 +47,7 @@ int main(){
     uint32_t    counter{0};
     while(timeInterval < 0.f){
         ++counter;
-        pico1.getTimebase(timebase, noSamples, &timeInterval, &maxSamples);
+        maxSamples = pico1.getTimebase(timebase, noSamples, &timeInterval);
     }
     std::cout << "\nThe chosen time interval is: " << timeInterval << "\n";
     std::cout << "The number of samples we can collect: " << maxSamples << "\n\n";

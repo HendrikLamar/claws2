@@ -21,6 +21,7 @@
 
 #include <libps6000-1.4/PicoStatus.h>
 #include <libps6000-1.4/ps6000Api.h>
+#include <vector>
 
 /*! The Pico class to steer and handle one Picoscope */
 class Pico
@@ -46,8 +47,14 @@ class Pico
         int16_t         m_oversample        {0}; // we cant use it
         uint32_t        m_bMaxSamples;
         uint32_t        m_rMaxSamples;
-        uint32_t        m_bMsegmentIndex      {0}; // since we have only one block
-        uint32_t        m_rMsegmentIndex;          // I have not idea so far.
+        uint32_t        m_bSegmentIndex      {0}; // since we have only one block
+        uint32_t        m_rSegmentIndex;          // I have not idea so far.
+        uint32_t        m_bBufferSize       {1000000}; // to reserve vectors for the data with this size
+        uint32_t        m_preTrigger;
+        uint32_t        m_postTrigger;
+
+        enPS6000RatioMode   PS6000_RATIO_MODE_NONE;
+
 
 
         /////////////////////////////////////////////////////////////////////
@@ -70,6 +77,8 @@ class Pico
             PS6000_COUPLING             coupling; 
             PS6000_RANGE                range;
             PS6000_BANDWIDTH_LIMITER    bandwidth;
+
+            std::vector<int16_t>*       buffer;     // channel buffer
         };
 
         Channel m_channelA;
@@ -135,7 +144,8 @@ class Pico
                     int16_t threshold, PS6000_THRESHOLD_DIRECTION direction,\
                     uint16_t delay, int16_t autoTriggerTime_ms);
 
-        void    setDataBuffer()
+        // Defines the data buffer to use per channel.
+        void    setDataBuffer();
 
         // Gets the right channel to change settings.
         Pico&                       changeCh(int channel);
@@ -154,11 +164,11 @@ class Pico
 
         ////////////////////////////////////////////////////////////////////
         // Get the timebase from the Picoscope
-        void getTimebase( 
+        uint32_t getTimebase( 
                 uint32_t    timebase,   \
                 uint32_t    noSamples,  \
-                float       *timeInterval_ns,    \
-                uint32_t    *maxSamples);
+                float       *timeInterval_ns
+                );
 
 
         // prints data of the current channel
