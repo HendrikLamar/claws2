@@ -6,7 +6,10 @@
 #   CUSTOM
 ############################################################
 
-build/
+**/build/
+**/docs/
+**/build/
+**/output/
 *.pdf
 
 
@@ -24,7 +27,6 @@ build/
 *.sig
 
 pkg/
-src/
 
 ### C++ ###
 # Prerequisites
