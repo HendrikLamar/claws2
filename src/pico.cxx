@@ -4,8 +4,8 @@
 // 
 //    Description:  Contains the pico class definitions
 // 
-//        Version:  1.0
-//        Created:  21.04.2017 14:01:03
+//        Version:  1.1
+//        Created:  05.05.2017 14:01:03
 //       Revision:  none
 //       Compiler:  g++
 // 
@@ -17,12 +17,12 @@
 
 
 #include "pico.h"
-#include "channel.h"
 #include "utility.h"
 
 #include <libps6000-1.4/ps6000Api.h>
 #include <libps6000-1.4/PicoStatus.h>
 
+#include <string>
 #include <iostream>
 #include <cassert>
 #include <unistd.h>
@@ -39,10 +39,10 @@ Pico::Pico(int16_t *handle, int8_t *serial)
     Pico::turnOffUnnecessary();
 
     // Initialize the channels and load defaults
-    m_channelA = new Channel(m_handle, PS6000_CHANNEL_A, m_bufferSize);
-    m_channelB = new Channel(m_handle, PS6000_CHANNEL_B, m_bufferSize);
-    m_channelC = new Channel(m_handle, PS6000_CHANNEL_C, m_bufferSize);
-    m_channelD = new Channel(m_handle, PS6000_CHANNEL_D, m_bufferSize);
+    m_channelA = new Channel(PS6000_CHANNEL_A, this);
+    m_channelB = new Channel(PS6000_CHANNEL_B, this);
+    m_channelC = new Channel(PS6000_CHANNEL_C, this);
+    m_channelD = new Channel(PS6000_CHANNEL_D, this);
 
     std::cout << "openUnit done!\n";
 }
@@ -92,6 +92,11 @@ void Pico::openUnit(){
             break;
     }
 }
+
+void Pico::setBufferANDnoOfSamples(){
+    m_bufferSize = m_noOfSamples = m_preTrigger + m_postTrigger;
+}
+
 /*
  * End - PrivateMemberFunctions!
  */
@@ -103,7 +108,7 @@ void Pico::openUnit(){
  */
 
 //! Returns the Channel to work on further on with class Channel methods.
-Channel*    Pico::getCh(PS6000_CHANNEL channel){
+Pico::Channel*    Pico::getCh(PS6000_CHANNEL channel){
                switch(channel){
                     case PS6000_CHANNEL_A:
                         return m_channelA;
@@ -122,7 +127,8 @@ Channel*    Pico::getCh(PS6000_CHANNEL channel){
                         return nullptr;
                } 
 }
-Channel*    Pico::getCh(int channel){
+
+Pico::Channel*    Pico::getCh(int channel){
                 PS6000_CHANNEL t_channel = static_cast<PS6000_CHANNEL>(channel);         
 
                 switch(t_channel){
@@ -156,10 +162,9 @@ uint32_t        Pico::returnPreTrigger() const{
 uint32_t        Pico::returnPostTrigger() const{
                     return m_postTrigger;
 }
-//! Returns preTrigger + postTrigger
-uint32_t        Pico::returnNoSamples() const{
-                    uint32_t t_noSamples = m_preTrigger + m_postTrigger;
-                    return t_noSamples;
+//! Returns the number of samples retrieved in the actual run.
+uint32_t        Pico::returnNoOfSamples() const{
+                    return m_noOfSamples;
 }
 //! Returns the current sampling interval in ns.
 float           Pico::returnTimeInterval() const{
@@ -184,8 +189,26 @@ uint32_t        Pico::returnBufferSize() const{
                     return m_bufferSize;
 }
 //! Returns the current ratio mode (Default: 0 = RATIO_MODE_NONE).
-enPS6000RatioMode       Pico::returnRatioMode() const{
-                    return m_ratioMode;
+enPS6000RatioMode       Pico::returnDownSampleRatioMode() const{
+                            return m_downSamplingRatioMode;
+}
+//! Returns the down sampling ratio.
+uint32_t                Pico::returnDownSampleRatio() const{
+                            return m_downSampleRatio;
+}
+//! Returns the time in milliseconds that the scope will spend collecting
+//! collecting samples. This does not include any auto trigger timeout.
+int32_t         Pico::returnTimeIndisposed() const{
+                    return m_timeIndisposedMs;
+}
+//! Returns a bitflag weather an overvoltage has occured on any of the
+//! channels. The first bit is denoting Channel A.
+int16_t         Pico::returnOverflow() const{
+                    return m_overflow;
+}
+//! Returns the alias (aka Position) of the Pico in the setup.
+std::string     Pico::returnAlias() const{
+                    return m_alias;
 }
 
 /*
@@ -198,13 +221,83 @@ enPS6000RatioMode       Pico::returnRatioMode() const{
 /*
  * Start - Set Pico related stuff like Trigger and so on...
  */
+
+//! Configures the trigger of the pico.
+void            Pico::configureTrigger(Utility::CLAWS_TRIGGER_MODE mode){
+                
+                    if(mode == Utility::CLAWS_TRIGGER_SIMPLE){
+                        m_status = ps6000SetSimpleTrigger(
+                                *m_handle,                  \
+                                m_tEnabled,                 \
+                                m_tSource,                  \
+                                m_tThreshold,               \
+                                m_tDirection,               \
+                                m_tDelay,                   \
+                                m_tAutoTrigger_ms);
+                    }
+
+                    Pico::checkStatus();
+
+}
+
+//! Configure all four channel at once.
+// It sends the data to the pico, allocates the data buffer
+// for each channel and does a consistency check if the number
+// of total samples is allowed (compares with getTimebase())
+void            Pico::configureChannels(){
+                    // first configure the channel settings and allocate the memory for the
+                    // data buffer
+                    for(auto ii = 0; ii < 4; ++ii){
+                        getCh(ii)->configureChannel();
+                        getCh(ii)->setDataBuffer();
+
+                        // count the total number of channels online to 
+                        // calculate the total number of samples to be aquired 
+                        // for a following consistency check if this if possible
+                        m_noChannelsEnabled = 0;
+                        if(getCh(ii)->returnEnabled()){
+                           ++m_noChannelsEnabled; 
+                        }
+                    }
+}
+
+//! Sets             the timebase of the pico.
+void            Pico::setTimebase(uint32_t timebase){
+                    m_timebase = timebase; 
+}
+//! Sets the pretrigger samples.
+void            Pico::setPreTrigger(uint32_t pretrigger){
+                    m_preTrigger = pretrigger;
+}
+//! Sets the posttrigger samples.
+void            Pico::setPostTrigger(uint32_t posttrigger){
+                    m_postTrigger = posttrigger;
+}
+
+//! Sets all Pico member variables at once (despite trigger settings).
+void            Pico::setVariables( uint32_t        timebase,                       \
+                                    int16_t         oversample,                     \
+                                    uint32_t        segmentIndex,                   \
+                                    uint32_t        preTrigger,                     \
+                                    uint32_t        postTrigger,                    \
+                                    uint32_t        downSampleRatio,                \
+                                    PS6000_RATIO_MODE downSampleRatioMode){
+                    m_timebase =                timebase;
+                    m_oversample =              oversample;
+                    m_segmentIndex =            segmentIndex;
+                    m_preTrigger =              preTrigger;
+                    m_postTrigger =             postTrigger;
+                    m_downSampleRatio =         downSampleRatio;
+                    m_downSamplingRatioMode =   downSampleRatioMode;
+}
+        
 void Pico::setSimpleTrigger(
-        int16_t enabled,                        \
-        PS6000_CHANNEL source,                  \
-        int16_t threshold,                      \
-        PS6000_THRESHOLD_DIRECTION direction,   \
-        uint16_t delay,                         \
-        int16_t autoTriggerTime_ms)
+        int16_t                     enabled,                \
+        PS6000_CHANNEL              source,                 \
+        int16_t                     threshold,              \
+        PS6000_THRESHOLD_DIRECTION  direction,              \
+        uint32_t                    delay,                  \
+        int16_t                     autoTriggerTime_ms)
 {
 
     m_tEnabled =            enabled;
@@ -214,80 +307,79 @@ void Pico::setSimpleTrigger(
     m_tDelay =              delay;
     m_tAutoTrigger_ms =     autoTriggerTime_ms;
 
-    m_status = ps6000SetSimpleTrigger(*m_handle, m_tEnabled, m_tSource,\
-            m_tThreshold, m_tDirection, m_tDelay, m_tAutoTrigger_ms);
-
-    Pico::checkStatus();
 }
 
-void Pico::getTimebase( 
-        uint32_t    timebase,           \
-        uint32_t    noSamples,          \
-        float       *timeInterval_ns,  \
-        uint32_t    *maxSamples
-        ){
+void Pico::getTimebase(){
 
-    m_status = ps6000GetTimebase2(
-            *m_handle,               \
-            timebase,               \
-            noSamples,              \
-            timeInterval_ns,       \
-            m_oversample,           \
-            maxSamples,            \
-            m_segmentIndex);
+    uint32_t counter    {0};
+    m_timeInterval_ns = -1.f;
 
-    m_timebase =        timebase;
-    m_noSamples =       noSamples;
-    m_timeInterval_ns = *timeInterval_ns;
-    m_maxSamples =      *maxSamples;
+    while(m_timeInterval_ns < 0 && counter < 20){
+        m_status = ps6000GetTimebase2(
+                *m_handle,                  \
+                m_timebase,                 \
+                m_noOfSamples,              \
+                &m_timeInterval_ns,         \
+                m_oversample,               \
+                &m_maxSamples,              \
+                m_segmentIndex);
+    }
+
+
+    //! \todo Check the error handling here!
+    if(counter <= 20){
+        std::cout << "\n######################################################\n";
+        std::cout << "ps6000GetTimebase2 did not work as expected!\n";
+        std::cout << "\n######################################################\n\n";
+    }
+
+    if(m_maxSamples < (m_noChannelsEnabled * m_bufferSize)){
+        assert("The total number of channel cannot be acquired since it is to large.\
+                Closing...");
+    }
 
     Pico::checkStatus();
 
 }
 
-void Pico::runBlock(
-        uint32_t    preTrigger,     \
-        uint32_t    postTrigger,    \
-        uint32_t    timebase
-        ){
-    m_preTrigger =      preTrigger;
-    m_postTrigger =     postTrigger;
-    m_timebase =        timebase;
-
-    int32_t aqTime;
+void Pico::runBlock(){
 
     m_status = ps6000RunBlock(
-            *m_handle,              \
-            m_preTrigger,           \
-            m_postTrigger,          \
-            m_timebase,             \
-            m_oversample,           \
-            &aqTime,                \
-            m_segmentIndex,         \
-            Utility::CallBackBlock,          \
+            *m_handle,                  \
+            m_preTrigger,               \
+            m_postTrigger,              \
+            m_timebase,                 \
+            m_oversample,               \
+            &m_timeIndisposedMs,        \
+            m_segmentIndex,             \
+            Utility::CallBackBlock,     \
             nullptr);
 
+    //! \todo Here one could break the 'Waiting for trigger!' period.
+    
     // Waits until the pico is done with data taking!
     while(!Utility::pReady){
-        usleep(10);
+        usleep(5);
     }
     Utility::pReady = false;
 
     Pico::checkStatus();
 }
 
-void    Pico::getValues(
-            uint32_t    *numberOfSamples,            \
-            int16_t     *overflow
-            ){
+void    Pico::getValues(){
+        
+        // on input the variable holds the number of samples required,
+        // on exit it contains the number of values retrieved.
+        m_noOfSamples = m_preTrigger + m_postTrigger;
+
         m_status = ps6000GetValues(
                         *m_handle,                  \
-                        0,                          \
-                        numberOfSamples,            \
-                        1,                          \
-                        PS6000_RATIO_MODE_NONE,     \
+                        m_startIndex,               \
+                        &m_noOfSamples,             \
+                        m_downSampleRatio,          \
+                        m_downSamplingRatioMode,    \
                         m_segmentIndex,             \
-                        overflow);
+                        &m_overflow);
 }
 
 /*
@@ -295,6 +387,12 @@ void    Pico::getValues(
  */
 ////////////////////////////////////////////////////////////////////////
 
+//! Stops the picoscope from sampling data.
+void    Pico::stopUnit(){
+            usleep(100);
+            m_status = ps6000Stop(*m_handle);
+            Pico::checkStatus();
+}
 
 //! Closes the current Pico.
 void        Pico::closeUnit(){
@@ -632,5 +730,190 @@ void Pico::checkStatus(){
 }
 /*
  * End - Pico::checkStatus() 
+ */
+////////////////////////////////////////////////////////////////////////////////
+
+
+
+
+////////////////////////////////////////////////////////////////////////////////
+//
+//          CHANNEL CONSTRUCTOR
+//
+////////////////////////////////////////////////////////////////////////////////
+
+Pico::Channel::Channel(PS6000_CHANNEL channel, Pico *picoscope)
+    : m_pico(picoscope), m_channel(channel){
+
+        // create data buffer and reserve some space on disk/RAM
+        m_buffer = new std::vector<int16_t>;
+        m_buffer->reserve(m_pico->m_bufferSizeReserve);
+    }
+////////////////////////////////////////////////////////////////////////////////
+
+////////////////////////////////////////////////////////////////////////////////
+/*
+ * Start - Private member function!
+ */
+void        Pico::Channel::configureChannel(){
+
+                    m_pico->m_status = ps6000SetChannel(\
+                            *(m_pico->m_handle),    \
+                            m_channel,              \
+                            m_enabled,              \
+                            m_coupling,             \
+                            m_range,                \
+                            m_analogueOffset,       \
+                            m_bandwidth);
+
+                    m_pico->checkStatus();
+                    
+}
+////////////////////////////////////////////////////////////////////////////////
+
+
+////////////////////////////////////////////////////////////////////////////////
+/*
+ * Start - ReturnFunctions!
+ */
+int16_t                    Pico::Channel::returnHandle() const{
+                                return *(m_pico->m_handle);
+                            }
+
+int8_t*                     Pico::Channel::returnSerial() const{
+                                return m_pico->m_serial;
+}
+
+PS6000_CHANNEL              Pico::Channel::returnChannel() const{
+                                return m_channel;
+                            }
+
+int16_t                     Pico::Channel::returnEnabled() const{
+                                return m_enabled;
+                            }
+
+float                       Pico::Channel::returnOffset() const{
+                                return m_analogueOffset;
+                            }
+
+PS6000_COUPLING             Pico::Channel::returnCoupling() const{
+                                return m_coupling;
+                            }
+
+PS6000_RANGE                Pico::Channel::returnRange() const{
+                                return m_range;
+                            }
+
+PS6000_BANDWIDTH_LIMITER    Pico::Channel::returnBandwidth() const{
+                                return m_bandwidth;
+                            }
+
+//! Returns the channel buffer.
+std::vector<int16_t>*       Pico::Channel::getBuffer(){
+                                return m_buffer;
+                            }
+
+/*
+ * End - ReturnFunctions!
+ */
+////////////////////////////////////////////////////////////////////////////////
+
+
+
+////////////////////////////////////////////////////////////////////////////////
+/*
+ * Start - SetFunctions!
+ */
+void     Pico::Channel::setEnabled(int16_t enabled){
+
+                    m_enabled = enabled;
+                    
+}
+
+void     Pico::Channel::setOffset(float analogueOffset){
+
+                    m_analogueOffset = analogueOffset;
+}
+
+void     Pico::Channel::setCoupling(PS6000_COUPLING coupling){
+
+                    m_coupling = coupling;
+
+}
+
+void     Pico::Channel::setRange(PS6000_RANGE range){
+
+                    m_range = range;
+}
+                    
+
+void    Pico::Channel::setBandwidth(PS6000_BANDWIDTH_LIMITER bandwidth){
+
+                    m_bandwidth = bandwidth;
+}
+
+void     Pico::Channel::setChannel(\
+                        int16_t                     enabled,            \
+                        PS6000_RANGE                range,              \
+                        float                       analogueOffset,     \
+                        PS6000_COUPLING             coupling,           \
+                        PS6000_BANDWIDTH_LIMITER    bandwidth
+                        ){
+
+                    m_enabled =         enabled;
+                    m_range =           range;
+                    m_analogueOffset =  analogueOffset;
+                    m_coupling =        coupling;
+                    m_bandwidth =       bandwidth;
+}
+
+void    Pico::Channel::setDataBuffer(){
+
+                    // recalculates noOfSamples and buffersize from pre and posttrigger
+                    m_pico->setBufferANDnoOfSamples();
+                    
+                    // allocate a buffer if the channel is enabled
+                    if(m_enabled) m_buffer->resize(m_pico->m_bufferSize);
+                    else m_buffer->clear();
+
+                    m_pico->m_status = ps6000SetDataBuffer(
+                                    *(m_pico->m_handle),              \
+                                    m_channel,              \
+                                    &m_buffer->at(0),        \
+                                    m_pico->m_bufferSize,           \
+                                    m_pico->m_downSamplingRatioMode);
+
+                    m_pico->checkStatus();
+}
+
+/*
+ * End - SetFunctions!
+ */
+////////////////////////////////////////////////////////////////////////////////
+
+
+////////////////////////////////////////////////////////////////////////////////
+/*
+ * Start - Print!
+ */
+std::ostream& operator<< (std::ostream &out, const Pico::Channel *channel){
+     
+    out << "\n++++++++++++++++++++++++++++++++++++++++++++++++++++++\n"\
+    << "Printing channel information...\n\n"\
+    << "Pico:\t\t" << channel->returnSerial() << "\n"\
+    << "Channel:\t\t" << channel->returnChannel() << "\n"\
+    << "Enabled:\t\t" << channel->returnEnabled() << "\n"\
+    << "Ana. Offset:\t\t" << channel->returnOffset() << "\n"\
+    << "Coupling:\t\t" << channel->returnCoupling() << "\n"\
+    << "Range:\t\t\t"   << channel->returnRange() << "\n"\
+    << "Bandwidth:\t\t" << channel->returnBandwidth() << "\n"\
+    << "++++++++++++++++++++++++++++++++++++++++++++++++++++++\n\n";
+
+    return out;
+}
+
+
+/*
+ * End - Print!
  */
 ////////////////////////////////////////////////////////////////////////////////

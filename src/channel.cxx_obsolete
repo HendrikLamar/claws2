@@ -29,8 +29,8 @@
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-Channel::Channel(int16_t *handle, PS6000_CHANNEL channel, uint32_t bufferSize)
-    : m_handle(handle), m_channel(channel), m_bufferSize(bufferSize){
+Channel::Channel(PS6000_CHANNEL channel)
+    : m_channel(channel){
 
         m_buffer = new std::vector<int16_t>;
         m_buffer->resize(m_bufferSize);

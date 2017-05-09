@@ -4,8 +4,8 @@
 // 
 //    Description:  
 // 
-//        Version:  1.0
-//        Created:  02.05.2017 13:42:53
+//        Version:  1.1
+//        Created:  05.05.2017 13:48:53
 //       Revision:  none
 //       Compiler:  g++
 // 
@@ -30,21 +30,15 @@
 class Channel
 {
     private:
-        // pico settings needed by channel
-        const int16_t               *m_handle;
-        int8_t                m_serial;
-//        const int8_t                m_serial;
 
         // single channel only setting        
-//        const PS6000_CHANNEL        m_channel;          // no initialization value needed
-        const PS6000_CHANNEL              m_channel;          // no initialization value needed
-        PS6000_COUPLING             m_coupling          {PS6000_DC_50R};
-        int16_t                     m_enabled           {false};
-        float                       m_analogueOffset    {0.f};
-        PS6000_RANGE                m_range             {PS6000_1V};
-        PS6000_BANDWIDTH_LIMITER    m_bandwidth         {PS6000_BW_FULL};
+        const PS6000_CHANNEL        m_channel;          // no initialization value needed
+        PS6000_COUPLING             m_coupling;
+        int16_t                     m_enabled;
+        float                       m_analogueOffset;
+        PS6000_RANGE                m_range;
+        PS6000_BANDWIDTH_LIMITER    m_bandwidth;
 
-        const uint32_t              m_bufferSize;
         std::vector<int16_t>*       m_buffer;
 
 
@@ -61,7 +55,7 @@ class Channel
         /*
          *! Contructor
          */
-        Channel(int16_t *handle, PS6000_CHANNEL channel, uint32_t bufferSize);
+        Channel(PS6000_CHANNEL channel);
         ///////////////////////////////////////////////////////////////////////
         
         ~Channel(){};
@@ -74,6 +68,8 @@ class Channel
 
         //! Returns the corresponding handle value
         int16_t                     returnHandle() const;
+        //! Returns the corresponding serial number of the pico
+        int8_t                      returnSerial() const;
         //! Returns the steered channel.
         PS6000_CHANNEL              returnChannel() const;
         //! Return is the channel is enabled or not.
@@ -100,21 +96,15 @@ class Channel
 
         //! Sets status of enabled.
         PICO_STATUS     setEnabled(int16_t enabled);
-        //! Sets the offset.
-        PICO_STATUS     setOffset(float analogueOffset);
         //! Sets the the coupling.
         PICO_STATUS     setCoupling(PS6000_COUPLING coupling);
+        //! Sets the offset.
+        PICO_STATUS     setOffset(float analogueOffset);
         //! Sets the range.
         PICO_STATUS     setRange(PS6000_RANGE range);
         //! Sets the bandwidth.
         PICO_STATUS     setBandwidth(PS6000_BANDWIDTH_LIMITER bandwidth);
 
-        //! Sets several often needed channel preferences at once.
-        PICO_STATUS     setChannel(\
-                            int16_t                     enabled,            \
-                            PS6000_RANGE                range,              \
-                            float                       analogueOffset
-                            );
         //! Sets all possible channel preferences.
         PICO_STATUS     setChannel(\
                             int16_t                     enabled,            \

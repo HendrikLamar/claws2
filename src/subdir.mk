@@ -7,8 +7,9 @@
 
 
 PICO_OBJS += ./build/src/pico.o
-PICO_OBJS += ./build/src/channel.o
+PICO_OBJS += ./build/src/claws.o
 PICO_OBJS += ./build/src/utility.o
+PICO_OBJS += ./build/src/roofi.o
 
 #CALI_OBJS += ./build/src/channel.o
 #CALI_OBJS += ./build/src/event.o

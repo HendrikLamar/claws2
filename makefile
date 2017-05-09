@@ -15,7 +15,12 @@ ifeq ($(shell uname -s),Linux)
 
 	# DAQ stuff
 	CFLAGS += -I./include
-	LFLAGS += -L./libs
+	LFLAGS += 
+
+	# boost libs
+	CFLAGS +=
+#	LFLAGS += -L/usr/lib/x86_64-linux-gnu/libboost_system.so.1.58.0 -L/usr/lib/x86_64-linux-gnu/libboost_filesystem.so.1.58.0
+	LFLAGS += -lboost_system -lboost_filesystem
 
 	CC = g++
 
@@ -36,7 +41,7 @@ release: CFLAGS += -O3
 release: clean build
 
 
-VERSION = 1.0
+VERSION = 1.1
 INCLUDES += -I"./include"
 PICO_OBJS += ./build/src/main.o
 

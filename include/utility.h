@@ -35,5 +35,10 @@ namespace Utility{
             void            *pParameter);
     ////////////////////////////////////////////////////////////////////////
 
+    enum CLAWS_TRIGGER_MODE{
+        
+        CLAWS_TRIGGER_SIMPLE,
+        CLAWS_TRIGGER_ADVANCED,
+    };
 }
 #endif //UTILITY_H
