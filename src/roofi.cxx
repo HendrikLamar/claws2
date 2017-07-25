@@ -54,7 +54,8 @@ namespace Roofi{
                     ptree.get<std::string>("Initializer.ConfigFile_Physics_Schiffer"),  \
                     ptree.get<std::string>("Initializer.ConfigFile_Physics_Klum"),      \
                     ptree.get<std::string>("Initializer.ConfigFile_Physics_Garrn"),     \
-                    ptree.get<int8_t>("Initializer.Pico1_Serial"),     \
+                    ptree.get<std::string>("Initializer.Pico1_Serial"), \
+//                    boost::numeric_cast<int8_t>(ptree.get<std::string>("Initializer.Pico1_Serial")),     
                     ptree.get<std::string>("Initializer.Pico1_Alias"),      \
         };
         

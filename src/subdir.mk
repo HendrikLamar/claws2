@@ -10,6 +10,10 @@ PICO_OBJS += ./build/src/pico.o
 PICO_OBJS += ./build/src/claws.o
 PICO_OBJS += ./build/src/utility.o
 PICO_OBJS += ./build/src/roofi.o
+PICO_OBJS += ./build/src/statemachine.o
+PICO_OBJS += ./build/src/database.o
+
+
 
 #CALI_OBJS += ./build/src/channel.o
 #CALI_OBJS += ./build/src/event.o

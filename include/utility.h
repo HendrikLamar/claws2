@@ -40,5 +40,6 @@ namespace Utility{
         CLAWS_TRIGGER_SIMPLE,
         CLAWS_TRIGGER_ADVANCED,
     };
+
 }
 #endif //UTILITY_H

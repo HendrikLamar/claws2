@@ -39,7 +39,7 @@ namespace Roofi{
         std::string filePhysicsKlum;
         std::string filePhysicsGarrn;
 
-        int8_t      Pico1Serial;
+        std::string Pico1Serial;
         std::string Pico1Alias;
 
 /*         std::string Pico2Serial;
