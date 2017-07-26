@@ -28,11 +28,13 @@
 
 
 
-MyState::MyState(Database * database) :
-    m_database(database)
+MyState::MyState() :
+    m_inputCounter(0),
+    m_database(new Database())
 {
+    // check if the help vectors are of different lenght
     assert(m_nickname.size() == m_description.size() );
-
+    // create a vector of pairs to create the 'printHelp()' function
     for(unsigned int i = 0; i < m_nickname.size(); ++i){
         m_tuple.push_back(std::make_pair(m_nickname.at(i), m_description.at(i)));
     }
@@ -45,6 +47,9 @@ MyState::MyState(Database * database) :
 
 MyState::~MyState()
 {
+    // take care of the database
+    delete m_database;
+    m_database = nullptr;
 
 }
 
@@ -76,13 +81,6 @@ void MyState::printWelcome()
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void MyState::printStatus()
-{
-    std::cout << m_database;
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
 char MyState::getKey()
 {
     std::cout << "claws[" << m_inputCounter << "]> ";
@@ -94,7 +92,7 @@ char MyState::getKey()
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void MyState::showStatus()
+void MyState::printStatus()
 {
     std::cout << "\n\tThe current state is: " << m_database->getState() << "\n";
     std::cout << "\tCounterA: " << m_database->getCounterA() << "\t"
@@ -106,7 +104,6 @@ void MyState::showStatus()
 
 void MyState::doMenu()
 {
-    std::thread secondThread;
     printWelcome();
     char key = getKey();
     while ( key != 'q' )
@@ -123,17 +120,17 @@ void MyState::doMenu()
                 std::cout << "Checking System!\n";
                 break;
             case 's':
-                showStatus();
+                printStatus();
                 break;
             case '1':
                 std::cout << "Starting Measurement!\n";
                 m_database->setStop(false);
-                secondThread = std::thread(&MyState::runPico, *this);
+                m_thread_01 = std::thread(&MyState::runPico, *this);
                 break;
             case '2':
                 std::cout << "Stopping Measurement!\n";
                 m_database->setStop(true);
-                secondThread.join();
+                m_thread_01.join();
                 break;
             case '0':
                 std::cout << "Force stopping Measurement!\n";

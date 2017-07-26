@@ -26,18 +26,14 @@
 int main()
 {
 
-    Database * database = new Database();
-
-    MyState mystate(database);
+    MyState mystate;
+    mystate.doMenu();
 
 //    mystate.doMenu();
 
-    std::thread mythread(&MyState::doMenu, mystate);
+//    std::thread mythread(&MyState::doMenu, mystate);
 
-    mythread.join();
-
-    delete database;
-    database = nullptr;
+//    mythread.join();
 
     return 0;
 }
