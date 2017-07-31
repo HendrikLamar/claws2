@@ -17,9 +17,14 @@
 
 #include <boost/statechart/event.hpp>
 #include <boost/statechart/simple_state.hpp>
+#include <boost/statechart/state.hpp>
 #include <boost/statechart/state_machine.hpp>
 #include <boost/statechart/transition.hpp>
+#include <boost/statechart/custom_reaction.hpp>
 #include <boost/mpl/list.hpp>
+
+#include <chrono>
+#include <thread>
 
 #include <iostream>
 
@@ -34,8 +39,8 @@ struct Idle;
 struct Status;
 struct Config;
 
+struct SystemIdle;
 struct SystemRun;
-struct SystemStop;
 
 struct EvStartStop : sc::event< EvStartStop > {};
 
@@ -43,12 +48,27 @@ struct ClawsDAQ : sc::state_machine< ClawsDAQ, Active > {};
 
 ///////////////////////////////////////////////////////////////////////////////
 
+char getKey(){
+
+    std::cout << "> ";
+    char key;
+    std::cin >> key;
+    return key;
+}
+
 class Data
 {
     public:
-      unsigned int m_counter;  
+      unsigned int m_counterA;  
+      unsigned int m_counterB;  
+      unsigned int m_counterC;  
+      bool         m_stop;
 
-      Data(): m_counter(0)
+      int           m_runA = 5;
+      int           m_runB = 8;
+      int           m_runC = 7;
+
+      Data(): m_counterA(0),m_counterB(0),m_counterC(0), m_stop(true)
         {};
       ~Data(){};
 };
@@ -56,28 +76,23 @@ class Data
 
 
 struct Active : sc::simple_state< Active, ClawsDAQ, 
-    boost::mpl::list< Idle, SystemStop > >
+    boost::mpl::list< Idle, SystemIdle> >
 {
     public:
-//        Data *  m_database;
 
-//        Active():m_database(new Data)
-        unsigned int m_counter;
-        Active():m_counter(0)
+        Data *  m_database;
+
+        Active():m_database(new Data)
         {
             std::cout << "Hello World!\n";
             std::cout << "I am Active!\n";
         }
         ~Active(){
             std::cout << "Exiting Active!\n";
+            delete m_database;
+            m_database = nullptr;
         }
 
-        unsigned int getCounter() const {
-            return m_counter;
-        }
-        unsigned int & getCounter() {
-            return m_counter;
-        }
 };
 
 struct Idle : sc::simple_state< Idle, Active::orthogonal<0> >
@@ -98,25 +113,37 @@ struct Idle : sc::simple_state< Idle, Active::orthogonal<0> >
         }
 };
 
-struct Status : sc::simple_state< Status, Active::orthogonal<0> >
+struct Status : sc::state< Status, Active::orthogonal<0> >
 {
     public:
         typedef boost::mpl::list<
-            sc::transition< EvStatus, Idle >,
+            sc::custom_reaction< EvStatus >,
+//            sc::transition< EvStatus, Idle >,
             sc::transition< EvConfig, Config >
                 > reactions;
 
+        sc::result react( const EvStatus & ){
+            if( true ){
+                return forward_event();
+            };
+        };
 
-        Status()
+
+        Status(my_context ctx) : my_base(ctx)
         {
-            std::cout << "Current counter: " << 
-                context< Active >().getCounter() << "\n";
+            std::cout << "CounterA: " << context< Active >().m_database->m_counterA << std::endl;
+            std::cout << "CounterB: " << context< Active >().m_database->m_counterB << std::endl;
+            std::cout << "CounterC: " << context< Active >().m_database->m_counterC << std::endl;
+
+            std::cout << "\nPress 's' to exit.\n";
         }
         ~Status(){
+            std::cout << "Leavin Status!\n";
         }
+        
 };
 
-struct Config : sc::simple_state< Config, Active::orthogonal<0> >
+struct Config : sc::state< Config, Active::orthogonal<0> >
 {
     public:
         typedef boost::mpl::list<
@@ -124,9 +151,29 @@ struct Config : sc::simple_state< Config, Active::orthogonal<0> >
             sc::transition< EvStatus, Status>
                 > reactions;
 
-        Config()
+        Config(my_context ctx) : my_base(ctx)
         {
-            std::cout << "I am Config!\n";
+            std::cout << "l = load\n";
+            std::cout << "s = save\n";
+            std::cout << "\n";
+            std::cout << "q = Exit\n";
+
+            char key = getKey();
+            while( true ){
+                switch( key ){
+                    case 'l':
+                        std::cout << "Loading Data!\n";
+                        break;
+                    case 's':
+                        std::cout << "Saving Data!\n";
+                        break;
+                    case 'q':
+                       break; 
+                    default:
+                        std::cout << "Wrong input dude!\n";
+                }
+                key = getKey();
+            }
         }
         ~Config(){
             std::cout << "Exiting Config!\n";
@@ -134,41 +181,119 @@ struct Config : sc::simple_state< Config, Active::orthogonal<0> >
 
 };
 
-struct SystemStop : sc::simple_state< SystemStop, Active::orthogonal<1> >
+
+
+struct SystemIdle : sc::simple_state< SystemIdle, Active::orthogonal<1> >
 {
     public:
         typedef sc::transition< EvStartStop, SystemRun > reactions;
 
-        SystemStop()
+        SystemIdle()
         {
-            std::cout << "I am SystemStop!\n";
+            std::cout << "I am SystemIdle!\n";
         }
-        ~SystemStop(){
-            std::cout << "Exiting SystemStop!\n";
+        ~SystemIdle(){
+            std::cout << "Exiting SystemIdle!\n";
         }
 };
 
-struct SystemRun : sc::simple_state< SystemRun, Active::orthogonal<1> >
+struct SystemRun : sc::state< SystemRun, Active::orthogonal<1> >
 {
     public:
-        typedef sc::transition< EvStartStop, SystemStop > reactions;
+        typedef sc::transition< EvStartStop, SystemIdle > reactions;
+/*         typedef boost::mpl::list<
+ *             sc::transition< EvStartStop, SystemIdle >,
+ *             sc::transition< EvStateA, StateA >,
+ *             sc::transition< EvStateB, StateB >,
+ *             sc::transition< EvStateC, StateC >
+ *             > reactions;
+ */
+        std::thread m_thread;
 
-        SystemRun()
+        SystemRun(my_context ctx) : 
+            my_base(ctx)
         {
-            std::cout << "I am SystemRun!\n";
+            std::cout << "SystemRun!\n";
+//            context< ClawsDAQ >().process_event( EvStateA() );
         }
+
         ~SystemRun(){
-            std::cout << "Exiting SystemRun!\n";
+
+            std::cout << "SystemStop!\n";
+            context< Active >().m_database->m_stop = false;
+//            m_thread.join();
         }
+
 };
 
-char getKey(){
+/* struct StateA : sc::state< StateA, SystemRun >
+ * {
+ *     public:
+ *         typedef sc::transition< EvStateB, StateB > reactions;
+ * 
+ *         StateA(my_context ctx) : my_base(ctx)
+ *         {
+ *             incrementCounterA();
+ *         };
+ *         ~StateA(){};
+ * 
+ *         void incrementCounterA(){
+ *             int mycount = 0;
+ *             while( mycount < context< Active >().m_database->m_runA){
+ *                 ++context< Active >().m_database->m_counterA;
+ *                 std::this_thread::sleep_for(std::chrono::milliseconds(500));
+ *                 ++mycount;
+ *             };
+ * //            context< ClawsDAQ >().process_event( EvStateB() );
+ *         }
+ * };
+ * 
+ * struct StateB : sc::state< StateB, SystemRun >
+ * {
+ *     public:
+ *         typedef sc::transition< EvStateC, StateC > reactions;
+ * 
+ *         StateB(my_context ctx) : my_base(ctx)
+ *         {
+ *             incrementCounterB();
+ *         };
+ *         ~StateB(){};
+ * 
+ *         void incrementCounterB(){
+ *             int mycount = 0;
+ *             while( mycount < context< Active >().m_database->m_runB){
+ *                 ++context< Active >().m_database->m_counterB;
+ *                 std::this_thread::sleep_for(std::chrono::milliseconds(500));
+ *                 ++mycount;
+ *             };
+ * //            context< ClawsDAQ >().process_event( EvStateC() );
+ *         }
+ * };
+ * 
+ * struct StateC : sc::state< StateC, SystemRun >
+ * {
+ *     public:
+ *         typedef sc::transition< EvStartStop, SystemIdle> reactions;
+ * 
+ *         StateC(my_context ctx) : my_base(ctx)
+ *         {
+ *             incrementCounterC();
+ *         };
+ *         ~StateC(){};
+ * 
+ *         void incrementCounterC(){
+ *             int mycount = 0;
+ *             while( mycount < context< Active >().m_database->m_runC){
+ *                 ++context< Active >().m_database->m_counterC;
+ *                 std::this_thread::sleep_for(std::chrono::milliseconds(500));
+ *                 ++mycount;
+ *             };
+ * //            context< ClawsDAQ >().process_event( EvStartStop() );
+ *         }
+ * };
+ */
 
-    std::cout << "> ";
-    char key;
-    std::cin >> key;
-    return key;
-}
+
 
 
 
@@ -189,6 +314,7 @@ int main(){
                 daq.process_event( EvStartStop() );
                 break;
             case 'c':
+                daq.process_event( EvConfig() );
                 daq.process_event( EvConfig() );
                 break;
             case 's':
