@@ -125,7 +125,7 @@ void MyState::doMenu()
             case '1':
                 std::cout << "Starting Measurement!\n";
                 m_database->setStop(false);
-                m_thread_01 = std::thread(&MyState::runPico, *this);
+                m_thread_01 = std::thread(&MyState::runPico, this);
                 break;
             case '2':
                 std::cout << "Stopping Measurement!\n";

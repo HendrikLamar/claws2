@@ -46,6 +46,7 @@ flags = [
 '-pthread',
 #'-I/opt/root/6.00/include/',
 '-I/opt/picoscope/include',
+'-I./include',
 
 
 '-Wall',

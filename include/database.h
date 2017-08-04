@@ -27,7 +27,7 @@ class Database
 
     public:
         Database();
-        ~Database();
+        virtual ~Database();
 
         enum State{
             IDLE,
@@ -35,26 +35,19 @@ class Database
             STATE_B
         };
 
-        void incrementCounterA();
-        void incrementCounterB();
-
-        unsigned long getCounterA();
-        unsigned long getCounterB();
 
         std::string     getState();
         void            setState(State state);
 
-        void setStop(bool switcher);
-        bool getStop();
+        unsigned int    getInputCounter();
 
+        void            setStop( bool switcher );
+        bool            getStop();
 
     private:
-        unsigned long       m_counterA;
-        unsigned long       m_counterB;
-
-        State       m_currentState;
-
-        bool        m_stopSwitch;
+        State           m_currentState;
+        unsigned int    m_inputCounter;
+        bool            m_stopSwitch;
 
 
 

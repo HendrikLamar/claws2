@@ -22,35 +22,22 @@
 
 
 Database::Database()
-    :m_counterA(0),
-    m_counterB(0),
-    m_currentState(State::IDLE),
+    :m_currentState(State::IDLE),
+    m_inputCounter(0),
     m_stopSwitch(false)
 {}
 
 Database::~Database(){}
 
 
-void Database::incrementCounterA()
+unsigned int    Database::getInputCounter()
 {
-    ++m_counterA;
+    unsigned int oldCounter = m_inputCounter;
+    ++m_inputCounter;
+
+    return oldCounter;
 }
 
-
-void Database::incrementCounterB()
-{
-    ++m_counterB;
-}
-
-unsigned long Database::getCounterA()
-{
-    return m_counterA;
-}
-
-unsigned long Database::getCounterB()
-{
-    return m_counterB;
-}
 
 std::string Database::getState()
 {
@@ -77,6 +64,7 @@ void Database::setState(State state)
     m_currentState = state;
 }
 
+
 void Database::setStop(bool switcher)
 {
     m_stopSwitch = switcher;
@@ -86,4 +74,3 @@ bool Database::getStop()
 {
     return m_stopSwitch;
 }
-
