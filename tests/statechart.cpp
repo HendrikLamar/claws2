@@ -177,6 +177,11 @@ int main(){
     ClawsDAQ daq;
     daq.initiate();
 
+
+
+
+
+
     std::cout << "r = StartStop\n";
     std::cout << "c = Config\n";
     std::cout << "s = Status\n";
