@@ -39,14 +39,11 @@ class Database
         std::string     getState();
         void            setState(State state);
 
-        unsigned int    getInputCounter();
-
         void            setStop( bool switcher );
         bool            getStop();
 
     private:
         State           m_currentState;
-        unsigned int    m_inputCounter;
         bool            m_stopSwitch;
 
 

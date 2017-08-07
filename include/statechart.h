@@ -164,14 +164,15 @@ struct ClawsDAQ : sc::state_machine< ClawsDAQ, Active >
         }
 
 
-        /// 
-        char getKey()
-        {
-            std::cout << "[" << m_database->getInputCounter() << "]> "; 
-            char key;
-            std::cin >> key;
-            return key;
-        };
+/*         /// 
+ *         char getKey()
+ *         {
+ *             std::cout << "[" << m_database->getInputCounter() << "]> "; 
+ *             char key;
+ *             std::cin >> key;
+ *             return key;
+ *         };
+ */
 };
 
 

@@ -23,20 +23,10 @@
 
 Database::Database()
     :m_currentState(State::IDLE),
-    m_inputCounter(0),
     m_stopSwitch(false)
 {}
 
 Database::~Database(){}
-
-
-unsigned int    Database::getInputCounter()
-{
-    unsigned int oldCounter = m_inputCounter;
-    ++m_inputCounter;
-
-    return oldCounter;
-}
 
 
 std::string Database::getState()
