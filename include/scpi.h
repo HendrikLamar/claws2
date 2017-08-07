@@ -19,12 +19,10 @@
 #define SCPI_H
 
 #include <string>
-/* #include <sys/socket.h>
- * #include <sys/types.h>
- * #include <arpa/inet.h>
- */
+//#include <sys/socket.h>
+//#include <sys/types.h>
+#include <arpa/inet.h>
 
-#include "clawsException.h"
 
 
 /** Top class needed by every device which is accessed over tcp/ip speaking 
@@ -38,10 +36,6 @@ class SCPI
     protected:
         const std::string       m_ipAdress;     ///< Holds the IP Adress
 
-        const std::string       m_ID;           ///< Name of the device.
-                                                ///< It must be the answer to the 
-                                                ///< "*IDN?" command.
-                                                
         const unsigned short    m_port;         //!< Holds the correct port number.
                                                 //!< The default for SCPI is 5025.
         
@@ -53,18 +47,14 @@ class SCPI
                                                 //!< on this socket.
 
         /** Standard initializer with default port 5025 for SCPI.
+         *      - ipAdress is the regular IP adress as string
+         *      - the port is only needed if a different port than 5025 is demanded
          * 
          */
-        SCPI(std::string ipAdress, std::string identification, unsigned short port = 5025) : 
+        SCPI(std::string ipAdress, unsigned short port = 5025) : 
             m_ipAdress(ipAdress),
-            m_ID(identification),
             m_port(port)
-        {
-            initSocket();
-            openSocket();
-            setCommand("*IDN?");
-            closeSocket();
-        }
+        {}
 
         /// Initializes the device. 
         void initSocket();
@@ -89,5 +79,37 @@ class SCPI
         
 };
 
+
+///////////////////////////////////////////////////////////////////////////////
+
+
+
+class KN6700 : public SCPI
+{
+    public:
+
+        /** Standard initializer with default port 5025 for SCPI.
+         *      - ipAdress is the regular IP adress as string
+         *      - identity is the output of *IDN? 
+         *      - the port is only needed if a different port than 5025 is demanded
+         * 
+         */
+        KN6700(std::string ipAdress, std::string identity, unsigned short port = 5025) :
+            SCPI(ipAdress, port),
+            m_ID(identity)
+        {
+            initSocket();
+            checkDevice();
+        }
+
+        void checkDevice();
+        
+    private:
+        const std::string       m_ID;           ///< Name of the device.
+                                                ///< It must be the answer to the 
+                                                ///< "*IDN?" command.
+                                                
+
+};
 
 #endif // SCPI_H

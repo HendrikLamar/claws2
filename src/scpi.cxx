@@ -14,6 +14,7 @@
 //        License:  GPLv3 - 2017, Hendrik Windel 
 // 
 // =====================================================================================
+#include <iostream>
 
 #include <string>
 #include <sstream>
@@ -120,7 +121,8 @@ void SCPI::closeSocket()
 {
     close(m_socket);
 
-    /// \todo Ideally check if the socket is really closed. But currently does not work.
+    /// \todo Ideally check if the socket is really closed. But currently it does not work
+    //  -> see below.
 //    isClosed();
 }
 
@@ -140,6 +142,30 @@ void SCPI::closeSocket()
  *   return n == 0;
  * } 
  */
+
+
+///////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
+
+
+void KN6700::checkDevice()
+{
+    openSocket();
+    setCommand("*IDN?");
+    if( m_ID != getAnswer() )
+    {
+        std::cout << "Wrong device!\n";
+    }
+    else std::cout << "Nice man!\n";
+}
+
+
+
+
+
+
+
+
 
 
 
