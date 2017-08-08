@@ -19,9 +19,19 @@
 #define DATABASE_H
 
 #include <string>
+#include <vector>
+
+#include "readini.h"
 #include "utility.h"
 
-class Database
+
+///////////////////////////////////////////////////////////////////////////////
+//
+///////////////////////////////////////////////////////////////////////////////
+
+
+
+class Database : public ReadIni
 {
 
 
@@ -29,25 +39,22 @@ class Database
         Database();
         virtual ~Database();
 
-        enum State{
-            IDLE,
-            STATE_A,
-            STATE_B
-        };
-
-
-        std::string     getState();
-        void            setState(State state);
-
         void            setStop( bool switcher );
         bool            getStop();
 
     private:
-        State           m_currentState;
         bool            m_stopSwitch;
 
+        ///////////////////////////////////////////////////////////////////////
+        //                  Power Supply
+        //   All settings for the powersupply are send as strings, anyway. Therefore
+        //   we can read them in as strings.
+        ///////////////////////////////////////////////////////////////////////
 
-
+        Utility::Agi_Channel Ch1;
+        Utility::Agi_Channel Ch2;
+        Utility::Agi_Channel Ch3;
+        Utility::Agi_Channel Ch4;
 
 };
 

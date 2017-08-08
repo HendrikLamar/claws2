@@ -1,9 +1,8 @@
 // =====================================================================================
 // 
-//       Filename:  roofi.cxx
+//       Filename:  readini.cxx
 // 
-//    Description:  The ROOt File & Ini manager.
-//                  Stores all the data. RAW and online computed.
+//    Description:  The Ini manager.
 // 
 //        Version:  1.0
 //        Created:  08.05.2017 17:50:24
@@ -30,7 +29,7 @@
 
 
 ReadIni::ReadIni() :
-    m_pathIniDir(boost::filesystem::current_path().string() + "/ini_files/")
+    m_pathWorkingDir(boost::filesystem::current_path())
 {
 
     try
@@ -63,7 +62,7 @@ ReadIni::Initstruct ReadIni::initialize(){
 
     // absolute path to the initializer file with complex conversion from
     // boost::path to string type
-    std::string pathInitializer = m_pathIniDir.string() + fileInitializer;
+    std::string pathInitializer = m_pathWorkingDir.string() + fileInitializer;
 
     // create and parse the property tree
     boost::property_tree::ptree ptree;
@@ -71,6 +70,7 @@ ReadIni::Initstruct ReadIni::initialize(){
     
     // uniform initilization of the Initstruct structure
     ReadIni::Initstruct initStruct{\
+                ptree.get<std::string>("Initializer.ConfigFile_Path"),              \
                 ptree.get<std::string>("Initializer.ConfigFile_Intermediate"),      \
                 ptree.get<std::string>("Initializer.ConfigFile_Physics_Obermaier"), \
                 ptree.get<std::string>("Initializer.ConfigFile_Physics_Merkel"),    \
@@ -83,23 +83,6 @@ ReadIni::Initstruct ReadIni::initialize(){
     return initStruct;
 };
 
-
-
-///////////////////////////////////////////////////////////////////////////////
-
-
-template < class T >
-T ReadIni::getKey( std::string file, std::string key )
-{
-    std::string finalPath = m_pathIniDir.string() + file;
-
-    boost::property_tree::ptree ptree;
-    boost::property_tree::ini_parser::read_ini( finalPath.c_str(), ptree );
-    
-    T output = ptree.get< T > ( key );
-
-    return output;
-};
 
 
 
