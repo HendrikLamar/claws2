@@ -28,6 +28,22 @@
 #include "clawsException.h"
 #include "scpi.h"
 
+
+///////////////////////////////////////////////////////////////////////////////
+
+
+SCPI::SCPI(std::string ipAdress, unsigned short port) : 
+    m_ipAdress(ipAdress),
+    m_port(port)
+{};
+
+
+SCPI::~SCPI()
+{};
+
+
+
+///////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////
 
 void    SCPI::initSocket()
@@ -35,8 +51,8 @@ void    SCPI::initSocket()
     /*
      * Initialize socket with folling options and test if this is doable.
      */
-    int sSocket = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
-    if ( sSocket == -1 )
+    m_socket = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
+    if ( m_socket == -1 )
     {
         throw SCPIException("Initialization failed. Socket not found!");
     }
@@ -145,7 +161,28 @@ void SCPI::closeSocket()
 
 
 ///////////////////////////////////////////////////////////////////////////////
+//
 ///////////////////////////////////////////////////////////////////////////////
+//                      START of KN6700
+///////////////////////////////////////////////////////////////////////////////
+
+
+KN6700::KN6700(std::string ipAdress, std::string identity, unsigned short port) :
+    SCPI(ipAdress, port),
+    m_ID(identity)
+{
+    initSocket();
+    checkDevice();
+};
+
+
+KN6700::~KN6700()
+{
+};
+
+
+///////////////////////////////////////////////////////////////////////////////
+
 
 
 void KN6700::checkDevice()
@@ -154,9 +191,9 @@ void KN6700::checkDevice()
     setCommand("*IDN?");
     if( m_ID != getAnswer() )
     {
-        std::cout << "Wrong device!\n";
+        throw SCPIException("You connected to the wrong device! Is the IP and Identity parameter correct?");
     }
-    else std::cout << "Nice man!\n";
+    closeSocket();
 }
 
 

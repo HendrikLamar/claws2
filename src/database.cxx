@@ -20,40 +20,22 @@
 #include <iostream>
 #include <string>
 
+///////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
 
-Database::Database()
-    :m_currentState(State::IDLE),
+
+Database::Database() :
     m_stopSwitch(false)
-{}
-
-Database::~Database(){}
+{};
 
 
-std::string Database::getState()
-{
-    std::string retArg;
-    switch(m_currentState){
-        case State::IDLE:
-            retArg = "IDLE";
-            break;
-        case State::STATE_A:
-            retArg = "STATE_A";
-            break;
-        case State::STATE_B:
-            retArg = "STATE_B";
-            break;
-        default:
-            std::cout << "No State available!\n";
 
-    }
-    return retArg;
-}
+Database::~Database(){};
 
-void Database::setState(State state)
-{
-    m_currentState = state;
-}
 
+
+///////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
 
 void Database::setStop(bool switcher)
 {

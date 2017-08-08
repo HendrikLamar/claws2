@@ -51,10 +51,9 @@ class SCPI
          *      - the port is only needed if a different port than 5025 is demanded
          * 
          */
-        SCPI(std::string ipAdress, unsigned short port = 5025) : 
-            m_ipAdress(ipAdress),
-            m_port(port)
-        {}
+        SCPI(std::string ipAdress, unsigned short port = 5025);
+
+        virtual ~SCPI();
 
         /// Initializes the device. 
         void initSocket();
@@ -94,14 +93,11 @@ class KN6700 : public SCPI
          *      - the port is only needed if a different port than 5025 is demanded
          * 
          */
-        KN6700(std::string ipAdress, std::string identity, unsigned short port = 5025) :
-            SCPI(ipAdress, port),
-            m_ID(identity)
-        {
-            initSocket();
-            checkDevice();
-        }
+        KN6700(std::string ipAdress, std::string identity, unsigned short port = 5025);
 
+        virtual ~KN6700();
+
+        // checks if the device is available and respons the device name we expect
         void checkDevice();
         
     private:

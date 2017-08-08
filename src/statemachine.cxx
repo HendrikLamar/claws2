@@ -40,16 +40,13 @@ MyState::MyState() :
     // create a vector of pairs to create the 'printHelp()' function
     for(unsigned int i = 0; i < m_nickname.size(); ++i){
         m_tuple.push_back(std::make_pair(m_nickname.at(i), m_description.at(i)));
+    }
 
     m_daq->initiate();
-
-    }
+}
 
 
 ///////////////////////////////////////////////////////////////////////////////
-
-
-}
 
 MyState::~MyState()
 {
@@ -101,7 +98,7 @@ void MyState::doMenu()
 {
     printWelcome();
     try{
-        KN6700 powsup("192.168.0.11","Agilent Technologies,N6700B,MY54004242,D.04.01" );
+        KN6700 powsup("192.168.0.11","Agilent Technologies,N6700B,MY54004242,D.04.01");
     }
     catch(SCPIException exep){
         std::cout << exep.what() << std::endl;
