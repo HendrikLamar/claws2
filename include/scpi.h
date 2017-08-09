@@ -79,33 +79,5 @@ class SCPI
 };
 
 
-///////////////////////////////////////////////////////////////////////////////
-
-
-
-class KN6700 : public SCPI
-{
-    public:
-
-        /** Standard initializer with default port 5025 for SCPI.
-         *      - ipAdress is the regular IP adress as string
-         *      - identity is the output of *IDN? 
-         *      - the port is only needed if a different port than 5025 is demanded
-         * 
-         */
-        KN6700(std::string ipAdress, std::string identity, unsigned short port = 5025);
-
-        virtual ~KN6700();
-
-        // checks if the device is available and respons the device name we expect
-        void checkDevice();
-        
-    private:
-        const std::string       m_ID;           ///< Name of the device.
-                                                ///< It must be the answer to the 
-                                                ///< "*IDN?" command.
-                                                
-
-};
 
 #endif // SCPI_H

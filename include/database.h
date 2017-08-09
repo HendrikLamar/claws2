@@ -45,16 +45,6 @@ class Database : public ReadIni
     private:
         bool            m_stopSwitch;
 
-        ///////////////////////////////////////////////////////////////////////
-        //                  Power Supply
-        //   All settings for the powersupply are send as strings, anyway. Therefore
-        //   we can read them in as strings.
-        ///////////////////////////////////////////////////////////////////////
-
-        Utility::Agi_Channel Ch1;
-        Utility::Agi_Channel Ch2;
-        Utility::Agi_Channel Ch3;
-        Utility::Agi_Channel Ch4;
 
 };
 
