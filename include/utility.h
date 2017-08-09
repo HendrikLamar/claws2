@@ -47,7 +47,7 @@ namespace Utility{
     //! Struct for a N6700 channel.
     //! This might be useful in later version of the code where a change without
     //! ini-file editing is wanted.
-    struct K_Channel 
+    struct Agi_Channel 
     {
         std::string         volt;
         std::string         curr;
