@@ -23,6 +23,7 @@
 
 #include "readini.h"
 #include "utility.h"
+#include "n6700.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -31,7 +32,9 @@
 
 
 
-class Database : public ReadIni
+class Database : 
+    public ReadIni,
+    public KPS_Channels
 {
 
 
@@ -50,11 +53,16 @@ class Database : public ReadIni
         //   All settings for the powersupply are send as strings, anyway. Therefore
         //   we can read them in as strings.
         ///////////////////////////////////////////////////////////////////////
+        
+        KPS_Channels            m_n6700_channels;
 
-        Utility::Agi_Channel Ch1;
-        Utility::Agi_Channel Ch2;
-        Utility::Agi_Channel Ch3;
-        Utility::Agi_Channel Ch4;
+
+
+        //! Void function which reads in the powersupply settings for low and
+        //! high gain mode.
+        void KPS_readIni( Utility::ClawsGain HIGH_LOW_GAIN );
+        
+
 
 };
 

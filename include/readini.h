@@ -52,7 +52,7 @@ class ReadIni
         //! Returns the key you specify from the file you specify.
         //! Possible files
         template < class T >
-        T getKey(std::string file, std::string key);
+        T getKey( std::string file, std::string key);
 
     protected:
         //! Contains the current working directory.

@@ -18,6 +18,7 @@
 #ifndef UTILITY_H
 #define UTILITY_H
 
+#include <map>
 #include <string>
 
 #include <libps6000-1.4/ps6000Api.h>
@@ -43,16 +44,10 @@ namespace Utility{
         CLAWS_TRIGGER_ADVANCED,
     };
     
-
-    //! Struct for a N6700 channel.
-    //! This might be useful in later version of the code where a change without
-    //! ini-file editing is wanted.
-    struct Agi_Channel 
+    enum ClawsGain
     {
-        std::string         volt;
-        std::string         curr;
-        std::string         curr_limit;
-        std::string         active;
+        HIGH_GAIN,
+        LOW_GAIN
     };
 
 }
