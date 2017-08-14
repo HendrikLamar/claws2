@@ -23,6 +23,8 @@
 #include <string>
 #include <map>
 
+#include "database.h"
+#include "utility.h"
 #include "scpi.h"
 
 
@@ -110,14 +112,27 @@ class N6700 : public SCPI
          *      - the port is only needed if a different port than 5025 is demanded
          * 
          */
-        N6700(std::string ipAdress, std::string identity, unsigned short port = 5025);
+//        N6700(std::string ipAdress, std::string identity, unsigned short port = 5025);
+        N6700( Database* database );
 
         virtual ~N6700();
 
-        // checks if the device is available and respons the device name we expect
+        //! checks if the device is available and respons the device name we expect
         void checkDevice();
+
+
+        //! Sends the configuration stored in the database to the PSU
+        void setConf( Utility::ClawsGain gain );
+
+
+        //! Turns the channels on (true) or off (false).
+        void setOutput( bool tmp );
         
     private:
+        Database*               m_database;
+
+
+
         const std::string       m_ID;           ///< Name of the device.
                                                 ///< It must be the answer to the 
                                                 ///< "*IDN?" command.

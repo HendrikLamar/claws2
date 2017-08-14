@@ -35,11 +35,15 @@
 SCPI::SCPI(std::string ipAdress, unsigned short port) : 
     m_ipAdress(ipAdress),
     m_port(port)
-{};
+{
+    initSocket();
+};
 
 
 SCPI::~SCPI()
-{};
+{
+    closeSocket();
+};
 
 
 

@@ -16,19 +16,28 @@
 // =====================================================================================
 
 
-#include "statemachine.h"
-#include "database.h"
+//#include "statemachine.h"
+//#include "database.h"
 
 #include <iostream>
+#include <string>
 
 
 int main()
 {
 
-    Database database;
+/*     Database database;
+ * 
+ *     database.N6700_readPSConf();
+ *     database.N6700_readChSet();
+ */
 
-    database.N6700_readPSConf();
-    database.N6700_readChSet();
+    std::string::size_type sz;
+
+    std::string sport = "5025";
+    unsigned short port = std::stoi(sport, &sz);
+
+    std::cout << port << "\t" << sport << "\t" << sz << std::endl;
 
     return 0;
 };
