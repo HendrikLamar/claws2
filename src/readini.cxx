@@ -29,7 +29,8 @@
 
 
 ReadIni::ReadIni() :
-    m_pathIniDir(boost::filesystem::current_path().string() + "/ini_files/")
+    m_pathIniDir(boost::filesystem::canonical(
+            boost::filesystem::current_path()).string() + "/ini_files/")
 {
 
     try
@@ -71,31 +72,17 @@ ReadIni::Initstruct ReadIni::initialize(){
     // uniform initilization of the Initstruct structure
     ReadIni::Initstruct initStruct{\
 //                ptree.get<std::string>("Initializer.ConfigFile_Path"),            
-                ptree.get<std::string>("Initializer.ConfigFile_Intermediate"),      \
-                ptree.get<std::string>("Initializer.ConfigFile_Physics_Obermaier"), \
-                ptree.get<std::string>("Initializer.ConfigFile_Physics_Merkel"),    \
-                ptree.get<std::string>("Initializer.ConfigFile_Physics_Schiffer"),  \
-                ptree.get<std::string>("Initializer.ConfigFile_Physics_Klum"),      \
-                ptree.get<std::string>("Initializer.ConfigFile_Physics_Garrn"),     \
-                ptree.get<std::string>("Initializer.ConfigFile_PowerSupply"),     \
+        m_pathIniDir.string () + ptree.get<std::string>("Initializer.ConfigFile_Intermediate"),      \
+        m_pathIniDir.string () + ptree.get<std::string>("Initializer.ConfigFile_Physics_Obermaier"), \
+        m_pathIniDir.string () + ptree.get<std::string>("Initializer.ConfigFile_Physics_Merkel"),    \
+        m_pathIniDir.string () + ptree.get<std::string>("Initializer.ConfigFile_Physics_Schiffer"),  \
+        m_pathIniDir.string () + ptree.get<std::string>("Initializer.ConfigFile_Physics_Klum"),      \
+        m_pathIniDir.string () + ptree.get<std::string>("Initializer.ConfigFile_Physics_Garrn"),     \
+        m_pathIniDir.string() + ptree.get<std::string>("Initializer.ConfigFile_PowerSupply"),     \
     };
     
     return initStruct;
 };
-
-
-template < class T >
-T ReadIni::getKey( std::string file, std::string key )
-{
-    boost::property_tree::ptree ptree;
-    boost::property_tree::ini_parser::read_ini(file.c_str(), ptree);
-
-    T output = ptree.get< T >( key );
-
-    return output;
-    
-};
-
 
 
 

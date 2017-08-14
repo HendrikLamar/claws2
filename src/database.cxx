@@ -19,6 +19,7 @@
 #include "utility.h"
 #include "n6700.h"
 #include "clawsException.h"
+#include "readini.h"
 
 #include <iostream>
 #include <string>
@@ -36,8 +37,6 @@ Database::Database() :
     //          Powersupply
     ///////////////////////////////////////////////////////////////////////////
 
-    KPS_Channels        m_n6700_channels;
-    
 };
 
 
@@ -78,24 +77,9 @@ bool Database::getStop()
 ///////////////////////////////////////////////////////////////////////////////
 
 
-void Database::KPS_readIni( Utility::ClawsGain HIGH_LOW_GAIN )
+// reads in high AND low gain mode everytime it is called.
+void Database::N6700_readChSet() 
 {
-    std::string gain;
-    switch ( HIGH_LOW_GAIN )
-    {
-
-        case Utility::HIGH_GAIN:
-            gain = "Low_Gain";
-            break;
-
-        case Utility::LOW_GAIN:
-            gain = "Low_Gain";
-            break;
-
-        default:
-            throw SCPIException("Wrong HIGH_LOW_GAIN input!");
-
-    }
 
     for ( size_t ii = 0; ii < m_KPS_mode.size(); ++ii ) {
         for ( size_t jj = 0; jj < m_KPS_channels.size(); ++jj ) {
@@ -107,12 +91,19 @@ void Database::KPS_readIni( Utility::ClawsGain HIGH_LOW_GAIN )
                     m_KPS_settings.at(kk);
                 
                 // reading the 
-                
                 m_n6700_channels.setKey( 
                         m_KPS_mode.at(ii), 
                         m_KPS_channels.at(jj), 
                         m_KPS_settings.at(kk), 
-                        ReadIni::getKey< std::string >( m_initstruct.m_filePowerSupply, key));
+                        ReadIni::getKey< std::string >( 
+                            m_initstruct.m_filePowerSupply, 
+                            key)
+                        );
+
+//                std::cout << "Key: " << key << "\n" << ReadIni::getKey< std::string >( 
+//                            m_initstruct.m_filePowerSupply, 
+//                            key) << std::endl;
+
             };
         };
     };
@@ -122,6 +113,52 @@ void Database::KPS_readIni( Utility::ClawsGain HIGH_LOW_GAIN )
 
 
 
+
+void Database::N6700_readPSConf()
+{
+    std::string root = "Connect.";
+
+
+    std::string ip = root + "Server";
+
+    m_n6700_connect.ip = ReadIni::getKey< std::string > (
+            m_initstruct.m_filePowerSupply, ip);
+
+
+
+    std::string port = root + "Port";
+
+    m_n6700_connect.port = ReadIni::getKey< std::string > (
+            m_initstruct.m_filePowerSupply, port);
+
+
+
+    std::string identity = root + "Identity";
+
+    m_n6700_connect.id = ReadIni::getKey< std::string > (
+            m_initstruct.m_filePowerSupply, identity);
+
+
+
+
+    return;
+
+}
+
+
+
+
+KPS_Channels Database::N6700_getChannels()
+{
+    return m_n6700_channels;
+}
+
+
+
+Utility::N6700_connect Database::N6700_getConnect()
+{
+    return m_n6700_connect;
+}
 
 
 ///////////////////////////////////////////////////////////////////////////////

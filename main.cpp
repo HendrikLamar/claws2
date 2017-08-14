@@ -17,15 +17,18 @@
 
 
 #include "statemachine.h"
+#include "database.h"
+
+#include <iostream>
 
 
 int main()
 {
 
+    Database database;
 
-    MyState mystate;
-
-    mystate.doMenu();
+    database.N6700_readPSConf();
+    database.N6700_readChSet();
 
     return 0;
 };

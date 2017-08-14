@@ -19,6 +19,10 @@
 #define READINI_H 
 
 #include <boost/filesystem.hpp>
+#include <boost/filesystem.hpp>
+#include <boost/property_tree/ptree.hpp>
+#include <boost/property_tree/ini_parser.hpp>
+
 #include <string>
 
 class ReadIni
@@ -29,6 +33,9 @@ class ReadIni
 
         //! Standard Destructor
         virtual ~ReadIni();
+
+
+
 
         //! Contains all the values from the initializer.ini file.
         struct Initstruct
@@ -45,14 +52,35 @@ class ReadIni
             std::string m_filePowerSupply;
         };
 
+
+
+
         //! Reads in the very first initializer and return a struct containing all
         // the variables.
         Initstruct initialize();
 
+
+
+
+
         //! Returns the key you specify from the file you specify.
-        //! Possible files
+        //! Since it is a tempalte function it is specified header only.
         template < class T >
-        T getKey( std::string file, std::string key);
+        T getKey( std::string file, std::string key )
+        {
+            boost::property_tree::ptree ptree;
+            boost::property_tree::ini_parser::read_ini(file.c_str(), ptree);
+        
+            T output = ptree.get< T >( key );
+        
+            return output;
+            
+        };
+
+
+
+
+
 
     protected:
         //! Contains the current working directory.

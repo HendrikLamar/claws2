@@ -44,25 +44,43 @@ class Database :
 
         void            setStop( bool switcher );
         bool            getStop();
+        
+
+
+
+
+        ///////////////////////////////////////////////////////////////////////
+        //                  Power Supply
+        //   All settings for the powersupply are send as strings. 
+        ///////////////////////////////////////////////////////////////////////
+        
+
+        //! Void function which reads in the powersupply settings for low and
+        //! high gain mode.
+        void N6700_readChSet();
+        
+        //! Reads in the n6700.ini file.
+        void N6700_readPSConf();
+
+        //! Returns a nested pair-construct with high-/low gain settings for
+        //! all four channels.
+        KPS_Channels N6700_getChannels();
+
+        //! Returns a struct with ip, id, and port for the n6700.
+        Utility::N6700_connect N6700_getConnect();
+
 
     private:
         bool            m_stopSwitch;
 
         ///////////////////////////////////////////////////////////////////////
         //                  Power Supply
-        //   All settings for the powersupply are send as strings, anyway. Therefore
-        //   we can read them in as strings.
+        //   All settings for the powersupply are send as strings. 
         ///////////////////////////////////////////////////////////////////////
         
         KPS_Channels            m_n6700_channels;
-
-
-
-        //! Void function which reads in the powersupply settings for low and
-        //! high gain mode.
-        void KPS_readIni( Utility::ClawsGain HIGH_LOW_GAIN );
-        
-
+         
+        Utility::N6700_connect  m_n6700_connect;
 
 };
 

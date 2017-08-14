@@ -32,10 +32,13 @@ namespace Utility{
     */
     extern bool pReady;
     // I am not sure whats going on here.
-    void CallBackBlock(
+    void CallBackBlock
+    (
             int16_t         handle,          \
             PICO_STATUS     t_status,        \
-            void            *pParameter);
+            void            *pParameter
+    );
+
     ////////////////////////////////////////////////////////////////////////
 
     enum CLAWS_TRIGGER_MODE{
@@ -49,6 +52,19 @@ namespace Utility{
         HIGH_GAIN,
         LOW_GAIN
     };
+    
+
+    ////////////////////////////////////////////////////////////////////////
+
+
+    struct N6700_connect
+    {
+        std::string ip;
+        std::string id;
+        std::string port; 
+    };
+
+
 
 }
 #endif //UTILITY_H

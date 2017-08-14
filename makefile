@@ -34,6 +34,7 @@ endif
 #
 ###################################
 all: CFLAGS += -g -O0 -Wall
+#all: build
 all: clean build
 
 # run release compilation

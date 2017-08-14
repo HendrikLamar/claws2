@@ -9,10 +9,11 @@
 PICO_OBJS += ./build/src/pico.o
 PICO_OBJS += ./build/src/claws.o
 PICO_OBJS += ./build/src/utility.o
-PICO_OBJS += ./build/src/roofi.o
+PICO_OBJS += ./build/src/readini.o
 PICO_OBJS += ./build/src/statemachine.o
 PICO_OBJS += ./build/src/database.o
 PICO_OBJS += ./build/src/scpi.o
+PICO_OBJS += ./build/src/n6700.o
 #PICO_OBJS += ./build/src/clawsException.o
 
 
