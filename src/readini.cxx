@@ -35,7 +35,7 @@ ReadIni::ReadIni() :
 
     try
     {
-        m_initstruct = initialize();
+        initialize();
     }
     catch( boost::property_tree::ptree_error excep) 
     {
@@ -56,7 +56,7 @@ ReadIni::~ReadIni()
 ///////////////////////////////////////////////////////////////////////////////
 
 
-ReadIni::Initstruct ReadIni::initialize(){
+void ReadIni::initialize(){
 
     // relativ path to the initializer file 
     std::string fileInitializer             {"/initializer.ini"};
@@ -70,7 +70,7 @@ ReadIni::Initstruct ReadIni::initialize(){
     boost::property_tree::ini_parser::read_ini(pathInitializer.c_str(), ptree);
     
     // uniform initilization of the Initstruct structure
-    ReadIni::Initstruct initStruct{\
+    ReadIni::Initstruct m_initstruct{\
 //                ptree.get<std::string>("Initializer.ConfigFile_Path"),            
         m_pathIniDir.string () + ptree.get<std::string>("Initializer.ConfigFile_Intermediate"),      \
         m_pathIniDir.string () + ptree.get<std::string>("Initializer.ConfigFile_Physics_Obermaier"), \
@@ -81,9 +81,12 @@ ReadIni::Initstruct ReadIni::initialize(){
         m_pathIniDir.string() + ptree.get<std::string>("Initializer.ConfigFile_PowerSupply"),     \
     };
     
-    return initStruct;
 };
 
 
+ReadIni::Initstruct ReadIni::getInitstruct()
+{
+    return m_initstruct;
+}
 
 

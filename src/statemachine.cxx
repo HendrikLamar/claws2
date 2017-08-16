@@ -97,12 +97,6 @@ char MyState::getKey()
 void MyState::doMenu()
 {
     printWelcome();
-    try{
-        N6700 powsup("192.168.0.11","Agilent Technologies,N6700B,MY54004242,D.04.01");
-    }
-    catch(SCPIException exep){
-        std::cout << exep.what() << std::endl;
-    }
     char key = getKey();
     while ( true )
     {

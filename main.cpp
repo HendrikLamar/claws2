@@ -32,12 +32,39 @@ int main()
  *     database.N6700_readChSet();
  */
 
-    std::string::size_type sz;
 
-    std::string sport = "5025";
-    unsigned short port = std::stoi(sport, &sz);
+    std::string cmd = "S";
+    std::string fcmd;
 
-    std::cout << port << "\t" << sport << "\t" << sz << std::endl;
+    std::string::iterator it = cmd.begin();
+    std::string::iterator itB = cmd.begin();
+    std::string::iterator itE = cmd.end();
+
+//    if ( cmd.size() > 1 )
+    {
+        for ( itB; itB != itE; ++itB )
+        {
+            std::cout << itB - it << std::endl;
+           if ( itB == itE - 1 )
+           {
+                fcmd += *itB;
+                break;
+           }
+            
+           fcmd += *itB;
+           fcmd += ",";
+
+        }
+    }
+
+
+    std::cout << "Before: " << cmd << "\tAfter: " << fcmd << std::endl;
+
+/*     std::cout << itE - itB << std::endl;
+ * //    std::cout << itB << "\n" << itE << "\n";
+ *     std::cout << cmd.size() << std::endl;
+ */
+
 
     return 0;
 };

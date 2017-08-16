@@ -23,7 +23,7 @@
 
 #include "readini.h"
 #include "utility.h"
-#include "n6700.h"
+#include "n6700_channels.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -32,9 +32,7 @@
 
 
 
-class Database : 
-    public ReadIni,
-    public KPS_Channels
+class Database
 {
 
 
@@ -64,23 +62,26 @@ class Database :
 
         //! Returns a nested pair-construct with high-/low gain settings for
         //! all four channels.
-        KPS_Channels N6700_getChannels();
+        N6700_Channels N6700_getChannels() const;
 
         //! Returns a struct with ip, id, and port for the n6700.
-        Utility::N6700_connect N6700_getConnect();
+        Utility::N6700_connect N6700_getConnect() const;
 
 
     private:
-        bool            m_stopSwitch;
+        bool                m_stopSwitch;
+
+        ReadIni*            m_initReader;
+
 
         ///////////////////////////////////////////////////////////////////////
         //                  Power Supply
         //   All settings for the powersupply are send as strings. 
         ///////////////////////////////////////////////////////////////////////
+
+        N6700_Channels*             m_N6700_Channels;
         
-        KPS_Channels            m_n6700_channels;
-         
-        Utility::N6700_connect  m_n6700_connect;
+        Utility::N6700_connect      m_n6700_connect;
 
 };
 

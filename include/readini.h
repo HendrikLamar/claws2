@@ -54,11 +54,11 @@ class ReadIni
 
 
 
-
         //! Reads in the very first initializer and return a struct containing all
         // the variables.
-        Initstruct initialize();
+        void        initialize();
 
+        Initstruct  getInitstruct();
 
 
 

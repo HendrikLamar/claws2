@@ -30,8 +30,9 @@
 
 
 Database::Database() :
-    ReadIni(),
-    m_stopSwitch(false)
+    m_stopSwitch(false),
+    m_initReader(new ReadIni()),
+    m_N6700_Channels(new N6700_Channels())
 {
     ///////////////////////////////////////////////////////////////////////////
     //          Powersupply
@@ -41,7 +42,14 @@ Database::Database() :
 
 
 
-Database::~Database(){};
+Database::~Database()
+{
+    delete m_initReader;
+    m_initReader = nullptr;
+
+    delete m_N6700_Channels;
+    m_N6700_Channels = nullptr;
+};
 
 
 
@@ -81,27 +89,28 @@ bool Database::getStop()
 void Database::N6700_readChSet() 
 {
 
-    for ( size_t ii = 0; ii < m_KPS_mode.size(); ++ii ) {
-        for ( size_t jj = 0; jj < m_KPS_channels.size(); ++jj ) {
-            for ( size_t kk = 0; kk < m_KPS_settings.size(); ++kk ) {
+    for ( size_t ii = 0; ii < m_N6700_Channels->Gains.size(); ++ii ) {
+        for ( size_t jj = 0; jj < m_N6700_Channels->Channels.size(); ++jj ) {
+            for ( size_t kk = 0; kk < m_N6700_Channels->Settings.size(); ++kk ) {
 
                 // assembling of the key for every loop iteration
                 std::string key = 
-                    m_KPS_mode.at(ii) + "." + m_KPS_channels.at(jj) + 
-                    m_KPS_settings.at(kk);
+                    m_N6700_Channels->Gains.at(ii) + "." + 
+                    m_N6700_Channels->Channels.at(jj) + 
+                    m_N6700_Channels->Settings.at(kk);
                 
-                // reading the 
-                m_n6700_channels.setKey( 
-                        m_KPS_mode.at(ii), 
-                        m_KPS_channels.at(jj), 
-                        m_KPS_settings.at(kk), 
-                        ReadIni::getKey< std::string >( 
-                            m_initstruct.m_filePowerSupply, 
+                // reading the ini-file and storing it in
+                m_N6700_Channels->setKey( 
+                        m_N6700_Channels->Gains.at(ii), 
+                        m_N6700_Channels->Channels.at(jj), 
+                        m_N6700_Channels->Settings.at(kk), 
+                        m_initReader->getKey< std::string >( 
+                            m_initReader->getInitstruct().m_filePowerSupply, 
                             key)
                         );
 
-//                std::cout << "Key: " << key << "\n" << ReadIni::getKey< std::string >( 
-//                            m_initstruct.m_filePowerSupply, 
+//                std::cout << "Key: " << key << "\n" << m_initReader->getKey< std::string >( 
+//                            m_initReader->getInitstruct()->m_filePowerSupply, 
 //                            key) << std::endl;
 
             };
@@ -121,22 +130,22 @@ void Database::N6700_readPSConf()
 
     std::string ip = root + "Server";
 
-    m_n6700_connect.ip = ReadIni::getKey< std::string > (
-            m_initstruct.m_filePowerSupply, ip);
+    m_n6700_connect.ip = m_initReader->getKey< std::string > (
+            m_initReader->getInitstruct().m_filePowerSupply, ip);
 
 
 
     std::string port = root + "Port";
 
-    m_n6700_connect.port = ReadIni::getKey< std::string > (
-            m_initstruct.m_filePowerSupply, port);
+    m_n6700_connect.port = m_initReader->getKey< std::string > (
+            m_initReader->getInitstruct().m_filePowerSupply, port);
 
 
 
     std::string identity = root + "Identity";
 
-    m_n6700_connect.id = ReadIni::getKey< std::string > (
-            m_initstruct.m_filePowerSupply, identity);
+    m_n6700_connect.id = m_initReader->getKey< std::string > (
+            m_initReader->getInitstruct().m_filePowerSupply, identity);
 
 
 
@@ -148,14 +157,14 @@ void Database::N6700_readPSConf()
 
 
 
-KPS_Channels Database::N6700_getChannels()
+N6700_Channels Database::N6700_getChannels() const
 {
-    return m_n6700_channels;
+    return *m_N6700_Channels;
 }
 
 
 
-Utility::N6700_connect Database::N6700_getConnect()
+Utility::N6700_connect Database::N6700_getConnect() const
 {
     return m_n6700_connect;
 }

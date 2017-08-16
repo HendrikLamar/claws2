@@ -74,6 +74,9 @@ void N6700::setConf( Utility::ClawsGain HIGH_LOW_GAIN )
             break;
     }
 
+
+
+
     
 
 
@@ -83,9 +86,56 @@ void N6700::setConf( Utility::ClawsGain HIGH_LOW_GAIN )
 
 void N6700::setOutput( bool tmp )
 {
+
+    // first check which channels need to be turned on, usually its every channel
+    std::string strtmp;
+    
+    if ( m_database->N6700_getChannels().getKey("High_Gain", "Ch1", "Active") == "true" )
+    {
+        strtmp += "1";
+    }
+    else if ( m_database->N6700_getChannels().getKey("High_Gain", "Ch2", "Active") == "true" )
+    {
+        strtmp += "2";
+    }
+    else if ( m_database->N6700_getChannels().getKey("High_Gain", "Ch3", "Active") == "true" )
+    {
+        strtmp += "3";
+    }
+    else if ( m_database->N6700_getChannels().getKey("High_Gain", "Ch4", "Active") == "true" )
+    {
+        strtmp += "4";
+    }
+
+
+
+    // second, add a ',' between each channel number
+    //
+    std::string tcmd;
+
+    for ( std::string::iterator itB = strtmp.begin(); 
+            itB != strtmp.end(); ++itB )
+    {
+       if ( itB == strtmp.end() - 1 )
+       {
+            tcmd += *itB;
+            break;
+       }
+        
+       tcmd += *itB;
+       tcmd += ",";
+
+    }
+
+
+
+    // third, assemply the final command and send it to the PSU
+    //
+    std::string cmd = "OUTP ON, (@" + tcmd + ")";
+
     if ( tmp )
     {
-        setCommand("OUTP ON, (@1:4)");
+        setCommand(cmd);
     }
     else setCommand("OUTP OFF, (@1:4)");
 
