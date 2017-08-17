@@ -21,6 +21,9 @@
 
 #include <iostream>
 #include <string>
+#include <cstdlib>
+#include <cstring>
+#include <vector>
 
 
 int main()
@@ -32,38 +35,8 @@ int main()
  *     database.N6700_readChSet();
  */
 
-
-    std::string cmd = "S";
-    std::string fcmd;
-
-    std::string::iterator it = cmd.begin();
-    std::string::iterator itB = cmd.begin();
-    std::string::iterator itE = cmd.end();
-
-//    if ( cmd.size() > 1 )
-    {
-        for ( itB; itB != itE; ++itB )
-        {
-            std::cout << itB - it << std::endl;
-           if ( itB == itE - 1 )
-           {
-                fcmd += *itB;
-                break;
-           }
-            
-           fcmd += *itB;
-           fcmd += ",";
-
-        }
-    }
-
-
-    std::cout << "Before: " << cmd << "\tAfter: " << fcmd << std::endl;
-
-/*     std::cout << itE - itB << std::endl;
- * //    std::cout << itB << "\n" << itE << "\n";
- *     std::cout << cmd.size() << std::endl;
- */
+    std::string text{"+8.002310E+01,+7.995900E+00,+7.991475E+00,+7.999256E+02"};
+//    std::string text{"+8.002310E+01"};
 
 
     return 0;

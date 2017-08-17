@@ -53,8 +53,17 @@ class N6700 : public SCPI
 
 
         //! Turns the channels on (true) or off (false).
-        void setOutput( bool tmp );
+        void turnChannelsOnOff( bool tmp );
         
+
+        //! Returns the current measured voltage of all channels in a vector
+        //! of doubles. The value for Channel 1 is at vector.at(0) and so on...
+        std::vector < double > getVolt();
+
+        //! Returns the current measured current of all channels in a vector
+        //! of doubles. The value for Channel 1 is at vector.at(0) and so on...
+        std::vector < double > getCurr();
+
     private:
         std::string::size_type  m_sz;
         Database*               m_database;
@@ -65,7 +74,6 @@ class N6700 : public SCPI
                                                 ///< It must be the answer to the 
                                                 ///< "*IDN?" command.
                                                 
-
 };
 
 

@@ -15,7 +15,9 @@
 // 
 // =====================================================================================
 #include <iostream>
-
+#include <vector>
+#include <cstdlib>
+#include <cstring>
 #include <string>
 #include <sstream>
 #include <sys/socket.h>
@@ -165,11 +167,39 @@ void SCPI::closeSocket()
 
 
 ///////////////////////////////////////////////////////////////////////////////
-//
 
 
 
 
+std::vector < double > SCPI::splitStringbyComma( std::string text )
+{
+    std::string tmp;
+    std::vector< double > output;
+
+    for ( std::string::iterator it = text.begin(); it != text.end(); ++it)
+    {
+
+        if ( strncmp( &*it, ",", 1 ) == 0 )
+        {
+            output.push_back( atof( tmp.c_str() ) );
+            tmp.erase(); 
+        }
+        else if ( it == text.end() - 1 )
+        {
+            tmp += *it;
+            output.push_back( atof( tmp.c_str() ) );
+            break;
+
+        }
+        else
+        {
+            tmp += *it;
+        }
+
+    }
+
+    return output;
+}
 
 
 

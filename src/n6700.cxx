@@ -61,6 +61,14 @@ void N6700::checkDevice()
 void N6700::setConf( Utility::ClawsGain HIGH_LOW_GAIN )
 {
     
+/*         const std::vector< std::string > Channels{"Ch1", "Ch2", "Ch3", "Ch4"};
+ * 
+ *         //! Vector containing all possible settings per channel.
+ *         const std::vector< std::string > Settings{"Active", "CurrLimit", "Volt"};
+ * 
+ *         //! Vector containing all possible modes (e.g. High_Gain, Low_Gain).
+ *         const std::vector< std::string > Gains{"High_Gain", "Low_Gain"};
+ */
     std::string gain;
 
     switch( HIGH_LOW_GAIN )
@@ -74,6 +82,7 @@ void N6700::setConf( Utility::ClawsGain HIGH_LOW_GAIN )
             break;
     }
 
+//    std::string rootVolt = 
 
 
 
@@ -84,7 +93,7 @@ void N6700::setConf( Utility::ClawsGain HIGH_LOW_GAIN )
 
 
 
-void N6700::setOutput( bool tmp )
+void N6700::turnChannelsOnOff( bool tmp )
 {
 
     // first check which channels need to be turned on, usually its every channel
@@ -137,7 +146,40 @@ void N6700::setOutput( bool tmp )
     {
         setCommand(cmd);
     }
+
+    // if channels should be turned off, turn all of them off
+    //
     else setCommand("OUTP OFF, (@1:4)");
 
     return;
+}
+
+
+
+std::vector< double > N6700::getVolt()
+{
+    setCommand("MEAS:VOLT? (@1:4)");
+    
+    std::string tmp = getAnswer();
+
+    std::vector< double > output = splitStringbyComma( tmp );
+
+
+    return output;
+
+}
+
+
+
+std::vector< double > N6700::getCurr()
+{
+    setCommand("MEAS:CURR? (@1:4)");
+    
+    std::string tmp = getAnswer();
+
+    std::vector< double > output = splitStringbyComma( tmp );
+
+
+    return output;
+
 }

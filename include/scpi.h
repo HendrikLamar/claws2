@@ -19,9 +19,11 @@
 #define SCPI_H
 
 #include <string>
+#include <vector>
 //#include <sys/socket.h>
 //#include <sys/types.h>
 #include <arpa/inet.h>
+
 
 
 
@@ -72,6 +74,10 @@ class SCPI
         /// Receives and returns the answer from the device.
         std::string getAnswer(); 
 
+        /// Splits a string (e.g. the return value of a voltage measurement of
+        /// one or multiple channels) by comma and returns each channel in
+        /// consecutive in a vector<double>.
+        std::vector< double > splitStringbyComma( std::string text );
         
     private:
         bool isClosed();
