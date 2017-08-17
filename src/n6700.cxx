@@ -20,6 +20,7 @@
 #include "clawsException.h"
 #include "utility.h"
 #include "database.h"
+#include "n6700_channels.h"
 
 #include <string>
 
@@ -58,17 +59,17 @@ void N6700::checkDevice()
 }
 
 
+
+
+
+///////////////////////////////////////////////////////////////////////////////
+
+
+
+
+
 void N6700::setConf( Utility::ClawsGain HIGH_LOW_GAIN )
 {
-    
-/*         const std::vector< std::string > Channels{"Ch1", "Ch2", "Ch3", "Ch4"};
- * 
- *         //! Vector containing all possible settings per channel.
- *         const std::vector< std::string > Settings{"Active", "CurrLimit", "Volt"};
- * 
- *         //! Vector containing all possible modes (e.g. High_Gain, Low_Gain).
- *         const std::vector< std::string > Gains{"High_Gain", "Low_Gain"};
- */
     std::string gain;
 
     switch( HIGH_LOW_GAIN )
@@ -81,15 +82,45 @@ void N6700::setConf( Utility::ClawsGain HIGH_LOW_GAIN )
             gain = "High_Gain";
             break;
     }
+    
+    std::string cmd;
 
-//    std::string rootVolt = 
-
-
-
+    std::string rSetVolt = ":VOLT:LEV ";
+    std::string spacer = ";";
+    std::string sCh = "(@"; 
+    std::string eCh = ")";
     
 
+    N6700_Channels  tmp_channels = m_database->N6700_getChannels();
+
+    for ( unsigned long ii = 0; ii < tmp_channels.Channels.size(); ++ii )
+    {
+        cmd += rSetVolt + tmp_channels.getKey(gain, tmp_channels.Channels.at(ii), "Volt")
+            + ", " + sCh + std::to_string(ii+1) + eCh;
+
+        // if it is not the last part, add a semicolon as separation pattern
+        if ( ii != tmp_channels.Channels.size() - 1 )
+        {
+            cmd += ";";
+        }
+    }
+
+    setCommand( cmd );
+
+
+    return;
 
 }
+
+
+
+
+
+
+///////////////////////////////////////////////////////////////////////////////
+
+
+
 
 
 
@@ -156,6 +187,16 @@ void N6700::turnChannelsOnOff( bool tmp )
 
 
 
+
+
+
+///////////////////////////////////////////////////////////////////////////////
+
+
+
+
+
+
 std::vector< double > N6700::getVolt()
 {
     setCommand("MEAS:VOLT? (@1:4)");
@@ -168,6 +209,16 @@ std::vector< double > N6700::getVolt()
     return output;
 
 }
+
+
+
+
+
+
+///////////////////////////////////////////////////////////////////////////////
+
+
+
 
 
 

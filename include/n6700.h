@@ -24,7 +24,7 @@
 #include <map>
 
 #include "database.h"
-#include "n6700_channels.h"
+//#include "n6700_channels.h"
 #include "utility.h"
 #include "scpi.h"
 

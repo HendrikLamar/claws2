@@ -68,6 +68,8 @@ class N6700_Channels
         const std::vector< std::string > Channels{"Ch1", "Ch2", "Ch3", "Ch4"};
 
         //! Vector containing all possible settings per channel.
+        //! CurrentLimit apparently not available as explicit setting for the used
+        //! modules. Need a workaround!
         const std::vector< std::string > Settings{"Active", "CurrLimit", "Volt"};
 
         //! Vector containing all possible modes (e.g. High_Gain, Low_Gain).
