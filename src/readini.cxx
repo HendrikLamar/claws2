@@ -70,7 +70,7 @@ void ReadIni::initialize(){
     boost::property_tree::ini_parser::read_ini(pathInitializer.c_str(), ptree);
     
     // uniform initilization of the Initstruct structure
-    ReadIni::Initstruct m_initstruct{\
+    m_initstruct = {\
 //                ptree.get<std::string>("Initializer.ConfigFile_Path"),            
         m_pathIniDir.string () + ptree.get<std::string>("Initializer.ConfigFile_Intermediate"),      \
         m_pathIniDir.string () + ptree.get<std::string>("Initializer.ConfigFile_Physics_Obermaier"), \

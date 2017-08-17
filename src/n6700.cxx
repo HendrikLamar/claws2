@@ -24,6 +24,10 @@
 
 #include <string>
 
+#include <iostream>
+#include <thread>
+#include <chrono>
+
 ///////////////////////////////////////////////////////////////////////////////
 
 
@@ -55,6 +59,23 @@ void N6700::checkDevice()
     {
         throw SCPIException("You connected to the wrong device! Is the IP and Identity parameter correct?");
     }
+    closeSocket();
+}
+
+
+
+
+
+///////////////////////////////////////////////////////////////////////////////
+
+
+
+
+
+void N6700::sendCommand( std::string cmd )
+{
+    openSocket();
+    setCommand( cmd );
     closeSocket();
 }
 
@@ -105,7 +126,7 @@ void N6700::setConf( Utility::ClawsGain HIGH_LOW_GAIN )
         }
     }
 
-    setCommand( cmd );
+    sendCommand( cmd );
 
 
     return;
@@ -175,12 +196,12 @@ void N6700::turnChannelsOnOff( bool tmp )
 
     if ( tmp )
     {
-        setCommand(cmd);
+        sendCommand(cmd);
     }
 
     // if channels should be turned off, turn all of them off
     //
-    else setCommand("OUTP OFF, (@1:4)");
+    else sendCommand("OUTP OFF, (@1:4)");
 
     return;
 }
@@ -199,9 +220,12 @@ void N6700::turnChannelsOnOff( bool tmp )
 
 std::vector< double > N6700::getVolt()
 {
+    openSocket();
     setCommand("MEAS:VOLT? (@1:4)");
     
     std::string tmp = getAnswer();
+
+    closeSocket();
 
     std::vector< double > output = splitStringbyComma( tmp );
 
@@ -224,9 +248,13 @@ std::vector< double > N6700::getVolt()
 
 std::vector< double > N6700::getCurr()
 {
+    openSocket();
+
     setCommand("MEAS:CURR? (@1:4)");
     
     std::string tmp = getAnswer();
+
+    closeSocket();
 
     std::vector< double > output = splitStringbyComma( tmp );
 
@@ -234,3 +262,51 @@ std::vector< double > N6700::getCurr()
     return output;
 
 }
+
+
+
+
+///////////////////////////////////////////////////////////////////////////////
+
+
+
+
+void N6700::run()
+{
+    try{
+        setConf( Utility::LOW_GAIN );
+    }
+    catch(SCPIException error)
+    {
+        std::cerr << error.what() << std::endl;
+        return;
+    }
+    std::this_thread::sleep_for(std::chrono::milliseconds(50));
+
+    turnChannelsOnOff( true );
+    std::this_thread::sleep_for(std::chrono::milliseconds(50));
+    std::vector <double> tmpVolt = getVolt();
+
+    for ( unsigned long ii = 0; ii < tmpVolt.size(); ++ii)
+    {
+        std::cout << m_database->N6700_getChannels().Channels.at(ii) << ": " << tmpVolt.at(ii) << "\n";
+    }
+
+    std::this_thread::sleep_for(std::chrono::seconds(10));
+    turnChannelsOnOff( false );
+    std::this_thread::sleep_for(std::chrono::milliseconds(50));
+
+    setConf( Utility::HIGH_GAIN );
+    std::this_thread::sleep_for(std::chrono::milliseconds(50));
+    for ( unsigned long ii = 0; ii < tmpVolt.size(); ++ii)
+    {
+        std::cout << m_database->N6700_getChannels().Channels.at(ii) << ": " << tmpVolt.at(ii) << "\n";
+    }
+
+    std::this_thread::sleep_for(std::chrono::seconds(10));
+
+    turnChannelsOnOff( false );
+
+    return;
+}
+

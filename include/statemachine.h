@@ -41,7 +41,7 @@ class MyState
         char getKey();
 
         // check the user input and react accordingly
-        void doMenu();
+        void run();
 
     private:
         // counter for the getKey() function

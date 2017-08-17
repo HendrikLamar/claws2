@@ -16,8 +16,7 @@
 // =====================================================================================
 
 
-//#include "statemachine.h"
-//#include "database.h"
+#include "statemachine.h"
 
 #include <iostream>
 #include <string>
@@ -28,16 +27,13 @@
 
 int main()
 {
+    MyState* mystate = new MyState();
+    mystate->run();
 
-/*     Database database;
- * 
- *     database.N6700_readPSConf();
- *     database.N6700_readChSet();
- */
 
-    std::string text{"+8.002310E+01,+7.995900E+00,+7.991475E+00,+7.999256E+02"};
-//    std::string text{"+8.002310E+01"};
-
+    delete mystate;
+    mystate = nullptr;
+    
 
     return 0;
 };

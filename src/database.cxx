@@ -29,7 +29,7 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 
-Database::Database() :
+Database::Database() try :
     m_stopSwitch(false),
     m_initReader(new ReadIni()),
     m_N6700_Channels(new N6700_Channels())
@@ -38,7 +38,16 @@ Database::Database() :
     //          Powersupply
     ///////////////////////////////////////////////////////////////////////////
 
-};
+    N6700_readPSConf();
+    N6700_readChSet();
+
+    std::cout << m_initReader->getInitstruct().m_filePowerSupply << std::endl;
+
+}
+catch(...)
+{
+    std::cerr << " Construction failed!\n";
+}
 
 
 
@@ -127,6 +136,7 @@ void Database::N6700_readPSConf()
 {
     std::string root = "Connect.";
 
+    std::cout << "File :" << m_initReader->getInitstruct().m_filePowerSupply << "\n";
 
     std::string ip = root + "Server";
 

@@ -32,6 +32,7 @@
 #include <boost/mpl/list.hpp>
 
 #include "database.h"
+#include "n6700.h"
 
 #include <iostream>
 #include <thread>
@@ -176,6 +177,7 @@ struct ClawsDAQ : sc::state_machine< ClawsDAQ, Active >
 };
 
 
+///////////////////////////////////////////////////////////////////////////////
 
 
 //! Outermost state of ClawsDAQ. Contains and handles all the inner states, also
@@ -229,6 +231,7 @@ struct Active : sc::simple_state< Active, ClawsDAQ,
 };
 
 
+///////////////////////////////////////////////////////////////////////////////
 
 
 
@@ -262,6 +265,7 @@ struct MenuIdle : sc::simple_state< MenuIdle, Active::orthogonal<0> >
 };
 
 
+///////////////////////////////////////////////////////////////////////////////
 
 
 
@@ -289,6 +293,7 @@ struct Status : sc::state< Status, Active::orthogonal<0> >
 };
 
 
+///////////////////////////////////////////////////////////////////////////////
 
 
 
@@ -314,6 +319,7 @@ struct Config : sc::state< Config, Active::orthogonal<0> >
 };
 
 
+///////////////////////////////////////////////////////////////////////////////
 
 
 
@@ -336,6 +342,7 @@ struct SystemIdle : sc::state< SystemIdle, Active::orthogonal<1> >
 };
 
 
+///////////////////////////////////////////////////////////////////////////////
 
 
 
@@ -344,6 +351,9 @@ struct SystemIdle : sc::state< SystemIdle, Active::orthogonal<1> >
 //! to handle the data taking.
 struct SystemRun : sc::state< SystemRun, Active::orthogonal<1> >
 {
+    private:
+        std::thread         m_thread;
+
     public:
         typedef sc::transition< EvStartStop, SystemIdle> reactions;
         
@@ -351,18 +361,21 @@ struct SystemRun : sc::state< SystemRun, Active::orthogonal<1> >
         {
             // \todo Add functionality! Run function in m_thread!
             std::cout << "Entering SystemRun\n";
+
+            // Initialize PSU with the database as parameter.
+            N6700 psu(context< ClawsDAQ >().getDatabase());
+            m_thread = std::thread(&N6700::run, psu);
         };
         virtual ~SystemRun()
         {
-//            m_thread.join();
+            m_thread.join();
             std::cout << "Exiting SystemRun\n";
         };
 
-    private:
-        std::thread         m_thread;
 };
 
 
+///////////////////////////////////////////////////////////////////////////////
 
 
 
@@ -389,6 +402,7 @@ struct Quit : sc::state< Quit, Active::orthogonal<0> >
 
 };
 
+///////////////////////////////////////////////////////////////////////////////
 
 
 

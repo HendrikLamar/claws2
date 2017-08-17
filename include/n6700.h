@@ -44,8 +44,11 @@ class N6700 : public SCPI
 
         virtual ~N6700();
 
-        //! checks if the device is available and respons the device name we expect
+        //! Checks if the device is available and respons the device name we expect
         void checkDevice();
+
+        //! Sends the command to the PSU.
+        void sendCommand( std::string cmd );
 
 
         //! Sends the configuration stored in the database to the PSU
@@ -63,6 +66,9 @@ class N6700 : public SCPI
         //! Returns the current measured current of all channels in a vector
         //! of doubles. The value for Channel 1 is at vector.at(0) and so on...
         std::vector < double > getCurr();
+
+
+        void run();
 
     private:
         std::string::size_type  m_sz;

@@ -61,7 +61,7 @@ class SCPI
         void initSocket();
 
         /// Opens the connection for possible commands. This functions needs to
-        /// be followed by the close() member function. 
+        /// be followed by the closeSocket() member function. 
         void openSocket();
 
         /// Closes the connection.

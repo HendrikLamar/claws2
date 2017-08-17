@@ -38,13 +38,11 @@ SCPI::SCPI(std::string ipAdress, unsigned short port) :
     m_ipAdress(ipAdress),
     m_port(port)
 {
-    initSocket();
 };
 
 
 SCPI::~SCPI()
 {
-    closeSocket();
 };
 
 
@@ -89,6 +87,7 @@ void    SCPI::initSocket()
 
 void    SCPI::openSocket()
 {
+    initSocket();
     int result = connect(m_socket, reinterpret_cast<sockaddr*>(&m_server), sizeof(m_server));
     if ( result == -1 )
     {

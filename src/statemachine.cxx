@@ -94,7 +94,7 @@ char MyState::getKey()
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void MyState::doMenu()
+void MyState::run()
 {
     printWelcome();
     char key = getKey();
