@@ -122,7 +122,7 @@ void N6700::setConf( Utility::ClawsGain HIGH_LOW_GAIN )
         // if it is not the last part, add a semicolon as separation pattern
         if ( ii != tmp_channels.Channels.size() - 1 )
         {
-            cmd += ";";
+            cmd += spacer;
         }
     }
 
@@ -155,15 +155,15 @@ void N6700::turnChannelsOnOff( bool tmp )
     {
         strtmp += "1";
     }
-    else if ( m_database->N6700_getChannels().getKey("High_Gain", "Ch2", "Active") == "true" )
+    if ( m_database->N6700_getChannels().getKey("High_Gain", "Ch2", "Active") == "true" )
     {
         strtmp += "2";
     }
-    else if ( m_database->N6700_getChannels().getKey("High_Gain", "Ch3", "Active") == "true" )
+    if ( m_database->N6700_getChannels().getKey("High_Gain", "Ch3", "Active") == "true" )
     {
         strtmp += "3";
     }
-    else if ( m_database->N6700_getChannels().getKey("High_Gain", "Ch4", "Active") == "true" )
+    if ( m_database->N6700_getChannels().getKey("High_Gain", "Ch4", "Active") == "true" )
     {
         strtmp += "4";
     }
@@ -292,20 +292,31 @@ void N6700::run()
         std::cout << m_database->N6700_getChannels().Channels.at(ii) << ": " << tmpVolt.at(ii) << "\n";
     }
 
-    std::this_thread::sleep_for(std::chrono::seconds(10));
+    std::this_thread::sleep_for(std::chrono::seconds(15));
     turnChannelsOnOff( false );
     std::this_thread::sleep_for(std::chrono::milliseconds(50));
 
+
     setConf( Utility::HIGH_GAIN );
+
+    turnChannelsOnOff( true );
+
     std::this_thread::sleep_for(std::chrono::milliseconds(50));
+    tmpVolt = getVolt();
     for ( unsigned long ii = 0; ii < tmpVolt.size(); ++ii)
     {
         std::cout << m_database->N6700_getChannels().Channels.at(ii) << ": " << tmpVolt.at(ii) << "\n";
     }
 
-    std::this_thread::sleep_for(std::chrono::seconds(10));
+    std::this_thread::sleep_for(std::chrono::seconds(15));
 
     turnChannelsOnOff( false );
+    std::this_thread::sleep_for(std::chrono::milliseconds(50));
+    tmpVolt = getVolt();
+    for ( unsigned long ii = 0; ii < tmpVolt.size(); ++ii)
+    {
+        std::cout << m_database->N6700_getChannels().Channels.at(ii) << ": " << tmpVolt.at(ii) << "\n";
+    }
 
     return;
 }

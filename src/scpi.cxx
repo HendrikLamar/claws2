@@ -109,6 +109,9 @@ void    SCPI::setCommand(std::string command)
     while( bytesSent < size )
     {
         int result = send(m_socket, fcommand.c_str() + bytesSent, size-bytesSent, 0);
+
+        //! \todo A log collecting all the data sent to the psu is possible here
+//        std::cout << fcommand.c_str() + bytesSent << std::endl;
         if( result < 0 )
         {
             throw SCPIException("Command could not be sent!");

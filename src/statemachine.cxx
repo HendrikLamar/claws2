@@ -122,6 +122,7 @@ void MyState::run()
 
             case '1':
                 m_daq->process_event( ClawsStatemachine::EvStartStop() );
+                m_daq->process_event( ClawsStatemachine::EvStartStop() );
                 break;
 
             case '0':
