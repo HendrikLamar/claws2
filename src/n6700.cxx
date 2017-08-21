@@ -270,7 +270,12 @@ std::vector< double > N6700::getCurr()
 
 
 
-
+///////////////////////////////////////////////////////////////////////////////
+//
+// the current implementation of run is only for testing cases. There is no proof
+// that the wait function in milliseconds are especially needed. 
+//
+///////////////////////////////////////////////////////////////////////////////
 void N6700::run()
 {
     try{

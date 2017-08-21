@@ -17,6 +17,7 @@
 
 
 #include "pico.h"
+#include "pico_channel.h"
 #include "utility.h"
 
 #include <libps6000-1.4/ps6000Api.h>
@@ -26,6 +27,7 @@
 #include <iostream>
 #include <cassert>
 #include <unistd.h>
+
 
 ////////////////////////////////////////////////////////////////////////
 /*
