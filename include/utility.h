@@ -92,9 +92,10 @@ namespace Utility{
     //!          - PS6000_1V
     //!          - PS6000_2V
     //!          - PS6000_5V
+    //!          - PS6000_10V
+    //!          - PS6000_20V
     //!      - bandwidth:
     //!          - PS6000_BW_FULL
-    //!          - PS6000_BW_20MHZ
     //!          - PS6000_BW_25MHZ
     //
     struct PS_Data_Channel
