@@ -58,7 +58,7 @@ class Database
         void N6700_readChSet();
         
         //! Reads in the n6700.ini file.
-        void N6700_readPSConf();
+        void N6700_readPSUConf();
 
         //! Returns a nested pair-construct with high-/low gain settings for
         //! all four channels.
@@ -66,6 +66,24 @@ class Database
 
         //! Returns a struct with ip, id, and port for the n6700.
         Utility::N6700_connect N6700_getConnect() const;
+
+
+
+
+        ///////////////////////////////////////////////////////////////////////
+        //                 Picoscope 
+        //
+        ///////////////////////////////////////////////////////////////////////
+
+
+        //! Picoscope initializer.
+        //! Reads the serial numbers from initializer.ini and initializes them if
+        //! available.
+        void Pico_init();
+
+        //! Reads in the pico settings.
+        void Pico_readConfig( Utility::Pico_RunMode mode );
+
 
 
     private:
@@ -82,6 +100,18 @@ class Database
         N6700_Channels*             m_N6700_Channels;
         
         Utility::N6700_connect      m_n6700_connect;
+
+
+
+
+        ///////////////////////////////////////////////////////////////////////
+        //                 Picoscope 
+        //
+        ///////////////////////////////////////////////////////////////////////
+
+        
+        std::vector< Utility::Pico_Data_Pico >*   m_picos;     
+
 
 };
 

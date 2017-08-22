@@ -32,13 +32,15 @@
 Database::Database() try :
     m_stopSwitch(false),
     m_initReader(new ReadIni()),
-    m_N6700_Channels(new N6700_Channels())
+    m_N6700_Channels(new N6700_Channels()),
+    m_picos(new std::vector< Utility::Pico_Data_Pico >)
+
 {
     ///////////////////////////////////////////////////////////////////////////
     //          Powersupply
     ///////////////////////////////////////////////////////////////////////////
 
-    N6700_readPSConf();
+    N6700_readPSUConf();
     N6700_readChSet();
 
     std::cout << m_initReader->getInitstruct().m_filePowerSupply << std::endl;
@@ -58,6 +60,9 @@ Database::~Database()
 
     delete m_N6700_Channels;
     m_N6700_Channels = nullptr;
+
+    delete m_picos;
+    m_picos = nullptr;
 };
 
 
@@ -85,6 +90,24 @@ bool Database::getStop()
 ///////////////////////////////////////////////////////////////////////////////
 //          END Database only stuff
 ///////////////////////////////////////////////////////////////////////////////
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -132,7 +155,7 @@ void Database::N6700_readChSet()
 
 
 
-void Database::N6700_readPSConf()
+void Database::N6700_readPSUConf()
 {
     std::string root = "Connect.";
 
@@ -182,4 +205,47 @@ Utility::N6700_connect Database::N6700_getConnect() const
 
 ///////////////////////////////////////////////////////////////////////////////
 //          END Database PowerSupply (KPS) stuff
+///////////////////////////////////////////////////////////////////////////////
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+///////////////////////////////////////////////////////////////////////////////
+//                      START Pico stuff
+///////////////////////////////////////////////////////////////////////////////
+
+
+
+void Database::Pico_init()
+{
+
+}
+
+
+/* void Database::Pico_readConfig( Utility::Pico_RunMode mode )
+ * {
+ *     
+ * }
+ */
+
+
+
+
+///////////////////////////////////////////////////////////////////////////////
+//                      END Pico stuff
 ///////////////////////////////////////////////////////////////////////////////

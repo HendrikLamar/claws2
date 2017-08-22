@@ -74,4 +74,5 @@ clean:
 doc:
 	@echo 'Building docs...'
 	doxygen config_doxygen
+	rsync -arz --delete ./docs -e ssh hwindel@pcbelle20.mpp.mpg.de:~/public_html/claws2_doc/
 	@echo ' '

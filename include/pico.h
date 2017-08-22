@@ -66,6 +66,7 @@ class Pico
         enPS6000RatioMode   m_downSamplingRatioMode     {PS6000_RATIO_MODE_NONE};
         uint32_t        m_downSampleRatio               {1};
 
+
         // FIXED! no change needed. (indicates the startpoint for data collection
         // in samples intervals from the start of the buffer)
         uint32_t            m_startIndex                {0};

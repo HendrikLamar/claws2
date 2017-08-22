@@ -39,19 +39,6 @@ namespace Utility{
             void            *pParameter
     );
 
-    ////////////////////////////////////////////////////////////////////////
-
-    enum CLAWS_TRIGGER_MODE{
-        
-        CLAWS_TRIGGER_SIMPLE,
-        CLAWS_TRIGGER_ADVANCED,
-    };
-    
-    enum ClawsGain
-    {
-        HIGH_GAIN,
-        LOW_GAIN
-    };
     
 
     ////////////////////////////////////////////////////////////////////////
@@ -75,13 +62,13 @@ namespace Utility{
 
     //! Data structure for on channel of a picoscope. This data needs to be read-in.
     //! Supported input parameters:
+    //!      - enabled:
+    //!          - true
+    //!          - false
     //!      - coupling:
     //!          - PS6000_AC
     //!          - PS6000_DC_1M
     //!          - PS6000_DC_50R
-    //!      - enabled:
-    //!          - true
-    //!          - false
     //!      - analogouOffset:
     //!          - Floating point given in volts.
     //!      - range:
@@ -98,7 +85,7 @@ namespace Utility{
     //!          - PS6000_BW_FULL
     //!          - PS6000_BW_25MHZ
     //
-    struct PS_Data_Channel
+    struct Pico_Data_Channel
     {
         //! Holds the channel number in the pico. Not set by the ini-file.
         const PS6000_CHANNEL        channel;
@@ -111,51 +98,6 @@ namespace Utility{
     };
 
 
-    //! Data structure for an entire picoscope. All the data need to be read-in.
-    //! Supported input parameters:
-    //!      - Ch1-4:
-    //!          - see PS_DATA_CHANNEL
-    //!      - serial:
-    //!          - the serial of the pico (written on the osci)
-    //!      - pre-/postTrigger:
-    //!          - integer, the sum of both should not exceed 2 GS
-    //!      - timebase:
-    //!          - 0 -> 200 ps   // only available if less than 3 channels enabled per pico
-    //!          - 1 -> 400 ps   // only available if less than 3 channels enabled per pico
-    //!          - 2 -> 800 ps
-    //!          - 3 -> 1.6 ns
-    //!          - 4 -> 3.2 ns
-    //!          - ...more are not implemented.
-    //!      - oversample:
-    //!          - 0 to 256 ( recommended: 0)
-    //!      - downSampleRatioMode:
-    //!          - PS6000_RATIO_MODE_NONE
-    //!      - downSampleRatio:
-    //!          - 1
-    struct PS_Data_Pico
-    {
-        PS_Data_Channel     Ch1;
-        PS_Data_Channel     Ch2;
-        PS_Data_Channel     Ch3;
-        PS_Data_Channel     Ch4;
-
-
-
-        const int8_t        serial;
-
-        uint32_t            preTrigger;
-        uint32_t            postTrigger;
-
-        uint32_t            timebase;
-        int16_t             oversample;
-
-        enPS6000RatioMode   downSampleRatioMode;
-        uint32_t            downSampleRatio;
-
-
-    };
-
-    
 
     //! Data structure holding the trigger settings.
     //! Supported input parameters:
@@ -176,16 +118,87 @@ namespace Utility{
     //!              - PS6000_FALLING       // using upper threshold
     //!          - delay:
     //!              - Integer given in milliseconds.
-    //!          - autoTriggerTime_ms:
+    //!          - autoTriggerTime:
     //!              - Integer given in milliseconds.
-    struct PS_Data_Trigger_Simple
+    //!              - 0 = no auto trigger
+    struct Pico_Data_Trigger_Simple
     {
         int16_t                     enabled;
         PS6000_CHANNEL              source;
         int16_t                     threshold;
         PS6000_THRESHOLD_DIRECTION  direction;
         uint32_t                    delay;
-        int16_t                     autoTriggerTime_ms;
+        int16_t                     autoTriggerTime;
+    };
+
+    //! Data structure for an entire picoscope. All the data need to be read-in.
+    //! Supported input parameters:
+    //!      - Ch1-4:
+    //!          - see Pico_DATA_CHANNEL
+    //!      - serial:
+    //!          - the serial of the pico (written on the osci)
+    //!      - pre-/postTrigger:
+    //!          - integer, the sum of both should not exceed 2 GS
+    //!      - timebase:
+    //!          - 0 -> 200 ps   // only available if less than 3 channels enabled per pico
+    //!          - 1 -> 400 ps   // only available if less than 3 channels enabled per pico
+    //!          - 2 -> 800 ps
+    //!          - 3 -> 1.6 ns
+    //!          - 4 -> 3.2 ns
+    //!          - ...more are not implemented.
+    //!      - oversample:
+    //!          - 0 to 256 ( recommended: 0)
+    //!      - downSampleRatioMode:
+    //!          - PS6000_RATIO_MODE_NONE
+    //!      - downSampleRatio:
+    //!          - 1
+    struct Pico_Data_Pico
+    {
+        Pico_Data_Channel         Ch1;
+        Pico_Data_Channel         Ch2;
+        Pico_Data_Channel         Ch3;
+        Pico_Data_Channel         Ch4;
+
+        Pico_Data_Trigger_Simple  trigger;
+
+
+        const int8_t            serial;
+
+        uint32_t                preTrigger;
+        uint32_t                postTrigger;
+
+        uint32_t                timebase;
+        int16_t                 oversample;
+
+        enPS6000RatioMode       downSampleRatioMode;
+        uint32_t                downSampleRatio;
+
+
+    };
+
+
+    //! Enum to specify which run mode should be loaded in Database::Pico_readConfig().
+    enum Pico_RunMode
+    {
+        OBERMAIER,
+        MERKEL,
+        SCHIFFER,
+        KLUM,
+        GARRN
+    };
+    
+    ////////////////////////////////////////////////////////////////////////
+
+    enum CLAWS_TRIGGER_MODE{
+        
+        CLAWS_TRIGGER_SIMPLE,
+        CLAWS_TRIGGER_ADVANCED,
+    };
+    
+    enum ClawsGain
+    {
+        HIGH_GAIN,
+        LOW_GAIN
     };
 
 }
