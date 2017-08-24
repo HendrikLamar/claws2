@@ -21,6 +21,8 @@
 #include "clawsException.h"
 #include "readini.h"
 
+#include <boost/property_tree/exceptions.hpp>
+
 #include <iostream>
 #include <string>
 
@@ -33,12 +35,14 @@ Database::Database() try :
     m_stopSwitch(false),
     m_initReader(new ReadIni()),
     m_N6700_Channels(new N6700_Channels()),
-    m_picos(new std::vector< Utility::Pico_Data_Pico >)
+    m_picos( nullptr )
 
 {
     ///////////////////////////////////////////////////////////////////////////
     //          Powersupply
     ///////////////////////////////////////////////////////////////////////////
+
+    Pico_init();
 
     N6700_readPSUConf();
     N6700_readChSet();
@@ -233,7 +237,60 @@ Utility::N6700_connect Database::N6700_getConnect() const
 
 void Database::Pico_init()
 {
+    // check if the pointer is empty. If yes allocate new, if no delete first.
+    if ( !m_picos )
+    {
+        delete m_picos;
+        m_picos = new std::vector< Utility::Pico_Data_Pico >;
+    }
+    else m_picos = new std::vector< Utility::Pico_Data_Pico >;
+    
 
+    std::vector <std::string > serials;
+    std::string sName = "Pico_Initializer.pico_";
+    std::string eName = "_serial";
+
+    // read all serials from the ini file. Four at maximum.
+    for ( int i = 0 ; i < 4 ; ++i )
+    {
+        // create key
+        std::string key = sName + std::to_string(i+1) + eName;
+        std::string tmp;
+
+        // try if there are all serial given in the picoInit.ini file.
+        // If not, just continue!
+        try
+        {
+            tmp = m_initReader->getKey< std::string >
+                (m_initReader->getInitstruct().m_initPico, key);
+        }
+        catch( boost::property_tree::ptree_error excep )
+        {
+            continue;
+        }
+
+        serials.push_back(tmp);
+    };
+
+
+    // translate found serials from std::string to unsigned char
+    for ( unsigned int ii = 0; ii < serials.size(); ++ii )
+    {
+        int tlength = serials.at(ii).end() - serials.at(ii).begin();
+        int8_t tmp[tlength];
+
+        for ( std::string::iterator it = serials.at(ii).begin();
+                it < serials.at(ii).end(); ++it )
+        {
+            // the argument of tmp is the iterator formed as int
+            tmp[tlength - (serials.at(ii).end() - it ) ] = *it;
+        }
+
+        Utility::Pico_Data_Pico tPico( tmp[0] );
+        m_picos->push_back( tPico );
+    }
+
+    return;
 }
 
 

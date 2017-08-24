@@ -86,7 +86,7 @@ void ReadIni::initialize(){
 };
 
 
-ReadIni::Initstruct ReadIni::getInitstruct()
+ReadIni::Initstruct ReadIni::getInitstruct() const
 {
     return m_initstruct;
 }

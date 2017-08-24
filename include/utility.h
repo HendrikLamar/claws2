@@ -87,6 +87,7 @@ namespace Utility{
     //
     struct Pico_Data_Channel
     {
+        Pico_Data_Channel( PS6000_CHANNEL tchannel ) : channel(tchannel) {};
         //! Holds the channel number in the pico. Not set by the ini-file.
         const PS6000_CHANNEL        channel;
 
@@ -154,6 +155,14 @@ namespace Utility{
     //!          - 1
     struct Pico_Data_Pico
     {
+        Pico_Data_Pico( int8_t tserial ) : 
+            Ch1( PS6000_CHANNEL_A ),
+            Ch2( PS6000_CHANNEL_B ),
+            Ch3( PS6000_CHANNEL_C ),
+            Ch4( PS6000_CHANNEL_D ),
+            serial(tserial)
+        {};
+
         Pico_Data_Channel         Ch1;
         Pico_Data_Channel         Ch2;
         Pico_Data_Channel         Ch3;

@@ -60,7 +60,7 @@ class ReadIni
         // the variables.
         void        initialize();
 
-        Initstruct  getInitstruct();
+        Initstruct getInitstruct() const;
 
 
 
