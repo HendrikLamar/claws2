@@ -41,6 +41,8 @@ class ReadIni
         struct Initstruct
         {
             
+            std::string m_initPico;
+
             std::string m_fileIntermediate;
 
             std::string m_filePhysicsObermaier;
