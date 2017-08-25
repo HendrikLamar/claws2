@@ -36,7 +36,8 @@ Database::Database() try :
     m_stopSwitch(false),
     m_initReader(new ReadIni()),
     m_N6700_Channels(new N6700_Channels()),
-    m_picoData( nullptr )
+    m_picoData( nullptr ),
+    m_picos( nullptr )
 
 {
     ///////////////////////////////////////////////////////////////////////////
@@ -68,6 +69,9 @@ Database::~Database()
 
     delete m_picoData;
     m_picoData = nullptr;
+    
+    delete m_picos;
+    m_picos = nullptr;
 };
 
 
@@ -238,18 +242,28 @@ Utility::N6700_connect Database::N6700_getConnect() const
 
 void Database::Pico_init()
 {
-    // check if the pointer is empty. If yes allocate new, if no delete first.
+    // check if the picoData pointer is empty. If yes allocate new, if no delete first.
     if ( !m_picoData )
     {
         delete m_picoData;
         m_picoData = new std::vector< Utility::Pico_Data_Pico >;
     }
     else m_picoData = new std::vector< Utility::Pico_Data_Pico >;
+    // check if the pico pointer is empty. If yes allocate new, if no delete first.
+    if ( !m_picos )
+    {
+        delete m_picos;
+        m_picos = new std::vector< Pico >;
+    }
+    else m_picos = new std::vector< Pico >;
     
 
     std::vector <std::string > serials;
     std::string sName = "Pico_Initializer.pico_";
     std::string eName = "_serial";
+
+
+    std::vector<int> initCounter;       //! Counts which serials could be initialized.
 
     // read all serials from the ini file. Four at maximum.
     for ( int i = 0 ; i < 4 ; ++i )
@@ -271,7 +285,9 @@ void Database::Pico_init()
         }
 
         serials.push_back(tmp);
+        initCounter.push_back(1);
     };
+
 
 
     if ( serials.size() > 0 )
@@ -281,8 +297,40 @@ void Database::Pico_init()
         {
             Utility::Pico_Data_Pico pico(serials.at(ii));
             m_picoData->push_back(pico);
+
+            try
+            {
+            m_picos->push_back(
+                    Pico( m_picoData->at(ii).serial )
+                    );
+            }
+            catch( PicoException error )
+            {
+                initCounter.at(ii) = 0;
+            };
+
         }
     }
+
+    if ( serials.size() > 0)
+    {
+
+        std::cout << "\n";
+
+        // Return to the user how many and which Picos have been found 
+        // and could be initialized.
+        for ( unsigned int ii = 0; ii < serials.size(); ++ii)
+        {
+            if ( initCounter.at(ii) == 1)
+            {
+                std::cout << serials.at(ii) << " succesfully initialized!\n";
+            }
+            else std::cout << serials.at(ii) << " could not be initialized!\n";
+        }
+    }
+    else std::cout << "Sorry no serials found! Does the ini-file exist?\n";
+
+    std::cout << std::endl;
 
     return;
 }

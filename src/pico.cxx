@@ -16,6 +16,7 @@
 // =====================================================================================
 
 
+#include "clawsException.h"
 #include "pico.h"
 #include "utility.h"
 
@@ -33,19 +34,18 @@
  * Pico Contructor.
  */
 
-Pico::Pico(int16_t *handle, int8_t *serial)
-    : m_handle(handle), m_serial(serial)
+Pico::Pico( int8_t *serial)
+    : m_serial(serial)
 {
     Pico::openUnit();
     Pico::turnOffUnnecessary();
 
-//    // Initialize the channels and load defaults
-//    m_channelA = new Channel(PS6000_CHANNEL_A, this);
-//    m_channelB = new Channel(PS6000_CHANNEL_B, this);
-//    m_channelC = new Channel(PS6000_CHANNEL_C, this);
-//    m_channelD = new Channel(PS6000_CHANNEL_D, this);
+    // Initialize the channels and load defaults
+    m_channelA = new Channel(PS6000_CHANNEL_A, this);
+    m_channelB = new Channel(PS6000_CHANNEL_B, this);
+    m_channelC = new Channel(PS6000_CHANNEL_C, this);
+    m_channelD = new Channel(PS6000_CHANNEL_D, this);
 
-    std::cout << "openUnit done!\n";
 }
 ////////////////////////////////////////////////////////////////////////
 
@@ -65,30 +65,33 @@ void Pico::printError(const char* message){
 
 void Pico::turnOffUnnecessary(){
 
-    m_status = ps6000SetEts(*m_handle,PS6000_ETS_OFF,0,0,nullptr);
+    m_status = ps6000SetEts(m_handle,PS6000_ETS_OFF,0,0,nullptr);
     Pico::checkStatus();
 }
 
 void Pico::openUnit(){
     
     if(!m_serial){
-        m_status = ps6000OpenUnit(m_handle,nullptr);
+        m_status = ps6000OpenUnit(&m_handle,nullptr);
     }
     
     else{
-        m_status = ps6000OpenUnit(m_handle,m_serial);
+        m_status = ps6000OpenUnit(&m_handle,m_serial);
     }
 
-    switch(*m_handle){
+    // used only in case 0
+    std::string msg;
+
+    switch(m_handle){
 
         case -1:
             std::cout << "Scope fails to open!\n";
             break;
         case 0:
-            std::cout << "No scope is found!\n";
+            throw PicoException("");
             break;
         default:
-            std::cout << "Found a Pico: " << m_serial << "\n";
+//            std::cout << "Found a Pico: " << m_serial << "\n";
 //            sleep(1);
             break;
     }
@@ -228,7 +231,7 @@ void            Pico::configureTrigger(Utility::CLAWS_TRIGGER_MODE mode){
                 
                     if(mode == Utility::CLAWS_TRIGGER_SIMPLE){
                         m_status = ps6000SetSimpleTrigger(
-                                *m_handle,                  \
+                                m_handle,                  \
                                 m_tEnabled,                 \
                                 m_tSource,                  \
                                 m_tThreshold,               \
@@ -317,7 +320,7 @@ void Pico::getTimebase(){
 
     while(m_timeInterval_ns < 0 && counter < 20){
         m_status = ps6000GetTimebase2(
-                *m_handle,                  \
+                m_handle,                  \
                 m_timebase,                 \
                 m_noOfSamples,              \
                 &m_timeInterval_ns,         \
@@ -346,7 +349,7 @@ void Pico::getTimebase(){
 void Pico::runBlock(){
 
     m_status = ps6000RunBlock(
-            *m_handle,                  \
+            m_handle,                  \
             m_preTrigger,               \
             m_postTrigger,              \
             m_timebase,                 \
@@ -374,7 +377,7 @@ void    Pico::getValues(){
         m_noOfSamples = m_preTrigger + m_postTrigger;
 
         m_status = ps6000GetValues(
-                        *m_handle,                  \
+                        m_handle,                  \
                         m_startIndex,               \
                         &m_noOfSamples,             \
                         m_downSampleRatio,          \
@@ -391,14 +394,14 @@ void    Pico::getValues(){
 //! Stops the picoscope from sampling data.
 void    Pico::stopUnit(){
             usleep(100);
-            m_status = ps6000Stop(*m_handle);
+            m_status = ps6000Stop(m_handle);
             Pico::checkStatus();
 }
 
 //! Closes the current Pico.
 void        Pico::closeUnit(){
                 sleep(1);
-                m_status = ps6000CloseUnit(*m_handle); 
+                m_status = ps6000CloseUnit(m_handle); 
                 Pico::checkStatus();
 }
 
@@ -759,7 +762,7 @@ Pico::Channel::Channel(PS6000_CHANNEL channel, Pico *picoscope)
 void        Pico::Channel::configureChannel(){
 
                     m_pico->m_status = ps6000SetChannel(\
-                            *(m_pico->m_handle),    \
+                            m_pico->m_handle,    \
                             m_channel,              \
                             m_enabled,              \
                             m_coupling,             \
@@ -778,7 +781,7 @@ void        Pico::Channel::configureChannel(){
  * Start - ReturnFunctions!
  */
 int16_t                    Pico::Channel::returnHandle() const{
-                                return *(m_pico->m_handle);
+                                return m_pico->m_handle;
                             }
 
 int8_t*                     Pico::Channel::returnSerial() const{
@@ -878,7 +881,7 @@ void    Pico::Channel::setDataBuffer(){
                     else m_buffer->clear();
 
                     m_pico->m_status = ps6000SetDataBuffer(
-                                    *(m_pico->m_handle),              \
+                                    m_pico->m_handle,              \
                                     m_channel,              \
                                     &m_buffer->at(0),        \
                                     m_pico->m_bufferSize,           \

@@ -36,7 +36,7 @@ class Pico
         // Information of the entire Picoscope
         PICO_STATUS         m_status;
 
-        int16_t             *m_handle;
+        int16_t             m_handle;
         int8_t              *m_serial;
         std::string         m_alias;
 
@@ -237,11 +237,11 @@ class Pico
         
         ////////////////////////////////////////////////////////////////////////
         //! Constructor
-        Pico(int16_t *handle, int8_t *serial);
+        Pico( int8_t *serial);
 
         // Destructor
         ~Pico(){
-            closeUnit();
+//            closeUnit();
         };
         ////////////////////////////////////////////////////////////////////////
 

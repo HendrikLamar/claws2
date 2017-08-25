@@ -113,6 +113,7 @@ class Database
         
         std::vector< Utility::Pico_Data_Pico >*     m_picoData;     
 
+        std::vector< Pico >*                        m_picos;
 
 };
 

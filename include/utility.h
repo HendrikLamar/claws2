@@ -173,7 +173,7 @@ namespace Utility{
             // check if the serial is longer than 100 chars.
             if ( tserial.size() > 100 )
             {
-                throw PicoException("The serial # cannot be longer than 100 chars. Sorry!");
+                throw PicoException("The serial cannot be longer than 100 chars. Sorry!");
             }
 
             Utility::stringToInt8_t( serial, tserial );
@@ -187,7 +187,6 @@ namespace Utility{
         Pico_Data_Trigger_Simple  trigger;
 
 
-        int16_t                 handle;
         int8_t                  serial[100];
 
         uint32_t                preTrigger;
