@@ -17,7 +17,6 @@
 
 
 #include "pico.h"
-#include "pico_channel.h"
 #include "utility.h"
 
 #include <libps6000-1.4/ps6000Api.h>
@@ -40,11 +39,11 @@ Pico::Pico(int16_t *handle, int8_t *serial)
     Pico::openUnit();
     Pico::turnOffUnnecessary();
 
-    // Initialize the channels and load defaults
-    m_channelA = new Channel(PS6000_CHANNEL_A, this);
-    m_channelB = new Channel(PS6000_CHANNEL_B, this);
-    m_channelC = new Channel(PS6000_CHANNEL_C, this);
-    m_channelD = new Channel(PS6000_CHANNEL_D, this);
+//    // Initialize the channels and load defaults
+//    m_channelA = new Channel(PS6000_CHANNEL_A, this);
+//    m_channelB = new Channel(PS6000_CHANNEL_B, this);
+//    m_channelC = new Channel(PS6000_CHANNEL_C, this);
+//    m_channelD = new Channel(PS6000_CHANNEL_D, this);
 
     std::cout << "openUnit done!\n";
 }
@@ -90,7 +89,7 @@ void Pico::openUnit(){
             break;
         default:
             std::cout << "Found a Pico: " << m_serial << "\n";
-            sleep(1);
+//            sleep(1);
             break;
     }
 }

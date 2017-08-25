@@ -15,6 +15,7 @@
 // 
 // =====================================================================================
 
+#include "pico.h"
 #include "database.h"
 #include "utility.h"
 #include "n6700.h"
@@ -35,7 +36,7 @@ Database::Database() try :
     m_stopSwitch(false),
     m_initReader(new ReadIni()),
     m_N6700_Channels(new N6700_Channels()),
-    m_picos( nullptr )
+    m_picoData( nullptr )
 
 {
     ///////////////////////////////////////////////////////////////////////////
@@ -65,8 +66,8 @@ Database::~Database()
     delete m_N6700_Channels;
     m_N6700_Channels = nullptr;
 
-    delete m_picos;
-    m_picos = nullptr;
+    delete m_picoData;
+    m_picoData = nullptr;
 };
 
 
@@ -238,12 +239,12 @@ Utility::N6700_connect Database::N6700_getConnect() const
 void Database::Pico_init()
 {
     // check if the pointer is empty. If yes allocate new, if no delete first.
-    if ( !m_picos )
+    if ( !m_picoData )
     {
-        delete m_picos;
-        m_picos = new std::vector< Utility::Pico_Data_Pico >;
+        delete m_picoData;
+        m_picoData = new std::vector< Utility::Pico_Data_Pico >;
     }
-    else m_picos = new std::vector< Utility::Pico_Data_Pico >;
+    else m_picoData = new std::vector< Utility::Pico_Data_Pico >;
     
 
     std::vector <std::string > serials;
@@ -273,21 +274,14 @@ void Database::Pico_init()
     };
 
 
-    // translate found serials from std::string to unsigned char
-    for ( unsigned int ii = 0; ii < serials.size(); ++ii )
+    if ( serials.size() > 0 )
     {
-        int tlength = serials.at(ii).end() - serials.at(ii).begin();
-        int8_t tmp[tlength];
-
-        for ( std::string::iterator it = serials.at(ii).begin();
-                it < serials.at(ii).end(); ++it )
+        
+        for ( unsigned int ii = 0; ii < serials.size(); ++ii )
         {
-            // the argument of tmp is the iterator formed as int
-            tmp[tlength - (serials.at(ii).end() - it ) ] = *it;
+            Utility::Pico_Data_Pico pico(serials.at(ii));
+            m_picoData->push_back(pico);
         }
-
-        Utility::Pico_Data_Pico tPico( tmp[0] );
-        m_picos->push_back( tPico );
     }
 
     return;

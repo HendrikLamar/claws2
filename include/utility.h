@@ -18,6 +18,8 @@
 #ifndef UTILITY_H
 #define UTILITY_H
 
+#include "clawsException.h"
+
 #include <map>
 #include <string>
 
@@ -40,6 +42,13 @@ namespace Utility{
     );
 
     
+
+    ////////////////////////////////////////////////////////////////////////
+
+
+    //! Rewrites a std::string to an int8_t array which is given as input parameter.
+    void stringToInt8_t( int8_t* tarray, std::string txt );
+
 
     ////////////////////////////////////////////////////////////////////////
 
@@ -155,13 +164,20 @@ namespace Utility{
     //!          - 1
     struct Pico_Data_Pico
     {
-        Pico_Data_Pico( int8_t tserial ) : 
+        Pico_Data_Pico( std::string tserial ) : 
             Ch1( PS6000_CHANNEL_A ),
             Ch2( PS6000_CHANNEL_B ),
             Ch3( PS6000_CHANNEL_C ),
-            Ch4( PS6000_CHANNEL_D ),
-            serial(tserial)
-        {};
+            Ch4( PS6000_CHANNEL_D )
+        {
+            // check if the serial is longer than 100 chars.
+            if ( tserial.size() > 100 )
+            {
+                throw PicoException("The serial # cannot be longer than 100 chars. Sorry!");
+            }
+
+            Utility::stringToInt8_t( serial, tserial );
+        };
 
         Pico_Data_Channel         Ch1;
         Pico_Data_Channel         Ch2;
@@ -171,7 +187,8 @@ namespace Utility{
         Pico_Data_Trigger_Simple  trigger;
 
 
-        const int8_t            serial;
+        int16_t                 handle;
+        int8_t                  serial[100];
 
         uint32_t                preTrigger;
         uint32_t                postTrigger;

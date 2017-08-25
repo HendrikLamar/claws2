@@ -73,6 +73,27 @@ class SCPIException : public ClawsException
 
 
 
+///////////////////////////////////////////////////////////////////////////////
+
+/** Pico specific exception class derived from the ClawsException class.
+ * 
+ */
+
+class PicoException : public ClawsException
+{
+    public:
+        PicoException( std::string error) : ClawsException(error)
+        {}
+
+        const char* what()
+        {
+            m_errorOut = "PicoException: " + m_errorIn;
+            return m_errorOut.c_str();
+        }
+};
+
+
+
 
 
 

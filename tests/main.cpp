@@ -15,8 +15,12 @@
 // 
 // =====================================================================================
 
+#include <cstring>
 #include <string>
 #include <iostream>
+
+#include <boost/numeric/conversion/cast.hpp>
+#include <boost/lexical_cast.hpp>
 
 
 int main()
@@ -26,7 +30,7 @@ int main()
 
     int llength = stri.end() - stri.begin();
 //    ++llength;
-    unsigned char foo[llength];
+    unsigned char foo[llength+1];
     int ii = 0;
     for ( std::string::iterator it = stri.begin(); it < stri.end(); ++it)
     {
@@ -38,6 +42,9 @@ int main()
 
     std::cout << "Orig: " << stri << std::endl;
     std::cout << "Copy: " << foo << std::endl;
+
+    const char* cchar = stri.c_str();
+
 
 
     return 0;

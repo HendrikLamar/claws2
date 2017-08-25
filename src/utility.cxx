@@ -15,6 +15,7 @@
 // 
 // =====================================================================================
 
+#include "clawsException.h"
 #include "utility.h"
 
 #include <iostream>
@@ -45,5 +46,21 @@ namespace Utility{
         }
     };
     ////////////////////////////////////////////////////////////////////////
+
+    void stringToInt8_t( int8_t* tarray, std::string txt )
+    {
+        int tlength = txt.size();
+        for ( std::string::iterator it = txt.begin(); it < txt.end(); ++it)
+        {
+            // the argument of tarray is the iterator reformed as int
+            tarray[tlength - ( txt.end() - it ) ] = *it;
+
+            // put an end character at the end of the array
+            if ( txt.end() - it == 1 )
+            {
+                tarray[ tlength ] = '\0';
+            }
+        }
+    };
     
 }

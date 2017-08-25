@@ -24,6 +24,7 @@
 #include "readini.h"
 #include "utility.h"
 #include "n6700_channels.h"
+#include "pico.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -110,7 +111,7 @@ class Database
         ///////////////////////////////////////////////////////////////////////
 
         
-        std::vector< Utility::Pico_Data_Pico >*   m_picos;     
+        std::vector< Utility::Pico_Data_Pico >*     m_picoData;     
 
 
 };
