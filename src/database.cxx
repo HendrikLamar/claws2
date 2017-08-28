@@ -314,8 +314,22 @@ void Database::Pico_init()
 
     if ( serials.size() > 0)
     {
+        int sumI{0};
+        for ( unsigned int bb = 0; bb < serials.size(); ++bb )
+        {
+            if ( initCounter.at(bb) == 1)
+            {
+                ++sumI;
+            }
+        }
 
         std::cout << "\n";
+        std::cout << "++++++++++++++++++++++++++++++++++++++++++++++++++++++++\n";
+        std::cout << "\tPico initialization\n";
+        std::cout << "++++++++++++++++++++++++++++++++++++++++++++++++++++++++\n";
+        std::cout << "Serials found:\t\t" << serials.size();
+        std::cout << "\nPicos intialized:\t" << sumI << "\n";
+        std::cout << "--------------------------------------------------------\n";
 
         // Return to the user how many and which Picos have been found 
         // and could be initialized.
@@ -323,13 +337,14 @@ void Database::Pico_init()
         {
             if ( initCounter.at(ii) == 1)
             {
-                std::cout << serials.at(ii) << " succesfully initialized!\n";
+                std::cout << "\t#" << ii << "\t" << serials.at(ii) << "\tinitialized!\n";
             }
-            else std::cout << serials.at(ii) << " could not be initialized!\n";
+            else std::cout << "\t#" << ii << "\t" << serials.at(ii) << "\tnot found!\n";
         }
     }
-    else std::cout << "Sorry no serials found! Does the ini-file exist?\n";
+    else std::cout << "\n\tSorry no serials found! Does the ini-file exist?\n";
 
+    std::cout << "++++++++++++++++++++++++++++++++++++++++++++++++++++++++\n";
     std::cout << std::endl;
 
     return;
