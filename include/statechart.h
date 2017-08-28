@@ -97,6 +97,8 @@ struct Active;
 struct MenuIdle;
 /// Status state
 struct Status;
+/// Intialize state
+struct Init;
 /// Config state
 struct Config;
 /// Quit state
@@ -118,6 +120,8 @@ struct SystemRun;
 
 /// Changes into the status state
 struct EvStatus : sc::event< EvStatus > {};
+/// Start initialization
+struct EvInit: sc::event< EvInit > {};
 /// Changes into the load config state
 struct EvLoadConfig: sc::event< EvLoadConfig > {};
 /// Start and stops the data taking
@@ -245,9 +249,23 @@ struct MenuIdle : sc::simple_state< MenuIdle, Active::orthogonal<0> >
             sc::transition< EvLoadConfig, Config >,
             sc::transition< EvStatus, Status >,
 //            sc::custom_reaction< EvQuit > 
-            sc::transition< EvQuit, Quit >
+            sc::transition< EvQuit, Quit >,
+            sc::custom_reaction< EvInit >
                 > reactions;
 
+        sc::result react( const EvInit & )
+        {
+            if ( state_downcast< const SystemIdle * >() != 0 )
+            {
+                return transit< Init >();
+            }
+            else 
+            {
+                std::cout << 
+                    "\nData aquisition is ongoing. Reinitialization not possible!\n\n";
+                return discard_event();
+            }
+        };
 
 /*         // Forward declaration of the custom_reaction. Implementation in .cpp-file
  *         sc::result react( const EvQuit & );
@@ -295,6 +313,31 @@ struct Status : sc::state< Status, Active::orthogonal<0> >
 
 ///////////////////////////////////////////////////////////////////////////////
 
+
+
+//! Initializes Pico, Epics & so on. Concurrency level <0>
+struct Init : sc::state< Init, Active::orthogonal<0> >
+{
+    public:
+        typedef sc::transition< EvInit, MenuIdle > reactions;
+
+
+        Init( my_context ctx ) : my_base( ctx )
+        {
+            
+            context< ClawsDAQ >().getDatabase()->Pico_init();
+            post_event( EvInit() );
+        }
+        virtual ~Init()
+        {
+            std::cout << "Leaving Init!\n";
+        }
+};
+
+
+
+
+///////////////////////////////////////////////////////////////////////////////
 
 
 

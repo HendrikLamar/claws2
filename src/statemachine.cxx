@@ -104,7 +104,7 @@ void MyState::run()
         {
 
             case 'i':
-                std::cout << "Not available yet :(\n";
+                m_daq->process_event( ClawsStatemachine::EvInit() );
                 break;
 
             case 'l':
@@ -122,7 +122,6 @@ void MyState::run()
 
             case '1':
                 m_daq->process_event( ClawsStatemachine::EvStartStop() );
-                m_daq->process_event( ClawsStatemachine::EvStartStop() );
                 break;
 
             case '0':
@@ -134,8 +133,8 @@ void MyState::run()
                 // state again and stop in the the while loop. See the next
                 // if-statement.
                 m_daq->process_event( ClawsStatemachine::EvQuit() );
-                std::this_thread::sleep_for(std::chrono::milliseconds(200));
-                m_daq->process_event( ClawsStatemachine::EvQuit() );
+//                std::this_thread::sleep_for(std::chrono::milliseconds(200));
+//                m_daq->process_event( ClawsStatemachine::EvQuit() );
                 break;
 
             case 'h':

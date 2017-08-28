@@ -44,7 +44,7 @@ Database::Database() try :
     //          Powersupply
     ///////////////////////////////////////////////////////////////////////////
 
-    Pico_init();
+//    Pico_init();
 
     N6700_readPSUConf();
     N6700_readChSet();
