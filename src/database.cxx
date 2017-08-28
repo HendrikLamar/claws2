@@ -364,9 +364,15 @@ void Database::Pico_init()
 
 void Database::Pico_close()
 {
-    for ( Pico pico : *m_picos )
+    
+    // check if m_picos is empty
+    if ( m_picos && (m_picos->size() > 0) ) 
     {
-        pico.closeUnit();
+        // closing all pico instances
+        for ( Pico pico : *m_picos )
+        {
+            pico.closeUnit();
+        }
     }
 
     return;
