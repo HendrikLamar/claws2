@@ -26,7 +26,9 @@
 #include <string>
 #include <iostream>
 #include <cassert>
-#include <unistd.h>
+#include <chrono>
+#include <thread>
+//#include <unistd.h>
 
 
 ////////////////////////////////////////////////////////////////////////
@@ -363,7 +365,8 @@ void Pico::runBlock(){
     
     // Waits until the pico is done with data taking!
     while(!Utility::pReady){
-        usleep(5);
+        std::this_thread::sleep_for(std::chrono::milliseconds(1));
+//        usleep(5);
     }
     Utility::pReady = false;
 
@@ -393,14 +396,15 @@ void    Pico::getValues(){
 
 //! Stops the picoscope from sampling data.
 void    Pico::stopUnit(){
-            usleep(100);
+            std::this_thread::sleep_for(std::chrono::milliseconds(100));
+//            usleep(100);
             m_status = ps6000Stop(m_handle);
             Pico::checkStatus();
 }
 
 //! Closes the current Pico.
 void        Pico::closeUnit(){
-                sleep(1);
+                std::this_thread::sleep_for(std::chrono::milliseconds(100));
                 m_status = ps6000CloseUnit(m_handle); 
                 Pico::checkStatus();
 }

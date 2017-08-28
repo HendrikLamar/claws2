@@ -243,15 +243,22 @@ Utility::N6700_connect Database::N6700_getConnect() const
 void Database::Pico_init()
 {
     // check if the picoData pointer is empty. If yes allocate new, if no delete first.
-    if ( !m_picoData )
+    if ( m_picoData )
     {
+        // delete data behind the pointer and invoke new vector
         delete m_picoData;
         m_picoData = new std::vector< Utility::Pico_Data_Pico >;
     }
     else m_picoData = new std::vector< Utility::Pico_Data_Pico >;
+
+
     // check if the pico pointer is empty. If yes allocate new, if no delete first.
-    if ( !m_picos )
+    if ( m_picos )
     {
+        // close picos properly before deleting the pointer
+        Pico_close();
+
+        // delete data behind the pointer and invoke new vector
         delete m_picos;
         m_picos = new std::vector< Pico >;
     }
@@ -349,6 +356,22 @@ void Database::Pico_init()
 
     return;
 }
+
+
+
+
+
+
+void Database::Pico_close()
+{
+    for ( Pico pico : *m_picos )
+    {
+        pico.closeUnit();
+    }
+
+    return;
+}
+
 
 
 /* void Database::Pico_readConfig( Utility::Pico_RunMode mode )

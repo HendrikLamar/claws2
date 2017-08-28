@@ -133,8 +133,6 @@ void MyState::run()
                 // state again and stop in the the while loop. See the next
                 // if-statement.
                 m_daq->process_event( ClawsStatemachine::EvQuit() );
-//                std::this_thread::sleep_for(std::chrono::milliseconds(200));
-//                m_daq->process_event( ClawsStatemachine::EvQuit() );
                 break;
 
             case 'h':

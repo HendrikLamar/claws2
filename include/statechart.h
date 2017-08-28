@@ -437,6 +437,7 @@ struct Quit : sc::state< Quit, Active::orthogonal<0> >
         {
             context< ClawsDAQ >().getDatabase()->setStop(true);
             std::cout << "Entering Quit\n";
+            post_event( EvQuit() );
         };
         virtual ~Quit() 
         {

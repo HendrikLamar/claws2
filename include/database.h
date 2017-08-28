@@ -82,6 +82,9 @@ class Database
         //! available.
         void Pico_init();
 
+        //! Closes all initialized Picos.
+        void Pico_close();
+
         //! Reads in the pico settings.
         void Pico_readConfig( Utility::Pico_RunMode mode );
 
