@@ -83,40 +83,50 @@ class Database
         void Pico_init();
 
         //! Closes all initialized Picos.
-        void Pico_close();
+            void Pico_close();
 
-        //! Reads in the pico settings.
-        void Pico_readConfig( Utility::Pico_RunMode mode );
-
-
-
-    private:
-        bool                m_stopSwitch;
-
-        ReadIni*            m_initReader;
-
-
-        ///////////////////////////////////////////////////////////////////////
-        //                  Power Supply
-        //   All settings for the powersupply are send as strings. 
-        ///////////////////////////////////////////////////////////////////////
-
-        N6700_Channels*             m_N6700_Channels;
-        
-        Utility::N6700_connect      m_n6700_connect;
+            //! Reads in the pico settings.
+            void Pico_readConfig( Utility::Pico_RunMode mode );
 
 
 
+        private:
+            bool                m_stopSwitch;
 
-        ///////////////////////////////////////////////////////////////////////
-        //                 Picoscope 
-        //
-        ///////////////////////////////////////////////////////////////////////
+            ReadIni*            m_initReader;
 
+
+            ///////////////////////////////////////////////////////////////////////
+            //                  Power Supply
+            //   All settings for the powersupply are send as strings. 
+            ///////////////////////////////////////////////////////////////////////
+
+            N6700_Channels*             m_N6700_Channels;
+            
+            Utility::N6700_connect      m_n6700_connect;
+
+
+
+
+            ///////////////////////////////////////////////////////////////////////
+            //                 Picoscope 
+            //
+            ///////////////////////////////////////////////////////////////////////
+
+            std::vector< int >      m_picoSuccessfulReadinSettings{1,1,1,1};
+
+        void Pico_readChannelsSettings( Utility::Pico_RunMode mode );
+        void Pico_readAquisitionSettings( Utility::Pico_RunMode mode, int picoNo );
+        void Pico_readTriggerSimpleSettings( Utility::Pico_RunMode mode, int picoNo );
+        void Pico_readTrigerAdvSettings( Utility::Pico_RunMode mode, int picoNo );
+
+        std::string Pico_returnPathToRunMode( Utility::Pico_RunMode mode );
         
         std::vector< Utility::Pico_Data_Pico >*     m_picoData;     
 
         std::vector< Pico >*                        m_picos;
+
+
 
 };
 

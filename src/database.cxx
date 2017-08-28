@@ -386,49 +386,218 @@ void Database::Pico_readConfig( Utility::Pico_RunMode mode )
 
     // open file according to runmode
     std::string iniPath;
-    switch( mode )
-    {
-        case Utility::OBERMAIER_HG:
-            iniPath = m_initReader->getInitstruct().Obermaier_HG;
-            break;
-        case Utility::MERKEL_HG:
-            iniPath = m_initReader->getInitstruct().Merkel_HG;
-            break;
-        case Utility::SCHIFFER_LG:
-            iniPath = m_initReader->getInitstruct().Schiffer_LG;
-            break;
-        case Utility::KLUM_LG:
-            iniPath = m_initReader->getInitstruct().Klum_LG;
-            break;
-        case Utility::GARRN:
-            iniPath = m_initReader->getInitstruct().Garrn;
-            break;
-        default:
-            throw PicoException("Wrong Pico_RunMode input!");
-    };
+
+
+
+
 
     // header string for each point
-    std::string head{"Pico_"};
+    std::string headS{"Pico_"};
+    std::vector< std::string > headE{
+        "_Aquisition",
+        "_Trigger_Simple",
+        "_Trigger_Advanced"
+    };
 
-    // header aquisition
-    std::string aquisition{"_Aquisition"};
 
-    // header trigger simple
-    std::string triggerS{"_Trigger_Simple"};
+    // Settings aquisition
+    std::vector< std::string > aquisitionSettings{
+        "preTrigger",
+        "postTrigger",
+        "timebase",
+        "downSampleMode",
+        "downSampleRatio",
+        "oversample"
+    };
 
-    // header trigger advanced
-    std::string triggerA{"_Trigger_Advanced"};
 
-    // header channel abcd
-    std::string chA{"_Channel_A"};
-    std::string chB{"_Channel_B"};
-    std::string chC{"_Channel_C"};
-    std::string chD{"_Channel_D"};
+    // Settings trigger simple
+    std::vector< std::string > triggerSSettings{
+        "enabled",
+        "source",
+        "threshold",
+        "direction",
+        "delay",
+        "autoTriggerTime"
+    };
+
+
+
+
+
+    // header channel with its settings
+    std::vector< std::string > channel{
+        "_Channel_A",
+        "_Channel_B",
+        "_Channel_C",
+        "_Channel_D"
+    };
+    std::vector< std::string > chSettings{
+        "enabled",
+        "coupling",
+        "range",
+        "analogueOffset",
+        "bandwidth"
+    };
+
+
+    // loop for four picos. four is hardcoded.
+    //! \todo Number of read-in config cycles is hardcoded to four. No matter
+    //! \todo how many picos are connected.
+    //
+    std::string rPath;      // root path
+    std::string iPath;      // intermediate path
+    std::string fPath;      // final path
+    for ( int counter_1 = 0; counter_1 < 4; ++counter_1)
+    {
+        rPath = headS + std::to_string(counter_1+1);
+
+        for ( auto tmp : headE )
+        {
+            iPath = rPath + tmp + ".";
+
+            if ( tmp.compare(headE.at(0)) == 0 )
+            {
+                for ( auto subtmp : aquisitionSettings )
+                {
+                    fPath = iPath + subtmp;
+
+
+                }
+            }
+        }
+
+
+    }
+
+
+
 }
 
 
 
 
+void Database::Pico_readChannelsSettings( Utility::Pico_RunMode mode )
+{
+    std::string headBegin{"Pico_"};
+    std::string headEnd{"_Channel_"};
+    std::vector< std::string > channelList{
+        "A",
+        "B",
+        "C",
+        "D"
+    };
+
+    // single channel settings
+    std::vector< std::string > chSettings{
+        "enabled",
+        "coupling",
+        "range",
+        "analogueOffset",
+        "bandwidth"
+    };
+
+
+    // preparation variables for the loop read-in
+    std::string pathToIniFile{Pico_returnPathToRunMode(mode)};
+
+    boost::property_tree::ptree ptree;
+    boost::property_tree::ini_parser::read_ini(pathToIniFile.c_str(), ptree);
+
+    std::string rPath;      // root path
+    std::string iPath;      // intermediate path
+    std::string fPath;      // final path
+
+    // the loop goes to four because of four picos are used
+    for ( int ii = 0; ii < 4; ++ii )
+    {
+        rPath = headBegin + std::to_string(ii+1) + headEnd;
+
+        // put channels in vector for better accessibility in loop
+        std::vector< Utility::Pico_Data_Channel > channels{
+            m_picoData->at(ii).Ch1,
+            m_picoData->at(ii).Ch2,
+            m_picoData->at(ii).Ch3,
+            m_picoData->at(ii).Ch4
+        };
+
+        // loop through the channels
+        for ( unsigned int kk = 0; kk < channelList.size(); ++kk )
+        {
+            // create loop specific root path (key)
+            iPath = rPath + channelList.at(kk) + ".";
+            
+            // reading 'enabled'
+            fPath = iPath + "enabled";
+            channels.at(kk).enabled = ptree.get< bool > (fPath);
+            
+            // reading coupling
+            fPath = iPath + "coupling";
+            channels.at(kk).coupling = ptree.get< PS6000_COUPLING > (fPath);
+            
+            
+
+        }
+    }
+
+     
+}
+
+
+
+
+void Database::Pico_readAquisitionSettings( Utility::Pico_RunMode mode, int picoNo )
+{
+
+}
+
+
+
+
+void Database::Pico_readTriggerSimpleSettings( Utility::Pico_RunMode mode, int picoNo )
+{
+
+}
+
+
+
+
+void Database::Pico_readTrigerAdvSettings( Utility::Pico_RunMode mode, int picoNo )
+{
+
+}
+
+
+std::string Database::Pico_returnPathToRunMode( Utility::Pico_RunMode mode )
+{
+
+    std::string output;
+    switch( mode )
+    {
+        case Utility::INTERMEDIATE:
+            output = m_initReader->getInitstruct().Intermediate;
+            break;
+        case Utility::OBERMAIER_HG:
+            output = m_initReader->getInitstruct().Obermaier_HG;
+            break;
+        case Utility::MERKEL_HG:
+            output = m_initReader->getInitstruct().Merkel_HG;
+            break;
+        case Utility::SCHIFFER_LG:
+            output = m_initReader->getInitstruct().Schiffer_LG;
+            break;
+        case Utility::KLUM_LG:
+            output = m_initReader->getInitstruct().Klum_LG;
+            break;
+        case Utility::GARRN:
+            output = m_initReader->getInitstruct().Garrn;
+            break;
+        default:
+            throw PicoException("Wrong Pico_RunMode input!");
+    };
+
+    return output;
+}
 
 ///////////////////////////////////////////////////////////////////////////////
 //                      END Pico stuff

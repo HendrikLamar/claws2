@@ -22,6 +22,7 @@
 
 #include <map>
 #include <string>
+#include <typeinfo>
 
 #include <libps6000-1.4/ps6000Api.h>
 #include <libps6000-1.4/PicoStatus.h>
@@ -64,7 +65,7 @@ namespace Utility{
 
     ////////////////////////////////////////////////////////////////////////
     //
-    //          Pico Data Structs to be read-in
+    //          Pico related stuff! 
     //
     ////////////////////////////////////////////////////////////////////////
 
@@ -90,9 +91,6 @@ namespace Utility{
     //!          - PS6000_5V
     //!          - PS6000_10V
     //!          - PS6000_20V
-    //!      - bandwidth:
-    //!          - PS6000_BW_FULL
-    //!          - PS6000_BW_25MHZ
     //
     struct Pico_Data_Channel
     {
@@ -104,7 +102,6 @@ namespace Utility{
         int16_t                     enabled;
         float                       analogueOffset;
         PS6000_RANGE                range;
-        PS6000_BANDWIDTH_LIMITER    bandwidth;
     };
 
 
@@ -214,6 +211,8 @@ namespace Utility{
     //! Enum to specify which run mode should be loaded in Database::Pico_readConfig().
     enum Pico_RunMode
     {
+        INTERMEDIATE,
+
         OBERMAIER_HG,
         MERKEL_HG,
         SCHIFFER_LG,
@@ -252,6 +251,152 @@ namespace Utility{
     };
 
 
+
+    // template function to return the read-in string value as correct enum
+    template < class T >
+    T   Pico_StringToEnum( std::string& enumerator )
+    {
+
+        // check for coupling
+        if ( typeid(T) == typeid(PS6000_COUPLING) )
+        {
+            if ( enumerator.compare("PS6000_AC") == 0 )
+            {
+                return PS6000_AC;
+            }
+            if ( enumerator.compare("PS6000_DC_1M") == 0 )
+            {
+                return PS6000_DC_1M;
+            }
+            if ( enumerator.compare("PS6000_DC_50R") == 0 )
+            {
+                return PS6000_DC_50R;
+            }
+        } // end coupling
+
+
+
+        // check for range
+        if ( typeid(T) == typeid(PS6000_RANGE) )
+        {
+            if( enumerator.compare("PS6000_50MV") == 0 )
+            {
+                return PS6000_50MV;
+            }
+            if( enumerator.compare("PS6000_100MV") == 0 )
+            {
+                return PS6000_100MV;
+            }
+            if( enumerator.compare("PS6000_200MV") == 0 )
+            {
+                return PS6000_200MV;
+            }
+            if( enumerator.compare("PS6000_500MV") == 0 )
+            {
+                return PS6000_500MV;
+            }
+            if( enumerator.compare("PS6000_1V") == 0 )
+            {
+                return PS6000_1V;
+            }
+            if( enumerator.compare("PS6000_2V") == 0 )
+            {
+                return PS6000_2V;
+            }
+            if( enumerator.compare("PS6000_5V") == 0 )
+            {
+                return PS6000_5V;
+            }
+            if( enumerator.compare("PS6000_10V") == 0 )
+            {
+                return PS6000_10V;
+            }
+            if( enumerator.compare("PS6000_20V") == 0 )
+            {
+                return PS6000_20V;
+            }
+
+        } // end range
+
+
+
+
+
+        // check for bandwidth
+        if ( typeid(T) == typeid(PS6000_BANDWIDTH_LIMITER) )
+        {
+            if ( enumerator.compare("PS6000_BW_FULL") == 0 )
+            {
+                return PS6000_BW_FULL;
+            }
+            if ( enumerator.compare("PS6000_BW_25MHZ") == 0 )
+            {
+                return PS6000_BW_25MHZ;
+            }
+        } // end bandwidth
+
+
+
+        // check for ratio mode
+        if ( typeid(T) == typeid(PS6000_RATIO_MODE) )
+        {
+            if ( enumerator.compare("PS6000_RATIO_MODE_NONE") == 0 )
+            {
+                return PS6000_RATIO_MODE_NONE;
+            }
+        } // end ratio mode
+
+
+
+        // check for channel
+        if ( typeid(T) == typeid(PS6000_CHANNEL) )
+        {
+            if ( enumerator.compare("PS6000_CHANNEL_A") == 0)
+            {
+                return PS6000_CHANNEL_A;
+            }
+            if ( enumerator.compare("PS6000_CHANNEL_B") == 0)
+            {
+                return PS6000_CHANNEL_B;
+            }
+            if ( enumerator.compare("PS6000_CHANNEL_C") == 0)
+            {
+                return PS6000_CHANNEL_C;
+            }
+            if ( enumerator.compare("PS6000_CHANNEL_D") == 0)
+            {
+                return PS6000_CHANNEL_D;
+            }
+            if ( enumerator.compare("PS6000_EXTERNAL") == 0)
+            {
+                return PS6000_EXTERNAL;
+            }
+            if ( enumerator.compare("PS6000_TRIGGER_AUX") == 0)
+            {
+                return PS6000_TRIGGER_AUX;
+            }
+        } // end channel
+
+
+
+
+        // check for trigger direction
+        // \todo Extension needed! Only suitable for simple trigger!
+        if ( typeid(T) == typeid(PS6000_THRESHOLD_DIRECTION) )
+        {
+            if ( enumerator.compare("PS6000_RISING") == 0 )
+            {
+                return PS6000_RISING;
+            }
+            if ( enumerator.compare("PS6000_FALLING") == 0 )
+            {
+                return PS6000_FALLING;
+            }
+        } // end trigger direction
+
+        throw PicoException("Enum is not known! Please check Pico_StringToEnum.");
+
+    }
 
 
 

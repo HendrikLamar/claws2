@@ -62,5 +62,28 @@ namespace Utility{
             }
         }
     };
+
+
+
+    ////////////////////////////////////////////////////////////////////////
+    //
+    //          Pico related stuff! 
+    //
+    ////////////////////////////////////////////////////////////////////////
+
+
+
+
+
+    // overloading function to return the read-in string value as correct enum
+    PS6000_COUPLING             Utility::Pico_StringToEnum( std::string coupling )
+    {
+        if ( )
+    }
+    PS6000_RANGE                Utility::Pico_StringToEnum( std::string range );
+    enPS6000RatioMode           Utility::Pico_StringToEnum( std::string mode ); 
+    PS6000_CHANNEL              Utility::Pico_StringToEnum( std::string channel );
+    PS6000_THRESHOLD_DIRECTION  Utility::Pico_StringToEnum( std::string dir );
+
     
 }
