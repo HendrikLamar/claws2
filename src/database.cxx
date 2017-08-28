@@ -49,7 +49,7 @@ Database::Database() try :
     N6700_readPSUConf();
     N6700_readChSet();
 
-    std::cout << m_initReader->getInitstruct().m_filePowerSupply << std::endl;
+    std::cout << m_initReader->getInitstruct().PowerSupply << std::endl;
 
 }
 catch(...)
@@ -146,7 +146,7 @@ void Database::N6700_readChSet()
                         m_N6700_Channels->Channels.at(jj), 
                         m_N6700_Channels->Settings.at(kk), 
                         m_initReader->getKey< std::string >( 
-                            m_initReader->getInitstruct().m_filePowerSupply, 
+                            m_initReader->getInitstruct().PowerSupply, 
                             key)
                         );
 
@@ -168,26 +168,26 @@ void Database::N6700_readPSUConf()
 {
     std::string root = "Connect.";
 
-    std::cout << "File :" << m_initReader->getInitstruct().m_filePowerSupply << "\n";
+    std::cout << "File :" << m_initReader->getInitstruct().PowerSupply << "\n";
 
     std::string ip = root + "Server";
 
     m_n6700_connect.ip = m_initReader->getKey< std::string > (
-            m_initReader->getInitstruct().m_filePowerSupply, ip);
+            m_initReader->getInitstruct().PowerSupply, ip);
 
 
 
     std::string port = root + "Port";
 
     m_n6700_connect.port = m_initReader->getKey< std::string > (
-            m_initReader->getInitstruct().m_filePowerSupply, port);
+            m_initReader->getInitstruct().PowerSupply, port);
 
 
 
     std::string identity = root + "Identity";
 
     m_n6700_connect.id = m_initReader->getKey< std::string > (
-            m_initReader->getInitstruct().m_filePowerSupply, identity);
+            m_initReader->getInitstruct().PowerSupply, identity);
 
 
 
@@ -284,7 +284,7 @@ void Database::Pico_init()
         try
         {
             tmp = m_initReader->getKey< std::string >
-                (m_initReader->getInitstruct().m_initPico, key);
+                (m_initReader->getInitstruct().initPico, key);
         }
         catch( boost::property_tree::ptree_error excep )
         {
@@ -380,11 +380,52 @@ void Database::Pico_close()
 
 
 
-/* void Database::Pico_readConfig( Utility::Pico_RunMode mode )
- * {
- *     
- * }
- */
+
+void Database::Pico_readConfig( Utility::Pico_RunMode mode )
+{
+
+    // open file according to runmode
+    std::string iniPath;
+    switch( mode )
+    {
+        case Utility::OBERMAIER_HG:
+            iniPath = m_initReader->getInitstruct().Obermaier_HG;
+            break;
+        case Utility::MERKEL_HG:
+            iniPath = m_initReader->getInitstruct().Merkel_HG;
+            break;
+        case Utility::SCHIFFER_LG:
+            iniPath = m_initReader->getInitstruct().Schiffer_LG;
+            break;
+        case Utility::KLUM_LG:
+            iniPath = m_initReader->getInitstruct().Klum_LG;
+            break;
+        case Utility::GARRN:
+            iniPath = m_initReader->getInitstruct().Garrn;
+            break;
+        default:
+            throw PicoException("Wrong Pico_RunMode input!");
+    };
+
+    // header string for each point
+    std::string head{"Pico_"};
+
+    // header aquisition
+    std::string aquisition{"_Aquisition"};
+
+    // header trigger simple
+    std::string triggerS{"_Trigger_Simple"};
+
+    // header trigger advanced
+    std::string triggerA{"_Trigger_Advanced"};
+
+    // header channel abcd
+    std::string chA{"_Channel_A"};
+    std::string chB{"_Channel_B"};
+    std::string chC{"_Channel_C"};
+    std::string chD{"_Channel_D"};
+}
+
 
 
 

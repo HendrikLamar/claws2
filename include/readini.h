@@ -41,26 +41,26 @@ class ReadIni
         struct Initstruct
         {
             
-            std::string m_initPico;
+            std::string initPico;
 
-            std::string m_fileIntermediate;
+            std::string Intermediate;
 
-            std::string m_filePhysicsObermaier;
-            std::string m_filePhysicsMerkel;
-            std::string m_filePhysicsSchiffer;
-            std::string m_filePhysicsKlum;
-            std::string m_filePhysicsGarrn;
+            std::string Obermaier_HG;
+            std::string Merkel_HG;
+            std::string Schiffer_LG;
+            std::string Klum_LG;
+            std::string Garrn;
 
-            std::string m_filePowerSupply;
+            std::string PowerSupply;
         };
 
 
 
         //! Reads in the very first initializer and return a struct containing all
         // the variables.
-        void        initialize();
+        void            initialize();
 
-        Initstruct getInitstruct() const;
+        Initstruct      getInitstruct() const;
 
 
 

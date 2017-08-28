@@ -202,17 +202,33 @@ namespace Utility{
     };
 
 
+
+
+
+    ////////////////////////////////////////////////////////////////////////
+
+
+
+
+
     //! Enum to specify which run mode should be loaded in Database::Pico_readConfig().
     enum Pico_RunMode
     {
-        OBERMAIER,
-        MERKEL,
-        SCHIFFER,
-        KLUM,
+        OBERMAIER_HG,
+        MERKEL_HG,
+        SCHIFFER_LG,
+        KLUM_LG,
         GARRN
     };
     
+
+
+
+
     ////////////////////////////////////////////////////////////////////////
+
+
+
 
     enum CLAWS_TRIGGER_MODE{
         
@@ -220,11 +236,26 @@ namespace Utility{
         CLAWS_TRIGGER_ADVANCED,
     };
     
+
+
+
+    ////////////////////////////////////////////////////////////////////////
+
+
+
+
+
     enum ClawsGain
     {
         HIGH_GAIN,
         LOW_GAIN
     };
 
-}
+
+
+
+
+} // END Namespace Utility
+
+
 #endif //UTILITY_H

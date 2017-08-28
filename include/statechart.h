@@ -69,7 +69,7 @@ namespace mpl = boost::mpl;
 /* !Events accessible with keyboard inputs:
  *
  * i = Initialize Pico, PowerSupply, Epics & co.
- * l = Load config file (default: Merkel
+ * l = Load config file (default: Merkel)
  * c = Do a system check
  * s = Show current status
  * 1 = Start/Stop measurement
