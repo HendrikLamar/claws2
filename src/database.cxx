@@ -477,7 +477,7 @@ void Database::Pico_readConfig( Utility::Pico_RunMode mode )
 
 
 
-void Database::Pico_readChannelsSettings( Utility::Pico_RunMode mode )
+void Database::Pico_readChannelsSettings( Utility::Pico_RunMode mode, int picoNo )
 {
     std::string headBegin{"Pico_"};
     std::string headEnd{"_Channel_"};
@@ -487,16 +487,6 @@ void Database::Pico_readChannelsSettings( Utility::Pico_RunMode mode )
         "C",
         "D"
     };
-
-    // single channel settings
-    std::vector< std::string > chSettings{
-        "enabled",
-        "coupling",
-        "range",
-        "analogueOffset",
-        "bandwidth"
-    };
-
 
     // preparation variables for the loop read-in
     std::string pathToIniFile{Pico_returnPathToRunMode(mode)};
@@ -509,47 +499,45 @@ void Database::Pico_readChannelsSettings( Utility::Pico_RunMode mode )
     std::string fKey;      // final path
 
     std::string tmp;
-    // the loop goes to four because of four picos are used
-    for ( int ii = 0; ii < 4; ++ii )
+    rKey = headBegin + std::to_string(picoNo+1) + headEnd;
+
+    // put channels in vector for better accessibility in loop
+    std::vector< Utility::Pico_Data_Channel > channels{
+        m_picoData->at(picoNo).Ch1,
+        m_picoData->at(picoNo).Ch2,
+        m_picoData->at(picoNo).Ch3,
+        m_picoData->at(picoNo).Ch4
+    };
+
+    // loop through the channels
+    for ( unsigned int kk = 0; kk < channelList.size(); ++kk )
     {
-        rKey = headBegin + std::to_string(ii+1) + headEnd;
+        // create loop specific root path (key)
+        iKey = rKey + channelList.at(kk) + ".";
+        
+        // reading 'enabled'
+        fKey = iKey + "enabled";
+        channels.at(kk).enabled = ptree.get< bool > ( fKey );
+        
+        // reading coupling
+        fKey = iKey + "coupling";
+        tmp = ptree.get< std::string > ( fKey );
+        channels.at(kk).coupling = 
+            Utility::Pico_StringToEnum_coupling( tmp ); 
+        
+        // reading range
+        fKey = iKey + "range";
+        tmp = ptree.get< std::string > ( fKey );
+        channels.at(kk).range = 
+            Utility::Pico_StringToEnum_range( tmp );
 
-        // put channels in vector for better accessibility in loop
-        std::vector< Utility::Pico_Data_Channel > channels{
-            m_picoData->at(ii).Ch1,
-            m_picoData->at(ii).Ch2,
-            m_picoData->at(ii).Ch3,
-            m_picoData->at(ii).Ch4
-        };
+        // reading analogue offset
+        fKey = iKey + "analogueOffset";
+        channels.at(kk).analogueOffset = ptree.get< float >( fKey );
 
-        // loop through the channels
-        for ( unsigned int kk = 0; kk < channelList.size(); ++kk )
-        {
-            // create loop specific root path (key)
-            iKey = rKey + channelList.at(kk) + ".";
-            
-            // reading 'enabled'
-            fKey = iKey + "enabled";
-            channels.at(kk).enabled = ptree.get< bool > ( fKey );
-            
-            // reading coupling
-            fKey = iKey + "coupling";
-            tmp = ptree.get< std::string > ( fKey );
-            channels.at(kk).coupling = 
-                Utility::Pico_StringToEnum_coupling( tmp ); 
-            
-            // reading range
-            fKey = iKey + "range";
-            tmp = ptree.get< std::string > ( fKey );
-            channels.at(kk).range = 
-                Utility::Pico_StringToEnum_range( tmp );
-
-            // reading analogue offset
-            fKey = iKey + "analogueOffset";
-            channels.at(kk).analogueOffset = ptree.get< float >( fKey );
-
-        }
     }
+
+    return;
 }
 
 
@@ -558,6 +546,45 @@ void Database::Pico_readChannelsSettings( Utility::Pico_RunMode mode )
 void Database::Pico_readAquisitionSettings( Utility::Pico_RunMode mode, int picoNo )
 {
 
+    std::string headBegin{"Pico_"};
+    std::string headEnd{"_Aquisition"};
+
+    // preparation variables for the loop read-in
+    std::string pathToIniFile{Pico_returnPathToRunMode(mode)};
+
+    boost::property_tree::ptree ptree;
+    boost::property_tree::ini_parser::read_ini(pathToIniFile.c_str(), ptree);
+
+    std::string rKey;      // root path
+    std::string fKey;      // final path
+
+    std::string tmp;
+    rKey = headBegin + std::to_string(picoNo+1) + headEnd + ".";
+
+    
+    // reading preTrigger 
+    fKey = rKey + "preTrigger";
+    m_picoData->at(picoNo).preTrigger = ptree.get< unsigned int > ( fKey );
+    
+    // reading postTrigger
+    fKey = rKey + "postTrigger";
+    m_picoData->at(picoNo).postTrigger = ptree.get< unsigned int > ( fKey );
+    
+    // reading timebase
+    fKey = rKey + "timebase";
+    m_picoData->at(picoNo).timebase = ptree.get< unsigned int > ( fKey );
+
+    // reading downSampleMode 
+    fKey = rKey + "downSampleMode";
+    tmp = ptree.get< std::string >( fKey );
+    m_picoData->at(picoNo).downSampleRatioMode = 
+        Utility::Pico_StringToEnum_ratio( tmp );
+
+    // reading downSamlpeRatio
+    fKey = rKey + "downSampleRatio";
+    m_picoData->at(picoNo).downSampleRatio = ptree.get< unsigned int  >( fKey );
+
+    return;
 }
 
 
@@ -566,12 +593,58 @@ void Database::Pico_readAquisitionSettings( Utility::Pico_RunMode mode, int pico
 void Database::Pico_readTriggerSimpleSettings( Utility::Pico_RunMode mode, int picoNo )
 {
 
+    std::string headBegin{"Pico_"};
+    std::string headEnd{"_Trigger_Simple"};
+
+    // preparation variables for the loop read-in
+    std::string pathToIniFile{Pico_returnPathToRunMode(mode)};
+
+    boost::property_tree::ptree ptree;
+    boost::property_tree::ini_parser::read_ini(pathToIniFile.c_str(), ptree);
+
+    std::string rKey;      // root path
+    std::string iKey;      // intermediate path
+    std::string fKey;      // final path
+
+    std::string tmp;
+    rKey = headBegin + std::to_string(picoNo+1) + headEnd + ".";
+    iKey = rKey;
+
+    // reading enabled
+    fKey = iKey + "enabled";
+    m_picoData->at(picoNo).trigger.enabled = ptree.get< bool > ( fKey );
+    
+    // reading source
+    fKey = iKey + "source";
+    tmp = ptree.get< std::string > ( fKey );
+    m_picoData->at(picoNo).trigger.source = 
+        Utility::Pico_StringToEnum_channel( tmp );
+    
+    // reading threshold
+    fKey = iKey + "threshold";
+    m_picoData->at(picoNo).trigger.threshold = ptree.get< int > ( fKey );
+
+    // reading direction
+    fKey = iKey + "direction";
+    tmp = ptree.get < std::string > ( fKey );
+    m_picoData->at(picoNo).trigger.direction = 
+        Utility::Pico_StringToEnum_thresDir( tmp );
+
+    // reading delay 
+    fKey = iKey + "delay";
+    m_picoData->at(picoNo).trigger.delay = ptree.get < unsigned int > ( fKey );
+
+    // reading autoTriggerTime
+    fKey = iKey + "autoTriggerTime";
+    m_picoData->at(picoNo).trigger.autoTriggerTime = ptree.get < int > ( fKey );
+
+    return;
 }
 
 
 
 
-void Database::Pico_readTrigerAdvSettings( Utility::Pico_RunMode mode, int picoNo )
+void Database::Pico_readTriggerAdvSettings( Utility::Pico_RunMode mode, int picoNo )
 {
 
 }

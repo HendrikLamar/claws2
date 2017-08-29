@@ -144,7 +144,7 @@ namespace Utility{
 
 
 
-    PS6000_BANDWIDTH_LIMITER    Pico_StringToEnum_bandwidt( std::string& enumerator )
+    PS6000_BANDWIDTH_LIMITER    Pico_StringToEnum_bandwidth( std::string& enumerator )
     {
 
         PS6000_BANDWIDTH_LIMITER output;

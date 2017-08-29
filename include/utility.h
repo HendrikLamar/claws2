@@ -141,7 +141,7 @@ namespace Utility{
     //! Data structure for an entire picoscope. All the data need to be read-in.
     //! Supported input parameters:
     //!      - Ch1-4:
-    //!          - see Pico_DATA_CHANNEL
+    //!          - see Utility::Pico_Data_Channel
     //!      - serial:
     //!          - the serial of the pico (written on the osci)
     //!      - pre-/postTrigger:
@@ -262,7 +262,7 @@ namespace Utility{
     PS6000_RANGE        Pico_StringToEnum_range( std::string& enumerator );
 
     //! String to enum for PS6000_BANDWIDTH_LIMITER
-    PS6000_BANDWIDTH_LIMITER    Pico_StringToEnum_bandwidt( std::string& enumerator );
+    PS6000_BANDWIDTH_LIMITER    Pico_StringToEnum_bandwidth( std::string& enumerator );
 
     //! String to enum for PS6000_RATIO_MODE
     PS6000_RATIO_MODE           Pico_StringToEnum_ratio( std::string& enumerator );

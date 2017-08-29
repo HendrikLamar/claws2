@@ -115,16 +115,16 @@ class Database
 
             std::vector< int >      m_picoSuccessfulReadinSettings{1,1,1,1};
 
-        void Pico_readChannelsSettings( Utility::Pico_RunMode mode );
-        void Pico_readAquisitionSettings( Utility::Pico_RunMode mode, int picoNo );
-        void Pico_readTriggerSimpleSettings( Utility::Pico_RunMode mode, int picoNo );
-        void Pico_readTrigerAdvSettings( Utility::Pico_RunMode mode, int picoNo );
+            void Pico_readChannelsSettings( Utility::Pico_RunMode mode, int picoNo );
+            void Pico_readAquisitionSettings( Utility::Pico_RunMode mode, int picoNo );
+            void Pico_readTriggerSimpleSettings( Utility::Pico_RunMode mode, int picoNo );
+            void Pico_readTriggerAdvSettings( Utility::Pico_RunMode mode, int picoNo );
 
-        std::string Pico_returnPathToRunMode( Utility::Pico_RunMode mode );
-        
-        std::vector< Utility::Pico_Data_Pico >*     m_picoData;     
+            std::string Pico_returnPathToRunMode( Utility::Pico_RunMode mode );
+            
+            std::vector< Utility::Pico_Data_Pico >*     m_picoData;     
 
-        std::vector< Pico >*                        m_picos;
+            std::vector< Pico >*                        m_picos;
 
 
 
