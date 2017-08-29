@@ -45,7 +45,7 @@ namespace Utility{
             std::cout << "Pico is done with aquiring!" << std::endl;
         }
     };
-    ////////////////////////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////////////
 
     void stringToInt8_t( int8_t* tarray, std::string txt )
     {
@@ -64,26 +64,186 @@ namespace Utility{
     };
 
 
-
-    ////////////////////////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////////////
     //
-    //          Pico related stuff! 
+    //                          START
     //
-    ////////////////////////////////////////////////////////////////////////
+    //                  Pico_StringToEnum functions
+    //
+    ///////////////////////////////////////////////////////////////////////////
 
 
-
-
-
-    // overloading function to return the read-in string value as correct enum
-    PS6000_COUPLING             Utility::Pico_StringToEnum( std::string coupling )
+    PS6000_COUPLING     Pico_StringToEnum_coupling( std::string& enumerator )
     {
-        if ( )
-    }
-    PS6000_RANGE                Utility::Pico_StringToEnum( std::string range );
-    enPS6000RatioMode           Utility::Pico_StringToEnum( std::string mode ); 
-    PS6000_CHANNEL              Utility::Pico_StringToEnum( std::string channel );
-    PS6000_THRESHOLD_DIRECTION  Utility::Pico_StringToEnum( std::string dir );
+        PS6000_COUPLING output;
 
+        if ( enumerator.compare("PS6000_AC") == 0 )
+        {
+            output =  PS6000_AC;
+        }
+        if ( enumerator.compare("PS6000_DC_1M") == 0 )
+        {
+            output =  PS6000_DC_1M;
+        }
+        if ( enumerator.compare("PS6000_DC_50R") == 0 )
+        {
+            output =  PS6000_DC_50R;
+        }
+        else throw PicoException("Wrong coupling input!");
+
+        return output;
+    };
+
+
+    PS6000_RANGE        Pico_StringToEnum_range( std::string& enumerator )
+    {
+        PS6000_RANGE output;
+
+        if( enumerator.compare("PS6000_50MV") == 0 )
+        {
+            output =  PS6000_50MV;
+        }
+        if( enumerator.compare("PS6000_100MV") == 0 )
+        {
+            output =  PS6000_100MV;
+        }
+        if( enumerator.compare("PS6000_200MV") == 0 )
+        {
+            output =  PS6000_200MV;
+        }
+        if( enumerator.compare("PS6000_500MV") == 0 )
+        {
+            output =  PS6000_500MV;
+        }
+        if( enumerator.compare("PS6000_1V") == 0 )
+        {
+            output =  PS6000_1V;
+        }
+        if( enumerator.compare("PS6000_2V") == 0 )
+        {
+            output =  PS6000_2V;
+        }
+        if( enumerator.compare("PS6000_5V") == 0 )
+        {
+            output =  PS6000_5V;
+        }
+        if( enumerator.compare("PS6000_10V") == 0 )
+        {
+            output =  PS6000_10V;
+        }
+        if( enumerator.compare("PS6000_20V") == 0 )
+        {
+            output =  PS6000_20V;
+        }
+        else throw PicoException("Wrong range input!");
+
+        return output;
+
+    };
+
+
+
+
+    PS6000_BANDWIDTH_LIMITER    Pico_StringToEnum_bandwidt( std::string& enumerator )
+    {
+
+        PS6000_BANDWIDTH_LIMITER output;
+
+        if ( enumerator.compare("PS6000_BW_FULL") == 0 )
+        {
+            output =  PS6000_BW_FULL;
+        }
+        if ( enumerator.compare("PS6000_BW_25MHZ") == 0 )
+        {
+            output =  PS6000_BW_25MHZ;
+        }
+        else throw PicoException("Wrong bandwidth input!");
+        
+
+        return output;
+    };
+
+
+
+    PS6000_RATIO_MODE   Pico_StringToEnum_ratio( std::string& enumerator )
+    {
+        PS6000_RATIO_MODE   output;
+        // check for ratio mode
+//        if ( typeid(T) == typeid(PS6000_RATIO_MODE) )
+//        {
+            if ( enumerator.compare("PS6000_RATIO_MODE_NONE") == 0 )
+            {
+                output =  PS6000_RATIO_MODE_NONE;
+            }
+            else throw PicoException("Ratio mode not known!");
+//        } // end ratio mode
+        return output;
+    };
+
+
+
+
+    PS6000_CHANNEL      Pico_StringToEnum_channel( std::string& enumerator )
+    {
+
+        PS6000_CHANNEL output;
+        if ( enumerator.compare("PS6000_CHANNEL_A") == 0)
+        {
+            output =  PS6000_CHANNEL_A;
+        }
+        if ( enumerator.compare("PS6000_CHANNEL_B") == 0)
+        {
+            output =  PS6000_CHANNEL_B;
+        }
+        if ( enumerator.compare("PS6000_CHANNEL_C") == 0)
+        {
+            output =  PS6000_CHANNEL_C;
+        }
+        if ( enumerator.compare("PS6000_CHANNEL_D") == 0)
+        {
+            output =  PS6000_CHANNEL_D;
+        }
+        if ( enumerator.compare("PS6000_EXTERNAL") == 0)
+        {
+            output =  PS6000_EXTERNAL;
+        }
+        if ( enumerator.compare("PS6000_TRIGGER_AUX") == 0)
+        {
+            output =  PS6000_TRIGGER_AUX;
+        }
+        else throw PicoException("Wrong channel input!");
+        
+
+        return output;
+    };
+
+
+
+    PS6000_THRESHOLD_DIRECTION  Pico_StringToEnum_thresDir(std::string& enumerator )
+    {
+
+        PS6000_THRESHOLD_DIRECTION  output;
+
+        if ( enumerator.compare("PS6000_RISING") == 0 )
+        {
+            output =  PS6000_RISING;
+        }
+        if ( enumerator.compare("PS6000_FALLING") == 0 )
+        {
+            output =  PS6000_FALLING;
+        }
+        else throw PicoException("Wrong threshold direction input!");
+
+        return output;
+    };
+
+
+    ///////////////////////////////////////////////////////////////////////////
+    //
+    //                          END 
+    //
+    //                  Pico_StringToEnum functions
+    //
+    ///////////////////////////////////////////////////////////////////////////
     
 }

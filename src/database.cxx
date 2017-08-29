@@ -504,14 +504,15 @@ void Database::Pico_readChannelsSettings( Utility::Pico_RunMode mode )
     boost::property_tree::ptree ptree;
     boost::property_tree::ini_parser::read_ini(pathToIniFile.c_str(), ptree);
 
-    std::string rPath;      // root path
-    std::string iPath;      // intermediate path
-    std::string fPath;      // final path
+    std::string rKey;      // root path
+    std::string iKey;      // intermediate path
+    std::string fKey;      // final path
 
+    std::string tmp;
     // the loop goes to four because of four picos are used
     for ( int ii = 0; ii < 4; ++ii )
     {
-        rPath = headBegin + std::to_string(ii+1) + headEnd;
+        rKey = headBegin + std::to_string(ii+1) + headEnd;
 
         // put channels in vector for better accessibility in loop
         std::vector< Utility::Pico_Data_Channel > channels{
@@ -525,22 +526,30 @@ void Database::Pico_readChannelsSettings( Utility::Pico_RunMode mode )
         for ( unsigned int kk = 0; kk < channelList.size(); ++kk )
         {
             // create loop specific root path (key)
-            iPath = rPath + channelList.at(kk) + ".";
+            iKey = rKey + channelList.at(kk) + ".";
             
             // reading 'enabled'
-            fPath = iPath + "enabled";
-            channels.at(kk).enabled = ptree.get< bool > (fPath);
+            fKey = iKey + "enabled";
+            channels.at(kk).enabled = ptree.get< bool > ( fKey );
             
             // reading coupling
-            fPath = iPath + "coupling";
-            channels.at(kk).coupling = ptree.get< PS6000_COUPLING > (fPath);
+            fKey = iKey + "coupling";
+            tmp = ptree.get< std::string > ( fKey );
+            channels.at(kk).coupling = 
+                Utility::Pico_StringToEnum_coupling( tmp ); 
             
-            
+            // reading range
+            fKey = iKey + "range";
+            tmp = ptree.get< std::string > ( fKey );
+            channels.at(kk).range = 
+                Utility::Pico_StringToEnum_range( tmp );
+
+            // reading analogue offset
+            fKey = iKey + "analogueOffset";
+            channels.at(kk).analogueOffset = ptree.get< float >( fKey );
 
         }
     }
-
-     
 }
 
 
