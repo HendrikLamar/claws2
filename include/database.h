@@ -83,10 +83,10 @@ class Database
         void Pico_init();
 
         //! Closes all initialized Picos.
-            void Pico_close();
+        void Pico_close();
 
-            //! Reads in the pico settings.
-            void Pico_readConfig( Utility::Pico_RunMode mode );
+        //! Reads in the pico settings.
+        void Pico_readSettings( Utility::Pico_RunMode mode );
 
 
 
@@ -115,6 +115,9 @@ class Database
 
             std::vector< int >      m_picoSuccessfulReadinSettings{1,1,1,1};
 
+
+
+            //! Help functions for Database::Pico_readSettings
             void Pico_readChannelsSettings( Utility::Pico_RunMode mode, int picoNo );
             void Pico_readAquisitionSettings( Utility::Pico_RunMode mode, int picoNo );
             void Pico_readTriggerSimpleSettings( Utility::Pico_RunMode mode, int picoNo );

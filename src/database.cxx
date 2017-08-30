@@ -381,97 +381,84 @@ void Database::Pico_close()
 
 
 
-void Database::Pico_readConfig( Utility::Pico_RunMode mode )
+void Database::Pico_readSettings( Utility::Pico_RunMode mode )
 {
-
-    // open file according to runmode
-    std::string iniPath;
-
-
-
-
-
-    // header string for each point
-    std::string headS{"Pico_"};
-    std::vector< std::string > headE{
-        "_Aquisition",
-        "_Trigger_Simple",
-        "_Trigger_Advanced"
-    };
-
-
-    // Settings aquisition
-    std::vector< std::string > aquisitionSettings{
-        "preTrigger",
-        "postTrigger",
-        "timebase",
-        "downSampleMode",
-        "downSampleRatio",
-        "oversample"
-    };
-
-
-    // Settings trigger simple
-    std::vector< std::string > triggerSSettings{
-        "enabled",
-        "source",
-        "threshold",
-        "direction",
-        "delay",
-        "autoTriggerTime"
-    };
-
-
-
-
-
-    // header channel with its settings
-    std::vector< std::string > channel{
-        "_Channel_A",
-        "_Channel_B",
-        "_Channel_C",
-        "_Channel_D"
-    };
-    std::vector< std::string > chSettings{
-        "enabled",
-        "coupling",
-        "range",
-        "analogueOffset",
-        "bandwidth"
-    };
-
-
-    // loop for four picos. four is hardcoded.
-    //! \todo Number of read-in config cycles is hardcoded to four. No matter
-    //! \todo how many picos are connected.
-    //
-    std::string rPath;      // root path
-    std::string iPath;      // intermediate path
-    std::string fPath;      // final path
-    for ( int counter_1 = 0; counter_1 < 4; ++counter_1)
+    
+    // since we have four picos, it loops fouer times
+    for ( int i = 0; i < 4; ++i )
     {
-        rPath = headS + std::to_string(counter_1+1);
 
-        for ( auto tmp : headE )
+        ///////////////////////////////////////////////////////////////////////
+        // catch exceptions for each settings separatly and inform the user.
+        
+
+        // reading in channel settings
+        try
         {
-            iPath = rPath + tmp + ".";
-
-            if ( tmp.compare(headE.at(0)) == 0 )
-            {
-                for ( auto subtmp : aquisitionSettings )
-                {
-                    fPath = iPath + subtmp;
-
-
-                }
-            }
+            Pico_readChannelsSettings( mode, i );
+        }
+        catch( boost::property_tree::ptree_error excep )
+        {
+            std::cout << "\nChannel settings couldn't be read-in for Pico# ";
+            std::cout << i+1 << "\n";
+            std::cout << "Please check the ini-file arguments and Claws docs.\n";
+            std::cout << excep.what() << "\n" << std::endl;
+            continue;
         }
 
+
+
+        // reading in aquisition settings
+        try
+        {
+            Pico_readAquisitionSettings( mode, i );
+        }
+        catch( boost::property_tree::ptree_error excep )
+        {
+            std::cout << "\nAquisition settings couldn't be read-in for Pico# ";
+            std::cout << i+1 << "\n";
+            std::cout << "Please check the ini-file arguments and Claws docs.\n";
+            std::cout << excep.what() << "\n" << std::endl;
+            continue;
+        }
+
+
+
+        // reading in simple trigger settings
+        try
+        {
+            Pico_readTriggerSimpleSettings( mode, i );
+        }
+        catch( boost::property_tree::ptree_error excep )
+        {
+            std::cout << "\nSimple Trigger settings couldn't be read-in for Pico# ";
+            std::cout << i+1 << "\n";
+            std::cout << "Please check the ini-file arguments and Claws docs.\n";
+            std::cout << excep.what() << "\n" << std::endl;
+            continue;
+        }
+
+
+
+        // reading in advanced trigger settings
+        //! \todo This function needs to be filled with some code!
+//        try
+//        {
+//            Pico_readTriggerAdvSettings( mode, i );
+//        }
+//        catch( boost::property_tree::ptree_error excep )
+//        {
+//            std::cout << "\nAdvanced Trigger settings couldn't be read-in for Pico# ";
+//            std::cout << i+1 << "\n";
+//            std::cout << "Please check the ini-file arguments and Claws docs.\n";
+//            std::cout << excep.what() << "\n" << std::endl;
+//            continue;
+//        }
 
     }
 
 
-
+    return;
 }
 
 
