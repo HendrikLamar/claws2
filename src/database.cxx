@@ -23,6 +23,8 @@
 #include "readini.h"
 
 #include <boost/property_tree/exceptions.hpp>
+#include <boost/property_tree/ptree.hpp>
+#include <boost/property_tree/ini_parser.hpp>
 
 #include <iostream>
 #include <string>
@@ -44,17 +46,28 @@ Database::Database() try :
     //          Powersupply
     ///////////////////////////////////////////////////////////////////////////
 
-//    Pico_init();
 
     N6700_readPSUConf();
     N6700_readChSet();
 
-    std::cout << m_initReader->getInitstruct().PowerSupply << std::endl;
+    
+
+
+
+    ///////////////////////////////////////////////////////////////////////////
+    //          Pico
+    ///////////////////////////////////////////////////////////////////////////
+
+    Pico_init();
+
+
+//    Pico_readSettings( Utility::MERKEL_HG );
 
 }
 catch(...)
 {
-    std::cerr << " Construction failed!\n";
+    std::cerr << "Database construction failed!\n";
+    throw;
 }
 
 
@@ -168,8 +181,6 @@ void Database::N6700_readPSUConf()
 {
     std::string root = "Connect.";
 
-    std::cout << "File :" << m_initReader->getInitstruct().PowerSupply << "\n";
-
     std::string ip = root + "Server";
 
     m_n6700_connect.ip = m_initReader->getKey< std::string > (
@@ -265,9 +276,10 @@ void Database::Pico_init()
     else m_picos = new std::vector< Pico >;
     
 
-    std::vector <std::string > serials;
+    std::vector< std::pair< std::string, std::string > > serialLocation;
     std::string sName = "Pico_Initializer.pico_";
-    std::string eName = "_serial";
+    std::string nameSerial = "_serial";
+    std::string nameLocation = "_location";
 
 
     std::vector<int> initCounter;       //! Counts which serials could be initialized.
@@ -276,39 +288,69 @@ void Database::Pico_init()
     for ( int i = 0 ; i < 4 ; ++i )
     {
         // create key
-        std::string key = sName + std::to_string(i+1) + eName;
-        std::string tmp;
+        std::string keySerial = sName + std::to_string(i+1) + nameSerial;
+        std::string keyLocation= sName + std::to_string(i+1) + nameLocation;
+        std::string tmpSerial;
+        std::string tmpLocation;
 
         // try if there are all serial given in the picoInit.ini file.
         // If not, just continue!
         try
         {
-            tmp = m_initReader->getKey< std::string >
-                (m_initReader->getInitstruct().initPico, key);
+
+            boost::property_tree::ptree ptree;
+            boost::property_tree::ini_parser::read_ini(
+                    m_initReader->getInitstruct().initPico, ptree);
+
+            tmpSerial = ptree.get< std::string >( keySerial );
+            tmpLocation = ptree.get< std::string >( keyLocation );
+
+/*             // try reading serial
+ *             tmpSerial = m_initReader->getKey< std::string >
+ *                 (m_initReader->getInitstruct().initPico, keySerial);
+ * 
+ *             // try reading location
+ *             tmpLocation = m_initReader->getKey< std::string >
+ *                 (m_initReader->getInitstruct().initPico, keyLocation);
+ */
         }
         catch( boost::property_tree::ptree_error excep )
         {
             continue;
         }
 
-        serials.push_back(tmp);
+        serialLocation.push_back( std::make_pair( tmpSerial, tmpLocation ) );
         initCounter.push_back(1);
     };
 
 
 
-    if ( serials.size() > 0 )
+    if ( serialLocation.size() > 0 )
     {
         
-        for ( unsigned int ii = 0; ii < serials.size(); ++ii )
+        for ( unsigned int ii = 0; ii < serialLocation.size(); ++ii )
         {
-            Utility::Pico_Data_Pico pico(serials.at(ii));
-            m_picoData->push_back(pico);
+            try
+            {
+                Utility::Pico_Data_Pico pico( 
+                        serialLocation.at(ii).first, 
+                        serialLocation.at(ii).second);
+
+                m_picoData->push_back(pico);
+            }
+            catch( PicoException excep )
+            {
+                std::cout << "For " << serialLocation.at(ii).first;
+                std::cout <<  ":\n" << excep.what() << "\n";
+                initCounter.at(ii) = 0;
+                continue;
+            }
+
 
             try
             {
             m_picos->push_back(
-                    Pico( m_picoData->at(ii).serial )
+                    Pico( m_picoData->at(ii).serial, &m_picoData->at(ii).location )
                     );
             }
             catch( PicoException error )
@@ -319,10 +361,10 @@ void Database::Pico_init()
         }
     }
 
-    if ( serials.size() > 0)
+    if ( serialLocation.size() > 0)
     {
         int sumI{0};
-        for ( unsigned int bb = 0; bb < serials.size(); ++bb )
+        for ( unsigned int bb = 0; bb < serialLocation.size(); ++bb )
         {
             if ( initCounter.at(bb) == 1)
             {
@@ -334,19 +376,26 @@ void Database::Pico_init()
         std::cout << "++++++++++++++++++++++++++++++++++++++++++++++++++++++++\n";
         std::cout << "\tPico initialization\n";
         std::cout << "++++++++++++++++++++++++++++++++++++++++++++++++++++++++\n";
-        std::cout << "Serials found:\t\t" << serials.size();
+        std::cout << "Serials found:\t\t" << serialLocation.size();
         std::cout << "\nPicos intialized:\t" << sumI << "\n";
         std::cout << "--------------------------------------------------------\n";
 
         // Return to the user how many and which Picos have been found 
         // and could be initialized.
-        for ( unsigned int ii = 0; ii < serials.size(); ++ii)
+        for ( unsigned int ii = 0; ii < serialLocation.size(); ++ii)
         {
             if ( initCounter.at(ii) == 1)
             {
-                std::cout << "\t#" << ii << "\t" << serials.at(ii) << "\tinitialized!\n";
+                std::cout << "#" << ii << "\t" << serialLocation.at(ii).first;
+                std::cout << "\t" << serialLocation.at(ii).second;
+                std::cout << "\tinitialized!\n";
             }
-            else std::cout << "\t#" << ii << "\t" << serials.at(ii) << "\tnot found!\n";
+            else
+            {
+                std::cout << "#" << ii << "\t" << serialLocation.at(ii).first;
+                std::cout << "\t" << serialLocation.at(ii).second;
+                std::cout << "\tnot found!\n";
+            }
         }
     }
     else std::cout << "\n\tSorry no serials found! Does the ini-file exist?\n";
@@ -631,6 +680,7 @@ void Database::Pico_readTriggerSimpleSettings( Utility::Pico_RunMode mode, int p
 
 
 
+//! \todo Function is empty!
 void Database::Pico_readTriggerAdvSettings( Utility::Pico_RunMode mode, int picoNo )
 {
 

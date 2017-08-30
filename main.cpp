@@ -27,8 +27,18 @@
 
 int main()
 {
-    MyState* mystate = new MyState();
-    mystate->run();
+
+    MyState* mystate;
+
+    try
+    {
+        mystate = new MyState();
+        mystate->run();
+    }
+    catch(...)
+    {
+        std::cout << "Unknown error occured. Exiting..." << std::endl;
+    }
 
 
     delete mystate;

@@ -21,15 +21,17 @@
 #include "clawsException.h"
 
 #include <map>
+#include <vector>
 #include <string>
-#include <typeinfo>
+#include <iostream>
+//#include <typeinfo>
 
 #include <libps6000-1.4/ps6000Api.h>
 #include <libps6000-1.4/PicoStatus.h>
 
 namespace Utility{
 
-    ////////////////////////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////////////
     /*
      * Pico Ready?
     */
@@ -44,14 +46,25 @@ namespace Utility{
 
     
 
-    ////////////////////////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////////////
 
 
     //! Rewrites a std::string to an int8_t array which is given as input parameter.
     void stringToInt8_t( int8_t* tarray, std::string txt );
 
 
-    ////////////////////////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////////////
+    
+
+    
+
+    
+
+
+
+
+
+    ///////////////////////////////////////////////////////////////////////////
 
 
     struct N6700_connect
@@ -63,11 +76,16 @@ namespace Utility{
 
 
 
-    ////////////////////////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////////////
     //
-    //          Pico related stuff! 
+    //                  Pico related stuff! 
     //
-    ////////////////////////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////////////
+
+    
+    ///////////////////////////////////////////////////////////////////////////
+    //                  Pico Data Structures
+    //
 
 
     //! Data structure for on channel of a picoscope. This data needs to be read-in.
@@ -144,6 +162,11 @@ namespace Utility{
     //!          - see Utility::Pico_Data_Channel
     //!      - serial:
     //!          - the serial of the pico (written on the osci)
+    //!      - location:
+    //           - upper_forward
+    //           - upper_backward
+    //           - lower_forward
+    //           - lower_backward
     //!      - pre-/postTrigger:
     //!          - integer, the sum of both should not exceed 2 GS
     //!      - timebase:
@@ -161,7 +184,7 @@ namespace Utility{
     //!          - 1
     struct Pico_Data_Pico
     {
-        Pico_Data_Pico( std::string tserial ) : 
+        Pico_Data_Pico( std::string tserial, std::string tlocation ) : 
             Ch1( PS6000_CHANNEL_A ),
             Ch2( PS6000_CHANNEL_B ),
             Ch3( PS6000_CHANNEL_C ),
@@ -173,7 +196,32 @@ namespace Utility{
                 throw PicoException("The serial cannot be longer than 100 chars. Sorry!");
             }
 
+            // translate the string to the demanded int8_t type
             Utility::stringToInt8_t( serial, tserial );
+
+
+            ///////////////////////////////////////////////////////////////////
+
+            // check if the location is allowed!
+            std::vector< std::string > possibleLocations{"upper_forward",
+                "upper_backward",
+                "lower_forward",
+                "lower_backward"};
+
+            // bool to check if the location is allowd
+            bool dummybool = false;
+            for ( auto &tmp : possibleLocations)
+            {
+                if ( tlocation.compare( tmp ) == 0 )
+                {
+                    dummybool = true;
+                }
+            }
+            
+            dummybool ? location = tlocation : throw PicoException(
+                    "Location not valid!");
+
+
         };
 
         Pico_Data_Channel         Ch1;
@@ -185,6 +233,7 @@ namespace Utility{
 
 
         int8_t                  serial[100];
+        std::string             location;
 
         uint32_t                preTrigger;
         uint32_t                postTrigger;
@@ -202,9 +251,33 @@ namespace Utility{
 
 
 
-    ////////////////////////////////////////////////////////////////////////
+    //
+    //                      END Pico Data Structures
+    ///////////////////////////////////////////////////////////////////////////
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    ///////////////////////////////////////////////////////////////////////////
+    //                      Pico Enums
+    //
 
 
 
@@ -250,6 +323,31 @@ namespace Utility{
         LOW_GAIN
     };
 
+    //
+    //                      END Pico Enums
+    ///////////////////////////////////////////////////////////////////////////
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     ///////////////////////////////////////////////////////////////////////////
     //                  Pico_StringToEnum functions
@@ -272,6 +370,16 @@ namespace Utility{
 
     //! String to enum for PS6000_THRESHOLD_DIRECTION
     PS6000_THRESHOLD_DIRECTION  Pico_StringToEnum_thresDir(std::string& enumerator );
+
+    //
+    //                      END Pico_StringToEnum functions
+    ///////////////////////////////////////////////////////////////////////////
+
+
+
+
+
+
 
 
 } // END Namespace Utility

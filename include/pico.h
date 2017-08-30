@@ -38,6 +38,7 @@ class Pico
 
         int16_t             m_handle;
         int8_t              *m_serial;
+        std::string         *m_location;
         std::string         m_alias;
 
         uint16_t            m_noChannelsEnabled         {0};
@@ -237,7 +238,7 @@ class Pico
         
         ////////////////////////////////////////////////////////////////////////
         //! Constructor
-        Pico( int8_t *serial);
+        Pico( int8_t* serial, std::string* location );
 
         // Destructor
         ~Pico(){

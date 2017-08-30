@@ -36,8 +36,9 @@
  * Pico Contructor.
  */
 
-Pico::Pico( int8_t *serial)
-    : m_serial(serial)
+Pico::Pico( int8_t *serial, std::string* location ) :
+    m_serial( serial ),
+    m_location( location )
 {
     Pico::openUnit();
     Pico::turnOffUnnecessary();
