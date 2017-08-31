@@ -61,7 +61,7 @@ Database::Database() try :
     Pico_init();
 
 
-//    Pico_readSettings( Utility::MERKEL_HG );
+    Pico_readSettings( Utility::MERKEL_HG );
 
 }
 catch(...)
@@ -434,7 +434,7 @@ void Database::Pico_readSettings( Utility::Pico_RunMode mode )
 {
     
     // since we have four picos, it loops fouer times
-    for ( int i = 0; i < 4; ++i )
+    for ( unsigned int i = 0; i < m_picos->size(); ++i )
     {
 
         ///////////////////////////////////////////////////////////////////////
@@ -447,6 +447,14 @@ void Database::Pico_readSettings( Utility::Pico_RunMode mode )
             Pico_readChannelsSettings( mode, i );
         }
         catch( boost::property_tree::ptree_error excep )
+        {
+            std::cout << "\nChannel settings couldn't be read-in for Pico# ";
+            std::cout << i+1 << "\n";
+            std::cout << "Please check the ini-file arguments and Claws docs.\n";
+            std::cout << excep.what() << "\n" << std::endl;
+            continue;
+        }
+        catch( PicoException excep )
         {
             std::cout << "\nChannel settings couldn't be read-in for Pico# ";
             std::cout << i+1 << "\n";
@@ -470,6 +478,14 @@ void Database::Pico_readSettings( Utility::Pico_RunMode mode )
             std::cout << excep.what() << "\n" << std::endl;
             continue;
         }
+        catch( PicoException excep )
+        {
+            std::cout << "\nAquisition settings couldn't be read-in for Pico# ";
+            std::cout << i+1 << "\n";
+            std::cout << "Please check the ini-file arguments and Claws docs.\n";
+            std::cout << excep.what() << "\n" << std::endl;
+            continue;
+        }
 
 
 
@@ -486,6 +502,15 @@ void Database::Pico_readSettings( Utility::Pico_RunMode mode )
             std::cout << excep.what() << "\n" << std::endl;
             continue;
         }
+        catch( PicoException excep )
+        {
+            std::cout << "\nSimple Trigger settings couldn't be read-in for Pico# ";
+            std::cout << i+1 << "\n";
+            std::cout << "Please check the ini-file arguments and Claws docs.\n";
+            std::cout << excep.what() << "\n" << std::endl;
+            continue;
+        }
+
 
 
 
@@ -535,7 +560,7 @@ void Database::Pico_readChannelsSettings( Utility::Pico_RunMode mode, int picoNo
     std::string fKey;      // final path
 
     std::string tmp;
-    rKey = headBegin + std::to_string(picoNo+1) + headEnd;
+    rKey = headBegin + m_picoData->at(picoNo).location + headEnd;
 
     // put channels in vector for better accessibility in loop
     std::vector< Utility::Pico_Data_Channel > channels{
@@ -558,8 +583,7 @@ void Database::Pico_readChannelsSettings( Utility::Pico_RunMode mode, int picoNo
         // reading coupling
         fKey = iKey + "coupling";
         tmp = ptree.get< std::string > ( fKey );
-        channels.at(kk).coupling = 
-            Utility::Pico_StringToEnum_coupling( tmp ); 
+        channels.at(kk).coupling = Utility::Pico_StringToEnum_coupling( tmp ); 
         
         // reading range
         fKey = iKey + "range";
@@ -595,7 +619,7 @@ void Database::Pico_readAquisitionSettings( Utility::Pico_RunMode mode, int pico
     std::string fKey;      // final path
 
     std::string tmp;
-    rKey = headBegin + std::to_string(picoNo+1) + headEnd + ".";
+    rKey = headBegin + m_picoData->at(picoNo).location + headEnd + ".";
 
     
     // reading preTrigger 
@@ -643,7 +667,7 @@ void Database::Pico_readTriggerSimpleSettings( Utility::Pico_RunMode mode, int p
     std::string fKey;      // final path
 
     std::string tmp;
-    rKey = headBegin + std::to_string(picoNo+1) + headEnd + ".";
+    rKey = headBegin + m_picoData->at(picoNo).location + headEnd + ".";
     iKey = rKey;
 
     // reading enabled

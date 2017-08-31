@@ -163,10 +163,10 @@ namespace Utility{
     //!      - serial:
     //!          - the serial of the pico (written on the osci)
     //!      - location:
-    //           - upper_forward
-    //           - upper_backward
-    //           - lower_forward
-    //           - lower_backward
+    //           - Upper_Forward
+    //           - Upper_Backward
+    //           - Lower_Forward
+    //           - Lower_Backward
     //!      - pre-/postTrigger:
     //!          - integer, the sum of both should not exceed 2 GS
     //!      - timebase:
@@ -203,10 +203,11 @@ namespace Utility{
             ///////////////////////////////////////////////////////////////////
 
             // check if the location is allowed!
-            std::vector< std::string > possibleLocations{"upper_forward",
-                "upper_backward",
-                "lower_forward",
-                "lower_backward"};
+            std::vector< std::string > possibleLocations{
+                "Upper_Forward",
+                "Upper_Backward",
+                "Lower_Forward",
+                "Lower_Backward"};
 
             // bool to check if the location is allowd
             bool dummybool = false;

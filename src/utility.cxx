@@ -79,17 +79,18 @@ namespace Utility{
 
         if ( enumerator.compare("PS6000_AC") == 0 )
         {
-            output =  PS6000_AC;
+            return  PS6000_AC;
         }
-        if ( enumerator.compare("PS6000_DC_1M") == 0 )
+        else if ( enumerator.compare("PS6000_DC_1M") == 0 )
         {
-            output =  PS6000_DC_1M;
+            return  PS6000_DC_1M;
         }
-        if ( enumerator.compare("PS6000_DC_50R") == 0 )
+        else if ( enumerator.compare("PS6000_DC_50R") == 0 )
         {
-            output =  PS6000_DC_50R;
+            return  PS6000_DC_50R;
         }
-        else throw PicoException("Wrong coupling input!");
+        
+        throw PicoException("Wrong coupling input!");
 
         return output;
     };
@@ -101,41 +102,42 @@ namespace Utility{
 
         if( enumerator.compare("PS6000_50MV") == 0 )
         {
-            output =  PS6000_50MV;
+            return  PS6000_50MV;
         }
         if( enumerator.compare("PS6000_100MV") == 0 )
         {
-            output =  PS6000_100MV;
+            return  PS6000_100MV;
         }
         if( enumerator.compare("PS6000_200MV") == 0 )
         {
-            output =  PS6000_200MV;
+            return  PS6000_200MV;
         }
         if( enumerator.compare("PS6000_500MV") == 0 )
         {
-            output =  PS6000_500MV;
+            return  PS6000_500MV;
         }
         if( enumerator.compare("PS6000_1V") == 0 )
         {
-            output =  PS6000_1V;
+            return  PS6000_1V;
         }
         if( enumerator.compare("PS6000_2V") == 0 )
         {
-            output =  PS6000_2V;
+            return  PS6000_2V;
         }
         if( enumerator.compare("PS6000_5V") == 0 )
         {
-            output =  PS6000_5V;
+            return  PS6000_5V;
         }
         if( enumerator.compare("PS6000_10V") == 0 )
         {
-            output =  PS6000_10V;
+            return  PS6000_10V;
         }
         if( enumerator.compare("PS6000_20V") == 0 )
         {
-            output =  PS6000_20V;
+            return  PS6000_20V;
         }
-        else throw PicoException("Wrong range input!");
+        
+        throw PicoException("Wrong range input!");
 
         return output;
 
@@ -151,13 +153,14 @@ namespace Utility{
 
         if ( enumerator.compare("PS6000_BW_FULL") == 0 )
         {
-            output =  PS6000_BW_FULL;
+            return  PS6000_BW_FULL;
         }
         if ( enumerator.compare("PS6000_BW_25MHZ") == 0 )
         {
-            output =  PS6000_BW_25MHZ;
+            return  PS6000_BW_25MHZ;
         }
-        else throw PicoException("Wrong bandwidth input!");
+        
+        throw PicoException("Wrong bandwidth input!");
         
 
         return output;
@@ -168,15 +171,13 @@ namespace Utility{
     PS6000_RATIO_MODE   Pico_StringToEnum_ratio( std::string& enumerator )
     {
         PS6000_RATIO_MODE   output;
-        // check for ratio mode
-//        if ( typeid(T) == typeid(PS6000_RATIO_MODE) )
-//        {
-            if ( enumerator.compare("PS6000_RATIO_MODE_NONE") == 0 )
-            {
-                output =  PS6000_RATIO_MODE_NONE;
-            }
-            else throw PicoException("Ratio mode not known!");
-//        } // end ratio mode
+
+        if ( enumerator.compare("PS6000_RATIO_MODE_NONE") == 0 )
+        {
+            return PS6000_RATIO_MODE_NONE;
+        }
+        else throw PicoException("Ratio mode not known!");
+
         return output;
     };
 
@@ -189,29 +190,30 @@ namespace Utility{
         PS6000_CHANNEL output;
         if ( enumerator.compare("PS6000_CHANNEL_A") == 0)
         {
-            output =  PS6000_CHANNEL_A;
+            return  PS6000_CHANNEL_A;
         }
         if ( enumerator.compare("PS6000_CHANNEL_B") == 0)
         {
-            output =  PS6000_CHANNEL_B;
+            return  PS6000_CHANNEL_B;
         }
         if ( enumerator.compare("PS6000_CHANNEL_C") == 0)
         {
-            output =  PS6000_CHANNEL_C;
+            return  PS6000_CHANNEL_C;
         }
         if ( enumerator.compare("PS6000_CHANNEL_D") == 0)
         {
-            output =  PS6000_CHANNEL_D;
+            return  PS6000_CHANNEL_D;
         }
         if ( enumerator.compare("PS6000_EXTERNAL") == 0)
         {
-            output =  PS6000_EXTERNAL;
+            return  PS6000_EXTERNAL;
         }
         if ( enumerator.compare("PS6000_TRIGGER_AUX") == 0)
         {
-            output =  PS6000_TRIGGER_AUX;
+            return  PS6000_TRIGGER_AUX;
         }
-        else throw PicoException("Wrong channel input!");
+        
+        throw PicoException("Wrong channel input!");
         
 
         return output;
@@ -226,13 +228,14 @@ namespace Utility{
 
         if ( enumerator.compare("PS6000_RISING") == 0 )
         {
-            output =  PS6000_RISING;
+            return  PS6000_RISING;
         }
         if ( enumerator.compare("PS6000_FALLING") == 0 )
         {
-            output =  PS6000_FALLING;
+            return  PS6000_FALLING;
         }
-        else throw PicoException("Wrong threshold direction input!");
+        
+        throw PicoException("Wrong threshold direction input!");
 
         return output;
     };
