@@ -25,7 +25,7 @@
 #include "utility.h"
 #include "n6700_channels.h"
 #include "pico.h"
-
+//#include "n6700.h"
 
 ///////////////////////////////////////////////////////////////////////////////
 //
@@ -56,10 +56,10 @@ class Database
 
         //! Void function which reads in the powersupply settings for low and
         //! high gain mode.
-        void N6700_readChSet();
+        void N6700_readChSettings();
         
         //! Reads in the n6700.ini file.
-        void N6700_readPSUConf();
+        void N6700_readConnectSettings();
 
         //! Returns a nested pair-construct with high-/low gain settings for
         //! all four channels.
@@ -80,13 +80,13 @@ class Database
         //! Picoscope initializer.
         //! Reads the serial numbers from initializer.ini and initializes them if
         //! available.
-        void Pico_init();
+        void Pico_init( std::vector< Pico* >* vPicos );
 
         //! Closes all initialized Picos.
-        void Pico_close();
+        void Pico_close( std::vector< Pico* >* vPicos );
 
         //! Reads in the pico settings.
-        void Pico_readSettings( Utility::Pico_RunMode mode );
+        void Pico_readSettings( Utility::Pico_RunMode mode, std::vector< Pico* >* vPicos );
 
 
 
@@ -101,6 +101,7 @@ class Database
             //   All settings for the powersupply are send as strings. 
             ///////////////////////////////////////////////////////////////////////
 
+//            N6700*                      m_psu;
             N6700_Channels*             m_N6700_Channels;
             
             Utility::N6700_connect      m_n6700_connect;
@@ -117,17 +118,35 @@ class Database
 
 
 
-            //! Help functions for Database::Pico_readSettings
-            void Pico_readChannelsSettings( Utility::Pico_RunMode mode, int picoNo );
-            void Pico_readAquisitionSettings( Utility::Pico_RunMode mode, int picoNo );
-            void Pico_readTriggerSimpleSettings( Utility::Pico_RunMode mode, int picoNo );
-            void Pico_readTriggerAdvSettings( Utility::Pico_RunMode mode, int picoNo );
+            // Help functions for Database::Pico_readSettings
+            void Pico_readChannelsSettings( 
+                    Utility::Pico_RunMode mode, 
+                    int picoNo
+                    );
+            void Pico_readAquisitionSettings( 
+                    Utility::Pico_RunMode mode, 
+                    int picoNo
+                    );
+            void Pico_readTriggerSimpleSettings( 
+                    Utility::Pico_RunMode mode, 
+                    int picoNo
+                    );
+            void Pico_readTriggerAdvSettings( 
+                    Utility::Pico_RunMode mode, 
+                    int picoNo
+                    );
+
+            Utility::Pico_Data_HL_Gain* Pico_getHLGainStruct( 
+                    Utility::Pico_RunMode mode,
+                    int picoNo
+                    );
+
 
             std::string Pico_returnPathToRunMode( Utility::Pico_RunMode mode );
             
-            std::vector< Utility::Pico_Data_Pico >*     m_picoData;     
+            std::vector< Utility::Pico_Data_Pico* >*     m_picoData;     
 
-            std::vector< Pico >*                        m_picos;
+//            std::vector< Pico >*                        m_picos;
 
 
 

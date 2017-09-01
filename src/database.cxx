@@ -38,17 +38,12 @@ Database::Database() try :
     m_stopSwitch(false),
     m_initReader(new ReadIni()),
     m_N6700_Channels(new N6700_Channels()),
-    m_picoData( nullptr ),
-    m_picos( nullptr )
-
+    m_picoData( nullptr )
 {
     ///////////////////////////////////////////////////////////////////////////
     //          Powersupply
     ///////////////////////////////////////////////////////////////////////////
 
-
-    N6700_readPSUConf();
-    N6700_readChSet();
 
     
 
@@ -57,11 +52,6 @@ Database::Database() try :
     ///////////////////////////////////////////////////////////////////////////
     //          Pico
     ///////////////////////////////////////////////////////////////////////////
-
-    Pico_init();
-
-
-    Pico_readSettings( Utility::MERKEL_HG );
 
 }
 catch(...)
@@ -83,8 +73,8 @@ Database::~Database()
     delete m_picoData;
     m_picoData = nullptr;
     
-    delete m_picos;
-    m_picos = nullptr;
+//    delete m_picos;
+//    m_picos = nullptr;
 };
 
 
@@ -140,7 +130,7 @@ bool Database::getStop()
 
 
 // reads in high AND low gain mode everytime it is called.
-void Database::N6700_readChSet() 
+void Database::N6700_readChSettings() 
 {
 
     for ( size_t ii = 0; ii < m_N6700_Channels->Gains.size(); ++ii ) {
@@ -177,7 +167,7 @@ void Database::N6700_readChSet()
 
 
 
-void Database::N6700_readPSUConf()
+void Database::N6700_readConnectSettings()
 {
     std::string root = "Connect.";
 
@@ -251,29 +241,29 @@ Utility::N6700_connect Database::N6700_getConnect() const
 
 
 
-void Database::Pico_init()
+void Database::Pico_init( std::vector< Pico* >* vPicos )
 {
     // check if the picoData pointer is empty. If yes allocate new, if no delete first.
     if ( m_picoData )
     {
         // delete data behind the pointer and invoke new vector
         delete m_picoData;
-        m_picoData = new std::vector< Utility::Pico_Data_Pico >;
+        m_picoData = new std::vector< Utility::Pico_Data_Pico* >;
     }
-    else m_picoData = new std::vector< Utility::Pico_Data_Pico >;
+    else m_picoData = new std::vector< Utility::Pico_Data_Pico* >;
 
 
     // check if the pico pointer is empty. If yes allocate new, if no delete first.
-    if ( m_picos )
+    if ( vPicos )
     {
         // close picos properly before deleting the pointer
-        Pico_close();
+        Pico_close( vPicos );
 
         // delete data behind the pointer and invoke new vector
-        delete m_picos;
-        m_picos = new std::vector< Pico >;
+        delete vPicos;
+        vPicos = new std::vector< Pico* >;
     }
-    else m_picos = new std::vector< Pico >;
+    else vPicos = new std::vector< Pico* >;
     
 
     std::vector< std::pair< std::string, std::string > > serialLocation;
@@ -332,7 +322,7 @@ void Database::Pico_init()
         {
             try
             {
-                Utility::Pico_Data_Pico pico( 
+                Utility::Pico_Data_Pico *pico = new Utility::Pico_Data_Pico( 
                         serialLocation.at(ii).first, 
                         serialLocation.at(ii).second);
 
@@ -349,8 +339,8 @@ void Database::Pico_init()
 
             try
             {
-            m_picos->push_back(
-                    Pico( m_picoData->at(ii).serial, &m_picoData->at(ii).location )
+            vPicos->push_back(
+                    new Pico( m_picoData->at(ii)->serial, &m_picoData->at(ii)->location )
                     );
             }
             catch( PicoException error )
@@ -411,16 +401,16 @@ void Database::Pico_init()
 
 
 
-void Database::Pico_close()
+void Database::Pico_close( std::vector< Pico* >* vPicos )
 {
     
-    // check if m_picos is empty
-    if ( m_picos && (m_picos->size() > 0) ) 
+    // check if vPicos is empty
+    if ( vPicos && (vPicos->size() > 0) ) 
     {
         // closing all pico instances
-        for ( Pico pico : *m_picos )
+        for ( Pico* pico : *vPicos )
         {
-            pico.closeUnit();
+            pico->closeUnit();
         }
     }
 
@@ -430,11 +420,14 @@ void Database::Pico_close()
 
 
 
-void Database::Pico_readSettings( Utility::Pico_RunMode mode )
+void Database::Pico_readSettings( 
+        Utility::Pico_RunMode mode, 
+        std::vector< Pico* >* vPicos 
+        )
 {
     
     // since we have four picos, it loops fouer times
-    for ( unsigned int i = 0; i < m_picos->size(); ++i )
+    for ( unsigned int i = 0; i < vPicos->size(); ++i )
     {
 
         ///////////////////////////////////////////////////////////////////////
@@ -540,6 +533,13 @@ void Database::Pico_readSettings( Utility::Pico_RunMode mode )
 
 void Database::Pico_readChannelsSettings( Utility::Pico_RunMode mode, int picoNo )
 {
+    // returns the corresponding high or low gain data structure according to the
+    // run mode
+    Utility::Pico_Data_HL_Gain* tmpDataStruct{
+        Pico_getHLGainStruct( mode, picoNo )};
+
+    ///////////////////////////////////////////////////////////////////////////
+
     std::string headBegin{"Pico_"};
     std::string headEnd{"_Channel_"};
     std::vector< std::string > channelList{
@@ -560,14 +560,14 @@ void Database::Pico_readChannelsSettings( Utility::Pico_RunMode mode, int picoNo
     std::string fKey;      // final path
 
     std::string tmp;
-    rKey = headBegin + m_picoData->at(picoNo).location + headEnd;
+    rKey = headBegin + m_picoData->at(picoNo)->location + headEnd;
 
     // put channels in vector for better accessibility in loop
-    std::vector< Utility::Pico_Data_Channel > channels{
-        m_picoData->at(picoNo).Ch1,
-        m_picoData->at(picoNo).Ch2,
-        m_picoData->at(picoNo).Ch3,
-        m_picoData->at(picoNo).Ch4
+    std::vector< Utility::Pico_Data_Channel* > channels{
+        tmpDataStruct->Ch1,
+        tmpDataStruct->Ch2,
+        tmpDataStruct->Ch3,
+        tmpDataStruct->Ch4
     };
 
     // loop through the channels
@@ -578,22 +578,22 @@ void Database::Pico_readChannelsSettings( Utility::Pico_RunMode mode, int picoNo
         
         // reading 'enabled'
         fKey = iKey + "enabled";
-        channels.at(kk).enabled = ptree.get< bool > ( fKey );
+        channels.at(kk)->enabled = ptree.get< bool > ( fKey );
         
         // reading coupling
         fKey = iKey + "coupling";
         tmp = ptree.get< std::string > ( fKey );
-        channels.at(kk).coupling = Utility::Pico_StringToEnum_coupling( tmp ); 
+        channels.at(kk)->coupling = Utility::Pico_StringToEnum_coupling( tmp ); 
         
         // reading range
         fKey = iKey + "range";
         tmp = ptree.get< std::string > ( fKey );
-        channels.at(kk).range = 
+        channels.at(kk)->range = 
             Utility::Pico_StringToEnum_range( tmp );
 
         // reading analogue offset
         fKey = iKey + "analogueOffset";
-        channels.at(kk).analogueOffset = ptree.get< float >( fKey );
+        channels.at(kk)->analogueOffset = ptree.get< float >( fKey );
 
     }
 
@@ -605,6 +605,13 @@ void Database::Pico_readChannelsSettings( Utility::Pico_RunMode mode, int picoNo
 
 void Database::Pico_readAquisitionSettings( Utility::Pico_RunMode mode, int picoNo )
 {
+
+    // returns the corresponding high or low gain data structure according to the
+    // run mode
+    Utility::Pico_Data_HL_Gain* tmpDataStruct{
+        Pico_getHLGainStruct( mode, picoNo )};
+
+    ///////////////////////////////////////////////////////////////////////////
 
     std::string headBegin{"Pico_"};
     std::string headEnd{"_Aquisition"};
@@ -619,30 +626,30 @@ void Database::Pico_readAquisitionSettings( Utility::Pico_RunMode mode, int pico
     std::string fKey;      // final path
 
     std::string tmp;
-    rKey = headBegin + m_picoData->at(picoNo).location + headEnd + ".";
+    rKey = headBegin + m_picoData->at(picoNo)->location + headEnd + ".";
 
     
     // reading preTrigger 
     fKey = rKey + "preTrigger";
-    m_picoData->at(picoNo).preTrigger = ptree.get< unsigned int > ( fKey );
+    tmpDataStruct->preTrigger = ptree.get< unsigned int > ( fKey );
     
     // reading postTrigger
     fKey = rKey + "postTrigger";
-    m_picoData->at(picoNo).postTrigger = ptree.get< unsigned int > ( fKey );
+    tmpDataStruct->postTrigger = ptree.get< unsigned int > ( fKey );
     
     // reading timebase
     fKey = rKey + "timebase";
-    m_picoData->at(picoNo).timebase = ptree.get< unsigned int > ( fKey );
+    tmpDataStruct->timebase = ptree.get< unsigned int > ( fKey );
 
     // reading downSampleMode 
     fKey = rKey + "downSampleMode";
     tmp = ptree.get< std::string >( fKey );
-    m_picoData->at(picoNo).downSampleRatioMode = 
+    tmpDataStruct->downSampleRatioMode = 
         Utility::Pico_StringToEnum_ratio( tmp );
 
     // reading downSamlpeRatio
     fKey = rKey + "downSampleRatio";
-    m_picoData->at(picoNo).downSampleRatio = ptree.get< unsigned int  >( fKey );
+    tmpDataStruct->downSampleRatio = ptree.get< unsigned int  >( fKey );
 
     return;
 }
@@ -652,6 +659,13 @@ void Database::Pico_readAquisitionSettings( Utility::Pico_RunMode mode, int pico
 
 void Database::Pico_readTriggerSimpleSettings( Utility::Pico_RunMode mode, int picoNo )
 {
+    // returns the corresponding high or low gain data structure according to the
+    // run mode
+    Utility::Pico_Data_HL_Gain* tmpDataStruct{
+        Pico_getHLGainStruct( mode, picoNo )};
+
+    ///////////////////////////////////////////////////////////////////////////
+
 
     std::string headBegin{"Pico_"};
     std::string headEnd{"_Trigger_Simple"};
@@ -667,36 +681,36 @@ void Database::Pico_readTriggerSimpleSettings( Utility::Pico_RunMode mode, int p
     std::string fKey;      // final path
 
     std::string tmp;
-    rKey = headBegin + m_picoData->at(picoNo).location + headEnd + ".";
+    rKey = headBegin + m_picoData->at(picoNo)->location + headEnd + ".";
     iKey = rKey;
 
     // reading enabled
     fKey = iKey + "enabled";
-    m_picoData->at(picoNo).trigger.enabled = ptree.get< bool > ( fKey );
+    tmpDataStruct->trigger->enabled = ptree.get< bool > ( fKey );
     
     // reading source
     fKey = iKey + "source";
     tmp = ptree.get< std::string > ( fKey );
-    m_picoData->at(picoNo).trigger.source = 
+    tmpDataStruct->trigger->source = 
         Utility::Pico_StringToEnum_channel( tmp );
     
     // reading threshold
     fKey = iKey + "threshold";
-    m_picoData->at(picoNo).trigger.threshold = ptree.get< int > ( fKey );
+    tmpDataStruct->trigger->threshold = ptree.get< int > ( fKey );
 
     // reading direction
     fKey = iKey + "direction";
     tmp = ptree.get < std::string > ( fKey );
-    m_picoData->at(picoNo).trigger.direction = 
+    tmpDataStruct->trigger->direction = 
         Utility::Pico_StringToEnum_thresDir( tmp );
 
     // reading delay 
     fKey = iKey + "delay";
-    m_picoData->at(picoNo).trigger.delay = ptree.get < unsigned int > ( fKey );
+    tmpDataStruct->trigger->delay = ptree.get < unsigned int > ( fKey );
 
     // reading autoTriggerTime
     fKey = iKey + "autoTriggerTime";
-    m_picoData->at(picoNo).trigger.autoTriggerTime = ptree.get < int > ( fKey );
+    tmpDataStruct->trigger->autoTriggerTime = ptree.get < int > ( fKey );
 
     return;
 }
@@ -741,6 +755,52 @@ std::string Database::Pico_returnPathToRunMode( Utility::Pico_RunMode mode )
 
     return output;
 }
+
+
+
+
+
+
+
+
+
+Utility::Pico_Data_HL_Gain*    Database::Pico_getHLGainStruct(
+                                        Utility::Pico_RunMode mode,
+                                        int picoNo
+                                        )
+{
+    switch( mode )
+    {
+        // return the intermediate data structure
+        case Utility::INTERMEDIATE:
+            return m_picoData->at(picoNo)->dataIntermediate;
+
+        // return the high gain data structure
+        case Utility::MERKEL_HG:
+            return m_picoData->at(picoNo)->dataHighGain;
+
+        case Utility::OBERMAIER_HG:
+            return m_picoData->at(picoNo)->dataHighGain;
+
+        // return the low gain data structure
+        case Utility::KLUM_LG:
+            return m_picoData->at(picoNo)->dataLowGain;
+
+        case Utility::SCHIFFER_LG:
+            return m_picoData->at(picoNo)->dataLowGain;
+
+        // if garrn is specified, use the high gain version as default
+        case Utility::GARRN:
+            return m_picoData->at(picoNo)->dataHighGain;            
+
+        default:
+            throw PicoException("Utility::Pico_RunMode does not exist!");
+    }
+
+} 
+
+
+
 
 ///////////////////////////////////////////////////////////////////////////////
 //                      END Pico stuff

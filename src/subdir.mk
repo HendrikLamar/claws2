@@ -15,6 +15,7 @@ PICO_OBJS += ./build/src/database.o
 PICO_OBJS += ./build/src/scpi.o
 PICO_OBJS += ./build/src/n6700.o
 #PICO_OBJS += ./build/src/clawsException.o
+PICO_OBJS += ./build/src/clawsRun.o
 
 
 

@@ -18,6 +18,7 @@
 #ifndef UTILITY_H
 #define UTILITY_H
 
+//#include "pico.h"
 #include "clawsException.h"
 
 #include <map>
@@ -182,13 +183,56 @@ namespace Utility{
     //!          - PS6000_RATIO_MODE_NONE
     //!      - downSampleRatio:
     //!          - 1
+    struct Pico_Data_HL_Gain
+    {
+        //! Constructor takes care about the channels.
+        Pico_Data_HL_Gain() : 
+            Ch1( new Pico_Data_Channel( PS6000_CHANNEL_A ) ),
+            Ch2( new Pico_Data_Channel( PS6000_CHANNEL_B ) ),
+            Ch3( new Pico_Data_Channel( PS6000_CHANNEL_C ) ),
+            Ch4( new Pico_Data_Channel( PS6000_CHANNEL_D ) )
+        {};
+
+        //! Destructor takes care about the channels.
+        ~Pico_Data_HL_Gain()
+        {
+            delete Ch1;
+            delete Ch2;
+            delete Ch3;
+            delete Ch4;
+
+            Ch1 = nullptr;
+            Ch2 = nullptr;
+            Ch3 = nullptr;
+            Ch4 = nullptr;
+        };
+
+        Pico_Data_Channel*        Ch1;
+        Pico_Data_Channel*        Ch2;
+        Pico_Data_Channel*        Ch3;
+        Pico_Data_Channel*        Ch4;
+
+        Pico_Data_Trigger_Simple* trigger;
+
+
+        uint32_t                preTrigger;
+        uint32_t                postTrigger;
+
+        uint32_t                timebase;
+        int16_t                 oversample;
+
+        enPS6000RatioMode       downSampleRatioMode;
+        uint32_t                downSampleRatio;
+
+
+    };
+
+
+
+
     struct Pico_Data_Pico
     {
-        Pico_Data_Pico( std::string tserial, std::string tlocation ) : 
-            Ch1( PS6000_CHANNEL_A ),
-            Ch2( PS6000_CHANNEL_B ),
-            Ch3( PS6000_CHANNEL_C ),
-            Ch4( PS6000_CHANNEL_D )
+        Pico_Data_Pico( std::string tserial, std::string tlocation )
         {
             // check if the serial is longer than 100 chars.
             if ( tserial.size() > 100 )
@@ -225,29 +269,37 @@ namespace Utility{
 
         };
 
-        Pico_Data_Channel         Ch1;
-        Pico_Data_Channel         Ch2;
-        Pico_Data_Channel         Ch3;
-        Pico_Data_Channel         Ch4;
+        ~Pico_Data_Pico()
+        {
+            // delete data pointers
+            if ( dataLowGain )
+            {
+                delete dataLowGain;
+                dataLowGain = nullptr;
+            }
+            if ( dataHighGain )
+            {
+                delete dataHighGain;
+                dataHighGain = nullptr;
+            }
+            if ( dataIntermediate )
+            {
+                delete dataIntermediate;
+                dataIntermediate = nullptr;
+            }
+        }
 
-        Pico_Data_Trigger_Simple  trigger;
 
+        ///////////////////////////////////////////////////////////////////////
 
         int8_t                  serial[100];
         std::string             location;
 
-        uint32_t                preTrigger;
-        uint32_t                postTrigger;
-
-        uint32_t                timebase;
-        int16_t                 oversample;
-
-        enPS6000RatioMode       downSampleRatioMode;
-        uint32_t                downSampleRatio;
-
+        Pico_Data_HL_Gain*      dataLowGain;
+        Pico_Data_HL_Gain*      dataHighGain;
+        Pico_Data_HL_Gain*      dataIntermediate;
 
     };
-
 
 
 
@@ -287,8 +339,8 @@ namespace Utility{
     {
         INTERMEDIATE,
 
-        OBERMAIER_HG,
         MERKEL_HG,
+        OBERMAIER_HG,
         SCHIFFER_LG,
         KLUM_LG,
         GARRN

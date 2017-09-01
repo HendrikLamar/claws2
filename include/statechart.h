@@ -31,8 +31,7 @@
 #include <boost/statechart/custom_reaction.hpp>
 #include <boost/mpl/list.hpp>
 
-#include "database.h"
-#include "n6700.h"
+#include "clawsRun.h"
 
 #include <iostream>
 #include <thread>
@@ -143,15 +142,15 @@ struct EvQuit : sc::event< EvQuit > {};
 struct ClawsDAQ : sc::state_machine< ClawsDAQ, Active >
 {
     protected:
-        Database*   m_database;
+        ClawsRun*   m_clawsRun;
 
     public:
-        ClawsDAQ() : m_database(new Database)
+        ClawsDAQ() : m_clawsRun(new ClawsRun)
         {};
         virtual ~ClawsDAQ() 
         {
-            delete m_database;
-            m_database = nullptr;
+            delete m_clawsRun;
+            m_clawsRun = nullptr;
 
             std::cout << 
     "+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\n";
@@ -163,9 +162,9 @@ struct ClawsDAQ : sc::state_machine< ClawsDAQ, Active >
         
 
         /// Returns the database 
-        Database * getDatabase()
+        ClawsRun* getClawsRun()
         {
-            return m_database;
+            return m_clawsRun;
         }
 
 
@@ -325,7 +324,16 @@ struct Init : sc::state< Init, Active::orthogonal<0> >
         Init( my_context ctx ) : my_base( ctx )
         {
             
-            context< ClawsDAQ >().getDatabase()->Pico_init();
+
+            // read in psu data and test if psu is available
+//            context< ClawsDAQ >().getDatabase()->N6700_readPSUConf();
+//            context< ClawsDAQ >().getDatabase()->N6700_readChSet();
+
+
+            // initialize Pico with Merkel as default setting
+/*             context< ClawsDAQ >().getDatabase()->Pico_init();
+ *             context< ClawsDAQ >().getDatabase()->Pico_readSettings( Utility::MERKEL_HG );
+ */
             post_event( EvInit() );
         }
         virtual ~Init()
@@ -406,8 +414,8 @@ struct SystemRun : sc::state< SystemRun, Active::orthogonal<1> >
             std::cout << "Entering SystemRun\n";
 
             // Initialize PSU with the database as parameter.
-            N6700 psu(context< ClawsDAQ >().getDatabase());
-            m_thread = std::thread(&N6700::run, psu);
+//            N6700 psu(context< ClawsDAQ >().getDatabase());
+//            m_thread = std::thread(&N6700::run, psu);
         };
         virtual ~SystemRun()
         {
@@ -435,7 +443,7 @@ struct Quit : sc::state< Quit, Active::orthogonal<0> >
         /// system can be shut down confidently.
         Quit( my_context ctx ) : my_base( ctx )
         {
-            context< ClawsDAQ >().getDatabase()->setStop(true);
+            context< ClawsDAQ >().getClawsRun()->getDatabase()->setStop(true);
             std::cout << "Entering Quit\n";
             post_event( EvQuit() );
         };

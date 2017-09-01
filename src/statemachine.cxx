@@ -144,7 +144,7 @@ void MyState::run()
         };
 
         // checks if the system shall shut down or not.
-        if ( m_daq->getDatabase()->getStop() )
+        if ( m_daq->getClawsRun()->getDatabase()->getStop() )
         {
             break;
         }
