@@ -35,18 +35,22 @@ class Channel
     private:
 
         //! Defines which channel number the current channel has at the pico.
-        const PS6000_CHANNEL            m_channel;
+        const PS6000_CHANNEL                m_channel;
 
         //! Holds the pico handle value.
-        const int16_t*                  m_handle;
+        const int16_t*                      m_handle;
         
-        //! Holds the database to call the settings.
-        const Database*                 m_database;
+//        //! Holds the database to call the settings.
+//        const Database*                     m_database;
 
-        //! Holds the channel settings struct.
-        const Utility::Pico_Data_Pico*  m_picoData;
+        //! Holds the pico settings struct.  
+        const Utility::Pico_Data_Pico*      m_picoData; 
 
-        ///////////////////////////////////////////////////////////////////////
+        //! Holds the channel settings struct
+        const Utility::Pico_Data_HL_Gain*   m_channelData;
+
+
+        /////////////////////////////////////////////////////////////////////// 
         
 
         // single channel settings
@@ -59,6 +63,9 @@ class Channel
         
         //! This vector stores all the data coming from the pico.
         std::vector< int16_t >*         m_dataBuffer;
+        uint32_t                        m_dataBufferSize;
+
+        void        calcDataBufferSize();
 
         // reserve a data buffer of that size per channel when initializing the pico
         // 500 000 000 is 2GS divided by 4 channels
@@ -71,8 +78,8 @@ class Channel
         Channel( 
                 PS6000_CHANNEL channel, 
                 int16_t* handle, 
-                Database* database, 
-                Utility::Pico_Data_Pico* picoData
+                Utility::Pico_Data_Pico* picoData,
+                Utility::Pico_Data_HL_Gain* channelData
                );
         ///////////////////////////////////////////////////////////////////////
         /*
@@ -85,10 +92,10 @@ class Channel
         std::vector< int16_t >*     getBuffer();
 
         //! Loads the settings stored in the database to the channel.
-        void    loadConf( Utility::ClawsGain gain );
+        void    loadConfig();
 
         //! Tells the Pico where to store the data for this channel.
-        void    setDataBuffer();
+        PICO_STATUS     setDataBuffer();
 
         //! Configures the channel with the loaded data.
         PICO_STATUS     setChannel();

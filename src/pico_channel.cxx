@@ -31,15 +31,17 @@
 
 
 
-Channel::Channel( 
+Channel::Channel
+    ( 
         PS6000_CHANNEL channel, 
         int16_t* handle, 
-        Database* database,
-        Utility::Pico_Data_Pico* picoData ) :
+        Utility::Pico_Data_Pico* picoData,
+        Utility::Pico_Data_HL_Gain* channelData 
+    ) :
     m_channel( channel ),
     m_handle( handle ),
-    m_database( database ),
-    m_picoData( picoData )
+    m_picoData( picoData ),
+    m_channelData( channelData )
 {
     // create data buffer and reserve maximum needed space on disk/RAM
     m_dataBuffer = new std::vector< int16_t >;
@@ -114,37 +116,16 @@ std::vector< int16_t >*     Channel::getBuffer()
 
 
 
-void    Channel::loadConf( Utility::ClawsGain gain )
+
+
+void    Channel::loadConfig( )
 {
 
     // holds the database data in this function
-    Utility::Pico_Data_HL_Gain* gdata;
     Utility::Pico_Data_Channel* data;
 
-
-
-    // first check if high or low gain or intermediata mode 
-    switch( gain )
-    {
-        case Utility::INTER:
-            gdata = m_picoData->dataIntermediate;
-            break;
-        case Utility::HIGH_GAIN:
-            gdata = m_picoData->dataHighGain;
-            break;
-        case Utility::LOW_GAIN:
-            gdata = m_picoData->dataLowGain;
-            break;
-        default:
-            ChannelException("ClawsGain mode does not exist!");
-    }
-
-
-
-
-
-    // second, find the correct channel in the database
-    for ( auto& tmp : *gdata->channels)
+    // first, find the correct channel in the database
+    for ( auto& tmp : *m_channelData->channels )
     {
         if ( tmp->channel == m_channel )
         {
@@ -153,16 +134,91 @@ void    Channel::loadConf( Utility::ClawsGain gain )
     }
 
 
-
-
-
-    // third, copy the data from the database to the member variables of the channel
+    // second, copy the data from the database to the member variables of the channel
     m_coupling          = data->coupling;
     m_enabled           = data->enabled;
     m_analogueOffset    = data->analogueOffset;
     m_range             = data->range;
 
+
+    calcDataBufferSize();
 }
+
+
+
+
+
+
+///////////////////////////////////////////////////////////////////////////////
+
+
+
+
+PICO_STATUS Channel::setDataBuffer()
+{
+
+    PICO_STATUS output; 
+
+    // check if resize is needed
+    if ( m_enabled ) 
+    {
+        if ( m_dataBuffer->size() != m_dataBufferSize )
+        {
+            m_dataBuffer->resize( m_dataBufferSize );
+        }
+
+    }
+    
+    // clear data buffer in any case
+    m_dataBuffer->clear();
+
+    output = ps6000SetDataBuffer
+        (
+            *m_handle,
+            m_channel,
+            &m_dataBuffer->at(0),
+            m_dataBufferSize,
+            m_channelData->downSampleRatioMode
+        );
+        
+
+    return output;
+
+}
+
+
+
+
+
+
+///////////////////////////////////////////////////////////////////////////////
+
+
+
+
+
+
+PICO_STATUS Channel::setChannel()
+{
+    PICO_STATUS output;
+
+    output = ps6000SetChannel
+        (
+            *m_handle,
+            m_channel,
+            m_enabled,
+            m_coupling,
+            m_range,
+            m_analogueOffset,
+            m_bandwidth 
+        );
+
+    return output;
+}
+
+
+
+
 
 
 
@@ -184,6 +240,64 @@ void    Channel::loadConf( Utility::ClawsGain gain )
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+///////////////////////////////////////////////////////////////////////////////
+//
+//             START Private member functions
+//
+///////////////////////////////////////////////////////////////////////////////
+
+
+
+void    Channel::calcDataBufferSize()
+{
+    m_dataBufferSize = m_channelData->preTrigger + m_channelData->postTrigger;
+
+    return;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+///////////////////////////////////////////////////////////////////////////////
+//
+//             END Private member functions
+//
+///////////////////////////////////////////////////////////////////////////////
 
 
 

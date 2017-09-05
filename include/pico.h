@@ -22,6 +22,8 @@
 #include <libps6000-1.4/PicoStatus.h>
 #include <libps6000-1.4/ps6000Api.h>
 
+#include "pico_channel.h"
+#include "utility.h"
 
 #include <vector>
 #include <string>
@@ -32,22 +34,24 @@ class Pico
 {
     private:
 
-        // Holds information about the scope
+        // Holds information about the current status of the scope
         PICO_STATUS         m_status;
 
+        // Pico unique variables
         int16_t             m_handle;
         int8_t*             m_serial;
         std::string*        m_location;
 
-        unsigned int        m_noChannelsEnabled;
         
-
+        // vector holding the four channels
+        std::vector< Channel* >*    m_channels;
 
 
         ////////////////////////////////////////////////////////////////////////
         //
         //          START Readin variables
         //
+        ////////////////////////////////////////////////////////////////////////
         
 
         // aquisition settings
@@ -58,6 +62,9 @@ class Pico
         enPS6000RatioMode   m_downSamplingRatioMode;
         uint32_t            m_downSampleRatio;
 
+
+
+
         // simple trigger settings
         int16_t                     m_st_enabled;
         PS6000_CHANNEL              m_st_source;
@@ -65,6 +72,35 @@ class Pico
         PS6000_THRESHOLD_DIRECTION  m_st_direction;
         uint32_t                    m_st_delay;
         int16_t                     m_st_autoTriggerTime_ms;
+
+
+
+
+        ////////////////////////////////////////////////////////////////////////
+        //
+        //          END Readin variables
+        //
+        ////////////////////////////////////////////////////////////////////////
+
+
+
+
+
+
+
+
+
+
+
+        
+
+
+        ////////////////////////////////////////////////////////////////////////
+        //
+        //          START  Internal variables  
+        //
+        ////////////////////////////////////////////////////////////////////////
+
 
 
         // block mode (not rapid block mode) settings with start value
@@ -90,6 +126,11 @@ class Pico
 
 
 
+        ////////////////////////////////////////////////////////////////////////
+        //
+        //          END Internal variables  
+        //
+        ////////////////////////////////////////////////////////////////////////
 
 
 };
