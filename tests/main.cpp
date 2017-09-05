@@ -55,15 +55,27 @@ int main()
 
     boo = 33;
 
-    
-    std::vector<int>* test = new std::vector<int>{0,1,2,3,4,5,6,7,8,9,10};
-
-
-
-
-
     std::cout << "\nOrig: " << boo << std::endl;
     std::cout << "Copy: " << *too << std::endl;
+
+
+
+
+    ///////////////////////////////////////////////////////////////////////////
+
+
+    int     mint;
+    int*    ptr = &mint;
+
+    std::cout << "Uninit: " << *ptr << std::endl;
+
+    mint = 5;
+
+    std::cout << "Init: " << *ptr << std::endl;
+
+    
+
+
 
     return 0;
 }

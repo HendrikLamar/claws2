@@ -35,19 +35,20 @@ class Channel
     private:
 
         //! Defines which channel number the current channel has at the pico.
+        //! This should never change!
         const PS6000_CHANNEL                m_channel;
 
-        //! Holds the pico handle value.
-        const int16_t*                      m_handle;
+        //! Const pointer to a variable handle value.
+        //! The handle value is not yet defined in the moment of construction.
+        //! Initialization follows later.
+        int16_t* const                      m_handle;
         
-//        //! Holds the database to call the settings.
-//        const Database*                     m_database;
+        //! Const pointer to a variable set of pico data.
+        Utility::Pico_Data_Pico* const      m_picoData; 
 
-        //! Holds the pico settings struct.  
-        const Utility::Pico_Data_Pico*      m_picoData; 
-
-        //! Holds the channel settings struct
-        const Utility::Pico_Data_HL_Gain*   m_channelData;
+        //! Pointer to the current run mode data. The pointer changes a lot, 
+        //! e.g. to intermediate, high gain, low gain.
+        Utility::Pico_Data_HL_Gain*         m_channelData;
 
 
         /////////////////////////////////////////////////////////////////////// 
@@ -73,10 +74,9 @@ class Channel
     public:
         ///////////////////////////////////////////////////////////////////////
         /*
-         *! Contructor
+         *! Constructor
          */
-        Channel( 
-                PS6000_CHANNEL channel, 
+        Channel(PS6000_CHANNEL channel, 
                 int16_t* handle, 
                 Utility::Pico_Data_Pico* picoData,
                 Utility::Pico_Data_HL_Gain* channelData

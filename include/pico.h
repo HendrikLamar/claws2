@@ -19,9 +19,6 @@
 #ifndef PICO_H
 #define PICO_H
 
-#include <libps6000-1.4/PicoStatus.h>
-#include <libps6000-1.4/ps6000Api.h>
-
 #include "pico_channel.h"
 #include "utility.h"
 
@@ -37,14 +34,49 @@ class Pico
         // Holds information about the current status of the scope
         PICO_STATUS         m_status;
 
-        // Pico unique variables
+        ////////////////////////////////////////////////////////////////////////
+        // 
+        //                  START Pico unique variables
+        //
+        ////////////////////////////////////////////////////////////////////////
+        
+
+        //! Const pointer to a variable set of pico data.
+        Utility::Pico_Data_Pico* const      m_picoData;
+
+        //! Handle value is defined during the initialization of the pico.
         int16_t             m_handle;
+
+        // This is not const since I get crazy when trying.
         int8_t*             m_serial;
-        std::string*        m_location;
+
+        // The location is const since it can't be changed and is known at initialization.
+        const std::string* const            m_location;
 
         
-        // vector holding the four channels
-        std::vector< Channel* >*    m_channels;
+        // Vector holding the four channels of the pico
+        const std::vector< Channel* >* const      m_channels;
+
+
+
+        ////////////////////////////////////////////////////////////////////////
+        // 
+        //                  END Pico unique variables
+        //
+        ////////////////////////////////////////////////////////////////////////
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
         ////////////////////////////////////////////////////////////////////////
@@ -131,6 +163,19 @@ class Pico
         //          END Internal variables  
         //
         ////////////////////////////////////////////////////////////////////////
+
+
+    public:
+        ///////////////////////////////////////////////////////////////////////
+        /*
+         *! Contructor
+         */
+        Pico( Utility::Pico_Data_Pico* picoData );
+        ///////////////////////////////////////////////////////////////////////
+        /*
+         *! Destructor
+         */
+        ~Pico();
 
 
 };
