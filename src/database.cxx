@@ -35,10 +35,10 @@
 
 
 Database::Database() try :
+    m_picoData( nullptr ),
     m_stopSwitch(false),
     m_initReader(new ReadIni()),
-    m_N6700_Channels(new N6700_Channels()),
-    m_picoData( nullptr )
+    m_N6700_Channels(new N6700_Channels())
 {
     ///////////////////////////////////////////////////////////////////////////
     //          Powersupply
@@ -563,12 +563,7 @@ void Database::Pico_readChannelsSettings( Utility::Pico_RunMode mode, int picoNo
     rKey = headBegin + m_picoData->at(picoNo)->location + headEnd;
 
     // put channels in vector for better accessibility in loop
-    std::vector< Utility::Pico_Data_Channel* > channels{
-        tmpDataStruct->Ch1,
-        tmpDataStruct->Ch2,
-        tmpDataStruct->Ch3,
-        tmpDataStruct->Ch4
-    };
+    std::vector< Utility::Pico_Data_Channel* >* channels = tmpDataStruct->channels;
 
     // loop through the channels
     for ( unsigned int kk = 0; kk < channelList.size(); ++kk )
@@ -578,22 +573,22 @@ void Database::Pico_readChannelsSettings( Utility::Pico_RunMode mode, int picoNo
         
         // reading 'enabled'
         fKey = iKey + "enabled";
-        channels.at(kk)->enabled = ptree.get< bool > ( fKey );
+        channels->at(kk)->enabled = ptree.get< bool > ( fKey );
         
         // reading coupling
         fKey = iKey + "coupling";
         tmp = ptree.get< std::string > ( fKey );
-        channels.at(kk)->coupling = Utility::Pico_StringToEnum_coupling( tmp ); 
+        channels->at(kk)->coupling = Utility::Pico_StringToEnum_coupling( tmp ); 
         
         // reading range
         fKey = iKey + "range";
         tmp = ptree.get< std::string > ( fKey );
-        channels.at(kk)->range = 
+        channels->at(kk)->range = 
             Utility::Pico_StringToEnum_range( tmp );
 
         // reading analogue offset
         fKey = iKey + "analogueOffset";
-        channels.at(kk)->analogueOffset = ptree.get< float >( fKey );
+        channels->at(kk)->analogueOffset = ptree.get< float >( fKey );
 
     }
 

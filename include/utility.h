@@ -187,30 +187,54 @@ namespace Utility{
     {
         //! Constructor takes care about the channels.
         Pico_Data_HL_Gain() : 
-            Ch1( new Pico_Data_Channel( PS6000_CHANNEL_A ) ),
-            Ch2( new Pico_Data_Channel( PS6000_CHANNEL_B ) ),
-            Ch3( new Pico_Data_Channel( PS6000_CHANNEL_C ) ),
-            Ch4( new Pico_Data_Channel( PS6000_CHANNEL_D ) )
+            channels( new std::vector< Utility::Pico_Data_Channel* >
+                        {
+                            new Utility::Pico_Data_Channel(PS6000_CHANNEL_A),
+                            new Utility::Pico_Data_Channel(PS6000_CHANNEL_B),
+                            new Utility::Pico_Data_Channel(PS6000_CHANNEL_C),
+                            new Utility::Pico_Data_Channel(PS6000_CHANNEL_D)
+                        }
+                    )
+//        Pico_Data_HL_Gain() : 
+//            Ch1( new Pico_Data_Channel( PS6000_CHANNEL_A ) ),
+//            Ch2( new Pico_Data_Channel( PS6000_CHANNEL_B ) ),
+//            Ch3( new Pico_Data_Channel( PS6000_CHANNEL_C ) ),
+//            Ch4( new Pico_Data_Channel( PS6000_CHANNEL_D ) )
         {};
 
         //! Destructor takes care about the channels.
         ~Pico_Data_HL_Gain()
         {
-            delete Ch1;
-            delete Ch2;
-            delete Ch3;
-            delete Ch4;
+            for ( auto& tmp: *channels )
+            {
+                delete tmp;
+                tmp = nullptr;
+            }
 
-            Ch1 = nullptr;
-            Ch2 = nullptr;
-            Ch3 = nullptr;
-            Ch4 = nullptr;
+            delete channels;
+            channels = nullptr;
+
         };
+//        ~Pico_Data_HL_Gain()
+//        {
+//            delete Ch1;
+//            delete Ch2;
+//            delete Ch3;
+//            delete Ch4;
+//
+//            Ch1 = nullptr;
+//            Ch2 = nullptr;
+//            Ch3 = nullptr;
+//            Ch4 = nullptr;
+//        };
 
-        Pico_Data_Channel*        Ch1;
-        Pico_Data_Channel*        Ch2;
-        Pico_Data_Channel*        Ch3;
-        Pico_Data_Channel*        Ch4;
+
+        std::vector< Utility::Pico_Data_Channel* >* channels;
+
+//        Pico_Data_Channel*        Ch1;
+//        Pico_Data_Channel*        Ch2;
+//        Pico_Data_Channel*        Ch3;
+//        Pico_Data_Channel*        Ch4;
 
         Pico_Data_Trigger_Simple* trigger;
 

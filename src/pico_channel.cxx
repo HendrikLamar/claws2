@@ -123,6 +123,7 @@ void    Channel::loadConf( Utility::ClawsGain gain )
 
 
 
+    // first check if high or low gain or intermediata mode 
     switch( gain )
     {
         case Utility::INTER:
@@ -135,22 +136,31 @@ void    Channel::loadConf( Utility::ClawsGain gain )
             gdata = m_picoData->dataLowGain;
             break;
         default:
-
+            ChannelException("ClawsGain mode does not exist!");
     }
 
 
 
 
-    // iterate through the pico data and 
-    for ( auto& tmp : *m_database->m_picoData )
+
+    // second, find the correct channel in the database
+    for ( auto& tmp : *gdata->channels)
     {
-        if( tmp->location.compare( *m_location ) == 0 )
+        if ( tmp->channel == m_channel )
         {
-
+            data = tmp;
         }
-
     }
-    if ( m_database->m_picoData)
+
+
+
+
+
+    // third, copy the data from the database to the member variables of the channel
+    m_coupling          = data->coupling;
+    m_enabled           = data->enabled;
+    m_analogueOffset    = data->analogueOffset;
+    m_range             = data->range;
 
 }
 
