@@ -372,6 +372,7 @@ namespace Utility{
 
     enum ClawsGain
     {
+        INTER,
         HIGH_GAIN,
         LOW_GAIN
     };

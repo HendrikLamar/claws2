@@ -88,6 +88,7 @@ class Database
         //! Reads in the pico settings.
         void Pico_readSettings( Utility::Pico_RunMode mode, std::vector< Pico* >* vPicos );
 
+        std::vector< Utility::Pico_Data_Pico* >*     m_picoData;     
 
 
         private:
@@ -144,7 +145,6 @@ class Database
 
             std::string Pico_returnPathToRunMode( Utility::Pico_RunMode mode );
             
-            std::vector< Utility::Pico_Data_Pico* >*     m_picoData;     
 
 //            std::vector< Pico >*                        m_picos;
 

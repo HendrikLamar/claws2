@@ -18,6 +18,7 @@
 #include <cstring>
 #include <string>
 #include <iostream>
+#include <vector>
 
 #include <boost/numeric/conversion/cast.hpp>
 #include <boost/lexical_cast.hpp>
@@ -43,9 +44,26 @@ int main()
     std::cout << "Orig: " << stri << std::endl;
     std::cout << "Copy: " << foo << std::endl;
 
-    const char* cchar = stri.c_str();
+    int16_t boo = 25;
+    int16_t* too;
+
+    too = &boo;
+
+    std::cout << "\nOrig: " << boo << std::endl;
+    std::cout << "Copy: " << *too << std::endl;
 
 
+    boo = 33;
+
+    
+    std::vector<int>* test = new std::vector<int>{0,1,2,3,4,5,6,7,8,9,10};
+
+
+
+
+
+    std::cout << "\nOrig: " << boo << std::endl;
+    std::cout << "Copy: " << *too << std::endl;
 
     return 0;
 }
