@@ -43,13 +43,38 @@ Pico::Pico( Utility::Pico_Data_Pico* picoData ) :
     m_channels( 
             new std::vector< Channel* >
                 {
-                    new Channel( PS6000_CHANNEL_A, &m_handle, m_picoData, m_picoData->dataIntermediate)
+                    new Channel( 
+                            PS6000_CHANNEL_A, 
+                            &m_handle, 
+                            m_picoData, 
+                            m_picoData->dataIntermediate
+                            ),
+                    new Channel( 
+                            PS6000_CHANNEL_B, 
+                            &m_handle, 
+                            m_picoData, 
+                            m_picoData->dataIntermediate
+                            ),
+                    new Channel( 
+                            PS6000_CHANNEL_C, 
+                            &m_handle, 
+                            m_picoData, 
+                            m_picoData->dataIntermediate
+                            ),
+                    new Channel( 
+                            PS6000_CHANNEL_D, 
+                            &m_handle, 
+                            m_picoData, 
+                            m_picoData->dataIntermediate
+                            ),
                 }
-            )
-{
+    )
+{};
 
-    Channel::
-}
+
+
+
+
 
 
 
@@ -58,6 +83,17 @@ Pico::Pico( Utility::Pico_Data_Pico* picoData ) :
 
 
 
+
+
+
+Pico::~Pico()
+{
+    for ( auto& tmp : *m_channels )
+    {
+        delete tmp;
+    }
+    delete m_channels;
+}
 
 
 
