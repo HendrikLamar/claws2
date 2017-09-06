@@ -1,3 +1,4 @@
+![Claws Logo](claws.png)
 # claws2
 A software for the __Claws 2__ detector for the second phase of the SuperKEKB commissioning.
 
