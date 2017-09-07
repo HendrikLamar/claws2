@@ -146,6 +146,38 @@ Pico::~Pico()
 
 
 
+void Pico::init()
+{
+    if(!m_serial)
+    {
+        m_status = ps6000OpenUnit(&m_handle, nullptr);
+    }
+    else
+    {
+        m_status = ps6000OpenUnit(&m_handle, m_serial);
+    }
+
+    switch( m_handle )
+    {
+        case -1:
+            throw PicoException(std::to_string(*m_serial) + " fails to open!");
+            break;
+        case 0:
+            throw PicoException(std::to_string(*m_serial) + " not found!");
+            break;
+        default:
+            break;
+    }
+}
+
+
+
+
+
+
+
+
+
 void Pico::loadConfig( Utility::ClawsGain mode )
 {
     // first, load channel settings
@@ -179,6 +211,13 @@ void Pico::loadConfig( Utility::ClawsGain mode )
     //! \todo Add Advanced Trigger Settings!
 }
 
+
+
+
+void Pico::setPico()
+{
+
+}
 
 
 
