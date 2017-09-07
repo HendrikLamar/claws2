@@ -118,7 +118,39 @@ std::vector< int16_t >*     Channel::getBuffer()
 
 
 
-void    Channel::loadConfig( )
+void Channel::setGainMode( Utility::ClawsGain gain )
+{
+    switch ( gain )
+    {
+        case Utility::INTER:
+            m_channelData = m_picoData->dataIntermediate;
+            break;
+        case Utility::HIGH_GAIN:
+            m_channelData = m_picoData->dataHighGain;
+            break;
+        case Utility::LOW_GAIN:
+            m_channelData = m_picoData->dataLowGain;
+            break;
+        default:
+            throw ChannelException("Wrong gain mode defined!");
+    }
+
+    return;
+}
+
+
+
+
+
+
+///////////////////////////////////////////////////////////////////////////////
+
+
+
+
+
+
+void    Channel::loadConfig()
 {
 
     // holds the database data in this function

@@ -91,6 +91,12 @@ class Channel
         //! Returns the channel buffer.
         std::vector< int16_t >*     getBuffer();
 
+        //! Sets the run mode. This function needs to be called before loadConfig(),
+        //! setDataBuffer() and setChannel().
+        //! Possible arguments defined in Utility::ClawsGain.
+        void    setGainMode( Utility::ClawsGain gain );
+
+
         //! Loads the settings stored in the database to the channel.
         void    loadConfig();
 

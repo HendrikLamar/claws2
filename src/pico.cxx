@@ -148,6 +148,13 @@ Pico::~Pico()
 
 void Pico::loadConfig()
 {
+    for ( auto& tmp : *m_channels )
+    {
+        tmp->loadConfig();
+    }
+
+
+
 
 }
 
