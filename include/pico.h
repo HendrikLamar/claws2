@@ -178,6 +178,14 @@ class Pico
         ~Pico();
 
 
+        //! Loads the settings from the Database and stores it in member variables
+        void loadConfig();
+
+        void setPico();
+
+        void run();
+
+        void stop();
 };
 
 

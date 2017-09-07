@@ -97,7 +97,8 @@ class Channel
         //! Tells the Pico where to store the data for this channel.
         PICO_STATUS     setDataBuffer();
 
-        //! Configures the channel with the loaded data.
+        //! Configures the channel with the current loaded data. You might want
+        //! to update the data first with loadConfig().
         PICO_STATUS     setChannel();
 
     
