@@ -118,7 +118,7 @@ std::vector< int16_t >*     Channel::getBuffer()
 
 
 
-void Channel::setGainMode( Utility::ClawsGain gain )
+void Channel::setGainMode( Utility::ClawsGain& gain )
 {
     switch ( gain )
     {

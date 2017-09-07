@@ -165,6 +165,43 @@ class Pico
         ////////////////////////////////////////////////////////////////////////
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        ////////////////////////////////////////////////////////////////////////
+        //
+        //         START private member functions 
+        //
+        ////////////////////////////////////////////////////////////////////////
+        
+
+
+        // Returns a Utility::Pico_Data_HL_Gain pointer to the correct data set
+        // for the demanded gain mode.
+        Utility::Pico_Data_HL_Gain*  getGainData( Utility::ClawsGain& mode );
+
+
+
+        ////////////////////////////////////////////////////////////////////////
+        //
+        //         END private member functions 
+        //
+        ////////////////////////////////////////////////////////////////////////
+
+
     public:
         ///////////////////////////////////////////////////////////////////////
         /*
@@ -179,7 +216,7 @@ class Pico
 
 
         //! Loads the settings from the Database and stores it in member variables
-        void loadConfig();
+        void loadConfig( Utility::ClawsGain mode );
 
         void setPico();
 

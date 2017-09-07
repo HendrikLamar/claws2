@@ -148,11 +148,19 @@ Pico::~Pico()
 
 void Pico::loadConfig( Utility::ClawsGain mode )
 {
+    // first, load channel settings
     for ( auto& tmp : *m_channels )
     {
-        tmp
+        tmp->setGainMode( mode );
         tmp->loadConfig();
     }
+
+    Utility::Pico_Data_HL_Gain* data = getGainData( mode );
+
+
+
+
+
 
 
 
@@ -198,3 +206,75 @@ void Pico::loadConfig( Utility::ClawsGain mode )
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+///////////////////////////////////////////////////////////////////////////////
+//
+//              START private member functions
+//
+///////////////////////////////////////////////////////////////////////////////
+
+
+
+
+
+Utility::Pico_Data_HL_Gain* Pico::getGainData( Utility::ClawsGain& mode )
+{
+
+    Utility::Pico_Data_HL_Gain* output;
+
+    switch( mode )
+    {
+        case Utility::INTER:
+            output = m_picoData->dataIntermediate;
+            break;
+        case Utility::LOW_GAIN:
+            output = m_picoData->dataLowGain;
+            break;
+        case Utility::HIGH_GAIN:
+            output = m_picoData->dataHighGain;
+            break;
+        default:
+            throw PicoException("Wrong ClawsGain parameter entered!");
+    }
+
+    return output;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+///////////////////////////////////////////////////////////////////////////////
+//
+//              END private member functions
+//
+///////////////////////////////////////////////////////////////////////////////
