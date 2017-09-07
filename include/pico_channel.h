@@ -33,6 +33,11 @@ class Channel
 {
 
     private:
+        ///////////////////////////////////////////////////////////////////////
+        //
+        //                  START const member variables
+        //
+        ///////////////////////////////////////////////////////////////////////
 
         //! Defines which channel number the current channel has at the pico.
         //! This should never change!
@@ -46,13 +51,37 @@ class Channel
         //! Const pointer to a variable set of pico data.
         Utility::Pico_Data_Pico* const      m_picoData; 
 
+        
+
+
+        ///////////////////////////////////////////////////////////////////////
+        //
+        //                  END const member variables
+        //
+        ///////////////////////////////////////////////////////////////////////
+
+
+
+
+
+
+
+
+
+
+
+
+        ///////////////////////////////////////////////////////////////////////
+        //
+        //                 START settings 
+        //
+        ///////////////////////////////////////////////////////////////////////
+        
+
         //! Pointer to the current run mode data. The pointer changes a lot, 
         //! e.g. to intermediate, high gain, low gain.
         Utility::Pico_Data_HL_Gain*         m_channelData;
 
-
-        /////////////////////////////////////////////////////////////////////// 
-        
 
         // single channel settings
         PS6000_COUPLING                 m_coupling;
@@ -71,7 +100,23 @@ class Channel
         // reserve a data buffer of that size per channel when initializing the pico
         // 500 000 000 is 2GS divided by 4 channels
         uint32_t        m_bufferSizeReserve{500000000};
+        
+
+
+        ///////////////////////////////////////////////////////////////////////
+        //
+        //                 END settings 
+        //
+        ///////////////////////////////////////////////////////////////////////
+        
+
+
+
+
     public:
+        
+
+
         ///////////////////////////////////////////////////////////////////////
         /*
          *! Constructor
@@ -87,6 +132,14 @@ class Channel
          */
         ~Channel();
         
+
+        ///////////////////////////////////////////////////////////////////////
+        //
+        //                START public member functions 
+        //
+        ///////////////////////////////////////////////////////////////////////
+        
+
 
         //! Returns the channel buffer.
         std::vector< int16_t >*     getBuffer();
@@ -107,6 +160,14 @@ class Channel
         //! to update the data first with loadConfig().
         PICO_STATUS     setChannel();
 
+
+
+
+        ///////////////////////////////////////////////////////////////////////
+        //
+        //                END public member functions 
+        //
+        ///////////////////////////////////////////////////////////////////////
     
 
 };

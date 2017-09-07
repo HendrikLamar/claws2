@@ -146,10 +146,11 @@ Pico::~Pico()
 
 
 
-void Pico::loadConfig()
+void Pico::loadConfig( Utility::ClawsGain mode )
 {
     for ( auto& tmp : *m_channels )
     {
+        tmp
         tmp->loadConfig();
     }
 
