@@ -158,13 +158,25 @@ void Pico::loadConfig( Utility::ClawsGain mode )
     Utility::Pico_Data_HL_Gain* data = getGainData( mode );
 
 
+    // loading aquisition settings
+    m_timebase                  = data->timebase;
+    m_oversample                = data->oversample;
+    m_preTrigger                = data->preTrigger;
+    m_postTrigger               = data->postTrigger;
+    m_downSamplingRatioMode     = data->downSampleRatioMode;
+    m_downSampleRatio           = data->downSampleRatio;
 
 
 
+    // loading simple trigger settings
+    m_st_enabled                = data->trigger->enabled;
+    m_st_source                 = data->trigger->source;
+    m_st_threshold              = data->trigger->threshold;
+    m_st_direction              = data->trigger->direction;
+    m_st_delay                  = data->trigger->delay;
+    m_st_autoTriggerTime_ms     = data->trigger->autoTriggerTime;
 
-
-
-
+    //! \todo Add Advanced Trigger Settings!
 }
 
 
