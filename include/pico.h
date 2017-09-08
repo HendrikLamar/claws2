@@ -205,7 +205,7 @@ class Pico
                                                     // an overflow has occurred or not
                                                     // bit 0 = ch1, bit 1 = ch2 ...
 
-        int                 m_noChannelsEnabled;    // holds the number of enabled channels
+        uint32_t            m_noChannelsEnabled;    // holds the number of enabled channels
 
 
         ////////////////////////////////////////////////////////////////////////

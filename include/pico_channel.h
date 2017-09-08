@@ -147,21 +147,21 @@ class Channel
         //! Sets the run mode. This function needs to be called before loadConfig(),
         //! setDataBuffer() and setChannel().
         //! Possible arguments defined in Utility::ClawsGain.
-        void    setGainMode( Utility::Claws_Gain& gain );
+        void                        setGainMode( Utility::Claws_Gain& gain );
 
 
         //! Loads the settings stored in the database to the channel.
-        void    loadConfig();
+        void                        loadConfig();
 
         //! Tells the Pico where to store the data for this channel.
-        PICO_STATUS     setDataBuffer();
+        PICO_STATUS                 setDataBuffer();
 
         //! Configures the channel with the current loaded data. You might want
         //! to update the data first with loadConfig().
-        PICO_STATUS     setChannel();
+        PICO_STATUS                 setChannel();
 
         //! Returns is channel is enabled.
-        bool getEnabled();
+        bool                        getEnabled();
 
 
 

@@ -419,29 +419,6 @@ std::ostream& operator<<( std::ostream& out, Pico* picoscope );
 
 
 
-
-void    Pico::howManyChannelsEnabled()
-{
-    m_noChannelsEnabled = 0;
-
-    for ( auto& tmp : *m_channels )
-}
-
-
-
-
-
-
-
-
-
-
-
-///////////////////////////////////////////////////////////////////////////////
-
-
-
-
 Utility::Pico_Data_HL_Gain* Pico::getGainData( Utility::Claws_Gain& mode )
 {
 
@@ -553,6 +530,17 @@ void    Pico::getTimebase()
                 );
         ++counter;
     }
+
+    // check if the maxSamples variable is large enough
+    // since it is equal for all channels, this caluclation should be fine
+    if( maxSamples < ( m_noChannelsEnabled * m_channels->at(0)->getBuffer()->size() ) )
+    {
+        throw PicoException("Demanded buffer is too large! Pico cannot allocate it!");
+    }
+
+    checkStatus();
+
+    return;
 }
 
 
