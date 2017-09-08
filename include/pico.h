@@ -208,6 +208,13 @@ class Pico
         uint32_t            m_noChannelsEnabled;    // holds the number of enabled channels
 
 
+        uint32_t            m_noMemorySegments{0};  // holds the number of memory segments
+                                                    // the pico memory is divided in
+                                                    // Default: 1 (by picoscope)
+                                                
+        uint32_t            m_noMemoryMaxSamples;   // holds the max number of samples
+                                                    // available in each memory segment
+
         ////////////////////////////////////////////////////////////////////////
         //
         //          END Picoscope internal variables 
@@ -247,7 +254,11 @@ class Pico
 
         void    getTimebase();
 
-        void    getValues();
+        void    getValuesBlock();
+
+        void    getValuesRapid();
+
+        void    setMemorySegments( uint32_t nSegments );
 
         void    checkStatus();
 

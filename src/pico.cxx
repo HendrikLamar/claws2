@@ -561,10 +561,57 @@ void    Pico::getTimebase()
 
 
 
-void    getValues();
+void    Pico::getValuesBlock()
+{
+    // on input, the number of samples demanded is given.
+    // on exit, the number of values retrieved is written.
+    m_noOfSamplesTotal = m_channels->at(0)->getBuffer()->size();
+
+    m_status = ps6000GetValues(
+                    m_handle,
+                    m_startIndex,
+                    &m_noOfSamplesTotal,
+                    m_downSampleRatio,
+                    m_downSamplingRatioMode,
+
+            )
+}
 
 
 
+
+
+
+
+
+
+
+void    getValuesRapid();
+
+
+
+
+
+
+
+///////////////////////////////////////////////////////////////////////////////
+
+
+
+
+
+void    Pico::setMemorySegments( uint32_t nSegments )
+{
+    m_status = ps6000MemorySegments(
+                    m_handle,
+                    nSegments,
+                    &m_noMemoryMaxSamples
+            );
+
+    checkStatus();
+
+    return;
+}
 
 
 
