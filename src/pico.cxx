@@ -253,8 +253,40 @@ void Pico::setPico()
 
 
 
-Channel* getCh( PS6000_CHANNEL& cha );
-Channel* getCh( int& cha );
+Channel* Pico::getCh( PS6000_CHANNEL& cha )
+{
+    switch( cha )
+    {
+        case PS6000_CHANNEL_A:
+            return m_channels->at(0);
+        case PS6000_CHANNEL_B:
+            return m_channels->at(1);
+        case PS6000_CHANNEL_C:
+            return m_channels->at(2);
+        case PS6000_CHANNEL_D:
+            return m_channels->at(3);
+        default:
+            return nullptr;
+    }
+}
+
+
+Channel* Pico::getCh( int& cha )
+{
+    switch( cha )
+    {
+        case 1:
+            return m_channels->at(0);
+        case 2:
+            return m_channels->at(1);
+        case 3:
+            return m_channels->at(2);
+        case 4:
+            return m_channels->at(3);
+        default:
+            return nullptr;
+    }
+}
 
 
 
