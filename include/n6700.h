@@ -52,7 +52,7 @@ class N6700 : public SCPI
 
 
         //! Sends the configuration stored in the database to the PSU
-        void setConf( Utility::ClawsGain gain );
+        void setConf( Utility::Claws_Gain gain );
 
 
         //! Turns the channels on (true) or off (false).

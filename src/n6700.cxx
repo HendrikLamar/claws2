@@ -89,12 +89,15 @@ void N6700::sendCommand( std::string cmd )
 
 
 
-void N6700::setConf( Utility::ClawsGain HIGH_LOW_GAIN )
+void N6700::setConf( Utility::Claws_Gain HIGH_LOW_GAIN )
 {
     std::string gain;
 
     switch( HIGH_LOW_GAIN )
     {
+        case Utility::INTER:
+            gain = "High_Gain";
+            break;
         case Utility::LOW_GAIN:
             gain = "Low_Gain";
             break;

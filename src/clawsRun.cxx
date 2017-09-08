@@ -63,7 +63,7 @@ Database*   ClawsRun::getDatabase()
 
 void        ClawsRun::initialize()
 {
-    m_database->Pico_init( m_picos );
+//    m_database->Pico_init( m_picos );
 //    m_database->Pico_readSettings
 }
 

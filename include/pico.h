@@ -300,8 +300,6 @@ class Pico
         //! Loads the settings from the Database and stores it in member variables
         void loadConfig( Utility::Claws_Gain& mode );
 
-        void setPico();
-
         //! Returns the channel.
         Channel* getCh( PS6000_CHANNEL& cha );
         Channel* getCh( int& cha );

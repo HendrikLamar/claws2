@@ -235,28 +235,6 @@ void Pico::loadConfig( Utility::Claws_Gain& mode )
 
 
 
-
-///////////////////////////////////////////////////////////////////////////////
-
-
-
-
-
-
-
-
-void Pico::setPico()
-{
-
-}
-
-
-
-
-
-
-
-
 ///////////////////////////////////////////////////////////////////////////////
 
 
@@ -333,7 +311,7 @@ void Pico::runBlock()
 
 
     // Now, check if data taking is done!
-    int16_t*    ready;
+    int16_t*    ready = nullptr;
 
     m_status = ps6000IsReady( m_handle, ready);
     checkStatus();
