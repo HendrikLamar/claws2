@@ -34,6 +34,9 @@ class Pico
         // Holds information about the current status of the scope
         PICO_STATUS         m_status;
 
+        // callback class for Pico::runXXX functions
+        Utility::CallBackPico*                  m_callBack;
+
         ////////////////////////////////////////////////////////////////////////
         // 
         //                  START Pico unique variables

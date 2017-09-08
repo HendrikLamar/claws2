@@ -36,18 +36,41 @@ namespace Utility{
     /*
      * Pico Ready?
     */
-    extern bool pReady;
-    // I am not sure whats going on here.
-    void CallBackBlock
-    (
-            int16_t         handle,          \
-            PICO_STATUS     t_status,        \
-            void            *pParameter
-    );
+/*     extern bool pReady;
+ *     // I am not sure whats going on here.
+ *     void CallBackBlock
+ *     (
+ *             int16_t         handle,          \
+ *             PICO_STATUS     t_status,        \
+ *             void            *pParameter
+ *     );
+ */
 
     
+    //! Needed by Pico:runBlock() and Pico::runRapid() implementation.
+    class CallBackPico
+    {
+        public:
+
+            CallBackPico(){};
+            ~CallBackPico(){};
+
+            bool    pReady{false};
+
+            void callBackBlock(
+                        int16_t         handle,
+                        PICO_STATUS     tstatus,
+                        void*           pParameter
+                    );
+    };
+
+
+
 
     ///////////////////////////////////////////////////////////////////////////
+
+
+
 
 
     //! Rewrites a std::string to an int8_t array which is given as input parameter.

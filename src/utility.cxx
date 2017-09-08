@@ -29,22 +29,47 @@ namespace Utility{
     /*
      * Pico Ready?
     */
-    bool pReady = false;
-    // I am not sure whats going on here.
-    void CallBackBlock(
-            int16_t         handle,          \
-            PICO_STATUS     t_status,        \
-            void            *pParameter){
+/*     bool pReady = false;
+ *     // I am not sure whats going on here.
+ *     void CallBackBlock(
+ *             int16_t         handle,          \
+ *             PICO_STATUS     t_status,        \
+ *             void            *pParameter){
+ * 
+ *         if(handle){};       // dirty: don't want 'variable unused' warning
+ *         if(pParameter){};
+ * 
+ * 
+ *         if(t_status != PICO_CANCELLED){
+ *             pReady = true;
+ *             std::cout << "Pico is done with aquiring!" << std::endl;
+ *         }
+ *     };
+ */
 
-        if(handle){};       // dirty: don't want 'variable unused' warning
-        if(pParameter){};
+    
 
+    //! It is absolutly not clear to me why this function is implemented like that,
+    //! but thats a copy of the pico example.
+    void CallBackPico::callBackBlock(
+                int16_t         handle,
+                PICO_STATUS     tstatus,
+                void*           pParameter
+            )
+    {
+        if( handle ) {};        // dirty: otherwise 'variable unused'
+        if(pParameter){};       // dirty: otherwise 'variable unused'
 
-        if(t_status != PICO_CANCELLED){
+        if( tstatus != PICO_CANCELLED)
+        {
             pReady = true;
-            std::cout << "Pico is done with aquiring!" << std::endl;
         }
     };
+
+
+
+
+
     ///////////////////////////////////////////////////////////////////////////
 
     void stringToInt8_t( int8_t* tarray, std::string txt )

@@ -40,6 +40,7 @@
 
 
 Pico::Pico( Utility::Pico_Data_Pico* picoData ) :
+    m_callBack( new Utility::CallBackPico() ),
     m_picoData( picoData ),
     m_location( &m_picoData->location ),
     m_channels( 
@@ -312,7 +313,45 @@ Channel* Pico::getCh( int& cha )
 
 
 
-void runBlock();
+void Pico::runBlock()
+{
+    // Make the pico ready! Afterwards wait until the trigger is fired and
+    // the data is collected.
+    m_status = ps6000RunBlock(
+                m_handle,
+                m_preTrigger,
+                m_postTrigger,
+                m_timebase,
+                m_oversample,
+                &m_timeIndisposedMS,
+                m_startIndex,
+                nullptr,
+                nullptr
+            );
+
+    checkStatus();
+
+
+    // Now, check if data taking is done!
+    int16_t*    ready;
+
+    m_status = ps6000IsReady( m_handle, ready);
+    checkStatus();
+
+
+
+    // Wait until data collection is done the ready pointer changes its value
+    // when this is the case. System can not be triggered for a long time, thats why it
+    // can take some time!
+    // \todo Here a stop switch would be imlementable!
+    while( !ready )
+    {
+        std::this_thread::sleep_for(std::chrono::milliseconds(1));
+    }
+
+
+    return;
+}
 
 
 
