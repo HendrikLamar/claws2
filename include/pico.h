@@ -256,12 +256,15 @@ class Pico
         // Sets the Trigger settings.
         void    setTrigger();
 
+        // checks if the pico return the correct time interval
         void    getTimebase();
 
+        // Acquires the data from the pico after data taking.
         void    getValuesBlock();
 
         void    getValuesRapid();
 
+        // Only needed when rapid block mode is used. Otherwise its 1 by default.
         void    setMemorySegments( uint32_t nSegments );
 
         void    checkStatus();

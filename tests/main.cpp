@@ -74,6 +74,10 @@ int main()
     std::cout << "Init: " << *ptr << std::endl;
 
     
+    std::string output;
+
+    output = "t";
+    std::cout << output.size() << std::endl;
 
 
 
