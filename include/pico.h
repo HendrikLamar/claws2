@@ -267,6 +267,8 @@ class Pico
         // Only needed when rapid block mode is used. Otherwise its 1 by default.
         void    setMemorySegments( uint32_t nSegments );
 
+        //! Checks m_status for possible error and throws a PicoException() if it is
+        //! the case.
         void    checkStatus();
 
 

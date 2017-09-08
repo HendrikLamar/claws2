@@ -26,6 +26,8 @@
 
 #include <vector>
 #include <string>
+#include <chrono>
+#include <thread>
 
 
 
@@ -326,8 +328,15 @@ void runBlock();
 
 
 
-void stop();
+void Pico::stop()
+{
+    std::this_thread::sleep_for(std::chrono::milliseconds(100));
 
+    m_status = ps6000Stop(m_handle);
+    checkStatus();
+
+    return;
+}
 
 
 
@@ -342,7 +351,16 @@ void stop();
 
 
 
-void close();
+void Pico::close()
+{
+    // Wait a bit before closing. Had problems in past without.
+    std::this_thread::sleep_for(std::chrono::milliseconds(100));
+    m_status = ps6000CloseUnit(m_handle);
+
+    checkStatus(); 
+
+    return;
+}
 
 
 
@@ -556,11 +574,6 @@ void    Pico::getTimebase()
 
 
 
-
-
-
-
-
 void    Pico::getValuesBlock()
 {
     // on input, the number of samples demanded is given.
@@ -592,9 +605,19 @@ void    Pico::getValuesBlock()
 
 
 
+///////////////////////////////////////////////////////////////////////////////
 
 
-void    getValuesRapid();
+
+
+
+
+
+
+void    Pico::getValuesRapid()
+{
+    //! \todo Pico::getValuesRapid needs to be written!
+}
 
 
 
