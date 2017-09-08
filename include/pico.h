@@ -91,8 +91,12 @@ class Pico
 
 
 
+        // needed to be read-in!
         Utility::Claws_Trigger_Mode         m_triggerMode;
 
+        // needed to be read-in!
+        // signifies in how many memory segments we need for rapid block mode
+        uint32_t                            m_noOfRapidBlockCollections;
 
 
 

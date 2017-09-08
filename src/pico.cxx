@@ -567,14 +567,22 @@ void    Pico::getValuesBlock()
     // on exit, the number of values retrieved is written.
     m_noOfSamplesTotal = m_channels->at(0)->getBuffer()->size();
 
+    // since in block mode we only have on index with index # 0, we use this hardcoded
+    uint32_t segmentIndex{0};
+
     m_status = ps6000GetValues(
                     m_handle,
                     m_startIndex,
                     &m_noOfSamplesTotal,
                     m_downSampleRatio,
                     m_downSamplingRatioMode,
+                    segmentIndex,
+                    &m_overflow
+            );
 
-            )
+    checkStatus();
+
+    return;
 }
 
 
