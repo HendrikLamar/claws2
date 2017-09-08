@@ -118,7 +118,7 @@ std::vector< int16_t >*     Channel::getBuffer()
 
 
 
-void Channel::setGainMode( Utility::ClawsGain& gain )
+void Channel::setGainMode( Utility::Claws_Gain& gain )
 {
     switch ( gain )
     {
@@ -254,6 +254,17 @@ PICO_STATUS Channel::setChannel()
 
 
 
+///////////////////////////////////////////////////////////////////////////////
+
+
+
+
+
+
+bool    Channel::getEnabled()
+{
+    return m_enabled;
+}
 
 
 

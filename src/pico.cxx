@@ -188,11 +188,18 @@ void Pico::init()
 
 void Pico::loadConfig( Utility::Claws_Gain& mode )
 {
+
+    // set the number of channels enabled to zero before filling it again
+    m_noChannelsEnabled = 0;
+
     // first, load channel settings
     for ( auto& tmp : *m_channels )
     {
         tmp->setGainMode( mode );
         tmp->loadConfig();
+
+        // find out how many channels are enabled
+        tmp->getEnabled() ? ++m_noChannelsEnabled: false ;
     }
 
     Utility::Pico_Data_HL_Gain* data = getGainData( mode );
@@ -217,6 +224,7 @@ void Pico::loadConfig( Utility::Claws_Gain& mode )
     m_st_autoTriggerTime_ms     = data->trigger->autoTriggerTime;
 
     //! \todo Add Advanced Trigger Settings!
+    
 }
 
 
@@ -412,6 +420,28 @@ std::ostream& operator<<( std::ostream& out, Pico* picoscope );
 
 
 
+void    Pico::howManyChannelsEnabled()
+{
+    m_noChannelsEnabled = 0;
+
+    for ( auto& tmp : *m_channels )
+}
+
+
+
+
+
+
+
+
+
+
+
+///////////////////////////////////////////////////////////////////////////////
+
+
+
+
 Utility::Pico_Data_HL_Gain* Pico::getGainData( Utility::Claws_Gain& mode )
 {
 
@@ -485,6 +515,52 @@ void    Pico::setTrigger()
 
 
 
+
+
+
+
+
+///////////////////////////////////////////////////////////////////////////////
+
+
+
+
+
+
+
+
+void    Pico::getTimebase()
+{
+    // create a counter to check how often the pico is asked for the correct value
+    uint32_t counter{0};
+
+    // give the membervariable a non physicsal value to see if it changes
+    m_timeInterval_ns = -1.f;
+
+    // on exit, the maximum number of samples available.
+    uint32_t maxSamples;
+
+    while( m_timeInterval_ns < 0 && counter < 100)
+    {
+        m_status = ps6000GetTimebase2(
+                        m_handle,
+                        m_timebase,
+                        m_noOfSamplesTotal,
+                        &m_timeInterval_ns,
+                        m_oversample,
+                        &maxSamples,
+                        m_startIndex                        
+                );
+        ++counter;
+    }
+}
+
+
+
+
+
+
+
 ///////////////////////////////////////////////////////////////////////////////
 
 
@@ -495,8 +571,9 @@ void    Pico::setTrigger()
 
 
 
-// Sets the aquisition settings.
-void    setAqui();
+
+
+void    getValues();
 
 
 
@@ -506,10 +583,15 @@ void    setAqui();
 
 
 
+///////////////////////////////////////////////////////////////////////////////
 
 
 
 
+
+
+
+void    checkStatus();
 
 
 

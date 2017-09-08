@@ -42,20 +42,20 @@ class Pico
         
 
         //! Const pointer to a variable set of pico data.
-        Utility::Pico_Data_Pico* const      m_picoData;
+        Utility::Pico_Data_Pico* const          m_picoData;
 
         //! Handle value is defined during the initialization of the pico.
-        int16_t             m_handle;
+        int16_t                                 m_handle;
 
         // This is not const since I get crazy when trying.
-        int8_t*             m_serial;
+        int8_t*                                 m_serial;
 
         // The location is const since it can't be changed and is known at initialization.
-        const std::string* const            m_location;
+        const std::string* const                m_location;
 
         
         // Vector holding the four channels of the pico
-        const std::vector< Channel* >* const      m_channels;
+        const std::vector< Channel* >* const    m_channels;
 
 
 
@@ -205,6 +205,7 @@ class Pico
                                                     // an overflow has occurred or not
                                                     // bit 0 = ch1, bit 1 = ch2 ...
 
+        int                 m_noChannelsEnabled;    // holds the number of enabled channels
 
 
         ////////////////////////////////////////////////////////////////////////
@@ -235,7 +236,6 @@ class Pico
         //         START private member functions 
         //
         ////////////////////////////////////////////////////////////////////////
-        
 
 
         // Returns a Utility::Pico_Data_HL_Gain pointer to the correct data set
@@ -245,8 +245,9 @@ class Pico
         // Sets the Trigger settings.
         void    setTrigger();
 
-        // Sets the aquisition settings.
-        void    setAqui();
+        void    getTimebase();
+
+        void    getValues();
 
         void    checkStatus();
 
