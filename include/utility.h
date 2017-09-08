@@ -379,7 +379,7 @@ namespace Utility{
 
 
 
-    enum CLAWS_TRIGGER_MODE{
+    enum Claws_Trigger_Mode{
         
         CLAWS_TRIGGER_SIMPLE,
         CLAWS_TRIGGER_ADVANCED,
@@ -394,7 +394,7 @@ namespace Utility{
 
 
 
-    enum ClawsGain
+    enum Claws_Gain
     {
         INTER,
         HIGH_GAIN,

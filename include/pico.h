@@ -79,9 +79,58 @@ class Pico
 
 
 
+
+
+
+
         ////////////////////////////////////////////////////////////////////////
         //
-        //          START Readin variables
+        //          START Steering variables
+        //
+        ////////////////////////////////////////////////////////////////////////
+
+
+
+        Utility::Claws_Trigger_Mode         m_triggerMode;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        ////////////////////////////////////////////////////////////////////////
+        //
+        //          END Steering variables
+        //
+        ////////////////////////////////////////////////////////////////////////
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        ////////////////////////////////////////////////////////////////////////
+        //
+        //          START Readin settings
         //
         ////////////////////////////////////////////////////////////////////////
         
@@ -110,7 +159,7 @@ class Pico
 
         ////////////////////////////////////////////////////////////////////////
         //
-        //          END Readin variables
+        //          END Readin settings
         //
         ////////////////////////////////////////////////////////////////////////
 
@@ -129,7 +178,7 @@ class Pico
 
         ////////////////////////////////////////////////////////////////////////
         //
-        //          START  Internal variables  
+        //          START  Picoscope internal variables  
         //
         ////////////////////////////////////////////////////////////////////////
 
@@ -160,7 +209,7 @@ class Pico
 
         ////////////////////////////////////////////////////////////////////////
         //
-        //          END Internal variables  
+        //          END Picoscope internal variables 
         //
         ////////////////////////////////////////////////////////////////////////
 
@@ -191,7 +240,7 @@ class Pico
 
         // Returns a Utility::Pico_Data_HL_Gain pointer to the correct data set
         // for the demanded gain mode.
-        Utility::Pico_Data_HL_Gain*  getGainData( Utility::ClawsGain& mode );
+        Utility::Pico_Data_HL_Gain*  getGainData( Utility::Claws_Gain& mode );
 
         // Sets the Trigger settings.
         void    setTrigger();
@@ -199,6 +248,7 @@ class Pico
         // Sets the aquisition settings.
         void    setAqui();
 
+        void    checkStatus();
 
 
         ////////////////////////////////////////////////////////////////////////
@@ -224,7 +274,7 @@ class Pico
         void init();
 
         //! Loads the settings from the Database and stores it in member variables
-        void loadConfig( Utility::ClawsGain mode );
+        void loadConfig( Utility::Claws_Gain& mode );
 
         void setPico();
 

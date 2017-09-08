@@ -186,7 +186,7 @@ void Pico::init()
 
 
 
-void Pico::loadConfig( Utility::ClawsGain mode )
+void Pico::loadConfig( Utility::Claws_Gain& mode )
 {
     // first, load channel settings
     for ( auto& tmp : *m_channels )
@@ -412,7 +412,7 @@ std::ostream& operator<<( std::ostream& out, Pico* picoscope );
 
 
 
-Utility::Pico_Data_HL_Gain* Pico::getGainData( Utility::ClawsGain& mode )
+Utility::Pico_Data_HL_Gain* Pico::getGainData( Utility::Claws_Gain& mode )
 {
 
     Utility::Pico_Data_HL_Gain* output;
@@ -450,9 +450,35 @@ Utility::Pico_Data_HL_Gain* Pico::getGainData( Utility::ClawsGain& mode )
 
 
 // Sets the Trigger settings.
-void    setTrigger();
+void    Pico::setTrigger()
+{
 
+    switch( m_triggerMode )
+    {
+        case Utility::CLAWS_TRIGGER_ADVANCED:
+            //! \todo Claws advanced trigger to be implemented!
+            break;
+        case Utility::CLAWS_TRIGGER_SIMPLE:
+            // applying the simple trigger
+            m_status = ps6000SetSimpleTrigger(
+                            m_handle,
+                            m_st_enabled,
+                            m_st_source,
+                            m_st_threshold,
+                            m_st_direction,
+                            m_st_delay,
+                            m_st_autoTriggerTime_ms
+                        );
+            break;
+        default:
+            throw PicoException("Wrong Trigger Mode! Can't apply trigger settings.");
 
+    }
+
+    checkStatus();
+
+    return;
+}
 
 
 
