@@ -193,6 +193,12 @@ class Pico
         // for the demanded gain mode.
         Utility::Pico_Data_HL_Gain*  getGainData( Utility::ClawsGain& mode );
 
+        // Sets the Trigger settings.
+        void    setTrigger();
+
+        // Sets the aquisition settings.
+        void    setAqui();
+
 
 
         ////////////////////////////////////////////////////////////////////////
@@ -222,9 +228,20 @@ class Pico
 
         void setPico();
 
-        void run();
+        //! Returns the channel.
+        Channel* getCh( PS6000_CHANNEL& cha );
+        Channel* getCh( int& cha );
+
+        void runBlock();
 
         void stop();
+
+        void close();
+
+
+        //! Overloaded operator<< to print out information.
+        friend std::ostream& operator<<(
+                std::ostream& out, Pico* picoscope );
 };
 
 
