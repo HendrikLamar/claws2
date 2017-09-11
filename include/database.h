@@ -44,6 +44,7 @@ class Database
         void            setStop( bool switcher );
         bool            getStop();
         
+        ReadIni*        getInitReader();
 
 
 
@@ -91,6 +92,7 @@ class Database
         std::vector< Utility::Pico_Data_Pico* >*     m_picoData;     
 
 
+
         private:
             bool                m_stopSwitch;
 
@@ -110,10 +112,11 @@ class Database
 
 
 
-            ///////////////////////////////////////////////////////////////////////
-            //                 Picoscope 
+            ///////////////////////////////////////////////////////////////////
             //
-            ///////////////////////////////////////////////////////////////////////
+            //                 START Pico Stuff 
+            //
+            ///////////////////////////////////////////////////////////////////
 
             std::vector< int >      m_picoSuccessfulReadinSettings{1,1,1,1};
 
@@ -146,7 +149,11 @@ class Database
             std::string Pico_returnPathToRunMode( Utility::Pico_RunMode mode );
             
 
-//            std::vector< Pico >*                        m_picos;
+            ///////////////////////////////////////////////////////////////////
+            //
+            //                 STOP Pico Stuff 
+            //
+            ///////////////////////////////////////////////////////////////////
 
 
 

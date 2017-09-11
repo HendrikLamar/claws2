@@ -42,6 +42,7 @@
 Pico::Pico( Utility::Pico_Data_Pico* picoData ) :
     m_callBack( new Utility::CallBackPico() ),
     m_picoData( picoData ),
+    m_serial( m_picoData->serial ),
     m_location( &m_picoData->location ),
     m_channels( 
             new std::vector< Channel* >
@@ -999,7 +1000,8 @@ void Pico::checkStatus()
             break;
     }
 
-    if ( output.size() == 0 )
+    // throw exception only when string is longer than zero
+    if ( output.size() != 0 )
     {
         throw PicoException(output);
     }

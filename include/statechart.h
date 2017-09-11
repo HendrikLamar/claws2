@@ -324,16 +324,8 @@ struct Init : sc::state< Init, Active::orthogonal<0> >
         Init( my_context ctx ) : my_base( ctx )
         {
             
+            context< ClawsDAQ >().getClawsRun()->initialize();
 
-            // read in psu data and test if psu is available
-//            context< ClawsDAQ >().getDatabase()->N6700_readPSUConf();
-//            context< ClawsDAQ >().getDatabase()->N6700_readChSet();
-
-
-            // initialize Pico with Merkel as default setting
-/*             context< ClawsDAQ >().getDatabase()->Pico_init();
- *             context< ClawsDAQ >().getDatabase()->Pico_readSettings( Utility::MERKEL_HG );
- */
             post_event( EvInit() );
         }
         virtual ~Init()

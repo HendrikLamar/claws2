@@ -59,6 +59,11 @@ void N6700::checkDevice()
     {
         throw SCPIException("You connected to the wrong device! Is the IP and Identity parameter correct?");
     }
+    else
+    {
+        std::cout << "\nPSU: "  << m_ID << "\n";
+        std::cout << " successful initialized!\n";
+    }
     closeSocket();
 }
 

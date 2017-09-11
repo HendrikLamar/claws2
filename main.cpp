@@ -24,6 +24,7 @@
 #include <cstring>
 #include <vector>
 
+#include "clawsRun.h"
 
 int main()
 {
@@ -43,7 +44,7 @@ int main()
 
     delete mystate;
     mystate = nullptr;
-    
 
+    
     return 0;
 };
