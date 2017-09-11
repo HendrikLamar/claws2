@@ -111,11 +111,6 @@ void MyState::run()
                 std::cout << "Not available yet :(\n";
                 break;
 
-            case 'c':
-                std::cout << "Not available yet :(\n";
-                std::cout << "Probably obsolete soon.\n";
-                break;
-
             case 's':
                 m_daq->process_event( ClawsStatemachine::EvStatus() );
                 break;
