@@ -531,6 +531,36 @@ void    Pico::setTrigger()
 
 
 
+///////////////////////////////////////////////////////////////////////////////
+
+
+
+
+
+
+void Pico::setChannels()
+{
+    for( auto& tmp : *m_channels )
+    {
+        // first, load the current config from the database
+        tmp->loadConfig();
+
+        // second, configure the channel with the fresh data and check if it
+        // was successful
+        m_status = tmp->setChannel();
+
+        checkStatus();
+    }
+     return;
+}
+
+
+
+
+
+
+
+
 
 
 ///////////////////////////////////////////////////////////////////////////////

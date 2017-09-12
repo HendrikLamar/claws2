@@ -160,7 +160,7 @@ class Channel
         //! to update the data first with loadConfig().
         PICO_STATUS                 setChannel();
 
-        //! Returns is channel is enabled.
+        //! Returns true if channel is enabled.
         bool                        getEnabled();
 
 

@@ -259,6 +259,9 @@ class Pico
         // Sets the Trigger settings.
         void    setTrigger();
 
+        // Configures the channels.
+        void    setChannels();
+
         // checks if the pico return the correct time interval
         void    getTimebase();
 
