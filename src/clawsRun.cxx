@@ -185,9 +185,11 @@ void        ClawsRun::initialize()
             {
                 continue;
             }
+
     
             serialLocation.push_back( std::make_pair( tmpSerial, tmpLocation ) );
             initCounter.push_back(1);
+
         };
     
     

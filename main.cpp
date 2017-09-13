@@ -24,7 +24,12 @@
 #include <cstring>
 #include <vector>
 
-#include "clawsRun.h"
+//#include "clawsRun.h"
+
+#include <chrono>
+#include <thread>
+#include <libps6000-1.4/PicoStatus.h>
+#include <libps6000-1.4/ps6000Api.h>
 
 int main()
 {
@@ -44,6 +49,74 @@ int main()
 
     delete mystate;
     mystate = nullptr;
+
+
+/*     PICO_STATUS pstatus;
+ * 
+ * //    int16_t counts;
+ * //    int8_t  serials[100];
+ * //    int16_t serialL;
+ * //
+ * //    pstatus = ps6000EnumerateUnits(&counts, serials, &serialL);
+ * //
+ * //    std::cout << "Counts: " << counts;
+ * //    std::cout << "\tSerials: " << serials;
+ * //    std::cout << "\tlength: " << serialL << std::endl;
+ * 
+ * 
+ * 
+ * 
+ *     int16_t handle_1 = 0;
+ *     int16_t handle_2 = 0;
+ *     int16_t handle_3;
+ * 
+ *     // 6404D
+ * //    int8_t serial_1[]{'E','Q','2','3','2','/','0','0','4','\0'};
+ * //    int8_t serial_2[]{'D','V','0','2','7','/','0','4','3','\0'};
+ * //    int8_t serial_2[]{'C','X','7','4','3','/','0','2','4','\0'};
+ * 
+ *     // 6403
+ *     int8_t serial_1[]{'A', 'Y', '1', '6', '6', '/', '0', '4', '7','\0'};
+ *     int8_t serial_2[]{'A', 'Y', '1', '6', '6', '/', '0', '3', '2','\0'};
+ * 
+ *     pstatus = ps6000OpenUnit(&handle_1, serial_1);
+ * 
+ *     std::cout << "Status: " << pstatus << "\t" << "Handle: " << handle_1 << 
+ *         std::endl;
+ * 
+ *     int8_t pstring[100];
+ *     int16_t stringL = 9;
+ *     int16_t stringR;
+ *     PICO_INFO info = 4;
+ * 
+ *     pstatus = ps6000GetUnitInfo(handle_1, pstring, stringL, &stringR, info);
+ *     std::cout << pstring << std::endl;
+ *     std::cout << stringR << std::endl;
+ * 
+ * //    pstatus = ps6000OpenUnit(&handle_2, serial_2);
+ *     pstatus = ps6000OpenUnit(&handle_2, serial_2);
+ * 
+ *     std::cout << "status: " << pstatus << "\t" << "handle: " << handle_2 << 
+ *         std::endl;
+ * 
+ *     pstatus = ps6000GetUnitInfo(handle_2, pstring, stringL, &stringR, info);
+ *     std::cout << pstring << std::endl;
+ *     std::cout << stringR << std::endl;
+ * //
+ * //    pstatus = ps6000OpenUnit(&handle_3, serial_3);
+ * //
+ * //    std::cout << "status: " << pstatus << "\t" << "handle: " << handle_3 << 
+ * //        std::endl;
+ * 
+ * 
+ * 
+ *     std::cout << "Exiting handle_1\n";
+ *     ps6000CloseUnit(handle_1);
+ * 
+ *     std::cout << "Exiting handle_2\n";
+ *     ps6000CloseUnit(handle_2);
+ * //    ps6000CloseUnit(handle_3);
+ */
 
     
     return 0;

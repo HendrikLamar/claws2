@@ -294,6 +294,11 @@ Channel* Pico::getCh( int& cha )
 
 void Pico::runBlock()
 {
+    
+    setChannels();
+
+    getTimebase();
+
     // Make the pico ready! Afterwards wait until the trigger is fired and
     // the data is collected.
     m_status = ps6000RunBlock(
@@ -595,6 +600,12 @@ void    Pico::getTimebase()
                         m_startIndex                        
                 );
         ++counter;
+    }
+
+    // check if the while loop finished properly
+    if( m_timeInterval_ns < 0 || counter > 99 )
+    {
+        throw PicoException("Demanded sampling interval not available!");
     }
 
     // check if the maxSamples variable is large enough
