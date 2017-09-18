@@ -307,10 +307,15 @@ class Pico
         Channel* getCh( PS6000_CHANNEL& cha );
         Channel* getCh( int& cha );
 
+        //! Starts one time data taking in block mode. Settings might to be loaded
+        //! before.
         void runBlock();
 
+        //! Stops properly the data taking. If this is called before a trigger event
+        //! occurs, the data array might contain non valid data.
         void stop();
 
+        //! Shuts down the Picoscope.
         void close();
 
 
