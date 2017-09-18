@@ -53,6 +53,12 @@ N6700::~N6700()
 
 void N6700::checkDevice()
 {
+    std::cout << "\n";
+    std::cout << "++++++++++++++++++++++++++++++++++++++++++++++++++++++++\n";
+    std::cout << "\tPSU initialization...\n";
+    std::cout << "++++++++++++++++++++++++++++++++++++++++++++++++++++++++\n";
+
+    //! \todo Check at which line the execution stops if the PSU is not available!
     openSocket();
     setCommand("*IDN?");
     if( m_ID != getAnswer() )
@@ -61,8 +67,9 @@ void N6700::checkDevice()
     }
     else
     {
-        std::cout << "\nPSU: "  << m_ID << "\n";
-        std::cout << " successful initialized!\n";
+        std::cout << "\n" << m_ID << "\n";
+        std::cout << "\t successful initialized!\n";
+        std::cout << "++++++++++++++++++++++++++++++++++++++++++++++++++++++++\n\n";
     }
     closeSocket();
 }

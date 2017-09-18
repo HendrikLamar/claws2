@@ -119,6 +119,13 @@ void        ClawsRun::initialize()
 
     void ClawsRun::Pico_init( )
     {
+
+    
+        std::cout << "\n";
+        std::cout << "++++++++++++++++++++++++++++++++++++++++++++++++++++++++\n";
+        std::cout << "\tPico initialization...\n";
+        std::cout << "++++++++++++++++++++++++++++++++++++++++++++++++++++++++\n";
+
         // check if the picoData pointer is empty. If yes allocate new, 
         // if no delete first.
         if ( m_database->m_picoData )
@@ -242,11 +249,6 @@ void        ClawsRun::initialize()
                     ++sumI;
                 }
             }
-    
-            std::cout << "\n";
-            std::cout << "++++++++++++++++++++++++++++++++++++++++++++++++++++++++\n";
-            std::cout << "\tPico initialization\n";
-            std::cout << "++++++++++++++++++++++++++++++++++++++++++++++++++++++++\n";
             std::cout << "Serials found:\t\t" << serialLocation.size();
             std::cout << "\nPicos intialized:\t" << sumI << "\n";
             std::cout << "--------------------------------------------------------\n";
