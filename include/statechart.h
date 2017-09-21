@@ -300,6 +300,8 @@ struct Status : sc::state< Status, Active::orthogonal<0> >
         {
             // \todo Add functionality!
             std::cout << "Entering Status\n";
+            context< ClawsDAQ >().getClawsRun()->printData();
+            post_event( EvStatus() );
         };
 
         virtual ~Status() 

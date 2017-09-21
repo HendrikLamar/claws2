@@ -380,4 +380,148 @@ namespace Utility{
     //
     ///////////////////////////////////////////////////////////////////////////
     
+
+
+
+
+
+
+
+
+
+    ///////////////////////////////////////////////////////////////////////////
+    //                  Pico_EnumToString functions
+    //
+    // The following functions are needed for readbility of std::cout and
+    // saving of the ini files.
+    //
+    ///////////////////////////////////////////////////////////////////////////
+
+
+    std::string     Pico_EnumToString_runMode( Utility::Pico_RunMode& mode )
+    {
+        std::string output;
+        switch( mode )
+        {
+            case 0:
+                output = "INTERMEDIATE";
+                break;
+            case 1:
+                output = "MERKEL_HG";
+                break;
+            case 2:
+                output = "OBERMAIER_HG";
+                break;
+            case 3:
+                output = "SCHIFFER_LG";
+                break;
+            case 4:
+                output = "KLUM_LG";
+                break;
+            case 5:
+                output = "GARRN";
+                break;
+            default:
+                throw UtilityException("Wrong Utility::Pico_RunMode enum entered!");
+        }
+
+        return output;
+    }
+
+
+
+
+    ///////////////////////////////////////////////////////////////////////////
+
+
+
+
+
+    std::string     Pico_EnumToString_trigger( Utility::Pico_Trigger_Mode& mode )
+    {
+        std::string output;
+        switch( mode )
+        {
+            case 0:
+                output = "TRIGGER_SIMPLE";
+                break;
+            case 1:
+                output = "TRIGGER_ADVANCED";
+                break;
+            default:
+                throw UtilityException("Wrong Utility::Pico_Trigger_Mode entered!");
+        }
+
+        return output;
+    }
+
+
+    ///////////////////////////////////////////////////////////////////////////
+    //
+    //                  END Pico_EnumToString functions
+    ///////////////////////////////////////////////////////////////////////////
+
+
+
+
+
+
+
+
+
+
+    ///////////////////////////////////////////////////////////////////////////////
+    //
+    //                  START General Data Structure 
+    //
+    ///////////////////////////////////////////////////////////////////////////////
+    
+    
+    //! Overloaded operator<< for Steering_Data.
+    std::ostream& operator<<( std::ostream& out, Utility::Steering_Data& data )
+    {
+
+        try
+        {
+                out << "+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++";
+                out << "\n\t\t\tSteering Data\n";
+                out << "+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++";
+                out << "\nPicoTriggerMode: " << Pico_EnumToString_trigger( data.triggerMode );
+                out << "\t\tHighGain: " << Pico_EnumToString_runMode( data.runMode_HighGain );
+                out << "\t\tLowGain: " << Pico_EnumToString_runMode( data.runMode_LowGain );
+                out << "\nLoopsPhysics: " << data.loopsPhysics;
+                out << "\t\t\tLoopsInter: " << data.loopsIntermediate;
+                out << "\t\tSavePath#1: " << data.savePath_1;
+                out << "\nSavePath#2: " << data.savePath_2;
+                out << "\t\tSavePath#3: " << data.savePath_3;
+                out << "\n";
+
+        }
+        catch( UtilityException& excep )
+        {
+            std::cout << excep.what() << std::endl;
+        }
+
+        return out;
+    }
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    ///////////////////////////////////////////////////////////////////////////
+    //
+    //                  END General Data Structure 
+    //
+    ///////////////////////////////////////////////////////////////////////////
+
+
+
+
+
 }

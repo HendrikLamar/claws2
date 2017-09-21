@@ -98,7 +98,7 @@ class PicoException : public ClawsException
 
 ///////////////////////////////////////////////////////////////////////////////
 
-/** CHannel specific exception class derived from the ClawsException class.
+/** Channel specific exception class derived from the ClawsException class.
  * 
  */
 
@@ -117,6 +117,26 @@ class ChannelException : public ClawsException
 
 
 
+
+
+///////////////////////////////////////////////////////////////////////////////
+
+/** Utility specific exception class derived from the ClawsException class.
+ * 
+ */
+
+class UtilityException: public ClawsException
+{
+    public:
+        UtilityException( std::string error) : ClawsException(error)
+        {}
+
+        const char* what()
+        {
+            m_errorOut = "UtilityException: " + m_errorIn;
+            return m_errorOut.c_str();
+        }
+};
 
 
 

@@ -171,6 +171,25 @@ void            ClawsRun::loadConfig()
 
 
 ///////////////////////////////////////////////////////////////////////////////
+
+
+
+
+
+
+void            ClawsRun::printData()
+{
+
+    Utility::Steering_Data tmp = m_database->getSteeringData();
+    std::cout << tmp << std::endl;
+
+    return;
+}
+
+
+
+
+///////////////////////////////////////////////////////////////////////////////
 //
 //              END Public Member Functions 
 //

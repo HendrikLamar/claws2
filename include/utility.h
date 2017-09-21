@@ -495,6 +495,26 @@ namespace Utility{
 
 
 
+    ///////////////////////////////////////////////////////////////////////////
+    //                  Pico_EnumToString functions
+    //
+    // The following functions are needed for readbility of std::cout and
+    // saving of the ini files.
+    //
+
+
+    //! Enum to string for Utility::Pico_runMode
+    std::string     Pico_EnumToString_runMode( Utility::Pico_RunMode& mode );
+
+    //! Enum to string for Utility::Pico_Trigger_Mode
+    std::string     Pico_EnumToString_trigger( Utility::Pico_Trigger_Mode& mode );
+
+
+    //
+    //                  END Pico_EnumToString functions
+    ///////////////////////////////////////////////////////////////////////////
+
+
 ///////////////////////////////////////////////////////////////////////////////
 //
 //                  END Pico related stuff! 
@@ -552,6 +572,10 @@ namespace Utility{
         std::string             savePath_1;
         std::string             savePath_2;
         std::string             savePath_3;
+
+
+        friend std::ostream& operator<<(
+                std::ostream& out, Utility::Steering_Data& data );
     };
 
 

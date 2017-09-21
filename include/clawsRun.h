@@ -142,7 +142,10 @@ class ClawsRun
         void            runBlockMode();
 
         //! (Re)Loads the configurations.
-        void loadConfig();
+        void            loadConfig();
+
+        //! Prints the current loaded data.
+        void            printData();
 };
 
 
