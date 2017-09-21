@@ -411,8 +411,8 @@ namespace Utility{
 
     enum Pico_Trigger_Mode{
         
-        Trigger_Simple,
-        Trigger_Advanced
+        TRIGGER_SIMPLE,
+        TRIGGER_ADVANCED 
     };
     
 
@@ -478,6 +478,9 @@ namespace Utility{
 
     //! String to enum for PS6000_THRESHOLD_DIRECTION
     PS6000_THRESHOLD_DIRECTION  Pico_StringToEnum_thresDir(std::string& enumerator );
+
+    //! String to enum for Utility::Pico_RunMode
+    Utility::Pico_RunMode       Pico_StringToEnum_runMode( std::string& enumerator);
 
     //
     //                      END Pico_StringToEnum functions

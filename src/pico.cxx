@@ -504,10 +504,10 @@ void    Pico::setTrigger()
 
     switch( m_triggerMode )
     {
-        case Utility::CLAWS_TRIGGER_ADVANCED:
+        case Utility::TRIGGER_ADVANCED:
             //! \todo Claws advanced trigger to be implemented!
             break;
-        case Utility::CLAWS_TRIGGER_SIMPLE:
+        case Utility::TRIGGER_SIMPLE:
             // applying the simple trigger
             m_status = ps6000SetSimpleTrigger(
                             m_handle,

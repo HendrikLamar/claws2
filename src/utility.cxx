@@ -89,6 +89,16 @@ namespace Utility{
     };
 
 
+
+
+
+
+
+
+
+
+
+
     ///////////////////////////////////////////////////////////////////////////
     //
     //                          START
@@ -119,6 +129,12 @@ namespace Utility{
 
         return output;
     };
+
+
+
+
+    ///////////////////////////////////////////////////////////////////////////
+    
 
 
     PS6000_RANGE        Pico_StringToEnum_range( std::string& enumerator )
@@ -170,6 +186,9 @@ namespace Utility{
 
 
 
+    ///////////////////////////////////////////////////////////////////////////
+
+
 
     PS6000_BANDWIDTH_LIMITER    Pico_StringToEnum_bandwidth( std::string& enumerator )
     {
@@ -193,6 +212,10 @@ namespace Utility{
 
 
 
+    ///////////////////////////////////////////////////////////////////////////
+
+
+
     PS6000_RATIO_MODE   Pico_StringToEnum_ratio( std::string& enumerator )
     {
         PS6000_RATIO_MODE   output;
@@ -206,6 +229,9 @@ namespace Utility{
         return output;
     };
 
+
+
+    ///////////////////////////////////////////////////////////////////////////
 
 
 
@@ -245,6 +271,8 @@ namespace Utility{
     };
 
 
+    ///////////////////////////////////////////////////////////////////////////
+
 
     PS6000_THRESHOLD_DIRECTION  Pico_StringToEnum_thresDir(std::string& enumerator )
     {
@@ -266,6 +294,39 @@ namespace Utility{
     };
 
 
+    Utility::Pico_RunMode Pico_StringToEnum_runMode( std::string& enumerator )
+    {
+        Utility::Pico_RunMode   output;
+
+        if( enumerator.compare("MERKEL_HG") == 0 )
+        {
+            return Utility::MERKEL_HG;
+        }
+        if( enumerator.compare("OBERMAIER_HG") == 0 )
+        {
+            return Utility::OBERMAIER_HG;
+        }
+        if( enumerator.compare("SCHIFFER_LG") == 0 )
+        {
+            return Utility::SCHIFFER_LG;
+        }
+        if( enumerator.compare("KLUM_LG") == 0 )
+        {
+            return Utility::KLUM_LG;
+        }
+        if( enumerator.compare("GARRN") == 0 )
+        {
+            return Utility::GARRN;
+        }
+        if( enumerator.compare("INTERMEDIATE") == 0 )
+        {
+            return Utility::INTERMEDIATE;
+        }
+
+        throw PicoException("Wrong run mode as input!");
+
+        return output;
+    };
     ///////////////////////////////////////////////////////////////////////////
     //
     //                          END 
