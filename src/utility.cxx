@@ -294,6 +294,15 @@ namespace Utility{
     };
 
 
+
+
+
+    ///////////////////////////////////////////////////////////////////////////
+
+
+
+
+
     Utility::Pico_RunMode Pico_StringToEnum_runMode( std::string& enumerator )
     {
         Utility::Pico_RunMode   output;
@@ -327,6 +336,42 @@ namespace Utility{
 
         return output;
     };
+
+
+
+
+
+    ///////////////////////////////////////////////////////////////////////////
+
+
+
+
+
+
+    Utility::Pico_Trigger_Mode  Pico_StringToEnum_trigger( std::string& enumerator )
+    {
+        Utility::Pico_Trigger_Mode output;
+
+        if (enumerator.compare("TRIGGER_SIMPLE") == 0 )
+        {
+            return Utility::TRIGGER_SIMPLE;
+        }
+        if (enumerator.compare("TRIGGER_ADVANCED") == 0 )
+        {
+            return Utility::TRIGGER_ADVANCED;
+        }
+
+        throw PicoException("Wrong trigger mode as input!");
+
+        return output;
+
+    }
+
+
+
+
+
+
     ///////////////////////////////////////////////////////////////////////////
     //
     //                          END 

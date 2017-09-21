@@ -480,7 +480,11 @@ namespace Utility{
     PS6000_THRESHOLD_DIRECTION  Pico_StringToEnum_thresDir(std::string& enumerator );
 
     //! String to enum for Utility::Pico_RunMode
-    Utility::Pico_RunMode       Pico_StringToEnum_runMode( std::string& enumerator);
+    Utility::Pico_RunMode       Pico_StringToEnum_runMode( std::string& enumerator );
+
+    //! String to enum for Utility::Pico_Trigger_Mode
+    Utility::Pico_Trigger_Mode  Pico_StringToEnum_trigger( std::string& enumerator );
+
 
     //
     //                      END Pico_StringToEnum functions
@@ -542,8 +546,8 @@ namespace Utility{
         Pico_RunMode            runMode_LowGain;
 
 
-        int                     loopsBeforeIntermediate;
-        int                     intermediateLoops;
+        int                     loopsPhysics;
+        int                     loopsIntermediate;
 
         std::string             savePath_1;
         std::string             savePath_2;

@@ -41,7 +41,7 @@ class ReadIni
         struct Initstruct
         {
             
-            std::string initPico;
+            std::string SteeringFile;
 
             std::string Intermediate;
 
@@ -52,6 +52,7 @@ class ReadIni
             std::string Garrn;
 
             std::string PowerSupply;
+            std::string initPico;
         };
 
 

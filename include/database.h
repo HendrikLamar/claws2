@@ -50,7 +50,8 @@ class Database
         ///////////////////////////////////////////////////////////////////////
 
 
-        void                        readSteeringFile();
+        Utility::Steering_Data  getSteeringData();
+        void                    readSteeringFile();
 
 
         ///////////////////////////////////////////////////////////////////////

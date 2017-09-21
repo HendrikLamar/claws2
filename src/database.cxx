@@ -127,6 +127,95 @@ ReadIni* Database::getInitReader()
 
 
 
+
+
+///////////////////////////////////////////////////////////////////////////////
+
+
+
+
+
+
+Utility::Steering_Data Database::getSteeringData()
+{
+    return *m_steeringData;
+}
+
+
+
+
+
+
+
+
+///////////////////////////////////////////////////////////////////////////////
+
+
+
+
+
+
+void Database::readSteeringFile()
+{
+    std::string root = "General.";
+
+
+    // read in High Gain Mode
+    std::string highGain = root + "RunMode_HighGain";
+    std::string tmp = 
+        m_initReader->getKey< std::string >(m_initReader->getInitstruct().SteeringFile, highGain);
+    m_steeringData->runMode_HighGain = Utility::Pico_StringToEnum_runMode( tmp );
+
+
+    // read in Low Gain Mode
+    std::string lowGain = root + "RunMode_LowGain";
+    tmp = m_initReader->getKey< std::string >(m_initReader->getInitstruct().SteeringFile, lowGain);
+    m_steeringData->runMode_LowGain = Utility::Pico_StringToEnum_runMode( tmp );
+
+    // read in Trigger Mode
+    std::string triggerM = root + "TriggerMode";
+    tmp = m_initReader->getKey< std::string >(m_initReader->getInitstruct().SteeringFile, triggerM);
+    m_steeringData->triggerMode = Utility::Pico_StringToEnum_trigger( tmp );
+
+    // read in loopsPhysics
+    std::string loopsPhysics = root + "LoopsPhysics";
+    m_steeringData->loopsPhysics = m_initReader->getKey<int>(
+            m_initReader->getInitstruct().SteeringFile, loopsPhysics);
+
+    // read in loopsIntermediate
+    std::string loopsIntermediate = root + "LoopsIntermediate";
+    m_steeringData->loopsIntermediate = m_initReader->getKey<int>(
+            m_initReader->getInitstruct().SteeringFile, loopsIntermediate);
+
+    // read in save path # 1
+    std::string savePath_1 = root + "Save_Path_1";
+    m_steeringData->savePath_1 = m_initReader->getKey<std::string>(
+            m_initReader->getInitstruct().SteeringFile, savePath_1);
+    
+    // read in save path # 2
+    std::string savePath_2 = root + "Save_Path_2";
+    m_steeringData->savePath_2 = m_initReader->getKey<std::string>(
+            m_initReader->getInitstruct().SteeringFile, savePath_2);
+
+    // read in save path # 3
+    std::string savePath_3 = root + "Save_Path_3";
+    m_steeringData->savePath_3 = m_initReader->getKey<std::string>(
+            m_initReader->getInitstruct().SteeringFile, savePath_3);
+
+    return;
+}
+
+
+
+
+
+
+
+
+
+
+
+
 ///////////////////////////////////////////////////////////////////////////////
 //          END Database only stuff
 ///////////////////////////////////////////////////////////////////////////////

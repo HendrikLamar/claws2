@@ -72,8 +72,8 @@ void ReadIni::initialize(){
     // uniform initilization of the Initstruct structure
     m_initstruct = {\
 //                ptree.get<std::string>("Initializer.ConfigFile_Path"),            
-        m_pathIniDir.string() + ptree.get<std::string>("Initializer.ConfigFile_PicoInit"),
 
+        m_pathIniDir.string() + ptree.get<std::string>("Initilizer.ClawsDAQ_steering-file"),        \
         m_pathIniDir.string() + ptree.get<std::string>("Initializer.ConfigFile_Intermediate"),      \
         m_pathIniDir.string() + ptree.get<std::string>("Initializer.ConfigFile_Physics_Obermaier"), \
         m_pathIniDir.string() + ptree.get<std::string>("Initializer.ConfigFile_Physics_Merkel"),    \
@@ -81,6 +81,7 @@ void ReadIni::initialize(){
         m_pathIniDir.string() + ptree.get<std::string>("Initializer.ConfigFile_Physics_Klum"),      \
         m_pathIniDir.string() + ptree.get<std::string>("Initializer.ConfigFile_Physics_Garrn"),     \
         m_pathIniDir.string() + ptree.get<std::string>("Initializer.ConfigFile_PowerSupply"),     \
+        m_pathIniDir.string() + ptree.get<std::string>("Initializer.ConfigFile_PicoInit"),
     };
     
 };
