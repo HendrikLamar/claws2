@@ -351,8 +351,9 @@ struct Config : sc::state< Config, Active::orthogonal<0> >
 
         Config( my_context ctx ) : my_base( ctx )
         {
-            // \todo Add functionality!
             std::cout << "Entering Config\n";
+            context< ClawsDAQ >().getClawsRun()->loadConfig();
+            post_event( EvLoadConfig() );
         };
         virtual ~Config() 
         {

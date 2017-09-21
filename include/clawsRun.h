@@ -141,6 +141,8 @@ class ClawsRun
         //! the (epics) user.
         void            runBlockMode();
 
+        //! (Re)Loads the configurations.
+        void loadConfig();
 };
 
 

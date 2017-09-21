@@ -145,6 +145,31 @@ void            ClawsRun::runBlockMode()
 
 
 
+
+///////////////////////////////////////////////////////////////////////////////
+
+
+
+
+
+void            ClawsRun::loadConfig()
+{
+    // load general of database
+    m_database->readSteeringFile();
+
+    // load PSU configs
+    m_database->N6700_readConnectSettings();
+
+    // load pico configs
+    // Since the Pico loads its own data, this is done at a different position.
+
+    return;
+}
+
+
+
+
+
 ///////////////////////////////////////////////////////////////////////////////
 //
 //              END Public Member Functions 

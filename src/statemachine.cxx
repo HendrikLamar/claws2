@@ -108,7 +108,7 @@ void MyState::run()
                 break;
 
             case 'l':
-                std::cout << "Not available yet :(\n";
+                m_daq->process_event( ClawsStatemachine::EvLoadConfig() );
                 break;
 
             case 's':
