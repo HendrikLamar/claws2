@@ -136,6 +136,11 @@ class ClawsRun
 
         //! Initializes picos, psu and epics.
         void            initialize();
+
+        //! Starts the pico runmode in an infinit loop until it is stopped by
+        //! the (epics) user.
+        void            runBlockMode();
+
 };
 
 

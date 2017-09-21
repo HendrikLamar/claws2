@@ -100,6 +100,16 @@ namespace Utility{
 
 
 
+
+
+
+
+
+
+
+
+
+
     ///////////////////////////////////////////////////////////////////////////
     //
     //                  Pico related stuff! 
@@ -187,10 +197,10 @@ namespace Utility{
     //!      - serial:
     //!          - the serial of the pico (written on the osci)
     //!      - location:
-    //           - Upper_Forward
-    //           - Upper_Backward
-    //           - Lower_Forward
-    //           - Lower_Backward
+    //!           - Upper_Forward
+    //!           - Upper_Backward
+    //!           - Lower_Forward
+    //!           - Lower_Backward
     //!      - pre-/postTrigger:
     //!          - integer, the sum of both should not exceed 2 GS
     //!      - timebase:
@@ -218,11 +228,6 @@ namespace Utility{
                             new Utility::Pico_Data_Channel(PS6000_CHANNEL_D)
                         }
                     )
-//        Pico_Data_HL_Gain() : 
-//            Ch1( new Pico_Data_Channel( PS6000_CHANNEL_A ) ),
-//            Ch2( new Pico_Data_Channel( PS6000_CHANNEL_B ) ),
-//            Ch3( new Pico_Data_Channel( PS6000_CHANNEL_C ) ),
-//            Ch4( new Pico_Data_Channel( PS6000_CHANNEL_D ) )
         {};
 
         //! Destructor takes care about the channels.
@@ -238,26 +243,10 @@ namespace Utility{
             channels = nullptr;
 
         };
-//        ~Pico_Data_HL_Gain()
-//        {
-//            delete Ch1;
-//            delete Ch2;
-//            delete Ch3;
-//            delete Ch4;
-//
-//            Ch1 = nullptr;
-//            Ch2 = nullptr;
-//            Ch3 = nullptr;
-//            Ch4 = nullptr;
-//        };
 
 
         std::vector< Utility::Pico_Data_Channel* >* channels;
 
-//        Pico_Data_Channel*        Ch1;
-//        Pico_Data_Channel*        Ch2;
-//        Pico_Data_Channel*        Ch3;
-//        Pico_Data_Channel*        Ch4;
 
         Pico_Data_Trigger_Simple* trigger;
 
@@ -274,6 +263,9 @@ namespace Utility{
 
     };
 
+
+
+///////////////////////////////////////////////////////////////////////////////
 
 
 

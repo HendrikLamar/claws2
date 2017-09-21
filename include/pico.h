@@ -285,6 +285,15 @@ class Pico
         ////////////////////////////////////////////////////////////////////////
 
 
+
+
+
+
+
+
+
+
+
     public:
         ///////////////////////////////////////////////////////////////////////
         /*
@@ -311,7 +320,7 @@ class Pico
         //! before.
         void runBlock();
 
-        //! Stops properly the data taking. If this is called before a trigger event
+        //! Stops the data taking properly. If this is called before a trigger event
         //! occurs, the data array might contain non valid data.
         void stop();
 

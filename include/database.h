@@ -48,6 +48,8 @@ class Database
 
 
 
+        void            readSteeringFile();
+
 
         ///////////////////////////////////////////////////////////////////////
         //                  Power Supply
@@ -78,15 +80,8 @@ class Database
         ///////////////////////////////////////////////////////////////////////
 
 
-        //! Picoscope initializer.
-        //! Reads the serial numbers from initializer.ini and initializes them if
-        //! available.
-//        void Pico_init( std::vector< Pico* >* vPicos );
-//
-//        //! Closes all initialized Picos.
-//        void Pico_close( std::vector< Pico* >* vPicos );
-//
-//        //! Reads in the pico settings.
+//        //! Reads in the pico settings for a specific run mode. The
+//        //! intermediate settings are read-in standardly.
 //        void Pico_readSettings( Utility::Pico_RunMode mode, std::vector< Pico* >* vPicos );
 
         std::vector< Utility::Pico_Data_Pico* >*     m_picoData;     

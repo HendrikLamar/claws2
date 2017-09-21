@@ -229,6 +229,7 @@ void Pico::loadConfig( Utility::Claws_Gain& mode )
 
     //! \todo Add Advanced Trigger Settings!
     
+    return;
 }
 
 

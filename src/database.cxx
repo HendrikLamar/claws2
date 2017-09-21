@@ -87,6 +87,8 @@ Database::~Database()
 void Database::setStop(bool switcher)
 {
     m_stopSwitch = switcher;
+
+    return;
 }
 
 
