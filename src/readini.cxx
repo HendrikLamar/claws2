@@ -73,7 +73,7 @@ void ReadIni::initialize(){
     m_initstruct = {\
 //                ptree.get<std::string>("Initializer.ConfigFile_Path"),            
 
-        m_pathIniDir.string() + ptree.get<std::string>("Initilizer.ClawsDAQ_steering-file"),        \
+        m_pathIniDir.string() + ptree.get<std::string>("Initializer.ClawsDAQ_steering-file"),        \
         m_pathIniDir.string() + ptree.get<std::string>("Initializer.ConfigFile_Intermediate"),      \
         m_pathIniDir.string() + ptree.get<std::string>("Initializer.ConfigFile_Physics_Obermaier"), \
         m_pathIniDir.string() + ptree.get<std::string>("Initializer.ConfigFile_Physics_Merkel"),    \

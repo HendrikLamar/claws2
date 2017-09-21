@@ -36,10 +36,29 @@
 
 Database::Database() try :
     m_picoData( nullptr ),
-    m_stopSwitch(false),
-    m_initReader(new ReadIni()),
-    m_N6700_Channels(new N6700_Channels())
+    m_stopSwitch( false ),
+    m_initReader( new ReadIni() ),
+    m_steeringData( new Utility::Steering_Data() ),
+    m_N6700_Channels( new N6700_Channels() )
 {
+    ///////////////////////////////////////////////////////////////////////////
+    //          General 
+    ///////////////////////////////////////////////////////////////////////////
+
+    try
+    {
+
+        readSteeringFile();
+
+    }
+    catch( boost::property_tree::ptree_error& excep )
+    {
+        std::cout << excep.what() << std::endl;
+        throw;
+    }
+
+
+
     ///////////////////////////////////////////////////////////////////////////
     //          Powersupply
     ///////////////////////////////////////////////////////////////////////////
@@ -73,8 +92,8 @@ Database::~Database()
     delete m_picoData;
     m_picoData = nullptr;
     
-//    delete m_picos;
-//    m_picos = nullptr;
+    delete m_steeringData;
+    m_steeringData = nullptr;
 };
 
 
