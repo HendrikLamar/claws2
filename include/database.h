@@ -47,8 +47,10 @@ class Database
         ReadIni*        getInitReader();
 
 
+        ///////////////////////////////////////////////////////////////////////
 
-        void            readSteeringFile();
+
+        void                        readSteeringFile();
 
 
         ///////////////////////////////////////////////////////////////////////
@@ -87,68 +89,69 @@ class Database
         std::vector< Utility::Pico_Data_Pico* >*     m_picoData;     
 
 
+    
+    private:
+        bool                        m_stopSwitch;
 
-        private:
-            bool                m_stopSwitch;
+        ReadIni*                    m_initReader;
 
-            ReadIni*            m_initReader;
-
-
-            ///////////////////////////////////////////////////////////////////////
-            //                  Power Supply
-            //   All settings for the powersupply are send as strings. 
-            ///////////////////////////////////////////////////////////////////////
-
-//            N6700*                      m_psu;
-            N6700_Channels*             m_N6700_Channels;
-            
-            Utility::N6700_connect      m_n6700_connect;
+        Utility::Steering_Data*     m_steeringData;
 
 
+        ///////////////////////////////////////////////////////////////////////
+        //                  Power Supply
+        //   All settings for the powersupply are send as strings. 
+        ///////////////////////////////////////////////////////////////////////
 
-
-            ///////////////////////////////////////////////////////////////////
-            //
-            //                 START Pico Stuff 
-            //
-            ///////////////////////////////////////////////////////////////////
-
-            std::vector< int >      m_picoSuccessfulReadinSettings{1,1,1,1};
+        N6700_Channels*             m_N6700_Channels;
+        
+        Utility::N6700_connect      m_n6700_connect;
 
 
 
-            // Help functions for Database::Pico_readSettings
-            void Pico_readChannelsSettings( 
-                    Utility::Pico_RunMode mode, 
-                    int picoNo
-                    );
-            void Pico_readAquisitionSettings( 
-                    Utility::Pico_RunMode mode, 
-                    int picoNo
-                    );
-            void Pico_readTriggerSimpleSettings( 
-                    Utility::Pico_RunMode mode, 
-                    int picoNo
-                    );
-            void Pico_readTriggerAdvSettings( 
-                    Utility::Pico_RunMode mode, 
-                    int picoNo
-                    );
 
-            Utility::Pico_Data_HL_Gain* Pico_getHLGainStruct( 
-                    Utility::Pico_RunMode mode,
-                    int picoNo
-                    );
+        ///////////////////////////////////////////////////////////////////
+        //
+        //                 START Pico Stuff 
+        //
+        ///////////////////////////////////////////////////////////////////
+
+        std::vector< int >      m_picoSuccessfulReadinSettings{1,1,1,1};
 
 
-            std::string Pico_returnPathToRunMode( Utility::Pico_RunMode mode );
-            
 
-            ///////////////////////////////////////////////////////////////////
-            //
-            //                 STOP Pico Stuff 
-            //
-            ///////////////////////////////////////////////////////////////////
+        // Help functions for Database::Pico_readSettings
+        void Pico_readChannelsSettings( 
+                Utility::Pico_RunMode mode, 
+                int picoNo
+                );
+        void Pico_readAquisitionSettings( 
+                Utility::Pico_RunMode mode, 
+                int picoNo
+                );
+        void Pico_readTriggerSimpleSettings( 
+                Utility::Pico_RunMode mode, 
+                int picoNo
+                );
+        void Pico_readTriggerAdvSettings( 
+                Utility::Pico_RunMode mode, 
+                int picoNo
+                );
+
+        Utility::Pico_Data_HL_Gain* Pico_getHLGainStruct( 
+                Utility::Pico_RunMode mode,
+                int picoNo
+                );
+
+
+        std::string Pico_returnPathToRunMode( Utility::Pico_RunMode mode );
+        
+
+        ///////////////////////////////////////////////////////////////////
+        //
+        //                 STOP Pico Stuff 
+        //
+        ///////////////////////////////////////////////////////////////////
 
 
 
