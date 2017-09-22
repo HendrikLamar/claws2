@@ -215,6 +215,12 @@ void            ClawsRun::printData()
     std::cout << tmp << std::endl;
 
 
+    for( auto& tmp_pico : *m_database->m_picoData )
+    {
+        std::cout << *tmp_pico << std::endl;
+    }
+
+
     return;
 }
 

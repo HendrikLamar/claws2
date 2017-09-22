@@ -248,7 +248,8 @@ namespace Utility{
                             new Utility::Pico_Data_Channel(PS6000_CHANNEL_C),
                             new Utility::Pico_Data_Channel(PS6000_CHANNEL_D)
                         }
-                    )
+                    ),
+            trigger( new Utility::Pico_Data_Trigger_Simple() )
         {};
 
         //! Destructor takes care about the channels.
@@ -256,12 +257,27 @@ namespace Utility{
         {
             for ( auto& tmp: *channels )
             {
-                delete tmp;
+                // delete if empty
+                if( tmp )
+                {
+                    delete tmp;
+                }
                 tmp = nullptr;
             }
 
-            delete channels;
+            // delete if empty
+            if( channels )
+            {
+                delete channels;
+            }
             channels = nullptr;
+
+            // delete if not empty
+            if( trigger )
+            {
+                delete trigger;
+            }
+            trigger = nullptr;
 
         };
 

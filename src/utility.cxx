@@ -232,6 +232,7 @@ namespace Utility{
         out << "+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++";
         out << "\n\t\tPico\t" << data.location << "\n";
         out << "\t\tSerial: " << data.serial;
+        out << "\n";
         out << "+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++";
         out << "\n";
 
@@ -239,17 +240,17 @@ namespace Utility{
         {
             out << "\tLow Gain Data\n";
             out << "-----------------------------------------------------------\n";
-            out << data.dataLowGain;
+            out << *data.dataLowGain;
             out << "\n\n";
 
             out << "\tHigh Gain Data\n";
             out << "-----------------------------------------------------------\n";
-            out << data.dataHighGain;
+            out << *data.dataHighGain;
             out << "\n\n";
 
             out << "\tIntermediate Data\n";
             out << "-----------------------------------------------------------\n";
-            out << data.dataIntermediate;
+            out << *data.dataIntermediate;
         }
         catch( UtilityException& excep )
         {
