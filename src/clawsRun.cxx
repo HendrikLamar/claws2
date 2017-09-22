@@ -120,6 +120,9 @@ void        ClawsRun::initialize()
     PSU_init();
 
 
+    loadConfig();
+
+
     return;
 }
 
@@ -160,8 +163,12 @@ void            ClawsRun::loadConfig()
     // load PSU configs
     m_database->N6700_readConnectSettings();
 
-    // load pico configs
-    // Since the Pico loads its own data, this is done at a different position.
+    // load pico configs for the set run mode...
+    m_database->Pico_readSettings( m_database->getSteeringData()->runMode_HighGain );
+    m_database->Pico_readSettings( m_database->getSteeringData()->runMode_LowGain );
+
+    // ...and for the intermediate mode
+    m_database->Pico_readSettings( Utility::INTERMEDIATE );
 
     return;
 }
@@ -180,7 +187,7 @@ void            ClawsRun::loadConfig()
 void            ClawsRun::printData()
 {
 
-    Utility::Steering_Data tmp = m_database->getSteeringData();
+    Utility::Steering_Data tmp = *m_database->getSteeringData();
     std::cout << tmp << std::endl;
 
     return;

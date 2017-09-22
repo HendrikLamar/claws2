@@ -43,6 +43,7 @@ class Database
 
         void            setStop( bool switcher );
         bool            getStop();
+
         
         ReadIni*        getInitReader();
 
@@ -50,7 +51,7 @@ class Database
         ///////////////////////////////////////////////////////////////////////
 
 
-        Utility::Steering_Data  getSteeringData();
+        Utility::Steering_Data* getSteeringData();
         void                    readSteeringFile();
 
 
@@ -83,9 +84,9 @@ class Database
         ///////////////////////////////////////////////////////////////////////
 
 
-//        //! Reads in the pico settings for a specific run mode. The
-//        //! intermediate settings are read-in standardly.
-//        void Pico_readSettings( Utility::Pico_RunMode mode, std::vector< Pico* >* vPicos );
+        //! Reads in the pico settings for a specific run mode. The
+        //! intermediate settings are read-in standardly.
+        void Pico_readSettings( Utility::Pico_RunMode mode );
 
         std::vector< Utility::Pico_Data_Pico* >*     m_picoData;     
 
@@ -97,6 +98,10 @@ class Database
         ReadIni*                    m_initReader;
 
         Utility::Steering_Data*     m_steeringData;
+
+        // this constanst integer is the number of picos we intend to use,
+        // no matter how many picos are found in the end
+        const int                   m_MaxNoOfPicos = 4;
 
 
         ///////////////////////////////////////////////////////////////////////
