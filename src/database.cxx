@@ -383,8 +383,8 @@ void Database::Pico_readSettings( Utility::Pico_RunMode mode )
 {
     
     // since we have four picos, it loops fouer times
-//    for ( int i = 0; i < m_MaxNoOfPicos ; ++i )
-    for ( int i = 0; i < 2 ; ++i )
+    for ( int i = 0; i < m_MaxNoOfPicos ; ++i )
+//    for ( int i = 0; i < 2 ; ++i )
     {
 
         ///////////////////////////////////////////////////////////////////////
@@ -480,7 +480,6 @@ void Database::Pico_readSettings( Utility::Pico_RunMode mode )
 //        }
 
     }
-    std::cout << "Loop ends here!\n";
 
 
     return;
