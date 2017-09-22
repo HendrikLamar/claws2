@@ -112,11 +112,157 @@ namespace Utility{
 
     std::ostream& operator<<( std::ostream& out, Utility::Pico_Data_Channel& data )
     {
+        PS6000_CHANNEL tmp_channel = data.channel;
+
+        out << "+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++";
+        out << "\n\t\t" << Utility::Pico_EnumToString_channel( tmp_channel );
+        out << "\n";
+        out << "+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++";
+        out << "\n";
+
         try
         {
-            out << 
+            out << "Coupling: " << Utility::Pico_EnumToString_coupling( data.coupling );
+            out << "\t\tEnabled: " << data.enabled;
+            out << "\nAnaOffset: " << data.analogueOffset << " V";
+            out << "\t\tRange: " << Utility::Pico_EnumToString_range( data.range );
+            out << "\n";
+            out << "+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++";
         }
+        catch( UtilityException& excep )
+        {
+            std::cout << excep.what() << std::endl;
+        }
+
+        out << "\n";
+
+        return out;
     }
+
+
+
+
+
+
+    ///////////////////////////////////////////////////////////////////////////
+
+
+
+
+    std::ostream& operator<<( std::ostream& out, Utility::Pico_Data_Trigger_Simple& data )
+    {
+
+        out << "+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++";
+        out << "\n\t\tTrigger Simple\n";
+        out << "+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++";
+        out << "\n";
+
+        try
+        {
+            out << "Enabled: " << data.enabled;
+            out << "\t\tSource: " << Utility::Pico_EnumToString_channel( data.source );
+            out << "\t\tThreshold: " << data.threshold;
+            out << "\nDirection: " << Utility::Pico_EnumToString_thresDir( data.direction );
+            out << "\t\tDelay: " << data.delay << " Samples";
+            out << "\t\tAutoTriggerTime: " << data.autoTriggerTime << " ms";
+            out << "\n";
+            out << "+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++";
+        }
+        catch( UtilityException& excep )
+        {
+            std::cout << excep.what() << std::endl;
+        }
+
+        out << "\n";
+
+        return out;
+    }
+
+
+
+
+
+
+    ///////////////////////////////////////////////////////////////////////////
+
+
+
+    std::ostream& operator<<( std::ostream& out, Utility::Pico_Data_HL_Gain& data )
+    {
+
+        try
+        {
+            out << "Pretrigger: " << data.preTrigger;
+            out << "\t\tPosttrigger: " << data.postTrigger;
+            out << "\t\tTimebase: " << data.timebase;
+            out << "\nOversample: " << data.oversample;
+            out << "\t\tDownSampleRatioMode: " << data.downSampleRatioMode;
+            out << "\tDownSampleRatio: " << data.downSampleRatio;
+            out << "\n";
+
+            for( auto& tmp : *data.channels )
+            {
+                out << tmp;
+            }
+
+            out << *(data.trigger);
+        }
+        catch( UtilityException& excep )
+        {
+            std::cout << excep.what() << std::endl;
+        }
+
+        out << "\n";
+
+        return out;
+    }
+
+
+
+
+
+    ///////////////////////////////////////////////////////////////////////////
+
+
+
+
+    std::ostream& operator<<( std::ostream& out, Utility::Pico_Data_Pico& data )
+    {
+        out << "\n+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\n";
+        out << "+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++";
+        out << "\n\t\tPico\t" << data.location << "\n";
+        out << "\t\tSerial: " << data.serial;
+        out << "+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++";
+        out << "\n";
+
+        try
+        {
+            out << "\tLow Gain Data\n";
+            out << "-----------------------------------------------------------\n";
+            out << data.dataLowGain;
+            out << "\n\n";
+
+            out << "\tHigh Gain Data\n";
+            out << "-----------------------------------------------------------\n";
+            out << data.dataHighGain;
+            out << "\n\n";
+
+            out << "\tIntermediate Data\n";
+            out << "-----------------------------------------------------------\n";
+            out << data.dataIntermediate;
+        }
+        catch( UtilityException& excep )
+        {
+            std::cout << excep.what() << std::endl;
+        }
+
+        out << "\n\n";
+
+        return out;
+    }
+
+
+
 
 
 

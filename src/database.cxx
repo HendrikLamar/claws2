@@ -89,7 +89,10 @@ Database::~Database()
     delete m_N6700_Channels;
     m_N6700_Channels = nullptr;
 
-    delete m_picoData;
+    if( m_picoData )
+    {
+        delete m_picoData;
+    }
     m_picoData = nullptr;
     
     delete m_steeringData;
@@ -380,7 +383,8 @@ void Database::Pico_readSettings( Utility::Pico_RunMode mode )
 {
     
     // since we have four picos, it loops fouer times
-    for ( int i = 0; i < m_MaxNoOfPicos ; ++i )
+//    for ( int i = 0; i < m_MaxNoOfPicos ; ++i )
+    for ( int i = 0; i < 2 ; ++i )
     {
 
         ///////////////////////////////////////////////////////////////////////
@@ -476,6 +480,7 @@ void Database::Pico_readSettings( Utility::Pico_RunMode mode )
 //        }
 
     }
+    std::cout << "Loop ends here!\n";
 
 
     return;

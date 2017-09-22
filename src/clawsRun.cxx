@@ -120,7 +120,17 @@ void        ClawsRun::initialize()
     PSU_init();
 
 
-    loadConfig();
+/*     try
+ *     {
+ *         std::cout << "Start loading Config...\n";
+ *         loadConfig();
+ *         std::cout << "done!\n";
+ *     }
+ *     catch( ... )
+ *     {
+ *         std::cout << "Unknown error. Config could not be loaded...\n";
+ *     }
+ */
 
 
     return;
@@ -157,18 +167,32 @@ void            ClawsRun::runBlockMode()
 
 void            ClawsRun::loadConfig()
 {
+    std::cout << "\tReading steering file...";
     // load general of database
     m_database->readSteeringFile();
+    std::cout << "done!\n";
 
+    std::cout << "\tReading PSU connection settings...";
     // load PSU configs
     m_database->N6700_readConnectSettings();
+    std::cout << "done!\n";
 
+
+
+
+    std::cout << "\tReading Pico high gain settings...";
     // load pico configs for the set run mode...
     m_database->Pico_readSettings( m_database->getSteeringData()->runMode_HighGain );
-    m_database->Pico_readSettings( m_database->getSteeringData()->runMode_LowGain );
+    std::cout << "done!\n";
 
+    std::cout << "\tReading low gain settingas...";
+    m_database->Pico_readSettings( m_database->getSteeringData()->runMode_LowGain );
+    std::cout << "done!\n";
+
+    std::cout << "\tReading intermediate settings...";
     // ...and for the intermediate mode
     m_database->Pico_readSettings( Utility::INTERMEDIATE );
+    std::cout << "done!\n";
 
     return;
 }
@@ -189,6 +213,7 @@ void            ClawsRun::printData()
 
     Utility::Steering_Data tmp = *m_database->getSteeringData();
     std::cout << tmp << std::endl;
+
 
     return;
 }

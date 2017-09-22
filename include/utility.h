@@ -294,7 +294,10 @@ namespace Utility{
 
     struct Pico_Data_Pico
     {
-        Pico_Data_Pico( std::string tserial, std::string tlocation )
+        Pico_Data_Pico( std::string tserial, std::string tlocation ) :
+            dataLowGain( new Utility::Pico_Data_HL_Gain() ),
+            dataHighGain( new Utility:: Pico_Data_HL_Gain() ),
+            dataIntermediate( new Utility::Pico_Data_HL_Gain() )
         {
             // check if the serial is longer than 100 chars.
             if ( tserial.size() > 100 )
