@@ -157,6 +157,9 @@ namespace Utility{
         int16_t                     enabled;
         float                       analogueOffset;
         PS6000_RANGE                range;
+
+        friend std::ostream& operator<<(
+                std::ostream& out, Utility::Pico_Data_Channel& data );
     };
 
 
@@ -203,6 +206,9 @@ namespace Utility{
         PS6000_THRESHOLD_DIRECTION  direction;
         uint32_t                    delay;
         int16_t                     autoTriggerTime;
+
+        friend std::ostream& operator<<(
+                std::ostream& out, Utility::Pico_Data_Trigger_Simple& data );
     };
 
     //! Data structure for an entire picoscope. All the data need to be read-in.
@@ -275,6 +281,8 @@ namespace Utility{
         enPS6000RatioMode       downSampleRatioMode;
         uint32_t                downSampleRatio;
 
+        friend std::ostream& operator<<(
+                std::ostream& out, Utility::Pico_Data_HL_Gain& data );
 
     };
 
@@ -353,6 +361,8 @@ namespace Utility{
         Pico_Data_HL_Gain*      dataHighGain;
         Pico_Data_HL_Gain*      dataIntermediate;
 
+        friend std::ostream& operator<<(
+                std::ostream& out, Utility::Pico_Data_Pico& data );
     };
 
 
@@ -502,6 +512,23 @@ namespace Utility{
     // saving of the ini files.
     //
 
+    //! Enum to string for PS6000_COUPLING
+    std::string     Pico_EnumToString_coupling( PS6000_COUPLING& var );
+
+    //! Enum to string for PS6000_RANGE 
+    std::string     Pico_EnumToString_range( PS6000_RANGE& var );
+
+    //! Enum to string for PS6000_BANDWIDTH_LIMITER_
+    std::string     Pico_EnumToString_bandwidth( PS6000_BANDWIDTH_LIMITER& var );
+
+    //! Enum to string for PS6000_RATIO_MODE
+    std::string     Pico_EnumToString_ratio( PS6000_RATIO_MODE& var );
+
+    //! Enum to string for PS6000_CHANNEL
+    std::string     Pico_EnumToString_channel( PS6000_CHANNEL& var );
+
+    //! Enum to string for PS6000_THRESHOLD_DIRECTION
+    std::string     Pico_EnumToString_thresDir( PS6000_THRESHOLD_DIRECTION& var );
 
     //! Enum to string for Utility::Pico_runMode
     std::string     Pico_EnumToString_runMode( Utility::Pico_RunMode& mode );

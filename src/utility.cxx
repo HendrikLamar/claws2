@@ -94,6 +94,33 @@ namespace Utility{
 
 
 
+///////////////////////////////////////////////////////////////////////////////
+
+
+
+    ///////////////////////////////////////////////////////////////////////////
+    //
+    //
+    //
+    //                  START Pico related stuff! 
+    //
+    //
+    //
+    ///////////////////////////////////////////////////////////////////////////
+
+
+
+    std::ostream& operator<<( std::ostream& out, Utility::Pico_Data_Channel& data )
+    {
+        try
+        {
+            out << 
+        }
+    }
+
+
+
+
 
 
 
@@ -398,6 +425,269 @@ namespace Utility{
     ///////////////////////////////////////////////////////////////////////////
 
 
+    //! Enum to string for PS6000_COUPLING
+    std::string     Pico_EnumToString_coupling( PS6000_COUPLING& var )
+    {
+        std::string output;
+        switch( var )
+        {
+            case 0:
+                output = "PS6000_AC";
+                break;
+            case 1:
+                output = "PS6000_DC_1M";
+                break;
+            case 2:
+                output = "PS6000_DC_50R";
+                break;
+            default:
+                throw UtilityException("Wrong PS6000_COUPLING entered. Can't convert.");
+        }
+        
+        return output;
+    }
+
+
+
+
+
+    ///////////////////////////////////////////////////////////////////////////
+
+
+
+
+
+    //! Enum to string for PS6000_RANGE 
+    std::string     Pico_EnumToString_range( PS6000_RANGE& var )
+    {
+        std::string output;
+        switch( var )
+        {
+            case 0:
+                output = "PS6000_10MV";
+                break;
+            case 1:
+                output = "PS6000_20MV";
+                break;
+            case 2:
+                output = "PS6000_50MV";
+                break;
+            case 3:
+                output = "PS6000_100MV";
+                break;
+            case 4:
+                output = "PS6000_200MV";
+                break;
+            case 5:
+                output = "PS6000_500MV";
+                break;
+            case 6:
+                output = "PS6000_1V";
+                break;
+            case 7:
+                output = "PS6000_2V";
+                break;
+            case 8:
+                output = "PS6000_5V";
+                break;
+            case 9:
+                output = "PS6000_10V";
+                break;
+            case 10:
+                output = "PS6000_50V";
+                break;
+            default:
+                throw UtilityException("Wrong PS6000_RANGE entered. Can't convert.");
+        }
+
+        return output;
+    }
+
+
+
+
+
+    ///////////////////////////////////////////////////////////////////////////
+
+
+
+
+
+
+    //! Enum to string for PS6000_BANDWIDTH_LIMITER_
+    std::string     Pico_EnumToString_bandwidth( PS6000_BANDWIDTH_LIMITER& var )
+    {
+        std::string output;
+        switch( var )
+        {
+            case 0:
+                output = "PS6000_BW_FULL";
+                break;
+            case 1:
+                output = "PS6000_BW_20MHZ";
+                break;
+            case 2:
+                output = "PS6000_BW_25MHZ";
+                break;
+            default:
+                throw UtilityException("Wrong PS6000_BANDWIDTH_LIMITER entered. Can't convert.");
+        }
+
+        return output;
+    }
+
+
+
+
+
+    ///////////////////////////////////////////////////////////////////////////
+
+
+
+
+
+
+    //! Enum to string for PS6000_RATIO_MODE
+    std::string     Pico_EnumToString_ratio( PS6000_RATIO_MODE& var )
+    {
+        std::string output;
+        switch( var )
+        {
+            case 0:
+                output = "PS6000_RATIO_MODE_NONE";
+                break;
+            case 1:
+                output = "PS6000_RATIO_MODE_AGGREGATE";
+                break;
+            case 2:
+                output = "PS6000_RATIO_MODE_AVERAGE";
+                break;
+            case 4:
+                output = "PS6000_RATIO_MODE_DECIMATE";
+                break;
+            case 8:
+                output = "PS6000_RATIO_MODE_DISTRIBUTION";
+                break;
+            default:
+                throw UtilityException("Wrong PS6000_RATIO_MODE entered. Can't convert.");
+        }
+
+        return output;
+    }
+
+
+
+
+
+    ///////////////////////////////////////////////////////////////////////////
+
+
+
+
+
+
+    //! Enum to string for PS6000_CHANNEL
+    std::string     Pico_EnumToString_channel( PS6000_CHANNEL& var )
+    {
+        std::string output;
+        switch( var ) 
+        {
+            case 0:
+                output = "PS6000_CHANNEL_A";
+                break;
+            case 1:
+                output = "PS6000_CHANNEL_B";
+                break;
+            case 2:
+                output = "PS6000_CHANNEL_C";
+                break;
+            case 3:
+                output = "PS6000_CHANNEL_D";
+                break;
+            case 4:
+                output = "PS6000_EXTERNAL";
+                break;
+            case 5:
+                output = "PS6000_MAX_CHANNELS";
+                break;
+            case 6:
+                output = "PS6000_TRIGGER_AUX";
+                break;
+            default:
+                throw UtilityException("Wrong PS6000_CHANNEL entered. Can't convert.");
+        }
+
+        return output;
+    }
+
+
+
+
+
+    ///////////////////////////////////////////////////////////////////////////
+
+
+
+
+
+
+    //! Enum to string for PS6000_THRESHOLD_DIRECTION
+    std::string     Pico_EnumToString_thresDir( PS6000_THRESHOLD_DIRECTION& var )
+    {
+        std::string output;
+        switch( var )
+        {
+            case 0:
+                output = "PS6000_ABOVE";
+                break;
+            case 1:
+                output = "PS6000_BELOW";
+                break;
+            case 2:
+                output = "PS6000_RISING";
+                break;
+            case 3:
+                output = "PS6000_FALLING";
+                break;
+            case 4:
+                output = "PS6000_RISING_OR_FALLING";
+                break;
+            case 5:
+                output = "PS6000_ABOVE_LOWER";
+                break;
+            case 6:
+                output = "PS6000_BELOW_LOWER";
+                break;
+            case 7:
+                output = "PS6000_RISING_LOWER";
+                break;
+            case 8:
+                output = "PS6000_FALLING_LOWER";
+                break;
+            case 9:
+                output = "PS6000_POSITIVE_RUNT";
+                break;
+            case 10:
+                output = "PS6000_NEGATIVE_RUNT";
+                break;
+            default:
+                throw UtilityException("Wrong PS6000_THRESHOLD_DIRECTION entered. Can't convert.");
+        }
+
+        return output;
+    }
+
+
+
+
+
+    ///////////////////////////////////////////////////////////////////////////
+
+
+
+
+
+
     std::string     Pico_EnumToString_runMode( Utility::Pico_RunMode& mode )
     {
         std::string output;
@@ -460,6 +750,45 @@ namespace Utility{
     //
     //                  END Pico_EnumToString functions
     ///////////////////////////////////////////////////////////////////////////
+
+
+
+
+
+
+    ///////////////////////////////////////////////////////////////////////////
+    //
+    //
+    //                  END Pico related stuff! 
+    //
+    //
+    ///////////////////////////////////////////////////////////////////////////
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
