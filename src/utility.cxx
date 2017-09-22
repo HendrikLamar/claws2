@@ -202,7 +202,7 @@ namespace Utility{
 
             for( auto& tmp : *data.channels )
             {
-                out << tmp;
+                out << *tmp;
             }
 
             out << *(data.trigger);
