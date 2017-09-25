@@ -431,6 +431,7 @@ void            ClawsRun::printData()
                 catch( PicoException error )
                 {
                     initCounter.at(ii) = 0;
+                    std::cout << "InitCounter: " << initCounter.at(ii) << std::endl;
                 };
     
             }
@@ -438,9 +439,9 @@ void            ClawsRun::printData()
 
 
     
+        int sumI{0};
         if ( serialLocation.size() > 0)
         {
-            int sumI{0};
             for ( unsigned int bb = 0; bb < serialLocation.size(); ++bb )
             {
                 if ( initCounter.at(bb) == 1)
