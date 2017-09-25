@@ -88,7 +88,11 @@ char MyState::getKey()
     ++m_inputCounter;
     char key;
     std::cin >> std::noskipws >> key;
-//    std::cin.ignore(32767, '\n'); // clear characters until a '\n' character is removed
+    if ( key != '\n' )
+    {
+        std::cin.ignore(32767, '\n'); // clear characters until a '\n' character is removed
+    }
+
     return key;
 }
 
