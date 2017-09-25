@@ -161,6 +161,7 @@ void Pico::init()
     }
     else
     {
+        std::cout << "Serial: " << m_serial << std::endl;
         m_status = ps6000OpenUnit(&m_handle, m_serial);
     }
 
@@ -175,6 +176,8 @@ void Pico::init()
         default:
             break;
     }
+
+    return;
 }
 
 

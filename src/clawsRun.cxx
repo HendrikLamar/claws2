@@ -260,7 +260,10 @@ void            ClawsRun::printData()
 
     for( auto& tmp_pico : *m_database->m_picoData )
     {
-        std::cout << *tmp_pico << std::endl;
+        if( tmp_pico )
+        {
+            std::cout << *tmp_pico << std::endl;
+        }
     }
 
 
@@ -403,6 +406,7 @@ void            ClawsRun::printData()
         if ( serialLocation.size() > 0 )
         {
             
+            int positionCounter = 0;
             for ( unsigned int ii = 0; ii < serialLocation.size(); ++ii )
             {
                 try
@@ -413,7 +417,7 @@ void            ClawsRun::printData()
     
                     m_database->m_picoData->push_back(pico);
                 }
-                catch( PicoException excep )
+                catch( PicoException& excep )
                 {
                     std::cout << "For " << serialLocation.at(ii).first;
                     std::cout <<  ":\n" << excep.what() << "\n";
@@ -424,14 +428,22 @@ void            ClawsRun::printData()
     
                 try
                 {
+                    std::cout << "Positioncounter: " << positionCounter << std::endl;
                     m_picos->push_back(
+//                            new Pico( m_database->m_picoData->at(positionCounter) )
                             new Pico( m_database->m_picoData->at(ii) )
                             );
+                    ++positionCounter;
+                    std::cout << "PPositioncounter: " << positionCounter << std::endl;
                 }
-                catch( PicoException error )
+                catch( PicoException& error )
                 {
                     initCounter.at(ii) = 0;
-                    std::cout << "InitCounter: " << initCounter.at(ii) << std::endl;
+
+                    // delete the data from the m_picoData vector which is not needed
+                    delete m_database->m_picoData->at(ii);
+                    m_database->m_picoData->at(ii) = nullptr;
+//                    m_database->m_picoData->pop_back();
                 };
     
             }

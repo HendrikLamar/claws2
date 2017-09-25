@@ -258,25 +258,16 @@ namespace Utility{
             for ( auto& tmp: *channels )
             {
                 // delete if empty
-                if( tmp )
-                {
-                    delete tmp;
-                }
+                delete tmp;
                 tmp = nullptr;
             }
 
             // delete if empty
-            if( channels )
-            {
-                delete channels;
-            }
+            delete channels;
             channels = nullptr;
 
             // delete if not empty
-            if( trigger )
-            {
-                delete trigger;
-            }
+            delete trigger;
             trigger = nullptr;
 
         };
@@ -353,21 +344,14 @@ namespace Utility{
         ~Pico_Data_Pico()
         {
             // delete data pointers
-            if ( dataLowGain )
-            {
-                delete dataLowGain;
-                dataLowGain = nullptr;
-            }
-            if ( dataHighGain )
-            {
-                delete dataHighGain;
-                dataHighGain = nullptr;
-            }
-            if ( dataIntermediate )
-            {
-                delete dataIntermediate;
-                dataIntermediate = nullptr;
-            }
+            delete dataLowGain;
+            dataLowGain = nullptr;
+
+            delete dataHighGain;
+            dataHighGain = nullptr;
+
+            delete dataIntermediate;
+            dataIntermediate = nullptr;
         }
 
 
