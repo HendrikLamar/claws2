@@ -169,6 +169,23 @@ Utility::Steering_Data* Database::getSteeringData()
 
 
 
+///////////////////////////////////////////////////////////////////////////////
+
+     
+
+void Database::setNoOfPicosInitialized( unsigned int numb )
+{
+    m_MaxNoOfPicos = numb;
+
+    return;
+}
+
+
+
+
+
+
+
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -383,7 +400,7 @@ void Database::Pico_readSettings( Utility::Pico_RunMode mode )
 {
     
     // since we have four picos, it loops fouer times
-    for ( int i = 0; i < m_MaxNoOfPicos ; ++i )
+    for ( unsigned int i = 0; i < m_MaxNoOfPicos ; ++i )
 //    for ( int i = 0; i < 2 ; ++i )
     {
 
@@ -396,7 +413,7 @@ void Database::Pico_readSettings( Utility::Pico_RunMode mode )
         {
             Pico_readChannelsSettings( mode, i );
         }
-        catch( boost::property_tree::ptree_error excep )
+        catch( boost::property_tree::ptree_error& excep )
         {
             std::cout << "\nChannel settings couldn't be read-in for Pico# ";
             std::cout << i+1 << "\n";
@@ -404,7 +421,7 @@ void Database::Pico_readSettings( Utility::Pico_RunMode mode )
             std::cout << excep.what() << "\n" << std::endl;
             continue;
         }
-        catch( PicoException excep )
+        catch( PicoException& excep )
         {
             std::cout << "\nChannel settings couldn't be read-in for Pico# ";
             std::cout << i+1 << "\n";
@@ -420,7 +437,7 @@ void Database::Pico_readSettings( Utility::Pico_RunMode mode )
         {
             Pico_readAquisitionSettings( mode, i );
         }
-        catch( boost::property_tree::ptree_error excep )
+        catch( boost::property_tree::ptree_error& excep )
         {
             std::cout << "\nAquisition settings couldn't be read-in for Pico# ";
             std::cout << i+1 << "\n";
@@ -428,7 +445,7 @@ void Database::Pico_readSettings( Utility::Pico_RunMode mode )
             std::cout << excep.what() << "\n" << std::endl;
             continue;
         }
-        catch( PicoException excep )
+        catch( PicoException& excep )
         {
             std::cout << "\nAquisition settings couldn't be read-in for Pico# ";
             std::cout << i+1 << "\n";
@@ -444,7 +461,7 @@ void Database::Pico_readSettings( Utility::Pico_RunMode mode )
         {
             Pico_readTriggerSimpleSettings( mode, i );
         }
-        catch( boost::property_tree::ptree_error excep )
+        catch( boost::property_tree::ptree_error& excep )
         {
             std::cout << "\nSimple Trigger settings couldn't be read-in for Pico# ";
             std::cout << i+1 << "\n";
@@ -452,7 +469,7 @@ void Database::Pico_readSettings( Utility::Pico_RunMode mode )
             std::cout << excep.what() << "\n" << std::endl;
             continue;
         }
-        catch( PicoException excep )
+        catch( PicoException& excep )
         {
             std::cout << "\nSimple Trigger settings couldn't be read-in for Pico# ";
             std::cout << i+1 << "\n";

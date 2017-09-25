@@ -22,6 +22,8 @@
 #include "n6700.h"
 #include "database.h"
 
+#include <boost/property_tree/exceptions.hpp>
+
 #include <iostream>
 #include <exception>
 
@@ -116,6 +118,7 @@ void        ClawsRun::initialize()
 {
 
     Pico_init();
+    m_database->setNoOfPicosInitialized(m_picos->size());
 
     PSU_init();
 
@@ -126,7 +129,7 @@ void        ClawsRun::initialize()
     }
     catch( ... )
     {
-        std::cout << "Unknown error. Config could not be loaded...\n";
+        std::cout << "\nUnknown error. Config could not be loaded...\n";
     }
 
 
@@ -170,32 +173,68 @@ void            ClawsRun::loadConfig()
     
 
 
-    std::cout << "Reading steering file...";
-    // load general of database
-    m_database->readSteeringFile();
-    std::cout << "done!\n";
+    try
+    {
+        std::cout << "Reading steering file...";
+        // load general of database
+        m_database->readSteeringFile();
+        std::cout << "done!\n";
+    }
+    catch( UtilityException& excep )
+    {
+        std::cout << "\n" << excep.what() << std::endl;
+    }
 
-    std::cout << "Reading PSU connection settings...";
-    // load PSU configs
-    m_database->N6700_readConnectSettings();
-    std::cout << "done!\n";
+    try
+    {
+        std::cout << "Reading PSU connection settings...";
+        // load PSU configs
+        m_database->N6700_readConnectSettings();
+        std::cout << "done!\n";
+    }
+    catch( UtilityException& excep )
+    {
+        std::cout << "\n" << excep.what() << std::endl;
+    }
 
 
 
 
-    std::cout << "Reading Pico high gain settings...";
-    // load pico configs for the set run mode...
-    m_database->Pico_readSettings( m_database->getSteeringData()->runMode_HighGain );
-    std::cout << "done!\n";
+    try
+    {
+        std::cout << "Reading Pico high gain settings...";
+        // load pico configs for the set run mode...
+        m_database->Pico_readSettings( m_database->getSteeringData()->runMode_HighGain );
+        std::cout << "done!\n";
+    }
+    catch( UtilityException& excep )
+    {
+        std::cout << "\n" << excep.what() << std::endl;
+    }
 
-    std::cout << "Reading low gain settings...";
-    m_database->Pico_readSettings( m_database->getSteeringData()->runMode_LowGain );
-    std::cout << "done!\n";
 
-    std::cout << "Reading intermediate settings...";
-    // ...and for the intermediate mode
-    m_database->Pico_readSettings( Utility::INTERMEDIATE );
-    std::cout << "done!\n";
+    try
+    {
+        std::cout << "Reading low gain settings...";
+        m_database->Pico_readSettings( m_database->getSteeringData()->runMode_LowGain );
+        std::cout << "done!\n";
+    }
+    catch( UtilityException& excep )
+    {
+        std::cout << "\n" << excep.what() << std::endl;
+    }
+
+    try
+    {
+        std::cout << "Reading intermediate settings...";
+        // ...and for the intermediate mode
+        m_database->Pico_readSettings( Utility::INTERMEDIATE );
+        std::cout << "done!\n";
+    }
+    catch( UtilityException& excep )
+    {
+        std::cout << "\n" << excep.what() << std::endl;
+    }
 
 
     return;

@@ -47,6 +47,10 @@ class Database
         
         ReadIni*        getInitReader();
 
+        //! Sets the number of picos initialized. To be called after initialization.
+        void            setNoOfPicosInitialized( unsigned int numb );
+
+
 
         ///////////////////////////////////////////////////////////////////////
 
@@ -99,9 +103,8 @@ class Database
 
         Utility::Steering_Data*     m_steeringData;
 
-        // this constanst integer is the number of picos we intend to use,
-        // no matter how many picos are found in the end
-        const int                   m_MaxNoOfPicos = 4;
+        // number of picos initialized. This value is set by clawsRun.
+        unsigned int                         m_MaxNoOfPicos;
 
 
         ///////////////////////////////////////////////////////////////////////
