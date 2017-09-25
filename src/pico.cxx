@@ -299,8 +299,42 @@ Channel* Pico::getCh( int& cha )
 
 void Pico::setReadyBlock()
 {
+    setChannels();
+
+    getTimebase();
+
+    setTrigger();
+
+
+    return;
 
 }
+
+
+
+
+
+
+
+
+///////////////////////////////////////////////////////////////////////////////
+
+
+
+
+
+
+
+
+void Pico::setReadyRapid()
+{
+    //! \todo Fill this function.
+
+}
+
+
+
+
 
 
 
@@ -366,6 +400,32 @@ void Pico::runBlock()
 
     return;
 }
+
+
+
+
+
+
+
+
+///////////////////////////////////////////////////////////////////////////////
+
+
+
+
+
+
+
+
+
+void Pico::runRapid()
+{
+    //! \todo Fill this function.
+
+}
+
+
+
 
 
 
