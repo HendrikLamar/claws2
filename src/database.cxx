@@ -211,11 +211,6 @@ void Database::readSteeringFile()
     tmp = m_initReader->getKey< std::string >(m_initReader->getInitstruct().SteeringFile, lowGain);
     m_steeringData->runMode_LowGain = Utility::Pico_StringToEnum_runMode( tmp );
 
-    // read in Trigger Mode
-    std::string triggerM = root + "TriggerMode";
-    tmp = m_initReader->getKey< std::string >(m_initReader->getInitstruct().SteeringFile, triggerM);
-    m_steeringData->triggerMode = Utility::Pico_StringToEnum_trigger( tmp );
-
     // read in loopsPhysics
     std::string loopsPhysics = root + "LoopsPhysics";
     m_steeringData->loopsPhysics = m_initReader->getKey<int>(
@@ -620,10 +615,15 @@ void Database::Pico_readAquisitionSettings( Utility::Pico_RunMode mode, int pico
     fKey = rKey + "downSampleRatio";
     tmpDataStruct->downSampleRatio = ptree.get< unsigned int  >( fKey );
 
-    //reading oversample
+    // reading oversample
     fKey = rKey + "oversample";
     tmpDataStruct->oversample = ptree.get< short >( fKey );
 
+    // reading in trigger mode
+    fKey = rKey + "triggerMode";
+    tmp = ptree.get< std::string >( fKey );
+    tmpDataStruct->triggerMode = 
+        Utility::Pico_StringToEnum_trigger( tmp );
 
     return;
 }

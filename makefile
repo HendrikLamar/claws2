@@ -41,6 +41,8 @@ all: build
 release: CFLAGS += -O3
 release: clean build
 
+clean: clean
+
 
 VERSION = 1.1
 INCLUDES += -I"./include"

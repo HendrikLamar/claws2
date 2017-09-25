@@ -118,6 +118,79 @@ namespace Utility{
 
 
 
+    ///////////////////////////////////////////////////////////////////////////
+    //                      Pico Enums
+    //
+
+
+
+    //! Enum to specify which run mode should be loaded in Database::Pico_readConfig().
+    enum Pico_RunMode
+    {
+        INTERMEDIATE,
+
+        MERKEL_HG,
+        OBERMAIER_HG,
+        SCHIFFER_LG,
+        KLUM_LG,
+        GARRN
+    };
+    
+
+
+
+
+    ////////////////////////////////////////////////////////////////////////
+
+
+
+
+    enum Pico_Trigger_Mode{
+        
+        TRIGGER_SIMPLE,
+        TRIGGER_ADVANCED 
+    };
+    
+
+
+
+    ///////////////////////////////////////////////////////////////////////////
+
+
+
+
+
+    enum Claws_Gain
+    {
+        INTER,
+        HIGH_GAIN,
+        LOW_GAIN
+    };
+
+    //
+    //                      END Pico Enums
+    ///////////////////////////////////////////////////////////////////////////
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     
     ///////////////////////////////////////////////////////////////////////////
@@ -222,6 +295,9 @@ namespace Utility{
     //!           - Upper_Backward
     //!           - Lower_Forward
     //!           - Lower_Backward
+    //!      - triggerMode:
+    //!          - TRIGGER_SIMPLE
+    //!          - TRIGGER_ADVANCED
     //!      - pre-/postTrigger:
     //!          - integer, the sum of both should not exceed 2 GS
     //!      - timebase:
@@ -278,6 +354,7 @@ namespace Utility{
 
         Pico_Data_Trigger_Simple* trigger;
 
+        Pico_Trigger_Mode       triggerMode;
 
         uint32_t                preTrigger;
         uint32_t                postTrigger;
@@ -373,79 +450,6 @@ namespace Utility{
 
     //
     //                      END Pico Data Structures
-    ///////////////////////////////////////////////////////////////////////////
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    ///////////////////////////////////////////////////////////////////////////
-    //                      Pico Enums
-    //
-
-
-
-    //! Enum to specify which run mode should be loaded in Database::Pico_readConfig().
-    enum Pico_RunMode
-    {
-        INTERMEDIATE,
-
-        MERKEL_HG,
-        OBERMAIER_HG,
-        SCHIFFER_LG,
-        KLUM_LG,
-        GARRN
-    };
-    
-
-
-
-
-    ////////////////////////////////////////////////////////////////////////
-
-
-
-
-    enum Pico_Trigger_Mode{
-        
-        TRIGGER_SIMPLE,
-        TRIGGER_ADVANCED 
-    };
-    
-
-
-
-    ///////////////////////////////////////////////////////////////////////////
-
-
-
-
-
-    enum Claws_Gain
-    {
-        INTER,
-        HIGH_GAIN,
-        LOW_GAIN
-    };
-
-    //
-    //                      END Pico Enums
     ///////////////////////////////////////////////////////////////////////////
 
 
@@ -591,7 +595,6 @@ namespace Utility{
     
     struct Steering_Data
     {
-        Pico_Trigger_Mode       triggerMode;
         Pico_RunMode            runMode_HighGain;
         Pico_RunMode            runMode_LowGain;
 

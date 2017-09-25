@@ -198,6 +198,7 @@ namespace Utility{
             out << "\nOversample: " << data.oversample;
             out << "\t\tDownSampleRatioMode: " << data.downSampleRatioMode;
             out << "\tDownSampleRatio: " << data.downSampleRatio;
+            out << "\nTriggerMode: " << Utility::Pico_EnumToString_trigger(data.triggerMode);
             out << "\n";
 
             for( auto& tmp : *data.channels )
@@ -962,7 +963,6 @@ namespace Utility{
                 out << "+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++";
                 out << "\n\t\t\tSteering Data\n";
                 out << "+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++";
-                out << "\nPicoTriggerMode: " << Pico_EnumToString_trigger( data.triggerMode );
                 out << "\t\tHighGain: " << Pico_EnumToString_runMode( data.runMode_HighGain );
                 out << "\t\tLowGain: " << Pico_EnumToString_runMode( data.runMode_LowGain );
                 out << "\nLoopsPhysics: " << data.loopsPhysics;

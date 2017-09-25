@@ -1,4 +1,5 @@
 // =====================================================================================
+//
 // 
 //       Filename:  pico.h
 // 
@@ -26,13 +27,27 @@
 #include <string>
 
 
-//! The Pico class to steer and handle one Picoscope
+
+/*! Pico class
+ * 
+ * Use it the following:
+ *  1. init()
+ *  2. loadConfig( Utility::Claws_Gain& mode )
+ *  3. setReadyBlock() / setReadyRapid()
+ *  4. runBlock() / runRapid()
+ *  6. stop()
+ *  7. close()
+ *
+ *  Steps 3 & 4 might be repeated. 
+ *
+ *
+ */ 
 class Pico
 {
     private:
 
         // Holds information about the current status of the scope
-        PICO_STATUS         m_status;
+        PICO_STATUS                             m_status;
 
         // callback class for Pico::runXXX functions
         Utility::CallBackPico*                  m_callBack;
@@ -309,16 +324,24 @@ class Pico
         //! Initializes the picoscope.
         void init();
 
-        //! Loads the settings from the Database and stores it in member variables
-        void loadConfig( Utility::Claws_Gain& mode );
-
         //! Returns the channel.
         Channel* getCh( PS6000_CHANNEL& cha );
         Channel* getCh( int& cha );
 
+        //! Loads the settings from the Database and stores it in member variables
+        void loadConfig( Utility::Claws_Gain& mode );
+
+        void setReadyBlock();
+
+        void setReadyRapid();
+
         //! Starts one time data taking in block mode. Settings might to be loaded
-        //! before.
+        //! before. PicoExceptions might be thrown. When runBlock() ends, the 
+        //! acquired data is stored in Pico_Channel::Data /todo Adjust to the reality.
+        //! Data might be saved, processed and/or displayed afterwards.
         void runBlock();
+
+        void runRapid();
 
         //! Stops the data taking properly. If this is called before a trigger event
         //! occurs, the data array might contain non valid data.

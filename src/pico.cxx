@@ -208,6 +208,7 @@ void Pico::loadConfig( Utility::Claws_Gain& mode )
         tmp->getEnabled() ? ++m_noChannelsEnabled: false ;
     }
 
+
     Utility::Pico_Data_HL_Gain* data = getGainData( mode );
 
 
@@ -288,6 +289,32 @@ Channel* Pico::getCh( int& cha )
 
 
 ///////////////////////////////////////////////////////////////////////////////
+
+
+
+
+
+
+
+
+void Pico::setReadyBlock()
+{
+
+}
+
+
+
+
+
+
+
+///////////////////////////////////////////////////////////////////////////////
+
+
+
+
+
+
 
 
 
