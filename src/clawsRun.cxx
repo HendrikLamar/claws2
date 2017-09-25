@@ -406,7 +406,6 @@ void            ClawsRun::printData()
         if ( serialLocation.size() > 0 )
         {
             
-            int positionCounter = 0;
             for ( unsigned int ii = 0; ii < serialLocation.size(); ++ii )
             {
                 try
@@ -428,13 +427,9 @@ void            ClawsRun::printData()
     
                 try
                 {
-                    std::cout << "Positioncounter: " << positionCounter << std::endl;
                     m_picos->push_back(
-//                            new Pico( m_database->m_picoData->at(positionCounter) )
                             new Pico( m_database->m_picoData->at(ii) )
                             );
-                    ++positionCounter;
-                    std::cout << "PPositioncounter: " << positionCounter << std::endl;
                 }
                 catch( PicoException& error )
                 {
@@ -443,7 +438,6 @@ void            ClawsRun::printData()
                     // delete the data from the m_picoData vector which is not needed
                     delete m_database->m_picoData->at(ii);
                     m_database->m_picoData->at(ii) = nullptr;
-//                    m_database->m_picoData->pop_back();
                 };
     
             }
