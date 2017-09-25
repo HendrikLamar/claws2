@@ -337,10 +337,11 @@ class Pico
 
         //! Starts one time data taking in block mode. Settings might to be loaded
         //! before. PicoExceptions might be thrown. When runBlock() ends, the 
-        //! acquired data is stored in Pico_Channel::Data /todo Adjust to the reality.
-        //! Data might be saved, processed and/or displayed afterwards.
+        //! acquired data is Can be retrieved by calling Pico_Channel::getBuffer() 
+        //! Data can be processed afterwards.
         void runBlock();
 
+        //! Starts the rapid block mode.
         void runRapid();
 
         //! Stops the data taking properly. If this is called before a trigger event

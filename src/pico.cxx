@@ -305,6 +305,12 @@ void Pico::setReadyBlock()
 
     setTrigger();
 
+    // set data buffer for each channel to define where the data should be stored
+    for( auto& tmp : *m_channels )
+    {
+        tmp->setDataBuffer();
+    }
+
 
     return;
 
@@ -393,11 +399,7 @@ void Pico::runBlock()
         std::this_thread::sleep_for(std::chrono::milliseconds(1));
     }
 
-    // set data buffer for each channel to define where the data should be stored
-    for( auto& tmp : *m_channels )
-    {
-        tmp->setDataBuffer();
-    }
+    getValuesBlock();
 
     return;
 }
