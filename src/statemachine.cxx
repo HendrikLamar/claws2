@@ -103,8 +103,10 @@ void MyState::run()
     {
         switch(key)
         {
+            // skip empty inputs
             case '\n':
                 break;
+
             case 'i':
                 m_daq->process_event( ClawsStatemachine::EvInit() );
                 break;
