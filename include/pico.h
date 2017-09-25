@@ -333,11 +333,14 @@ class Pico
         //! Loads the settings from the Database and stores it in member variables
         void loadConfig( Utility::Claws_Gain& mode );
 
+        //! Prepares the Pico to get ready for block mode. Should be called before
+        //! block mode.
         void setReadyBlock();
 
         void setReadyRapid();
 
-        //! Starts one time data taking in block mode. Settings might to be loaded
+        //! Starts one time data taking in block mode. Should be placed in a loop.
+        //! Settings should to be loaded
         //! before. PicoExceptions might be thrown. When runBlock() ends, the 
         //! acquired data is Can be retrieved by calling Pico_Channel::getBuffer() 
         //! Data can be processed afterwards.
