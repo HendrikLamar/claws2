@@ -260,6 +260,8 @@ void            ClawsRun::printData()
 
     for( auto& tmp_pico : *m_database->m_picoData )
     {
+        // m_picoData has size four all the time. herefore print only
+        // entries in which the pointer is not empty
         if( tmp_pico )
         {
             std::cout << *tmp_pico << std::endl;

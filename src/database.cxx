@@ -620,6 +620,11 @@ void Database::Pico_readAquisitionSettings( Utility::Pico_RunMode mode, int pico
     fKey = rKey + "downSampleRatio";
     tmpDataStruct->downSampleRatio = ptree.get< unsigned int  >( fKey );
 
+    //reading oversample
+    fKey = rKey + "oversample";
+    tmpDataStruct->oversample = ptree.get< short >( fKey );
+
+
     return;
 }
 
