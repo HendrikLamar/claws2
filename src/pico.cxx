@@ -155,46 +155,9 @@ Pico::~Pico()
 
 
 
-void Pico::init()
-{
-    if(!m_serial)
-    {
-        m_status = ps6000OpenUnit(&m_handle, nullptr);
-    }
-    else
-    {
-        m_status = ps6000OpenUnit(&m_handle, m_serial);
-    }
-
-    switch( m_handle )
-    {
-        case -1:
-            throw PicoException(std::to_string(*m_serial) + " fails to open!");
-            break;
-        case 0:
-            throw PicoException(std::to_string(*m_serial) + " not found!");
-            break;
-        default:
-            break;
-    }
-
-    return;
-}
 
 
-
-
-
-
-///////////////////////////////////////////////////////////////////////////////
-
-
-
-
-
-
-
-void Pico::loadConfig( Utility::Claws_Gain& mode )
+void Pico::loadConfig( Utility::Claws_Gain mode )
 {
 
     // set the number of channels enabled to zero before filling it again
@@ -249,7 +212,7 @@ void Pico::loadConfig( Utility::Claws_Gain& mode )
 
 
 
-Channel* Pico::getCh( PS6000_CHANNEL& cha )
+Channel* Pico::getCh( PS6000_CHANNEL cha )
 {
     switch( cha )
     {
@@ -267,7 +230,7 @@ Channel* Pico::getCh( PS6000_CHANNEL& cha )
 }
 
 
-Channel* Pico::getCh( int& cha )
+Channel* Pico::getCh( int cha )
 {
     switch( cha )
     {
@@ -550,6 +513,43 @@ std::ostream& operator<<( std::ostream& out, Pico* picoscope );
 //
 //              START private member functions
 //
+///////////////////////////////////////////////////////////////////////////////
+
+
+
+
+
+void Pico::init()
+{
+    if(!m_serial)
+    {
+        m_status = ps6000OpenUnit(&m_handle, nullptr);
+    }
+    else
+    {
+        m_status = ps6000OpenUnit(&m_handle, m_serial);
+    }
+
+    switch( m_handle )
+    {
+        case -1:
+            throw PicoException(std::to_string(*m_serial) + " fails to open!");
+            break;
+        case 0:
+            throw PicoException(std::to_string(*m_serial) + " not found!");
+            break;
+        default:
+            break;
+    }
+
+    return;
+}
+
+
+
+
+
+
 ///////////////////////////////////////////////////////////////////////////////
 
 

@@ -149,8 +149,10 @@ void        ClawsRun::initialize()
 
 
 
-void            ClawsRun::runBlockMode()
+void            ClawsRun::run()
 {
+
+
 
 }
 
@@ -537,6 +539,39 @@ void            ClawsRun::printData()
 
     
     ///////////////////////////////////////////////////////////////////////////
+
+
+
+
+
+
+
+    void ClawsRun::Pico_runInter()
+    {
+        //! \todo Extend for multiple Picos!
+        m_picos->at(1)->loadConfig( Utility::INTER );
+    }
+
+
+
+
+
+
+
+    ///////////////////////////////////////////////////////////////////////////
+
+
+
+
+
+
+
+
+
+
+
+
+
     
 
 

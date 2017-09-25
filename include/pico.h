@@ -31,7 +31,7 @@
 /*! Pico class
  * 
  * Use it the following:
- *  1. init()
+ *  1. init() -> is done when instance is created.
  *  2. loadConfig( Utility::Claws_Gain& mode )
  *  3. setReadyBlock() / setReadyRapid()
  *  4. runBlock() / runRapid()
@@ -267,6 +267,9 @@ class Pico
         ////////////////////////////////////////////////////////////////////////
 
 
+        //! Initializes the picoscope.
+        void init();
+
         // Returns a Utility::Pico_Data_HL_Gain pointer to the correct data set
         // for the demanded gain mode.
         Utility::Pico_Data_HL_Gain*  getGainData( Utility::Claws_Gain& mode );
@@ -323,15 +326,12 @@ class Pico
          */
         ~Pico();
 
-        //! Initializes the picoscope.
-        void init();
-
         //! Returns the channel.
-        Channel* getCh( PS6000_CHANNEL& cha );
-        Channel* getCh( int& cha );
+        Channel* getCh( PS6000_CHANNEL cha );
+        Channel* getCh( int cha );
 
         //! Loads the settings from the Database and stores it in member variables
-        void loadConfig( Utility::Claws_Gain& mode );
+        void loadConfig( Utility::Claws_Gain mode );
 
         //! Prepares the Pico to get ready for block mode. Should be called before
         //! block mode.

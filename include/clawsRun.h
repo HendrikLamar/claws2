@@ -49,6 +49,9 @@ class ClawsRun
 
         void Pico_close();
 
+        void Pico_runInter();
+
+        void Pico_runBlock();
 
         ///////////////////////////////////////////////////////////////////////
         //
@@ -139,7 +142,7 @@ class ClawsRun
 
         //! Starts the pico runmode in an infinit loop until it is stopped by
         //! the (epics) user.
-        void            runBlockMode();
+        void            run();
 
         //! (Re)Loads the configurations.
         void            loadConfig();
