@@ -87,7 +87,8 @@ char MyState::getKey()
     std::cout << "claws[" << m_inputCounter << "]> ";
     ++m_inputCounter;
     char key;
-    std::cin >> key;
+    std::cin >> std::noskipws >> key;
+//    std::cin.ignore(32767, '\n'); // clear characters until a '\n' character is removed
     return key;
 }
 
@@ -102,7 +103,8 @@ void MyState::run()
     {
         switch(key)
         {
-
+            case '\n':
+                break;
             case 'i':
                 m_daq->process_event( ClawsStatemachine::EvInit() );
                 break;
