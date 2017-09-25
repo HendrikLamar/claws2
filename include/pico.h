@@ -288,10 +288,12 @@ class Pico
         // Only needed when rapid block mode is used. Otherwise its 1 by default.
         void    setMemorySegments( uint32_t nSegments );
 
-        //! Checks m_status for possible error and throws a PicoException() if it is
-        //! the case.
+        // Checks m_status for possible error and throws a PicoException() if it is
+        // the case. Should be called after every ps6000-function.
         void    checkStatus();
 
+        // Turns off unneeded things. Currently: ETSmode
+        void    turnOffUnneeded();
 
         ////////////////////////////////////////////////////////////////////////
         //

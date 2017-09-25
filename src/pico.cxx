@@ -76,6 +76,8 @@ Pico::Pico( Utility::Pico_Data_Pico* picoData ) :
 {
     // initialize pico
     init();
+
+    turnOffUnneeded();
 };
 
 
@@ -1143,6 +1145,42 @@ void Pico::checkStatus()
 
     return;
 }
+
+
+
+
+
+
+
+
+///////////////////////////////////////////////////////////////////////////////
+
+
+
+
+
+
+
+void Pico::turnOffUnneeded()
+{
+    m_status = ps6000SetEts(
+            m_handle,
+            PS6000_ETS_OFF,
+            0,
+            0,
+            nullptr
+            );
+
+    checkStatus();
+
+    return;
+}
+
+
+
+
+
+
 
 
 
