@@ -77,7 +77,8 @@ Pico::Pico( Utility::Pico_Data_Pico* picoData ) :
     // initialize pico
     init();
 
-    turnOffUnneeded();
+//    turnOffUnneeded();
+
 };
 
 
@@ -186,6 +187,9 @@ void Pico::loadConfig( Utility::Claws_Gain mode )
     m_downSampleRatio           = data->downSampleRatio;
 
 
+    // loading the correct trigger mode
+    m_triggerMode = data->triggerMode;
+
 
     // loading simple trigger settings
     m_st_enabled                = data->trigger->enabled;
@@ -194,6 +198,12 @@ void Pico::loadConfig( Utility::Claws_Gain mode )
     m_st_direction              = data->trigger->direction;
     m_st_delay                  = data->trigger->delay;
     m_st_autoTriggerTime_ms     = data->trigger->autoTriggerTime;
+
+
+    // on input, the number of samples demanded is given.
+    // on exit, the number of values retrieved is written.
+    m_noOfSamplesTotal = m_preTrigger + m_postTrigger;
+
 
     //! \todo Add Advanced Trigger Settings!
     
@@ -274,6 +284,7 @@ void Pico::setReadyBlock()
     for( auto& tmp : *m_channels )
     {
         tmp->setDataBuffer();
+        std::this_thread::sleep_for(std::chrono::milliseconds(200));
     }
 
 
@@ -642,11 +653,9 @@ void Pico::setChannels()
 {
     for( auto& tmp : *m_channels )
     {
-        // first, load the current config from the database
-        tmp->loadConfig();
 
-        // second, configure the channel with the fresh data and check if it
-        // was successful
+        // configure the channel with the fresh data and check if it
+        // was successful. Data is loaded before
         m_status = tmp->setChannel();
 
         checkStatus();
@@ -681,9 +690,12 @@ void    Pico::getTimebase()
     m_timeInterval_ns = -1.f;
 
     // on exit, the maximum number of samples available.
-    uint32_t maxSamples;
+    uint32_t maxSamples{50000};
 
-    while( m_timeInterval_ns < 0 && counter < 100)
+    uint32_t counterMax = 5000;
+
+
+    while( m_timeInterval_ns < 0 && counter < counterMax )
     {
         m_status = ps6000GetTimebase2(
                         m_handle,
@@ -694,12 +706,20 @@ void    Pico::getTimebase()
                         &maxSamples,
                         m_startIndex                        
                 );
+
+
+        checkStatus();
+
+        std::this_thread::sleep_for(std::chrono::milliseconds(1));
         ++counter;
     }
 
+
+
     // check if the while loop finished properly
-    if( m_timeInterval_ns < 0 || counter > 99 )
+    if( m_timeInterval_ns < 0 || counter > counterMax -1 )
     {
+        std::cout << "TimeInterval: " << m_timeInterval_ns << std::endl;
         throw PicoException("Demanded sampling interval not available!");
     }
 
@@ -730,17 +750,18 @@ void    Pico::getTimebase()
 
 void    Pico::getValuesBlock()
 {
-    // on input, the number of samples demanded is given.
-    // on exit, the number of values retrieved is written.
-    m_noOfSamplesTotal = m_channels->at(0)->getBuffer()->size();
 
     // since in block mode we only have on index with index # 0, we use this hardcoded
     uint32_t segmentIndex{0};
+    
+
+    uint32_t noOfSamplesReturned = m_noOfSamplesTotal;
+
 
     m_status = ps6000GetValues(
                     m_handle,
                     m_startIndex,
-                    &m_noOfSamplesTotal,
+                    &noOfSamplesReturned,
                     m_downSampleRatio,
                     m_downSamplingRatioMode,
                     segmentIndex,
@@ -748,6 +769,11 @@ void    Pico::getValuesBlock()
             );
 
     checkStatus();
+
+    if( noOfSamplesReturned != m_noOfSamplesTotal )
+    {
+        throw PicoException("# of samples returned unequal to # of acquired samples!");
+    }
 
     return;
 }

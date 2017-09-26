@@ -149,10 +149,12 @@ void        ClawsRun::initialize()
 
 
 
-void            ClawsRun::run()
+void    ClawsRun::run()
 {
 
+    Pico_runInter();
 
+    return;
 
 }
 
@@ -549,7 +551,37 @@ void            ClawsRun::printData()
     void ClawsRun::Pico_runInter()
     {
         //! \todo Extend for multiple Picos!
-        m_picos->at(1)->loadConfig( Utility::INTER );
+        try
+        {
+            m_picos->at(1)->loadConfig( Utility::INTER );
+            m_picos->at(1)->setReadyBlock();
+            m_picos->at(1)->runBlock();
+
+            std::vector< int16_t >* data = m_picos->at(1)->getCh(0)->getBuffer();
+
+
+            for( auto& tmp : *data )
+            {
+                std::cout << tmp << "\n";
+            }
+
+            m_picos->at(1)->stop();
+        }
+        catch( ChannelException& excep )
+        {
+            std::cout << excep.what() << std::endl;
+        }
+        catch( PicoException& excep )
+        {
+            std::cout << excep.what() << std::endl;
+        }
+        catch( ClawsException& excep )
+        {
+            std::cout << excep.what() << std::endl;
+        }
+
+
+        return;
     }
 
 

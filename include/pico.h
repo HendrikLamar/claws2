@@ -230,7 +230,7 @@ class Pico
         uint32_t            m_noChannelsEnabled;    // holds the number of enabled channels
 
 
-        uint32_t            m_noMemorySegments{0};  // holds the number of memory segments
+        uint32_t            m_noMemorySegments{1};  // holds the number of memory segments
                                                     // the pico memory is divided in
                                                     // Default: 1 (by picoscope)
                                                 

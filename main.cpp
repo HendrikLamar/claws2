@@ -51,7 +51,8 @@ int main()
     mystate = nullptr;
 
 
-/*     PICO_STATUS pstatus;
+/* 
+ *     PICO_STATUS pstatus;
  * 
  * //    int16_t counts;
  * //    int8_t  serials[100];
@@ -68,7 +69,6 @@ int main()
  * 
  *     int16_t handle_1 = 0;
  *     int16_t handle_2 = 0;
- *     int16_t handle_3;
  * 
  *     // 6404D
  * //    int8_t serial_1[]{'E','Q','2','3','2','/','0','0','4','\0'};
@@ -102,6 +102,26 @@ int main()
  *     pstatus = ps6000GetUnitInfo(handle_2, pstring, stringL, &stringR, info);
  *     std::cout << pstring << std::endl;
  *     std::cout << stringR << std::endl;
+ * 
+ * 
+ * 
+ *     pstatus = ps6000SetChannel(handle_1, PS6000_CHANNEL_A, true, PS6000_DC_50R, 
+ *             PS6000_50MV, 0, PS6000_BW_FULL);
+ *     pstatus = ps6000SetChannel(handle_1, PS6000_CHANNEL_B, true, PS6000_DC_50R, 
+ *             PS6000_50MV, 0, PS6000_BW_FULL);
+ *     pstatus = ps6000SetChannel(handle_1, PS6000_CHANNEL_C, true, PS6000_DC_50R, 
+ *             PS6000_50MV, 0, PS6000_BW_FULL);
+ *     pstatus = ps6000SetChannel(handle_1, PS6000_CHANNEL_D, true, PS6000_DC_50R, 
+ *             PS6000_50MV, 0, PS6000_BW_FULL);
+ * 
+ *     float       timeInterval_ns = 0;
+ *     uint32_t    maxSamples = 200;
+ *     pstatus = ps6000GetTimebase2(handle_1, 2, 200, &timeInterval_ns, 0, &maxSamples,0);
+ * 
+ *     std::cout << "Time interval: " << timeInterval_ns << " ns\n";
+ * 
+ * 
+ * 
  * //
  * //    pstatus = ps6000OpenUnit(&handle_3, serial_3);
  * //
@@ -116,8 +136,9 @@ int main()
  *     std::cout << "Exiting handle_2\n";
  *     ps6000CloseUnit(handle_2);
  * //    ps6000CloseUnit(handle_3);
+ * 
+ * 
  */
-
     
     return 0;
 };

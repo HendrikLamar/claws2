@@ -162,6 +162,7 @@ void    Channel::loadConfig()
         if ( tmp->channel == m_channel )
         {
             data = tmp;
+            break;
         }
     }
 
@@ -233,6 +234,7 @@ PICO_STATUS Channel::setDataBuffer()
 PICO_STATUS Channel::setChannel()
 {
     PICO_STATUS output;
+
 
     output = ps6000SetChannel
         (

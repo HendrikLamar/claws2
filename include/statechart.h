@@ -406,6 +406,7 @@ struct SystemRun : sc::state< SystemRun, Active::orthogonal<1> >
         {
             // \todo Add functionality! Run function in m_thread!
             std::cout << "Entering SystemRun\n";
+            context< ClawsDAQ >().getClawsRun()->run();
 
             // Initialize PSU with the database as parameter.
 //            N6700 psu(context< ClawsDAQ >().getDatabase());
