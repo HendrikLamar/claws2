@@ -253,6 +253,7 @@ Channel* Pico::getCh( int cha )
         case 4:
             return m_channels->at(3);
         default:
+            throw PicoException("Error. Channels count from 1 to 4 dumbass!");
             return nullptr;
     }
 }
@@ -340,7 +341,7 @@ void Pico::setReadyRapid()
 
 void Pico::runBlock()
 {
-    
+
     // Make the pico ready! Afterwards wait until the trigger is fired and
     // the data is collected.
     m_status = ps6000RunBlock(
@@ -359,10 +360,8 @@ void Pico::runBlock()
 
 
     // Now, check if data taking is done!
-    int16_t*    ready = nullptr;
-
-    m_status = ps6000IsReady( m_handle, ready);
-    checkStatus();
+    int16_t     ready = 0;
+//    int16_t*    ready = nullptr;
 
 
 
@@ -372,6 +371,8 @@ void Pico::runBlock()
     // \todo Here a stop switch would be imlementable!
     while( !ready )
     {
+        m_status = ps6000IsReady( m_handle, &ready);
+        checkStatus();
         std::this_thread::sleep_for(std::chrono::milliseconds(1));
     }
 

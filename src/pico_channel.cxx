@@ -202,8 +202,6 @@ PICO_STATUS Channel::setDataBuffer()
 
     }
     
-    // clear data buffer in any case
-    m_dataBuffer->clear();
 
     output = ps6000SetDataBuffer
         (

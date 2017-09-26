@@ -557,7 +557,7 @@ void            ClawsRun::printData()
             m_picos->at(1)->setReadyBlock();
             m_picos->at(1)->runBlock();
 
-            std::vector< int16_t >* data = m_picos->at(1)->getCh(0)->getBuffer();
+            std::vector< int16_t >* data = m_picos->at(1)->getCh(1)->getBuffer();
 
 
             for( auto& tmp : *data )
