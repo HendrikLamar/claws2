@@ -103,6 +103,8 @@ Pico::~Pico()
         delete tmp;
     }
     delete m_channels;
+
+    close();
 }
 
 
@@ -446,6 +448,7 @@ void Pico::stop()
 
 void Pico::close()
 {
+    stop();
     // Wait a bit before closing. Had problems in past without.
     std::this_thread::sleep_for(std::chrono::milliseconds(100));
     m_status = ps6000CloseUnit(m_handle);

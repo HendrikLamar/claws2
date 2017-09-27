@@ -447,6 +447,23 @@ void            ClawsRun::printData()
                 };
     
             }
+            
+            // make m_picoData the same size as clawsRun::m_picos,
+            // otherwise going through both vector leads to problems,
+            // e.g. data for m_pico->at(0) is at m_picoData->at(1)
+            std::vector< Utility::Pico_Data_Pico* >* tmp = 
+                new std::vector< Utility::Pico_Data_Pico* >;
+            for( unsigned int tt = 0; tt < m_database->m_picoData->size(); ++tt )
+            {
+                if( m_database->m_picoData->at( tt ) )
+                {
+                    tmp->push_back(m_database->m_picoData->at( tt ) );
+                    m_database->m_picoData->at( tt ) = nullptr;
+                }
+            }
+
+            m_database->m_picoData = tmp;
+            tmp = nullptr;
         }
 
 
@@ -518,15 +535,10 @@ void            ClawsRun::printData()
             // closing all pico instances
             for ( Pico* tpico : *m_picos )
             {
-                try
-                {
-                    tpico->close();
-                }
-                catch( PicoException& excep )
-                {
-                    throw;
-                }
+                delete tpico;
+                tpico = nullptr;
             }
+
         }
     
         return;
