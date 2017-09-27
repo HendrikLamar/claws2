@@ -86,7 +86,11 @@ namespace Utility{
                 tarray[ tlength ] = '\0';
             }
         }
+
+        return;
     };
+
+
 
 
 
@@ -107,6 +111,68 @@ namespace Utility{
     //
     //
     ///////////////////////////////////////////////////////////////////////////
+
+
+
+
+
+
+    std::string Pico_preInitializer( int16_t* handle )
+    {
+//        PICO_STATUS tmp_status;
+        std::string output = "";
+
+        // first, open random pico
+//        tmp_status = ps6000OpenUnit(handle, nullptr);
+        ps6000OpenUnit(handle, nullptr);
+
+        switch( *handle )
+        {
+            case -1:
+                throw PicoException("Pico fails to open!");
+                break;
+            case 0:
+                throw PicoException("");
+                break;
+            default:
+                break;
+        }
+
+
+        // second, get serial of found pico and return
+        int16_t stringL = 9;            // expected length of output
+        int8_t pstring[stringL + 1];    // on exit, serial is written here
+                                        // the length is #expectedCharacters plus
+                                        // a ending character
+        int16_t stringR;                // length of output array
+        PICO_INFO info = 4;             // demandend info (4 = serial)
+
+//        tmp_status = ps6000GetUnitInfo(*handle, pstring, stringL, &stringR, info);
+        ps6000GetUnitInfo(*handle, pstring, stringL, &stringR, info);
+
+        for( int tt = 0; tt < stringR-1; ++tt )
+        {
+            output += pstring[tt];
+        }
+
+        return output;
+
+    }
+
+
+
+
+
+
+
+
+    ///////////////////////////////////////////////////////////////////////////
+
+
+
+
+
+
 
 
 

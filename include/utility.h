@@ -80,6 +80,10 @@ namespace Utility{
     ///////////////////////////////////////////////////////////////////////////
     
 
+
+    //! Searches for a picoscope and returns its serial number as a string.
+    //! On exit, handle holds the unique handle value for the picoscope.
+    std::string Pico_preInitializer( int16_t* handle );
     
 
     

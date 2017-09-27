@@ -45,7 +45,9 @@ class ClawsRun
         std::vector< Pico* >*           m_picos;
 
 
-        void Pico_init( );
+        void Pico_init_bySerial( );
+
+        void Pico_init_byNullptr();
 
         void Pico_close();
 

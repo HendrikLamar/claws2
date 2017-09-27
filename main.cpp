@@ -51,6 +51,7 @@ int main()
     mystate = nullptr;
 
 
+
 /* 
  *     PICO_STATUS pstatus;
  * 
@@ -84,7 +85,7 @@ int main()
  *     std::cout << "Status: " << pstatus << "\t" << "Handle: " << handle_1 << 
  *         std::endl;
  * 
- *     int8_t pstring[100];
+ *     int8_t pstring[10];
  *     int16_t stringL = 9;
  *     int16_t stringR;
  *     PICO_INFO info = 4;
@@ -92,6 +93,13 @@ int main()
  *     pstatus = ps6000GetUnitInfo(handle_1, pstring, stringL, &stringR, info);
  *     std::cout << pstring << std::endl;
  *     std::cout << stringR << std::endl;
+ * 
+ *     std::string str_serial = "";
+ *     for( int tt = 0; tt < stringR-1; ++tt )
+ *     {
+ *         str_serial += pstring[tt];
+ *     }
+ *     std::cout << "Transformed string: " << str_serial << std::endl;
  * 
  * //    pstatus = ps6000OpenUnit(&handle_2, serial_2);
  *     pstatus = ps6000OpenUnit(&handle_2, serial_2);
@@ -139,6 +147,7 @@ int main()
  * 
  * 
  */
+
     
     return 0;
 };

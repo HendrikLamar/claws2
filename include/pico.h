@@ -49,9 +49,6 @@ class Pico
         // Holds information about the current status of the scope
         PICO_STATUS                             m_status;
 
-        // callback class for Pico::runXXX functions
-        Utility::CallBackPico*                  m_callBack;
-
         ////////////////////////////////////////////////////////////////////////
         // 
         //                  START Pico unique variables
@@ -317,14 +314,22 @@ class Pico
     public:
         ///////////////////////////////////////////////////////////////////////
         /*
-         *! Contructor
+         *! Constructor to be called if pico is initialized by serial.
          */
         Pico( Utility::Pico_Data_Pico* picoData );
+
+        //! Constructor to be called when pico is initialized before which means
+        //! that its unique handle is known.
+        Pico( Utility::Pico_Data_Pico* picoData, int16_t handle );
         ///////////////////////////////////////////////////////////////////////
         /*
          *! Destructor
          */
         ~Pico();
+
+        //! This function can be use to check that the already opened device is
+        //! communicating.
+        void pingUnit();
 
         //! Returns the channel.
         Channel* getCh( PS6000_CHANNEL cha );

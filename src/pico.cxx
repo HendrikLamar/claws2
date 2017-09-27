@@ -40,7 +40,6 @@
 
 
 Pico::Pico( Utility::Pico_Data_Pico* picoData ) :
-    m_callBack( new Utility::CallBackPico() ),
     m_picoData( picoData ),
     m_serial( m_picoData->serial ),
     m_location( &m_picoData->location ),
@@ -81,6 +80,51 @@ Pico::Pico( Utility::Pico_Data_Pico* picoData ) :
 
 };
 
+
+
+
+
+
+
+Pico::Pico( Utility::Pico_Data_Pico* picoData, int16_t handle ) :
+    m_picoData( picoData ),
+    m_handle( handle ),
+    m_serial( m_picoData->serial ),
+    m_location( &m_picoData->location ),
+    m_channels( 
+            new std::vector< Channel* >
+                {
+                    new Channel( 
+                            PS6000_CHANNEL_A, 
+                            &m_handle, 
+                            m_picoData, 
+                            m_picoData->dataIntermediate
+                            ),
+                    new Channel( 
+                            PS6000_CHANNEL_B, 
+                            &m_handle, 
+                            m_picoData, 
+                            m_picoData->dataIntermediate
+                            ),
+                    new Channel( 
+                            PS6000_CHANNEL_C, 
+                            &m_handle, 
+                            m_picoData, 
+                            m_picoData->dataIntermediate
+                            ),
+                    new Channel( 
+                            PS6000_CHANNEL_D, 
+                            &m_handle, 
+                            m_picoData, 
+                            m_picoData->dataIntermediate
+                            ),
+                }
+    )
+{
+    // no initialization needed since the handle is known
+    
+    pingUnit();
+};
 
 
 
@@ -153,6 +197,26 @@ Pico::~Pico()
 //              START public member functions
 //
 ///////////////////////////////////////////////////////////////////////////////
+
+
+
+
+    
+void Pico::pingUnit()
+{
+    m_status = ps6000PingUnit( m_handle );
+    checkStatus();
+
+    return;
+}
+    
+
+
+
+
+////////////////////////////////////////////////////////////////////////////////
+    
+
 
 
 

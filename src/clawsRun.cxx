@@ -117,7 +117,8 @@ Database*   ClawsRun::getDatabase()
 void        ClawsRun::initialize()
 {
 
-    Pico_init();
+//    Pico_init_bySerial();
+    Pico_init_byNullptr();
     m_database->setNoOfPicosInitialized(m_picos->size());
 
     PSU_init();
@@ -325,14 +326,13 @@ void            ClawsRun::printData()
     
 
 
-    void ClawsRun::Pico_init( )
+    void ClawsRun::Pico_init_bySerial( )
     {
 
     
         std::cout << "\n";
-        std::cout << "++++++++++++++++++++++++++++++++++++++++++++++++++++++++\n";
-        std::cout << "\tPico initialization...\n";
-        std::cout << "++++++++++++++++++++++++++++++++++++++++++++++++++++++++\n";
+        std::cout << "Pico initialization...\n";
+        std::cout << "--------------------------------------------------------\n";
 
         // check if the picoData pointer is empty. If yes allocate new, 
         // if no delete first.
@@ -502,13 +502,243 @@ void            ClawsRun::printData()
         }
         else std::cout << "\n\tSorry no serials found! Does the ini-file exist?\n";
     
-        std::cout << "++++++++++++++++++++++++++++++++++++++++++++++++++++++++\n";
+        std::cout << "--------------------------------------------------------\n";
         std::cout << std::endl;
     
         return;
     }
     
     
+
+
+
+
+
+
+
+    ///////////////////////////////////////////////////////////////////////////
+    
+
+
+
+
+
+
+
+
+
+
+
+    void ClawsRun::Pico_init_byNullptr( )
+    {
+
+    
+        std::cout << "\n";
+        std::cout << "Pico initialization...\n";
+        std::cout << "--------------------------------------------------------\n";
+
+        // check if the picoData pointer is empty. If yes allocate new, 
+        // if no delete first.
+        if ( m_database->m_picoData )
+        {
+            // delete data behind the pointer and invoke new vector
+            delete m_database->m_picoData;
+            m_database->m_picoData = new std::vector< Utility::Pico_Data_Pico* >;
+        }
+        else m_database->m_picoData = new std::vector< Utility::Pico_Data_Pico* >;
+    
+    
+        // check if the pico pointer is empty. If yes allocate new, if no delete first.
+        if ( m_picos )
+        {
+            // close picos properly before deleting the pointer
+            Pico_close( );
+    
+            // delete data behind the pointer and invoke new vector
+            delete m_picos;
+            m_picos = new std::vector< Pico* >;
+        }
+        else m_picos = new std::vector< Pico* >;
+
+
+        std::vector< std::pair< std::string, std::string > > serialLocation;
+        std::string sName = "Pico_Initializer.pico_";
+        std::string nameSerial = "_serial";
+        std::string nameLocation = "_location";
+    
+
+        std::vector<int> initCounter;       //! Counts which serials could be initialized.
+    
+        // read all serials from the ini file. Four at maximum.
+        for ( int i = 0 ; i < 4 ; ++i )
+        {
+            // create key
+            std::string keySerial = sName + std::to_string(i+1) + nameSerial;
+            std::string keyLocation= sName + std::to_string(i+1) + nameLocation;
+            std::string tmpSerial;
+            std::string tmpLocation;
+    
+            // try if there are all serial given in the picoInit.ini file.
+            // If not, just continue!
+            try
+            {
+    
+                boost::property_tree::ptree ptree;
+                boost::property_tree::ini_parser::read_ini(
+                        m_database->getInitReader()->getInitstruct().initPico, ptree);
+    
+                tmpSerial = ptree.get< std::string >( keySerial );
+                tmpLocation = ptree.get< std::string >( keyLocation );
+    
+    /*             // try reading serial
+     *             tmpSerial = m_initReader->getKey< std::string >
+     *                 (m_initReader->getInitstruct().initPico, keySerial);
+     * 
+     *             // try reading location
+     *             tmpLocation = m_initReader->getKey< std::string >
+     *                 (m_initReader->getInitstruct().initPico, keyLocation);
+     */
+            }
+            catch( boost::property_tree::ptree_error excep )
+            {
+                continue;
+            }
+
+    
+            serialLocation.push_back( std::make_pair( tmpSerial, tmpLocation ) );
+            initCounter.push_back(1);
+
+        };
+
+
+        if ( serialLocation.size() > 0 )
+        {
+            
+            for ( unsigned int ii = 0; ii < serialLocation.size(); ++ii )
+            {
+                int16_t tmp_handle;
+                std::string tmp_serial;
+                try
+                {
+                    tmp_serial = Utility::Pico_preInitializer( &tmp_handle );
+                }
+                catch( PicoException& excep )
+                {
+                    initCounter.at(ii) = 0;
+                    continue;
+                }
+
+
+                // search for correct location to the given serial
+                for( unsigned int tt = 0; tt < serialLocation.size(); ++tt )
+                {
+                    if( tmp_serial.compare( serialLocation.at(tt).first ) == 0 )
+                    {
+                        
+                        // first, create data struct to pass it to the pico in
+                        // the second step
+                        try
+                        {
+                            Utility::Pico_Data_Pico *pico = new Utility::Pico_Data_Pico( 
+                                    serialLocation.at(tt).first, 
+                                    serialLocation.at(tt).second);
+    
+                            m_database->m_picoData->push_back(pico);
+                        }
+                        catch( PicoException& excep )
+                        {
+                            std::cout << "For " << serialLocation.at(tt).first;
+                            std::cout <<  ":\n" << excep.what() << "\n";
+                            initCounter.at(ii) = 0;
+                            continue;
+                        }
+    
+    
+                        // second, create a pico instance with the data struct
+                        // created before and the handle value
+                        try
+                        {
+                            m_picos->push_back(
+                                    new Pico( m_database->m_picoData->at(ii), tmp_handle )
+                                    );
+                        }
+                        catch( PicoException& error )
+                        {
+                            initCounter.at(ii) = 0;
+
+                            // delete the data from the m_picoData vector which is not needed
+                            delete m_database->m_picoData->at(ii);
+                            m_database->m_picoData->at(ii) = nullptr;
+                        };
+    
+                    }
+                }
+            }
+            
+//            // make m_picoData the same size as clawsRun::m_picos,
+//            // otherwise going through both vector leads to problems,
+//            // e.g. data for m_pico->at(0) is at m_picoData->at(1)
+//            std::vector< Utility::Pico_Data_Pico* >* tmp = 
+//                new std::vector< Utility::Pico_Data_Pico* >;
+//            for( unsigned int bb = 0; bb < m_database->m_picoData->size(); ++bb )
+//            {
+//                if( m_database->m_picoData->at( bb ) )
+//                {
+//                    tmp->push_back(m_database->m_picoData->at( bb ) );
+//                    m_database->m_picoData->at( bb ) = nullptr;
+//                }
+//            }
+//
+//            m_database->m_picoData = tmp;
+//            tmp = nullptr;
+        }
+
+
+    
+        int sumI{0};
+        if ( serialLocation.size() > 0)
+        {
+            for ( unsigned int bb = 0; bb < serialLocation.size(); ++bb )
+            {
+                if ( initCounter.at(bb) == 1)
+                {
+                    ++sumI;
+                }
+            }
+            std::cout << "Serials found:\t\t" << serialLocation.size();
+            std::cout << "\nPicos intialized:\t" << sumI << "\n";
+            std::cout << "--------------------------------------------------------\n";
+    
+            // Return to the user how many and which Picos have been found 
+            // and could be initialized.
+            for ( unsigned int ii = 0; ii < serialLocation.size(); ++ii)
+            {
+                if ( initCounter.at(ii) == 1)
+                {
+                    std::cout << "#" << ii << "\t" << serialLocation.at(ii).first;
+                    std::cout << "\t" << serialLocation.at(ii).second;
+                    std::cout << "\tinitialized!\n";
+                }
+                else
+                {
+                    std::cout << "#" << ii << "\t" << serialLocation.at(ii).first;
+                    std::cout << "\t" << serialLocation.at(ii).second;
+                    std::cout << "\tnot found!\n";
+                }
+            }
+        }
+        else std::cout << "\n\tSorry no serials found! Does the ini-file exist?\n";
+    
+        std::cout << "--------------------------------------------------------\n";
+        std::cout << std::endl;
+
+        return;
+    }
+
+    
+    
+
+
 
 
 
