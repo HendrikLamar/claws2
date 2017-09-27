@@ -551,35 +551,38 @@ void            ClawsRun::printData()
     void ClawsRun::Pico_runInter()
     {
         //! \todo Extend for multiple Picos!
-        try
+        for( unsigned int ii = 0; ii < m_picos->size(); ++ii)
         {
-            m_picos->at(1)->loadConfig( Utility::INTER );
-            m_picos->at(1)->setReadyBlock();
-            m_picos->at(1)->runBlock();
-
-            std::vector< int16_t >* data = m_picos->at(1)->getCh(1)->getBuffer();
-
-
-            for( auto& tmp : *data )
+        
+            try
             {
-                std::cout << tmp << "\n";
+                m_picos->at(ii)->loadConfig( Utility::INTER );
+                m_picos->at(ii)->setReadyBlock();
+                m_picos->at(ii)->runBlock();
+
+                std::vector< int16_t >* data = m_picos->at(ii)->getCh(ii)->getBuffer();
+
+
+                for( auto& tmp : *data )
+                {
+                    std::cout << tmp << "\n";
+                }
+
+                m_picos->at(ii)->stop();
             }
-
-            m_picos->at(1)->stop();
+            catch( ChannelException& excep )
+            {
+                std::cout << excep.what() << std::endl;
+            }
+            catch( PicoException& excep )
+            {
+                std::cout << excep.what() << std::endl;
+            }
+            catch( ClawsException& excep )
+            {
+                std::cout << excep.what() << std::endl;
+            }
         }
-        catch( ChannelException& excep )
-        {
-            std::cout << excep.what() << std::endl;
-        }
-        catch( PicoException& excep )
-        {
-            std::cout << excep.what() << std::endl;
-        }
-        catch( ClawsException& excep )
-        {
-            std::cout << excep.what() << std::endl;
-        }
-
 
         return;
     }

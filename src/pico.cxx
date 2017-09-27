@@ -244,16 +244,16 @@ Channel* Pico::getCh( int cha )
 {
     switch( cha )
     {
-        case 1:
+        case 0:
             return m_channels->at(0);
-        case 2:
+        case 1:
             return m_channels->at(1);
-        case 3:
+        case 2:
             return m_channels->at(2);
-        case 4:
+        case 3:
             return m_channels->at(3);
         default:
-            throw PicoException("Error. Channels count from 1 to 4 dumbass!");
+            throw PicoException("Error. Channels count from 0 to 3, dumbass!");
             return nullptr;
     }
 }
