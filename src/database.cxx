@@ -692,11 +692,111 @@ void Database::Pico_readTriggerSimpleSettings( Utility::Pico_RunMode mode, int p
 
 
 
+
+
+
+///////////////////////////////////////////////////////////////////////////////
+
+
+
+
+
+
+
+
+
+
+
 //! \todo Function is empty!
 void Database::Pico_readTriggerAdvSettings( Utility::Pico_RunMode mode, int picoNo )
 {
 
 }
+
+
+
+
+
+
+
+///////////////////////////////////////////////////////////////////////////////
+
+
+
+
+
+
+
+void Database::Pico_readIntermediateSettings( int picoNo )
+{
+
+    Utility::Pico_Data_Inter*   tmpDataStruct = m_picoData->at(picoNo)->dataInter;
+
+    ///////////////////////////////////////////////////////////////////////////
+
+
+    std::string headBegin{"Pico_"};
+    std::string headEnd{"_Intermediate_Mode_Settings"};
+
+    // preparation variables for the loop read-in
+    std::string pathToIniFile{m_initReader->getInitstruct().Intermediate};
+
+    boost::property_tree::ptree ptree;
+    boost::property_tree::ini_parser::read_ini(pathToIniFile.c_str(), ptree);
+
+    std::string rKey;      // root path
+    std::string iKey;      // intermediate path
+    std::string fKey;      // final path
+
+    std::string tmp;
+    rKey = headBegin + m_picoData->at(picoNo)->location + headEnd + ".";
+    iKey = rKey;
+
+    fKey = iKey + "preTrigger";
+    tmpDataStruct->preTrigger = ptree.get< unsigned int >( fKey );
+
+    fKey = iKey + "postTrigger";
+    tmpDataStruct->postTrigger = ptree.get< unsigned int >( fKey );
+
+    fKey = iKey + "timebase";
+    tmpDataStruct->timebase = ptree.get< unsigned int >( fKey );
+    
+    fKey = iKey + "collection_mode";
+    tmp = ptree.get< std::string >( fKey );
+    tmpDataStruct->collMode = Utility::Pico_StringToEnum_collection( tmp );
+
+    fKey = iKey + "threshold";
+    tmpDataStruct->threshold =  ptree.get< int >( fKey );
+
+    fKey = iKey + "direction";
+    tmp = ptree.get< std::string >( fKey );
+    tmpDataStruct->direction = Utility::Pico_StringToEnum_thresDir( tmp );
+
+    fKey = iKey + "autoTriggerTime";
+    tmpDataStruct->autoTriggerTime = ptree.get < int > ( fKey );
+
+    fKey = iKey + "channels_to_calibrate";
+    tmpDataStruct->channels_to_calibrate = ptree.get< std::string >( fKey );
+
+
+    return;
+}
+
+
+
+
+
+
+///////////////////////////////////////////////////////////////////////////////
+
+
+
+
+
+
+
+
+
 
 
 std::string Database::Pico_returnPathToRunMode( Utility::Pico_RunMode mode )
@@ -705,9 +805,6 @@ std::string Database::Pico_returnPathToRunMode( Utility::Pico_RunMode mode )
     std::string output;
     switch( mode )
     {
-        case Utility::INTERMEDIATE:
-            output = m_initReader->getInitstruct().Intermediate;
-            break;
         case Utility::OBERMAIER_HG:
             output = m_initReader->getInitstruct().Obermaier_HG;
             break;
@@ -736,6 +833,21 @@ std::string Database::Pico_returnPathToRunMode( Utility::Pico_RunMode mode )
 
 
 
+///////////////////////////////////////////////////////////////////////////////
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 Utility::Pico_Data_HL_Gain*    Database::Pico_getHLGainStruct(
@@ -745,10 +857,6 @@ Utility::Pico_Data_HL_Gain*    Database::Pico_getHLGainStruct(
 {
     switch( mode )
     {
-        // return the intermediate data structure
-        case Utility::INTERMEDIATE:
-            return m_picoData->at(picoNo)->dataIntermediate;
-
         // return the high gain data structure
         case Utility::MERKEL_HG:
             return m_picoData->at(picoNo)->dataHighGain;

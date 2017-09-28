@@ -147,6 +147,8 @@ class Database
                 int picoNo
                 );
 
+        void Pico_readIntermediateSettings( int picoNo );
+
         Utility::Pico_Data_HL_Gain* Pico_getHLGainStruct( 
                 Utility::Pico_RunMode mode,
                 int picoNo

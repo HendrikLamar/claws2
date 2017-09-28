@@ -568,10 +568,6 @@ namespace Utility{
         {
             return Utility::GARRN;
         }
-        if( enumerator.compare("INTERMEDIATE") == 0 )
-        {
-            return Utility::INTERMEDIATE;
-        }
 
         throw PicoException("Wrong run mode as input!");
 
@@ -938,9 +934,6 @@ namespace Utility{
         std::string output;
         switch( mode )
         {
-            case 0:
-                output = "INTERMEDIATE";
-                break;
             case 1:
                 output = "MERKEL_HG";
                 break;
