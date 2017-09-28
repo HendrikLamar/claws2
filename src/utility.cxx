@@ -613,6 +613,37 @@ namespace Utility{
 
 
 
+
+///////////////////////////////////////////////////////////////////////////////
+
+
+
+
+    Utility::Collection_Mode Pico_StringToEnum_collection( std::string& enumerator )
+    {
+        Utility::Collection_Mode output;
+
+        if( enumerator.compare("BLOCK") == 0 )
+        {
+            return Utility::BLOCK;
+        }
+        if( enumerator.compare("RAPID") == 0 )
+        {
+            return Utility::RAPID;
+        }
+
+        throw PicoException("Wrong collection mode as input!");
+
+        return output;
+    }
+
+
+
+
+
+
+
+
     ///////////////////////////////////////////////////////////////////////////
     //
     //                          END 
@@ -958,6 +989,42 @@ namespace Utility{
 
         return output;
     }
+
+
+
+
+
+
+
+///////////////////////////////////////////////////////////////////////////////
+
+
+
+
+
+    std::string     Pico_EnumToString_collection( Utility::Collection_Mode& mode )
+    {
+        std::string output;
+        switch( mode )
+        {
+            case 0:
+                output = "BLOCK";
+                break;
+            case 1:
+                output = "RAPID";
+                break;
+            default:
+                throw UtilityException("Wrong Utility::Collection_Mode entered!");
+        }
+
+        return output;
+    }
+
+
+
+
+
+
 
 
     ///////////////////////////////////////////////////////////////////////////

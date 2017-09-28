@@ -171,6 +171,26 @@ namespace Utility{
         LOW_GAIN
     };
 
+
+
+    ///////////////////////////////////////////////////////////////////////////
+    
+
+
+
+
+
+    enum Collection_Mode
+    {
+        BLOCK,
+        RAPID
+    };
+
+
+
+
+
+
     //
     //                      END Pico Enums
     ///////////////////////////////////////////////////////////////////////////
@@ -200,6 +220,38 @@ namespace Utility{
     ///////////////////////////////////////////////////////////////////////////
     //                  Pico Data Structures
     //
+
+
+    struct Pico_Data_Inter
+    {
+        uint32_t                preTrigger;
+        uint32_t                postTrigger;
+
+        uint32_t                timebase;
+        Collection_Mode         collMode;
+
+        int16_t                     threshold;
+        PS6000_THRESHOLD_DIRECTION  direction;
+        int                         autoTriggerTime;
+
+        std::string             channels_to_calibrate;
+
+    };
+
+
+
+
+
+///////////////////////////////////////////////////////////////////////////////
+
+
+
+
+
+
+
+
+
 
 
     //! Data structure for on channel of a picoscope. This data needs to be read-in.
@@ -385,7 +437,8 @@ namespace Utility{
         Pico_Data_Pico( std::string tserial, std::string tlocation ) :
             dataLowGain( new Utility::Pico_Data_HL_Gain() ),
             dataHighGain( new Utility:: Pico_Data_HL_Gain() ),
-            dataIntermediate( new Utility::Pico_Data_HL_Gain() )
+            dataIntermediate( new Utility::Pico_Data_HL_Gain() ),
+            dataInter( new Utility::Pico_Data_Inter() )
         {
             // check if the serial is longer than 100 chars.
             if ( tserial.size() > 100 )
@@ -433,6 +486,9 @@ namespace Utility{
 
             delete dataIntermediate;
             dataIntermediate = nullptr;
+
+            delete dataInter;
+            dataInter = nullptr;
         }
 
 
@@ -444,6 +500,8 @@ namespace Utility{
         Pico_Data_HL_Gain*      dataLowGain;
         Pico_Data_HL_Gain*      dataHighGain;
         Pico_Data_HL_Gain*      dataIntermediate;
+
+        Pico_Data_Inter*        dataInter;
 
         friend std::ostream& operator<<(
                 std::ostream& out, Utility::Pico_Data_Pico& data );
@@ -506,6 +564,8 @@ namespace Utility{
     //! String to enum for Utility::Pico_Trigger_Mode
     Utility::Pico_Trigger_Mode  Pico_StringToEnum_trigger( std::string& enumerator );
 
+    //! String to enum for Utility::Collection_Mode
+    Utility::Collection_Mode    Pico_StringToEnum_collection( std::string& enumerator );
 
     //
     //                      END Pico_StringToEnum functions
@@ -547,6 +607,8 @@ namespace Utility{
     //! Enum to string for Utility::Pico_Trigger_Mode
     std::string     Pico_EnumToString_trigger( Utility::Pico_Trigger_Mode& mode );
 
+    //! Enum to string for Utility::Collection_Mode
+    std::string     Pico_EnumToString_collection( Utility::Collection_Mode& mode );
 
     //
     //                  END Pico_EnumToString functions

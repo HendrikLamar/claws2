@@ -35,6 +35,7 @@
 
 #include <iostream>
 #include <thread>
+#include <chrono>
 
 namespace ClawsStatemachine{
 
@@ -150,6 +151,7 @@ struct ClawsDAQ : sc::state_machine< ClawsDAQ, Active >
         {
             delete m_clawsRun;
             m_clawsRun = nullptr;
+            std::this_thread::sleep_for(std::chrono::seconds(2));
 
             std::cout << 
     "+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\n";
@@ -167,15 +169,6 @@ struct ClawsDAQ : sc::state_machine< ClawsDAQ, Active >
         }
 
 
-/*         /// 
- *         char getKey()
- *         {
- *             std::cout << "[" << m_database->getInputCounter() << "]> "; 
- *             char key;
- *             std::cin >> key;
- *             return key;
- *         };
- */
 };
 
 
@@ -196,7 +189,6 @@ struct Active : sc::simple_state< Active, ClawsDAQ,
 
     public:
 
-//        Active() :  m_database(new Database)
         Active() 
         {
             // \todo Functionality to be added!
@@ -206,29 +198,7 @@ struct Active : sc::simple_state< Active, ClawsDAQ,
         {
             std::cout << "Exiting Active\n";
         };
-/*         virtual ~Active() 
- *         {
- *             delete m_database;
- *             m_database = nullptr;
- * 
- *             std::cout << 
- *     "+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\n";
- *             std::cout << "\t\t ClawsDAQ says Goodbye!\n";
- *             std::cout << "\n\t\t ROOOOOOOOAAAAAAAR!\n";
- *             std::cout << 
- *     "+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\n";
- *         };
- */
-
-
-/*         /// Returns the database 
- *         Database * getDatabase()
- *         {
- *             return m_database;
- *         }
- */
         
-
 
 };
 
