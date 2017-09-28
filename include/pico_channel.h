@@ -49,7 +49,7 @@ class Channel
         int16_t* const                      m_handle;
         
         //! Const pointer to a variable set of pico data.
-        Utility::Pico_Data_Pico* const      m_picoData; 
+        Utility::Pico_Data_Pico*            m_picoData; 
 
         
 
@@ -114,8 +114,8 @@ class Channel
 
 
     public:
-        
 
+//        friend class Database;
 
         ///////////////////////////////////////////////////////////////////////
         /*
@@ -123,8 +123,7 @@ class Channel
          */
         Channel(PS6000_CHANNEL channel, 
                 int16_t* handle, 
-                Utility::Pico_Data_Pico* picoData,
-                Utility::Pico_Data_HL_Gain* channelData
+                Utility::Pico_Data_Pico* picoData
                );
         ///////////////////////////////////////////////////////////////////////
         /*
