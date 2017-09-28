@@ -798,7 +798,7 @@ void            ClawsRun::printData()
         
             try
             {
-                m_picos->at(ii)->loadConfig( Utility::INTER );
+//                m_picos->at(ii)->loadConfig( Utility::INTER );
                 m_picos->at(ii)->setReadyBlock();
                 m_picos->at(ii)->runBlock();
 

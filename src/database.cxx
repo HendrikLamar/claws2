@@ -393,6 +393,17 @@ Utility::N6700_connect Database::N6700_getConnect() const
 
 void Database::Pico_readSettings( Utility::Pico_RunMode mode )
 {
+
+    if( mode == Utility::INTERMEDIATE )
+    {
+        for( unsigned int i = 0; i < m_MaxNoOfPicos; ++i )
+        {
+            Pico_readIntermediateSettings( i );
+        }
+
+        return;
+    }
+
     
     // since we have four picos, it loops fouer times
     for ( unsigned int i = 0; i < m_MaxNoOfPicos ; ++i )
@@ -805,6 +816,9 @@ std::string Database::Pico_returnPathToRunMode( Utility::Pico_RunMode mode )
     std::string output;
     switch( mode )
     {
+        case Utility::INTERMEDIATE:
+            output = m_initReader->getInitstruct().Intermediate;
+            break;
         case Utility::OBERMAIER_HG:
             output = m_initReader->getInitstruct().Obermaier_HG;
             break;

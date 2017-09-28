@@ -131,9 +131,9 @@ namespace Utility{
     //! Enum to specify which run mode should be loaded in Database::Pico_readConfig().
     enum Pico_RunMode
     {
-        // starting at one because in earlier versions INTERMEDIATE was
-        // a run mode and placed above MERKEL_HG
-        MERKEL_HG = 1,
+        INTERMEDIATE,
+
+        MERKEL_HG,
         OBERMAIER_HG,
         SCHIFFER_LG,
         KLUM_LG,
