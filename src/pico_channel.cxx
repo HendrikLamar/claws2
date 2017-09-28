@@ -32,16 +32,18 @@
 
 
 Channel::Channel
-    ( 
-        PS6000_CHANNEL channel, 
+    (
+        PS6000_CHANNEL channel,
         int16_t* handle, 
-        Utility::Pico_Data_Pico* picoData,
-        Utility::Pico_Data_HL_Gain* channelData 
+        Utility::Pico_Data_HL_Gain* const dataHighGain,
+        Utility::Pico_Data_HL_Gain* const dataLowGain,
+        Utility::Pico_Data_Inter*   const dataInter
     ) :
     m_channel( channel ),
     m_handle( handle ),
-    m_picoData( picoData ),
-    m_channelData( channelData )
+    m_data_highGain( dataHighGain ),
+    m_data_lowGain( dataLowGain ),
+    m_data_inter( dataInter )
 {
     // create data buffer and reserve maximum needed space on disk/RAM
     m_dataBuffer = new std::vector< int16_t >;
@@ -118,25 +120,26 @@ std::vector< int16_t >*     Channel::getBuffer()
 
 
 
-void Channel::setGainMode( Utility::Claws_Gain& gain )
-{
-    switch ( gain )
-    {
-        case Utility::INTER:
-            m_channelData = m_picoData->dataIntermediate;
-            break;
-        case Utility::HIGH_GAIN:
-            m_channelData = m_picoData->dataHighGain;
-            break;
-        case Utility::LOW_GAIN:
-            m_channelData = m_picoData->dataLowGain;
-            break;
-        default:
-            throw ChannelException("Wrong gain mode defined!");
-    }
-
-    return;
-}
+/* void Channel::setGainMode( Utility::Claws_Gain& gain )
+ * {
+ *     switch ( gain )
+ *     {
+ *         case Utility::INTER:
+ *             m_channelData = m_picoData->dataIntermediate;
+ *             break;
+ *         case Utility::HIGH_GAIN:
+ *             m_channelData = m_picoData->dataHighGain;
+ *             break;
+ *         case Utility::LOW_GAIN:
+ *             m_channelData = m_picoData->dataLowGain;
+ *             break;
+ *         default:
+ *             throw ChannelException("Wrong gain mode defined!");
+ *     }
+ * 
+ *     return;
+ * }
+ */
 
 
 

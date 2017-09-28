@@ -57,7 +57,7 @@ class Pico
         
 
         //! Const pointer to a variable set of pico data.
-        Utility::Pico_Data_Pico* const          m_picoData;
+        Utility::Pico_Data_Pico* const          m_data_pico;
 
         //! Handle value is defined during the initialization of the pico.
         int16_t                                 m_handle;
@@ -68,11 +68,14 @@ class Pico
         // The location is const since it can't be changed and is known at initialization.
         const std::string* const                m_location;
 
+
+        Utility::Pico_Data_HL_Gain* const       m_data_highGain;
+        Utility::Pico_Data_HL_Gain* const       m_data_lowGain;
+        Utility::Pico_Data_Inter* const         m_data_inter;
+
         
         // Vector holding the four channels of the pico
         const std::vector< Channel* >* const    m_channels;
-
-
 
         ////////////////////////////////////////////////////////////////////////
         // 
@@ -154,24 +157,25 @@ class Pico
         ////////////////////////////////////////////////////////////////////////
         
 
-        // aquisition settings
-        uint32_t            m_timebase;
-        int16_t             m_oversample;
-        uint32_t            m_preTrigger;
-        uint32_t            m_postTrigger;
-        enPS6000RatioMode   m_downSamplingRatioMode;
-        uint32_t            m_downSampleRatio;
-
-
-
-
-        // simple trigger settings
-        int16_t                     m_st_enabled;
-        PS6000_CHANNEL              m_st_source;
-        int16_t                     m_st_threshold;
-        PS6000_THRESHOLD_DIRECTION  m_st_direction;
-        uint32_t                    m_st_delay;
-        int16_t                     m_st_autoTriggerTime_ms;
+/*         // aquisition settings
+ *         uint32_t            m_timebase;
+ *         int16_t             m_oversample;
+ *         uint32_t            m_preTrigger;
+ *         uint32_t            m_postTrigger;
+ *         enPS6000RatioMode   m_downSamplingRatioMode;
+ *         uint32_t            m_downSampleRatio;
+ * 
+ * 
+ * 
+ * 
+ *         // simple trigger settings
+ *         int16_t                     m_st_enabled;
+ *         PS6000_CHANNEL              m_st_source;
+ *         int16_t                     m_st_threshold;
+ *         PS6000_THRESHOLD_DIRECTION  m_st_direction;
+ *         uint32_t                    m_st_delay;
+ *         int16_t                     m_st_autoTriggerTime_ms;
+ */
 
 
 

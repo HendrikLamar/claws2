@@ -48,9 +48,12 @@ class Channel
         //! Initialization follows later.
         int16_t* const                      m_handle;
         
-        //! Const pointer to a variable set of pico data.
-        Utility::Pico_Data_Pico*            m_picoData; 
+        //! Pointer to the current run mode data. The pointer changes a lot, 
+        //! e.g. to intermediate, high gain, low gain.
+        Utility::Pico_Data_HL_Gain* const   m_data_highGain;
+        Utility::Pico_Data_HL_Gain* const   m_data_lowGain;
 
+        Utility::Pico_Data_Inter* const     m_data_inter;
         
 
 
@@ -73,39 +76,48 @@ class Channel
 
         ///////////////////////////////////////////////////////////////////////
         //
-        //                 START settings 
+        //                 START internal variables 
         //
         ///////////////////////////////////////////////////////////////////////
         
 
-        //! Pointer to the current run mode data. The pointer changes a lot, 
-        //! e.g. to intermediate, high gain, low gain.
-        Utility::Pico_Data_HL_Gain*         m_channelData;
+        enum BlockInterRapid
+        {
+            BLOCK,
+            INTER,
+            RAPID
+        };
 
 
-        // single channel settings
-        PS6000_COUPLING                 m_coupling;
-        int16_t                         m_enabled;
-        float                           m_analogueOffset;
-        PS6000_RANGE                    m_range;
-        PS6000_BANDWIDTH_LIMITER        m_bandwidth{PS6000_BW_FULL};
+/*         // single channel settings
+ *         PS6000_COUPLING                 m_coupling;
+ *         int16_t                         m_enabled;
+ *         float                           m_analogueOffset;
+ *         PS6000_RANGE                    m_range;
+ *         PS6000_BANDWIDTH_LIMITER        m_bandwidth{PS6000_BW_FULL};
+ */
 
         
-        //! This vector stores all the data coming from the pico.
-        std::vector< int16_t >*         m_dataBuffer;
-        uint32_t                        m_dataBufferSize;
-
-        void        calcDataBufferSize();
-
+        //! data vector to store data coming from physics block mode
+        std::vector< int16_t >*         m_buffer_block_data;
+        uint32_t                        m_buffer_block_size;
         // reserve a data buffer of that size per channel when initializing the pico
         // 500 000 000 is 2GS divided by 4 channels
-        uint32_t        m_bufferSizeReserve{500000000};
+        uint32_t        m_buffer_block_sizeReserve{500000000};
+
+
+        // data vector to store data coming from intermediate mode
+        std::vector< int16_t >*         m_buffer_inter;
+        uint32_t                        m_buffer_inter_size;
+
+        void        calcDataBufferSize( BlockInterRapid mode );
+
         
 
 
         ///////////////////////////////////////////////////////////////////////
         //
-        //                 END settings 
+        //                 END internal variables 
         //
         ///////////////////////////////////////////////////////////////////////
         
@@ -123,7 +135,9 @@ class Channel
          */
         Channel(PS6000_CHANNEL channel, 
                 int16_t* handle, 
-                Utility::Pico_Data_Pico* picoData
+                Utility::Pico_Data_HL_Gain* const dataHighGain,
+                Utility::Pico_Data_HL_Gain* const dataLowGain,
+                Utility::Pico_Data_Inter*   const dataInter
                );
         ///////////////////////////////////////////////////////////////////////
         /*
@@ -143,10 +157,11 @@ class Channel
         //! Returns the channel buffer.
         std::vector< int16_t >*     getBuffer();
 
-        //! Sets the run mode. This function needs to be called before loadConfig(),
-        //! setDataBuffer() and setChannel().
-        //! Possible arguments defined in Utility::ClawsGain.
-        void                        setGainMode( Utility::Claws_Gain& gain );
+/*         //! Sets the run mode. This function needs to be called before loadConfig(),
+ *         //! setDataBuffer() and setChannel().
+ *         //! Possible arguments defined in Utility::ClawsGain.
+ *         void                        setGainMode( Utility::Claws_Gain& gain );
+ */
 
 
         //! Loads the settings stored in the database to the channel.

@@ -129,7 +129,7 @@ namespace Utility{
 
 
     //! Enum to specify which run mode should be loaded in Database::Pico_readConfig().
-    enum Pico_RunMode
+    enum class Pico_RunMode
     {
         INTERMEDIATE,
 
@@ -149,7 +149,7 @@ namespace Utility{
 
 
 
-    enum Pico_Trigger_Mode{
+    enum class Pico_Trigger_Mode{
         
         TRIGGER_SIMPLE,
         TRIGGER_ADVANCED 
@@ -164,9 +164,9 @@ namespace Utility{
 
 
 
-    enum Claws_Gain
+    enum class Claws_Gain
     {
-        INTER,
+        INTERMEDIATE,
         HIGH_GAIN,
         LOW_GAIN
     };
@@ -180,10 +180,11 @@ namespace Utility{
 
 
 
-    enum Collection_Mode
+    enum class Collection_Mode
     {
         BLOCK,
-        RAPID
+        RAPID,
+        INTERMEDIATE
     };
 
 
@@ -224,6 +225,8 @@ namespace Utility{
 
     struct Pico_Data_Inter
     {
+
+        // this value are read in every time the database reads in new data
         uint32_t                preTrigger;
         uint32_t                postTrigger;
 
@@ -236,6 +239,17 @@ namespace Utility{
 
         std::string             channels_to_calibrate;
 
+        // the following values are read in only when picos are initialized
+        // since the values will most probably not change
+        enPS6000RatioMode           downSampleRatioMode;
+        uint32_t                    downSampleRatio;
+        int16_t                     oversample;
+        Utility::Pico_Trigger_Mode  triggerMode;
+        uint32_t                    triggerDelay;
+        PS6000_COUPLING             coupling;
+        PS6000_RANGE                range;
+        PS6000_BANDWIDTH_LIMITER    bandwidth;
+        float                       analogueOffset;
     };
 
 

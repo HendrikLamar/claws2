@@ -40,45 +40,194 @@
 
 
 Pico::Pico( Utility::Pico_Data_Pico* picoData ) :
-    m_picoData( picoData ),
-    m_serial( m_picoData->serial ),
-    m_location( &m_picoData->location ),
+    m_data_pico( picoData ),
+    m_serial( m_data_pico->serial ),
+    m_location( &m_data_pico->location ),
+    m_data_highGain( new Utility::Pico_Data_HL_Gain() ),
+    m_data_lowGain( new Utility::Pico_Data_HL_Gain() ),
+    m_data_inter( new Utility::Pico_Data_Inter() ),
     m_channels( 
             new std::vector< Channel* >
                 {
                     new Channel( 
                             PS6000_CHANNEL_A, 
                             &m_handle, 
-                            m_picoData, 
-                            m_picoData->dataIntermediate
+                            m_data_highGain, 
+                            m_data_lowGain,
+                            m_data_inter 
                             ),
                     new Channel( 
                             PS6000_CHANNEL_B, 
                             &m_handle, 
-                            m_picoData, 
-                            m_picoData->dataIntermediate
+                            m_data_highGain,
+                            m_data_lowGain,
+                            m_data_inter
                             ),
                     new Channel( 
                             PS6000_CHANNEL_C, 
                             &m_handle, 
-                            m_picoData, 
-                            m_picoData->dataIntermediate
+                            m_data_highGain,
+                            m_data_lowGain,
+                            m_data_inter
                             ),
                     new Channel( 
                             PS6000_CHANNEL_D, 
                             &m_handle, 
-                            m_picoData, 
-                            m_picoData->dataIntermediate
+                            m_data_highGain,
+                            m_data_lowGain,
+                            m_data_inter
+                            ),
+                }
+               )
+{
+    // initialize pico
+    init();
+    turnOffUnneeded();
+
+}
+
+
+
+
+
+
+
+///////////////////////////////////////////////////////////////////////////////
+
+
+
+
+
+
+
+Pico::Pico( Utility::Pico_Data_Pico* picoData, int16_t handle ) :
+    m_data_pico( picoData ),
+    m_handle( handle ),
+    m_serial( m_data_pico->serial ),
+    m_location( &m_data_pico->location ),
+    m_data_highGain( new Utility::Pico_Data_HL_Gain() ),
+    m_data_lowGain( new Utility::Pico_Data_HL_Gain() ),
+    m_data_inter( new Utility::Pico_Data_Inter() ),
+    m_channels( 
+            new std::vector< Channel* >
+                {
+                    new Channel( 
+                            PS6000_CHANNEL_A, 
+                            &m_handle, 
+                            m_data_highGain,
+                            m_data_lowGain,
+                            m_data_inter
+                            ),
+                    new Channel( 
+                            PS6000_CHANNEL_B, 
+                            &m_handle, 
+                            m_data_highGain,
+                            m_data_lowGain,
+                            m_data_inter
+                            ),
+                    new Channel( 
+                            PS6000_CHANNEL_C, 
+                            &m_handle, 
+                            m_data_highGain,
+                            m_data_lowGain,
+                            m_data_inter
+                            ),
+                    new Channel( 
+                            PS6000_CHANNEL_D, 
+                            &m_handle, 
+                            m_data_highGain,
+                            m_data_lowGain,
+                            m_data_inter
                             ),
                 }
     )
 {
-    // initialize pico
-    init();
-
-//    turnOffUnneeded();
-
+    // no initialization needed since the handle is known
+    
+    pingUnit();
 };
+
+
+
+
+
+
+
+///////////////////////////////////////////////////////////////////////////////
+
+
+
+
+
+
+
+Pico::~Pico()
+{
+    for ( auto& tmp : *m_channels )
+    {
+        delete tmp;
+    }
+    delete m_channels;
+
+    delete m_data_highGain;
+    delete m_data_lowGain;
+    delete m_data_inter;
+
+    close();
+}
+
+
+
+
+
+///////////////////////////////////////////////////////////////////////////////
+
+
+
+
+
+/* 
+ * Pico::Pico( Utility::Pico_Data_Pico* picoData ) :
+ *     m_picoData( picoData ),
+ *     m_serial( m_picoData->serial ),
+ *     m_location( &m_picoData->location ),
+ *     m_channels( 
+ *             new std::vector< Channel* >
+ *                 {
+ *                     new Channel( 
+ *                             PS6000_CHANNEL_A, 
+ *                             &m_handle, 
+ *                             m_picoData, 
+ *                             m_picoData->dataIntermediate
+ *                             ),
+ *                     new Channel( 
+ *                             PS6000_CHANNEL_B, 
+ *                             &m_handle, 
+ *                             m_picoData, 
+ *                             m_picoData->dataIntermediate
+ *                             ),
+ *                     new Channel( 
+ *                             PS6000_CHANNEL_C, 
+ *                             &m_handle, 
+ *                             m_picoData, 
+ *                             m_picoData->dataIntermediate
+ *                             ),
+ *                     new Channel( 
+ *                             PS6000_CHANNEL_D, 
+ *                             &m_handle, 
+ *                             m_picoData, 
+ *                             m_picoData->dataIntermediate
+ *                             ),
+ *                 }
+ *     )
+ * {
+ *     // initialize pico
+ *     init();
+ * 
+ *     turnOffUnneeded();
+ * 
+ * };
+ */
 
 
 
