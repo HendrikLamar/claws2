@@ -35,19 +35,20 @@ Channel::Channel
     (
         PS6000_CHANNEL channel,
         int16_t* handle, 
-        Utility::Pico_Data_HL_Gain* const dataHighGain,
-        Utility::Pico_Data_HL_Gain* const dataLowGain,
+        Utility::Pico_Data_HL_Gain* const dataHLGain,
         Utility::Pico_Data_Inter*   const dataInter
     ) :
     m_channel( channel ),
     m_handle( handle ),
-    m_data_highGain( dataHighGain ),
-    m_data_lowGain( dataLowGain ),
+    m_data_HLGain( dataHLGain ),
     m_data_inter( dataInter )
 {
     // create data buffer and reserve maximum needed space on disk/RAM
-    m_dataBuffer = new std::vector< int16_t >;
-    m_dataBuffer->reserve( m_bufferSizeReserve );
+    m_buffer_block_data = new std::vector< int16_t >;
+    m_buffer_block_data->reserve( m_buffer_block_sizeReserve );
+
+    m_buffer_inter_data = new std::vector< int16_t >;
+    m_buffer_inter_data->reserve( m_buffer_inter_sizeReserver );
 }
 
 
@@ -60,11 +61,11 @@ Channel::Channel
 
 Channel::~Channel()
 {
-    if ( m_dataBuffer )
-    {
-        delete m_dataBuffer;
-        m_dataBuffer = nullptr;
-    }
+    delete m_buffer_block_data;
+    m_buffer_block_data = nullptr;
+
+    delete m_buffer_inter_data;
+    m_buffer_inter_data = nullptr;
 }
 
 
@@ -104,9 +105,22 @@ Channel::~Channel()
 
 
 
-std::vector< int16_t >*     Channel::getBuffer()
+std::vector< int16_t >*     Channel::getBuffer( Utility::Collection_Mode mode )
 {
-    return m_dataBuffer;
+    switch( mode )
+    {
+        case Utility::Collection_Mode::BLOCK:
+            return m_buffer_block_data;
+        case Utility::Collection_Mode::INTERMEDIATE:
+            return m_buffer_inter_data;
+        case Utility::Collection_Mode::RAPID:
+            return nullptr;
+
+        default:
+            throw ChannelException("This Collection Mode does not exist!");
+    }
+
+    return nullptr;
 }
 
 
@@ -156,28 +170,18 @@ std::vector< int16_t >*     Channel::getBuffer()
 void    Channel::loadConfig()
 {
 
-    // holds the database data in this function
-    Utility::Pico_Data_Channel* data;
-
     // first, find the correct channel in the database
-    for ( auto& tmp : *m_channelData->channels )
+    for ( auto& tmp : *m_data_HLGain->channels )
     {
         if ( tmp->channel == m_channel )
         {
-            data = tmp;
+            m_data_channel = tmp;
             break;
         }
     }
 
 
-    // second, copy the data from the database to the member variables of the channel
-    m_coupling          = data->coupling;
-    m_enabled           = data->enabled;
-    m_analogueOffset    = data->analogueOffset;
-    m_range             = data->range;
-
-
-    calcDataBufferSize();
+    calcDataBufferSize( );
 }
 
 
@@ -190,33 +194,60 @@ void    Channel::loadConfig()
 
 
 
-PICO_STATUS Channel::setDataBuffer()
+PICO_STATUS Channel::setDataBuffer( Utility::Collection_Mode mode )
 {
 
     PICO_STATUS output; 
 
-    // check if resize is needed
-    if ( m_enabled ) 
+    switch( mode )
     {
-        if ( m_dataBuffer->size() != m_dataBufferSize )
-        {
-            m_dataBuffer->resize( m_dataBufferSize );
-        }
+        case Utility::Collection_Mode::BLOCK:
+            if( getEnabled( Utility::Collection_Mode::BLOCK ) )
+            {
+                if( m_buffer_block_data->size() != m_buffer_block_size )
+                {
+                    m_buffer_block_data->resize( m_buffer_block_size );
+                }
+            }
 
+            output = ps6000SetDataBuffer(
+                    *m_handle,
+                    m_channel,
+                    &m_buffer_block_data->at(0),
+                    m_buffer_block_size,
+                    m_data_HLGain->downSampleRatioMode
+                    );
+
+            return output;
+
+        case Utility::Collection_Mode::INTERMEDIATE:
+            if( getEnabled( Utility::Collection_Mode::INTERMEDIATE ) )
+            {
+                if( m_buffer_inter_data->size() != m_buffer_inter_size )
+                {
+                    m_buffer_inter_data->resize( m_buffer_inter_size );
+                }
+            }
+
+            output = ps6000SetDataBuffer(
+                    *m_handle,
+                    m_channel,
+                    &m_buffer_inter_data->at(0),
+                    m_buffer_inter_size,
+                    m_data_inter->downSampleRatioMode 
+                    );
+ 
+            return output;
+
+        case Utility::Collection_Mode::RAPID:
+            throw ChannelException("Rapid Block mode not available yet!");
+
+        default:
+            throw ChannelException("Wrong Collection Mode input!");
     }
     
 
-    output = ps6000SetDataBuffer
-        (
-            *m_handle,
-            m_channel,
-            &m_dataBuffer->at(0),
-            m_dataBufferSize,
-            m_channelData->downSampleRatioMode
-        );
-        
-
-    return output;
+    return PICO_CANCELLED;
 
 }
 
@@ -232,23 +263,44 @@ PICO_STATUS Channel::setDataBuffer()
 
 
 
-PICO_STATUS Channel::setChannel()
+PICO_STATUS Channel::setChannel( Utility::Collection_Mode mode )
 {
     PICO_STATUS output;
 
+    switch( mode )
+    {
+        case Utility::Collection_Mode::INTERMEDIATE:
+            output = ps6000SetChannel(
+                    *m_handle,
+                    m_channel,
+                    getEnabled( mode ),
+                    m_data_inter->coupling,
+                    m_data_inter->range,
+                    m_data_inter->analogueOffset,
+                    m_data_inter->bandwidth
+                    );
+            return output;
+        case Utility::Collection_Mode::BLOCK:
+            output = ps6000SetChannel(
+                    *m_handle,
+                    m_channel,
+                    getEnabled( mode ),
+                    m_data_channel->coupling,
+                    m_data_channel->range,
+                    m_data_channel->analogueOffset,
+                    m_data_channel->bandwidth
+                    );
+            return output;
 
-    output = ps6000SetChannel
-        (
-            *m_handle,
-            m_channel,
-            m_enabled,
-            m_coupling,
-            m_range,
-            m_analogueOffset,
-            m_bandwidth 
-        );
+        case Utility::Collection_Mode::RAPID:
+            throw ChannelException("Rapid Block mode not available yet!");
+            break;
 
-    return output;
+        default:
+            throw ChannelException("Wrong Collection Mode input!");
+    }
+
+    return PICO_CANCELLED;
 }
 
 
@@ -264,9 +316,44 @@ PICO_STATUS Channel::setChannel()
 
 
 
-bool    Channel::getEnabled()
+int16_t Channel::getEnabled( Utility::Collection_Mode mode )
 {
-    return m_enabled;
+    int16_t output = 0;
+
+    int counter = 0;    // cannot initialized in case statement
+
+    switch( mode )
+    {
+        case Utility::Collection_Mode::INTERMEDIATE:
+
+            for( char&c : m_data_inter->channels_to_calibrate)
+            {
+                if( counter == static_cast<int>(m_channel) )
+                {
+                    if( c == '1' )
+                    {
+                        output = 1;
+                        break;
+                    };
+                    ++counter;
+                };
+            };
+            break;
+
+        case Utility::Collection_Mode::BLOCK:
+            output = m_data_channel->enabled;
+            break;
+
+        case Utility::Collection_Mode::RAPID:
+            throw ChannelException("Rapid Block mode not available yet!");
+            break;
+
+        default:
+            throw ChannelException("Wrong Collection Mode input!");
+    }
+
+    return PICO_CANCELLED;
+
 }
 
 
@@ -323,7 +410,9 @@ bool    Channel::getEnabled()
 
 void    Channel::calcDataBufferSize()
 {
-    m_dataBufferSize = m_channelData->preTrigger + m_channelData->postTrigger;
+    m_buffer_block_size = m_data_HLGain->preTrigger + m_data_HLGain->postTrigger;
+
+    m_buffer_inter_size = m_data_inter->preTrigger = m_data_inter->postTrigger;
 
     return;
 }

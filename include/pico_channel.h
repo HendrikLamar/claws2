@@ -50,11 +50,11 @@ class Channel
         
         //! Pointer to the current run mode data. The pointer changes a lot, 
         //! e.g. to intermediate, high gain, low gain.
-        Utility::Pico_Data_HL_Gain* const   m_data_highGain;
-        Utility::Pico_Data_HL_Gain* const   m_data_lowGain;
+        Utility::Pico_Data_HL_Gain*         m_data_HLGain;
 
-        Utility::Pico_Data_Inter* const     m_data_inter;
+        Utility::Pico_Data_Inter*           m_data_inter;
         
+        Utility::Pico_Data_Channel*         m_data_channel;
 
 
         ///////////////////////////////////////////////////////////////////////
@@ -81,14 +81,6 @@ class Channel
         ///////////////////////////////////////////////////////////////////////
         
 
-        enum BlockInterRapid
-        {
-            BLOCK,
-            INTER,
-            RAPID
-        };
-
-
 /*         // single channel settings
  *         PS6000_COUPLING                 m_coupling;
  *         int16_t                         m_enabled;
@@ -107,12 +99,15 @@ class Channel
 
 
         // data vector to store data coming from intermediate mode
-        std::vector< int16_t >*         m_buffer_inter;
+        std::vector< int16_t >*         m_buffer_inter_data;
         uint32_t                        m_buffer_inter_size;
+        uint32_t                        m_buffer_inter_sizeReserver{500};
 
-        void        calcDataBufferSize( BlockInterRapid mode );
+        // calculates the buffer size by adding pre and posttrigger. needed 
+        // as input parameter for several pico functions
+        void        calcDataBufferSize( );
 
-        
+
 
 
         ///////////////////////////////////////////////////////////////////////
@@ -135,9 +130,8 @@ class Channel
          */
         Channel(PS6000_CHANNEL channel, 
                 int16_t* handle, 
-                Utility::Pico_Data_HL_Gain* const dataHighGain,
-                Utility::Pico_Data_HL_Gain* const dataLowGain,
-                Utility::Pico_Data_Inter*   const dataInter
+                Utility::Pico_Data_HL_Gain* dataHLGain,
+                Utility::Pico_Data_Inter*   dataInter
                );
         ///////////////////////////////////////////////////////////////////////
         /*
@@ -155,7 +149,7 @@ class Channel
 
 
         //! Returns the channel buffer.
-        std::vector< int16_t >*     getBuffer();
+        std::vector< int16_t >*     getBuffer( Utility::Collection_Mode mode );
 
 /*         //! Sets the run mode. This function needs to be called before loadConfig(),
  *         //! setDataBuffer() and setChannel().
@@ -168,14 +162,14 @@ class Channel
         void                        loadConfig();
 
         //! Tells the Pico where to store the data for this channel.
-        PICO_STATUS                 setDataBuffer();
+        PICO_STATUS                 setDataBuffer( Utility::Collection_Mode mode );
 
         //! Configures the channel with the current loaded data. You might want
         //! to update the data first with loadConfig().
-        PICO_STATUS                 setChannel();
+        PICO_STATUS                 setChannel( Utility::Collection_Mode mode );
 
         //! Returns true if channel is enabled.
-        bool                        getEnabled();
+        int16_t                     getEnabled( Utility::Collection_Mode mode );
 
 
 

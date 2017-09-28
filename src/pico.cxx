@@ -53,28 +53,24 @@ Pico::Pico( Utility::Pico_Data_Pico* picoData ) :
                             PS6000_CHANNEL_A, 
                             &m_handle, 
                             m_data_highGain, 
-                            m_data_lowGain,
                             m_data_inter 
                             ),
                     new Channel( 
                             PS6000_CHANNEL_B, 
                             &m_handle, 
                             m_data_highGain,
-                            m_data_lowGain,
                             m_data_inter
                             ),
                     new Channel( 
                             PS6000_CHANNEL_C, 
                             &m_handle, 
                             m_data_highGain,
-                            m_data_lowGain,
                             m_data_inter
                             ),
                     new Channel( 
                             PS6000_CHANNEL_D, 
                             &m_handle, 
                             m_data_highGain,
-                            m_data_lowGain,
                             m_data_inter
                             ),
                 }
@@ -115,28 +111,24 @@ Pico::Pico( Utility::Pico_Data_Pico* picoData, int16_t handle ) :
                             PS6000_CHANNEL_A, 
                             &m_handle, 
                             m_data_highGain,
-                            m_data_lowGain,
                             m_data_inter
                             ),
                     new Channel( 
                             PS6000_CHANNEL_B, 
                             &m_handle, 
                             m_data_highGain,
-                            m_data_lowGain,
                             m_data_inter
                             ),
                     new Channel( 
                             PS6000_CHANNEL_C, 
                             &m_handle, 
                             m_data_highGain,
-                            m_data_lowGain,
                             m_data_inter
                             ),
                     new Channel( 
                             PS6000_CHANNEL_D, 
                             &m_handle, 
                             m_data_highGain,
-                            m_data_lowGain,
                             m_data_inter
                             ),
                 }

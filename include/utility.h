@@ -300,6 +300,7 @@ namespace Utility{
         int16_t                     enabled;
         float                       analogueOffset;
         PS6000_RANGE                range;
+        PS6000_BANDWIDTH_LIMITER    bandwidth;
 
         friend std::ostream& operator<<(
                 std::ostream& out, Utility::Pico_Data_Channel& data );
