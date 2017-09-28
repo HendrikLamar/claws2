@@ -437,7 +437,6 @@ namespace Utility{
         Pico_Data_Pico( std::string tserial, std::string tlocation ) :
             dataLowGain( new Utility::Pico_Data_HL_Gain() ),
             dataHighGain( new Utility:: Pico_Data_HL_Gain() ),
-            dataIntermediate( new Utility::Pico_Data_HL_Gain() ),
             dataInter( new Utility::Pico_Data_Inter() )
         {
             // check if the serial is longer than 100 chars.
@@ -484,9 +483,6 @@ namespace Utility{
             delete dataHighGain;
             dataHighGain = nullptr;
 
-            delete dataIntermediate;
-            dataIntermediate = nullptr;
-
             delete dataInter;
             dataInter = nullptr;
         }
@@ -499,7 +495,6 @@ namespace Utility{
 
         Pico_Data_HL_Gain*      dataLowGain;
         Pico_Data_HL_Gain*      dataHighGain;
-        Pico_Data_HL_Gain*      dataIntermediate;
 
         Pico_Data_Inter*        dataInter;
 
