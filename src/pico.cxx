@@ -224,6 +224,8 @@ void Pico::pingUnit()
 void Pico::setConfig( Utility::Claws_Gain gain )
 {
 
+    m_noChannelsEnabled = 0;
+
     switch( gain )
     {
         case Utility::Claws_Gain::INTERMEDIATE:
@@ -806,8 +808,9 @@ void    Pico::getTimebase()
 
     // check if the maxSamples variable is large enough
     // since it is equal for all channels, this caluclation should be fine
-    if( maxSamples < ( m_noChannelsEnabled * m_buffer_data_size ) )
+    if( maxSamples < ( m_noChannelsEnabled *  m_buffer_data_size ) )
     {
+        
         throw PicoException("Demanded buffer is too large! Pico cannot allocate it!");
     }
 
