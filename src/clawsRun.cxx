@@ -233,7 +233,7 @@ void            ClawsRun::loadConfig()
     {
         std::cout << "Reading intermediate settings...";
         // ...and for the intermediate mode
-        m_database->Pico_readSettings( Utility::INTERMEDIATE );
+        m_database->Pico_readSettings( Utility::Pico_RunMode::INTERMEDIATE );
         std::cout << "done!\n";
     }
     catch( UtilityException& excep )

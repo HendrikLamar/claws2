@@ -151,15 +151,15 @@ class ClawsRun
 
         //! Prints the current loaded data.
         void            printData();
+
+
+
+
+
+
+
+
 };
-
-
-
-
-
-
-
-
 
 
 #endif // CLAWSRUN_H

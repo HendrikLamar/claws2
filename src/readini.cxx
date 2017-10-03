@@ -73,15 +73,16 @@ void ReadIni::initialize(){
     m_initstruct = {\
 //                ptree.get<std::string>("Initializer.ConfigFile_Path"),            
 
-        m_pathIniDir.string() + ptree.get<std::string>("Initializer.ClawsDAQ_steering-file"),        \
-        m_pathIniDir.string() + ptree.get<std::string>("Initializer.ConfigFile_Intermediate"),      \
-        m_pathIniDir.string() + ptree.get<std::string>("Initializer.ConfigFile_Physics_Obermaier"), \
-        m_pathIniDir.string() + ptree.get<std::string>("Initializer.ConfigFile_Physics_Merkel"),    \
-        m_pathIniDir.string() + ptree.get<std::string>("Initializer.ConfigFile_Physics_Schiffer"),  \
-        m_pathIniDir.string() + ptree.get<std::string>("Initializer.ConfigFile_Physics_Klum"),      \
-        m_pathIniDir.string() + ptree.get<std::string>("Initializer.ConfigFile_Physics_Garrn"),     \
-        m_pathIniDir.string() + ptree.get<std::string>("Initializer.ConfigFile_PowerSupply"),     \
-        m_pathIniDir.string() + ptree.get<std::string>("Initializer.ConfigFile_PicoInit"),
+        m_pathIniDir.string() + ptree.get<std::string>("Initializer.ClawsDAQ_config"),        \
+        m_pathIniDir.string() + ptree.get<std::string>("Initializer.intermediate"),      \
+        m_pathIniDir.string() + ptree.get<std::string>("Initializer.constant_config"),      \
+        m_pathIniDir.string() + ptree.get<std::string>("Initializer.physics_Obermaier"), \
+        m_pathIniDir.string() + ptree.get<std::string>("Initializer.physics_Merkel"),    \
+        m_pathIniDir.string() + ptree.get<std::string>("Initializer.physics_Schiffer"),  \
+        m_pathIniDir.string() + ptree.get<std::string>("Initializer.physics_Klum"),      \
+        m_pathIniDir.string() + ptree.get<std::string>("Initializer.physics_Garrn"),     \
+        m_pathIniDir.string() + ptree.get<std::string>("Initializer.powerSupply"),     \
+        m_pathIniDir.string() + ptree.get<std::string>("Initializer.picoInit"),
     };
     
 };

@@ -69,9 +69,9 @@ class Pico
         const std::string* const                m_location;
 
 
-        Utility::Pico_Data_HL_Gain* const       m_data_highGain;
-        Utility::Pico_Data_HL_Gain* const       m_data_lowGain;
-        Utility::Pico_Data_Inter* const         m_data_inter;
+        // this pointer point to the data which is is needed for the current
+        // run mode
+        Utility::Pico_Data_HL_Gain*             m_data_current;
 
         
         // Vector holding the four channels of the pico
@@ -108,9 +108,10 @@ class Pico
         ////////////////////////////////////////////////////////////////////////
 
 
+        Utility::Claws_Gain                 m_currentGain;
 
         // needed to be read-in!
-        Utility::Pico_Trigger_Mode         m_triggerMode;
+        Utility::Pico_Trigger_Mode          m_triggerMode;
 
         // needed to be read-in!
         // signifies in how many memory segments we need for rapid block mode
@@ -213,7 +214,10 @@ class Pico
                                                 // collection
         
 
-        uint32_t            m_noOfSamplesTotal;     // sum of pre- and posttriggers
+        uint32_t            m_buffer_data_size;     // sum of pre- and posttriggers
+                                                    // written every time new 
+                                                    // data is loaded
+//        uint32_t            m_buffer_inter_size;    // sum of pre- and posttriggers
                                                     // written every time new 
                                                     // data is loaded
 
@@ -271,12 +275,16 @@ class Pico
         //! Initializes the picoscope.
         void init();
 
-        // Returns a Utility::Pico_Data_HL_Gain pointer to the correct data set
-        // for the demanded gain mode.
-        Utility::Pico_Data_HL_Gain*  getGainData( Utility::Claws_Gain& mode );
+/*         // Returns a Utility::Pico_Data_HL_Gain pointer to the correct data set
+ *         // for the demanded gain mode.
+ *         Utility::Pico_Data_HL_Gain*  getHLGainData( Utility::Claws_Gain& mode );
+ */
 
         // Sets the Trigger settings.
-        void    setTrigger();
+        void    setTrigger( );
+
+        void    setTrigger_Advanced( );
+        void    setTrigger_Simple( );
 
         // Configures the channels.
         void    setChannels();
@@ -339,8 +347,8 @@ class Pico
         Channel* getCh( PS6000_CHANNEL cha );
         Channel* getCh( int cha );
 
-        //! Loads the settings from the Database and stores it in member variables
-        void loadConfig( Utility::Claws_Gain mode );
+        //! Loads the in the argument demanded settings from the Database and stores it in member variables.
+        void setConfig( Utility::Claws_Gain gain );
 
         //! Prepares the Pico to get ready for block mode. Should be called before
         //! block mode.
@@ -370,8 +378,5 @@ class Pico
         friend std::ostream& operator<<(
                 std::ostream& out, Pico* picoscope );
 };
-
-
-
 
 #endif // PICO_H

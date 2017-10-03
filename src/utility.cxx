@@ -258,13 +258,13 @@ namespace Utility{
 
         try
         {
-            out << "Pretrigger: " << data.preTrigger;
-            out << "\t\tPosttrigger: " << data.postTrigger;
-            out << "\t\tTimebase: " << data.timebase;
-            out << "\nOversample: " << data.oversample;
-            out << "\t\tDownSampleRatioMode: " << data.downSampleRatioMode;
-            out << "\tDownSampleRatio: " << data.downSampleRatio;
-            out << "\nTriggerMode: " << Utility::Pico_EnumToString_trigger(data.triggerMode);
+            out << "Pretrigger: " << data.val_preTrigger;
+            out << "\t\tPosttrigger: " << data.val_postTrigger;
+            out << "\t\tTimebase: " << data.val_timebase;
+            out << "\nOversample: " << data.val_oversample;
+            out << "\t\tDownSampleRatioMode: " << data.val_downSampleRatioMode;
+            out << "\tDownSampleRatio: " << data.val_downSampleRatio;
+            out << "\nTriggerMode: " << Utility::Pico_EnumToString_trigger(data.mode_trigger);
             out << "\n";
 
             for( auto& tmp : *data.channels )
@@ -272,7 +272,7 @@ namespace Utility{
                 out << *tmp;
             }
 
-            out << *(data.trigger);
+            out << *(data.data_trigger);
         }
         catch( UtilityException& excep )
         {
@@ -297,8 +297,8 @@ namespace Utility{
     {
         out << "\n+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\n";
         out << "+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++";
-        out << "\n\t\tPico\t" << data.location << "\n";
-        out << "\t\tSerial: " << data.serial;
+        out << "\n\t\tPico\t" << data.val_location << "\n";
+        out << "\t\tSerial: " << data.val_serial;
         out << "\n";
         out << "+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++";
         out << "\n";
@@ -307,17 +307,17 @@ namespace Utility{
         {
             out << "\tLow Gain Data\n";
             out << "-----------------------------------------------------------\n";
-            out << *data.dataLowGain;
+            out << *data.data_lowGain;
             out << "\n\n";
 
             out << "\tHigh Gain Data\n";
             out << "-----------------------------------------------------------\n";
-            out << *data.dataHighGain;
+            out << *data.data_highGain;
             out << "\n\n";
 
             out << "\tIntermediate Data\n";
             out << "-----------------------------------------------------------\n";
-            out << *data.dataIntermediate;
+            out << *data.data_inter;
         }
         catch( UtilityException& excep )
         {
@@ -550,23 +550,23 @@ namespace Utility{
 
         if( enumerator.compare("MERKEL_HG") == 0 )
         {
-            return Utility::MERKEL_HG;
+            return Utility::Pico_RunMode::MERKEL_HG;
         }
         if( enumerator.compare("OBERMAIER_HG") == 0 )
         {
-            return Utility::OBERMAIER_HG;
+            return Utility::Pico_RunMode::OBERMAIER_HG;
         }
         if( enumerator.compare("SCHIFFER_LG") == 0 )
         {
-            return Utility::SCHIFFER_LG;
+            return Utility::Pico_RunMode::SCHIFFER_LG;
         }
         if( enumerator.compare("KLUM_LG") == 0 )
         {
-            return Utility::KLUM_LG;
+            return Utility::Pico_RunMode::KLUM_LG;
         }
         if( enumerator.compare("GARRN") == 0 )
         {
-            return Utility::GARRN;
+            return Utility::Pico_RunMode::GARRN;
         }
 
         throw PicoException("Wrong run mode as input!");
@@ -591,11 +591,11 @@ namespace Utility{
 
         if (enumerator.compare("TRIGGER_SIMPLE") == 0 )
         {
-            return Utility::TRIGGER_SIMPLE;
+            return Utility::Pico_Trigger_Mode::TRIGGER_SIMPLE;
         }
         if (enumerator.compare("TRIGGER_ADVANCED") == 0 )
         {
-            return Utility::TRIGGER_ADVANCED;
+            return Utility::Pico_Trigger_Mode::TRIGGER_ADVANCED;
         }
 
         throw PicoException("Wrong trigger mode as input!");
@@ -621,11 +621,11 @@ namespace Utility{
 
         if( enumerator.compare("BLOCK") == 0 )
         {
-            return Utility::BLOCK;
+            return Utility::Collection_Mode::BLOCK;
         }
         if( enumerator.compare("RAPID") == 0 )
         {
-            return Utility::RAPID;
+            return Utility::Collection_Mode::RAPID;
         }
 
         throw PicoException("Wrong collection mode as input!");
@@ -932,7 +932,7 @@ namespace Utility{
     std::string     Pico_EnumToString_runMode( Utility::Pico_RunMode& mode )
     {
         std::string output;
-        switch( mode )
+        switch( static_cast<int>(mode) )
         {
             case 1:
                 output = "MERKEL_HG";
@@ -968,7 +968,7 @@ namespace Utility{
     std::string     Pico_EnumToString_trigger( Utility::Pico_Trigger_Mode& mode )
     {
         std::string output;
-        switch( mode )
+        switch( static_cast<int>(mode) )
         {
             case 0:
                 output = "TRIGGER_SIMPLE";
@@ -998,7 +998,7 @@ namespace Utility{
     std::string     Pico_EnumToString_collection( Utility::Collection_Mode& mode )
     {
         std::string output;
-        switch( mode )
+        switch( static_cast<int>(mode) )
         {
             case 0:
                 output = "BLOCK";

@@ -107,14 +107,10 @@ void N6700::setConf( Utility::Claws_Gain HIGH_LOW_GAIN )
 
     switch( HIGH_LOW_GAIN )
     {
-        case Utility::INTER:
-            gain = "High_Gain";
-            break;
-        case Utility::LOW_GAIN:
+        case Utility::Claws_Gain::LOW_GAIN:
             gain = "Low_Gain";
             break;
-
-        case Utility::HIGH_GAIN:
+        default:
             gain = "High_Gain";
             break;
     }
@@ -294,7 +290,7 @@ std::vector< double > N6700::getCurr()
 void N6700::run()
 {
     try{
-        setConf( Utility::LOW_GAIN );
+        setConf( Utility::Claws_Gain::LOW_GAIN );
     }
     catch(SCPIException error)
     {
@@ -317,7 +313,7 @@ void N6700::run()
     std::this_thread::sleep_for(std::chrono::milliseconds(50));
 
 
-    setConf( Utility::HIGH_GAIN );
+    setConf( Utility::Claws_Gain::HIGH_GAIN );
 
     turnChannelsOnOff( true );
 

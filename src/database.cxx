@@ -394,7 +394,7 @@ Utility::N6700_connect Database::N6700_getConnect() const
 void Database::Pico_readSettings( Utility::Pico_RunMode mode )
 {
 
-    if( mode == Utility::INTERMEDIATE )
+    if( mode == Utility::Pico_RunMode::INTERMEDIATE )
     {
         for( unsigned int i = 0; i < m_MaxNoOfPicos; ++i )
         {
@@ -540,7 +540,7 @@ void Database::Pico_readChannelsSettings( Utility::Pico_RunMode mode, int picoNo
     std::string fKey;      // final path
 
     std::string tmp;
-    rKey = headBegin + m_picoData->at(picoNo)->location + headEnd;
+    rKey = headBegin + m_picoData->at(picoNo)->val_location + headEnd;
 
     // put channels in vector for better accessibility in loop
     std::vector< Utility::Pico_Data_Channel* >* channels = tmpDataStruct->channels;
@@ -601,39 +601,39 @@ void Database::Pico_readAquisitionSettings( Utility::Pico_RunMode mode, int pico
     std::string fKey;      // final path
 
     std::string tmp;
-    rKey = headBegin + m_picoData->at(picoNo)->location + headEnd + ".";
+    rKey = headBegin + m_picoData->at(picoNo)->val_location + headEnd + ".";
 
     
     // reading preTrigger 
     fKey = rKey + "preTrigger";
-    tmpDataStruct->preTrigger = ptree.get< unsigned int > ( fKey );
+    tmpDataStruct->val_preTrigger = ptree.get< unsigned int > ( fKey );
     
     // reading postTrigger
     fKey = rKey + "postTrigger";
-    tmpDataStruct->postTrigger = ptree.get< unsigned int > ( fKey );
+    tmpDataStruct->val_postTrigger = ptree.get< unsigned int > ( fKey );
     
     // reading timebase
     fKey = rKey + "timebase";
-    tmpDataStruct->timebase = ptree.get< unsigned int > ( fKey );
+    tmpDataStruct->val_timebase = ptree.get< unsigned int > ( fKey );
 
     // reading downSampleMode 
     fKey = rKey + "downSampleMode";
     tmp = ptree.get< std::string >( fKey );
-    tmpDataStruct->downSampleRatioMode = 
+    tmpDataStruct->val_downSampleRatioMode = 
         Utility::Pico_StringToEnum_ratio( tmp );
 
     // reading downSamlpeRatio
     fKey = rKey + "downSampleRatio";
-    tmpDataStruct->downSampleRatio = ptree.get< unsigned int  >( fKey );
+    tmpDataStruct->val_downSampleRatio = ptree.get< unsigned int  >( fKey );
 
     // reading oversample
     fKey = rKey + "oversample";
-    tmpDataStruct->oversample = ptree.get< short >( fKey );
+    tmpDataStruct->val_oversample = ptree.get< short >( fKey );
 
     // reading in trigger mode
     fKey = rKey + "triggerMode";
     tmp = ptree.get< std::string >( fKey );
-    tmpDataStruct->triggerMode = 
+    tmpDataStruct->mode_trigger= 
         Utility::Pico_StringToEnum_trigger( tmp );
 
     return;
@@ -666,36 +666,36 @@ void Database::Pico_readTriggerSimpleSettings( Utility::Pico_RunMode mode, int p
     std::string fKey;      // final path
 
     std::string tmp;
-    rKey = headBegin + m_picoData->at(picoNo)->location + headEnd + ".";
+    rKey = headBegin + m_picoData->at(picoNo)->val_location + headEnd + ".";
     iKey = rKey;
 
     // reading enabled
     fKey = iKey + "enabled";
-    tmpDataStruct->trigger->enabled = ptree.get< bool > ( fKey );
+    tmpDataStruct->data_trigger->enabled = ptree.get< bool > ( fKey );
     
     // reading source
     fKey = iKey + "source";
     tmp = ptree.get< std::string > ( fKey );
-    tmpDataStruct->trigger->source = 
+    tmpDataStruct->data_trigger->source = 
         Utility::Pico_StringToEnum_channel( tmp );
     
     // reading threshold
     fKey = iKey + "threshold";
-    tmpDataStruct->trigger->threshold = ptree.get< int > ( fKey );
+    tmpDataStruct->data_trigger->threshold = ptree.get< int > ( fKey );
 
     // reading direction
     fKey = iKey + "direction";
     tmp = ptree.get < std::string > ( fKey );
-    tmpDataStruct->trigger->direction = 
+    tmpDataStruct->data_trigger->direction = 
         Utility::Pico_StringToEnum_thresDir( tmp );
 
     // reading delay 
     fKey = iKey + "delay";
-    tmpDataStruct->trigger->delay = ptree.get < unsigned int > ( fKey );
+    tmpDataStruct->data_trigger->delay = ptree.get < unsigned int > ( fKey );
 
     // reading autoTriggerTime
     fKey = iKey + "autoTriggerTime";
-    tmpDataStruct->trigger->autoTriggerTime = ptree.get < int > ( fKey );
+    tmpDataStruct->data_trigger->autoTriggerTime = ptree.get < int > ( fKey );
 
     return;
 }
@@ -741,16 +741,19 @@ void Database::Pico_readTriggerAdvSettings( Utility::Pico_RunMode mode, int pico
 void Database::Pico_readIntermediateSettings( int picoNo )
 {
 
-    Utility::Pico_Data_Inter*   tmpDataStruct = m_picoData->at(picoNo)->dataInter;
+    Utility::Pico_Data_HL_Gain*   tmpDataStruct = m_picoData->at(picoNo)->data_inter;
 
     ///////////////////////////////////////////////////////////////////////////
 
 
+    // reade variable stuff
+    //
+    
     std::string headBegin{"Pico_"};
     std::string headEnd{"_Intermediate_Mode_Settings"};
 
     // preparation variables for the loop read-in
-    std::string pathToIniFile{m_initReader->getInitstruct().Intermediate};
+    std::string pathToIniFile{m_initReader->getInitstruct().intermediate};
 
     boost::property_tree::ptree ptree;
     boost::property_tree::ini_parser::read_ini(pathToIniFile.c_str(), ptree);
@@ -760,34 +763,106 @@ void Database::Pico_readIntermediateSettings( int picoNo )
     std::string fKey;      // final path
 
     std::string tmp;
-    rKey = headBegin + m_picoData->at(picoNo)->location + headEnd + ".";
+    rKey = headBegin + m_picoData->at(picoNo)->val_location + headEnd + ".";
     iKey = rKey;
 
     fKey = iKey + "preTrigger";
-    tmpDataStruct->preTrigger = ptree.get< unsigned int >( fKey );
+    tmpDataStruct->val_preTrigger = ptree.get< unsigned int >( fKey );
 
     fKey = iKey + "postTrigger";
-    tmpDataStruct->postTrigger = ptree.get< unsigned int >( fKey );
+    tmpDataStruct->val_postTrigger = ptree.get< unsigned int >( fKey );
 
     fKey = iKey + "timebase";
-    tmpDataStruct->timebase = ptree.get< unsigned int >( fKey );
+    tmpDataStruct->val_timebase = ptree.get< unsigned int >( fKey );
     
-    fKey = iKey + "collection_mode";
-    tmp = ptree.get< std::string >( fKey );
-    tmpDataStruct->collMode = Utility::Pico_StringToEnum_collection( tmp );
-
     fKey = iKey + "threshold";
-    tmpDataStruct->threshold =  ptree.get< int >( fKey );
+    tmpDataStruct->data_trigger->threshold =  ptree.get< int >( fKey );
 
     fKey = iKey + "direction";
     tmp = ptree.get< std::string >( fKey );
-    tmpDataStruct->direction = Utility::Pico_StringToEnum_thresDir( tmp );
+    tmpDataStruct->data_trigger->direction = Utility::Pico_StringToEnum_thresDir( tmp );
 
     fKey = iKey + "autoTriggerTime";
-    tmpDataStruct->autoTriggerTime = ptree.get < int > ( fKey );
+    tmpDataStruct->data_trigger->autoTriggerTime = ptree.get < int > ( fKey );
 
+    // find out which channel is enabled
     fKey = iKey + "channels_to_calibrate";
-    tmpDataStruct->channels_to_calibrate = ptree.get< std::string >( fKey );
+    tmp = ptree.get< std::string >( fKey );
+    int counter = 0;
+    for( char &tchar : tmp )
+    {
+        if( tchar == '1' )
+        {
+            tmpDataStruct->channels->at(counter)->enabled = true;
+        }
+        else
+        {
+            tmpDataStruct->channels->at(counter)->enabled = false;
+        }
+
+        ++counter;
+    }
+
+
+
+
+
+
+    // read constant stuff
+    //
+    headEnd = "_Intermediate_Mode";
+
+    pathToIniFile = m_initReader->getInitstruct().constant_config;
+    boost::property_tree::ini_parser::read_ini(pathToIniFile.c_str(), ptree);
+
+    rKey = m_picoData->at(picoNo)->val_location + headEnd + ".";
+
+    fKey = rKey + "downSampleMode";
+    tmp = ptree.get< std::string >( fKey );
+    tmpDataStruct->val_downSampleRatioMode = Utility::Pico_StringToEnum_ratio( tmp );
+
+    fKey = rKey + "downSampleRatio";
+    tmpDataStruct->val_downSampleRatio = ptree.get< unsigned int >( fKey );
+
+    fKey = rKey + "oversample";
+    tmpDataStruct->val_oversample = ptree.get< unsigned int >( fKey );
+
+    fKey = rKey + "triggerMode";
+    tmp = ptree.get< std::string >( fKey );
+    tmpDataStruct->mode_trigger = Utility::Pico_StringToEnum_trigger( tmp );
+
+    fKey = rKey + "delay";
+    tmpDataStruct->data_trigger->delay = ptree.get< unsigned int >( fKey );
+
+
+    // channel stuff is equal for all channels 
+    PS6000_COUPLING             tmp_coupling;
+    PS6000_RANGE                tmp_range;
+    float                       tmp_anaOffset;
+    PS6000_BANDWIDTH_LIMITER    tmp_bandwidth;
+
+    fKey = rKey + "coupling";
+    tmp = ptree.get< std::string >(fKey);
+    tmp_coupling = Utility::Pico_StringToEnum_coupling( tmp );
+
+    fKey = rKey + "range";
+    tmp = ptree.get< std::string >( fKey );
+    tmp_range = Utility::Pico_StringToEnum_range( tmp );
+
+    fKey = rKey + "analogueOffset";
+    tmp_anaOffset = ptree.get< float >( fKey );
+
+    fKey = rKey + "bandwidth";
+    tmp = ptree.get< std::string >( fKey );
+    tmp_bandwidth = Utility::Pico_StringToEnum_bandwidth( tmp );
+
+    for( auto& tcha : *tmpDataStruct->channels )
+    {
+        tcha->coupling = tmp_coupling;
+        tcha->range = tmp_range;
+        tcha->analogueOffset = tmp_anaOffset;
+        tcha->bandwidth = tmp_bandwidth;
+    }
 
 
     return;
@@ -816,22 +891,19 @@ std::string Database::Pico_returnPathToRunMode( Utility::Pico_RunMode mode )
     std::string output;
     switch( mode )
     {
-        case Utility::INTERMEDIATE:
-            output = m_initReader->getInitstruct().Intermediate;
-            break;
-        case Utility::OBERMAIER_HG:
+        case Utility::Pico_RunMode::OBERMAIER_HG:
             output = m_initReader->getInitstruct().Obermaier_HG;
             break;
-        case Utility::MERKEL_HG:
+        case Utility::Pico_RunMode::MERKEL_HG:
             output = m_initReader->getInitstruct().Merkel_HG;
             break;
-        case Utility::SCHIFFER_LG:
+        case Utility::Pico_RunMode::SCHIFFER_LG:
             output = m_initReader->getInitstruct().Schiffer_LG;
             break;
-        case Utility::KLUM_LG:
+        case Utility::Pico_RunMode::KLUM_LG:
             output = m_initReader->getInitstruct().Klum_LG;
             break;
-        case Utility::GARRN:
+        case Utility::Pico_RunMode::GARRN:
             output = m_initReader->getInitstruct().Garrn;
             break;
         default:
@@ -872,22 +944,22 @@ Utility::Pico_Data_HL_Gain*    Database::Pico_getHLGainStruct(
     switch( mode )
     {
         // return the high gain data structure
-        case Utility::MERKEL_HG:
-            return m_picoData->at(picoNo)->dataHighGain;
+        case Utility::Pico_RunMode::MERKEL_HG:
+            return m_picoData->at(picoNo)->data_highGain;
 
-        case Utility::OBERMAIER_HG:
-            return m_picoData->at(picoNo)->dataHighGain;
+        case Utility::Pico_RunMode::OBERMAIER_HG:
+            return m_picoData->at(picoNo)->data_highGain;
 
         // return the low gain data structure
-        case Utility::KLUM_LG:
-            return m_picoData->at(picoNo)->dataLowGain;
+        case Utility::Pico_RunMode::KLUM_LG:
+            return m_picoData->at(picoNo)->data_lowGain;
 
-        case Utility::SCHIFFER_LG:
-            return m_picoData->at(picoNo)->dataLowGain;
+        case Utility::Pico_RunMode::SCHIFFER_LG:
+            return m_picoData->at(picoNo)->data_lowGain;
 
         // if garrn is specified, use the high gain version as default
-        case Utility::GARRN:
-            return m_picoData->at(picoNo)->dataHighGain;            
+        case Utility::Pico_RunMode::GARRN:
+            return m_picoData->at(picoNo)->data_highGain;            
 
         default:
             throw PicoException("Utility::Pico_RunMode does not exist!");

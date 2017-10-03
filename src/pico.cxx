@@ -41,37 +41,31 @@
 
 Pico::Pico( Utility::Pico_Data_Pico* picoData ) :
     m_data_pico( picoData ),
-    m_serial( m_data_pico->serial ),
-    m_location( &m_data_pico->location ),
-    m_data_highGain( new Utility::Pico_Data_HL_Gain() ),
-    m_data_lowGain( new Utility::Pico_Data_HL_Gain() ),
-    m_data_inter( new Utility::Pico_Data_Inter() ),
+    m_serial( m_data_pico->val_serial ),
+    m_location( &m_data_pico->val_location ),
+    m_data_current( new Utility::Pico_Data_HL_Gain( Utility::Claws_Gain::INTERMEDIATE ) ),
     m_channels( 
             new std::vector< Channel* >
                 {
                     new Channel( 
                             PS6000_CHANNEL_A, 
                             &m_handle, 
-                            m_data_highGain, 
-                            m_data_inter 
+                            m_data_current
                             ),
                     new Channel( 
                             PS6000_CHANNEL_B, 
                             &m_handle, 
-                            m_data_highGain,
-                            m_data_inter
+                            m_data_current
                             ),
                     new Channel( 
                             PS6000_CHANNEL_C, 
                             &m_handle, 
-                            m_data_highGain,
-                            m_data_inter
+                            m_data_current
                             ),
                     new Channel( 
                             PS6000_CHANNEL_D, 
                             &m_handle, 
-                            m_data_highGain,
-                            m_data_inter
+                            m_data_current
                             ),
                 }
                )
@@ -99,40 +93,34 @@ Pico::Pico( Utility::Pico_Data_Pico* picoData ) :
 Pico::Pico( Utility::Pico_Data_Pico* picoData, int16_t handle ) :
     m_data_pico( picoData ),
     m_handle( handle ),
-    m_serial( m_data_pico->serial ),
-    m_location( &m_data_pico->location ),
-    m_data_highGain( new Utility::Pico_Data_HL_Gain() ),
-    m_data_lowGain( new Utility::Pico_Data_HL_Gain() ),
-    m_data_inter( new Utility::Pico_Data_Inter() ),
+    m_serial( m_data_pico->val_serial ),
+    m_location( &m_data_pico->val_location ),
+    m_data_current( new Utility::Pico_Data_HL_Gain( Utility::Claws_Gain::INTERMEDIATE ) ),
     m_channels( 
             new std::vector< Channel* >
                 {
                     new Channel( 
                             PS6000_CHANNEL_A, 
                             &m_handle, 
-                            m_data_highGain,
-                            m_data_inter
+                            m_data_current
                             ),
                     new Channel( 
                             PS6000_CHANNEL_B, 
                             &m_handle, 
-                            m_data_highGain,
-                            m_data_inter
+                            m_data_current
                             ),
                     new Channel( 
                             PS6000_CHANNEL_C, 
                             &m_handle, 
-                            m_data_highGain,
-                            m_data_inter
+                            m_data_current
                             ),
                     new Channel( 
                             PS6000_CHANNEL_D, 
                             &m_handle, 
-                            m_data_highGain,
-                            m_data_inter
+                            m_data_current
                             ),
                 }
-    )
+               )
 {
     // no initialization needed since the handle is known
     
@@ -161,137 +149,10 @@ Pico::~Pico()
     }
     delete m_channels;
 
-    delete m_data_highGain;
-    delete m_data_lowGain;
-    delete m_data_inter;
+    delete m_data_current;
 
     close();
 }
-
-
-
-
-
-///////////////////////////////////////////////////////////////////////////////
-
-
-
-
-
-/* 
- * Pico::Pico( Utility::Pico_Data_Pico* picoData ) :
- *     m_picoData( picoData ),
- *     m_serial( m_picoData->serial ),
- *     m_location( &m_picoData->location ),
- *     m_channels( 
- *             new std::vector< Channel* >
- *                 {
- *                     new Channel( 
- *                             PS6000_CHANNEL_A, 
- *                             &m_handle, 
- *                             m_picoData, 
- *                             m_picoData->dataIntermediate
- *                             ),
- *                     new Channel( 
- *                             PS6000_CHANNEL_B, 
- *                             &m_handle, 
- *                             m_picoData, 
- *                             m_picoData->dataIntermediate
- *                             ),
- *                     new Channel( 
- *                             PS6000_CHANNEL_C, 
- *                             &m_handle, 
- *                             m_picoData, 
- *                             m_picoData->dataIntermediate
- *                             ),
- *                     new Channel( 
- *                             PS6000_CHANNEL_D, 
- *                             &m_handle, 
- *                             m_picoData, 
- *                             m_picoData->dataIntermediate
- *                             ),
- *                 }
- *     )
- * {
- *     // initialize pico
- *     init();
- * 
- *     turnOffUnneeded();
- * 
- * };
- */
-
-
-
-
-
-
-
-Pico::Pico( Utility::Pico_Data_Pico* picoData, int16_t handle ) :
-    m_picoData( picoData ),
-    m_handle( handle ),
-    m_serial( m_picoData->serial ),
-    m_location( &m_picoData->location ),
-    m_channels( 
-            new std::vector< Channel* >
-                {
-                    new Channel( 
-                            PS6000_CHANNEL_A, 
-                            &m_handle, 
-                            m_picoData, 
-                            m_picoData->dataIntermediate
-                            ),
-                    new Channel( 
-                            PS6000_CHANNEL_B, 
-                            &m_handle, 
-                            m_picoData, 
-                            m_picoData->dataIntermediate
-                            ),
-                    new Channel( 
-                            PS6000_CHANNEL_C, 
-                            &m_handle, 
-                            m_picoData, 
-                            m_picoData->dataIntermediate
-                            ),
-                    new Channel( 
-                            PS6000_CHANNEL_D, 
-                            &m_handle, 
-                            m_picoData, 
-                            m_picoData->dataIntermediate
-                            ),
-                }
-    )
-{
-    // no initialization needed since the handle is known
-    
-    pingUnit();
-};
-
-
-
-
-
-
-
-
-///////////////////////////////////////////////////////////////////////////////
-
-
-
-
-
-
-Pico::~Pico()
-{
-    for ( auto& tmp : *m_channels )
-    {
-        delete tmp;
-    }
-    delete m_channels;
-
-    close();
-}
-
 
 
 
@@ -360,62 +221,41 @@ void Pico::pingUnit()
 
 
 
-
-
-
-
-
-void Pico::loadConfig( Utility::Claws_Gain mode )
+void Pico::setConfig( Utility::Claws_Gain gain )
 {
 
-    // set the number of channels enabled to zero before filling it again
-    m_noChannelsEnabled = 0;
-
-    // first, load channel settings
-    for ( auto& tmp : *m_channels )
+    switch( gain )
     {
-        tmp->setGainMode( mode );
-        tmp->loadConfig();
+        case Utility::Claws_Gain::INTERMEDIATE:
+            *m_data_current = *m_data_pico->data_inter;
+            break;
+        case Utility::Claws_Gain::HIGH_GAIN:
+            *m_data_current = *m_data_pico->data_highGain;
+            break;
+        case Utility::Claws_Gain::LOW_GAIN:
+            *m_data_current = *m_data_pico->data_lowGain;
+            break;
 
-        // find out how many channels are enabled
-        tmp->getEnabled() ? ++m_noChannelsEnabled: false ;
+        default:
+            throw PicoException("Wrong gain input!");
+    }
+
+    // load channel settingso
+    for( auto& tmp : *m_channels )
+    {
+        tmp->loadConfig();
+        tmp->getEnabled() ? ++m_noChannelsEnabled : false;
     }
 
 
-    Utility::Pico_Data_HL_Gain* data = getGainData( mode );
+    m_buffer_data_size = m_data_current->val_preTrigger + m_data_current->val_postTrigger;
 
 
-    // loading aquisition settings
-    m_timebase                  = data->timebase;
-    m_oversample                = data->oversample;
-    m_preTrigger                = data->preTrigger;
-    m_postTrigger               = data->postTrigger;
-    m_downSamplingRatioMode     = data->downSampleRatioMode;
-    m_downSampleRatio           = data->downSampleRatio;
-
-
-    // loading the correct trigger mode
-    m_triggerMode = data->triggerMode;
-
-
-    // loading simple trigger settings
-    m_st_enabled                = data->trigger->enabled;
-    m_st_source                 = data->trigger->source;
-    m_st_threshold              = data->trigger->threshold;
-    m_st_direction              = data->trigger->direction;
-    m_st_delay                  = data->trigger->delay;
-    m_st_autoTriggerTime_ms     = data->trigger->autoTriggerTime;
-
-
-    // on input, the number of samples demanded is given.
-    // on exit, the number of values retrieved is written.
-    m_noOfSamplesTotal = m_preTrigger + m_postTrigger;
-
-
-    //! \todo Add Advanced Trigger Settings!
-    
     return;
 }
+
+
+
 
 
 
@@ -480,7 +320,7 @@ Channel* Pico::getCh( int cha )
 
 
 
-void Pico::setReadyBlock()
+void Pico::setReadyBlock( )
 {
     setChannels();
 
@@ -553,10 +393,10 @@ void Pico::runBlock()
     // the data is collected.
     m_status = ps6000RunBlock(
                 m_handle,
-                m_preTrigger,
-                m_postTrigger,
-                m_timebase,
-                m_oversample,
+                m_data_current->val_preTrigger,
+                m_data_current->val_postTrigger,
+                m_data_current->val_timebase,
+                m_data_current->val_oversample,
                 &m_timeIndisposedMS,
                 m_startIndex,
                 nullptr,
@@ -739,6 +579,21 @@ std::ostream& operator<<( std::ostream& out, Pico* picoscope );
 
 
 
+
+
+///////////////////////////////////////////////////////////////////////////////
+
+
+
+
+
+
+
+
+
+
+
+
 void Pico::init()
 {
     if(!m_serial)
@@ -775,27 +630,28 @@ void Pico::init()
 
 
 
-Utility::Pico_Data_HL_Gain* Pico::getGainData( Utility::Claws_Gain& mode )
+
+
+// Sets the Trigger settings.
+void    Pico::setTrigger( )
 {
 
-    Utility::Pico_Data_HL_Gain* output;
-
-    switch( mode )
+    switch( m_data_current->mode_trigger )
     {
-        case Utility::INTER:
-            output = m_picoData->dataIntermediate;
+        case Utility::Pico_Trigger_Mode::TRIGGER_ADVANCED:
+            //! \todo Claws advanced trigger to be implemented!
+            setTrigger_Advanced();
             break;
-        case Utility::LOW_GAIN:
-            output = m_picoData->dataLowGain;
-            break;
-        case Utility::HIGH_GAIN:
-            output = m_picoData->dataHighGain;
+        case Utility::Pico_Trigger_Mode::TRIGGER_SIMPLE:
+            // applying the simple trigger
+            setTrigger_Simple();
             break;
         default:
-            throw PicoException("Wrong ClawsGain parameter entered!");
+            throw PicoException("Wrong Trigger Mode! Can't apply trigger settings.");
+
     }
 
-    return output;
+    return;
 }
 
 
@@ -812,36 +668,52 @@ Utility::Pico_Data_HL_Gain* Pico::getGainData( Utility::Claws_Gain& mode )
 
 
 
-// Sets the Trigger settings.
-void    Pico::setTrigger()
+void Pico::setTrigger_Simple()
 {
-
-    switch( m_triggerMode )
-    {
-        case Utility::TRIGGER_ADVANCED:
-            //! \todo Claws advanced trigger to be implemented!
-            break;
-        case Utility::TRIGGER_SIMPLE:
-            // applying the simple trigger
-            m_status = ps6000SetSimpleTrigger(
-                            m_handle,
-                            m_st_enabled,
-                            m_st_source,
-                            m_st_threshold,
-                            m_st_direction,
-                            m_st_delay,
-                            m_st_autoTriggerTime_ms
-                        );
-            break;
-        default:
-            throw PicoException("Wrong Trigger Mode! Can't apply trigger settings.");
-
-    }
+    m_status = ps6000SetSimpleTrigger
+        (
+         m_handle,
+         m_data_current->data_trigger->enabled,
+         m_data_current->data_trigger->source,
+         m_data_current->data_trigger->threshold,
+         m_data_current->data_trigger->direction,
+         m_data_current->data_trigger->delay,
+         m_data_current->data_trigger->autoTriggerTime);
 
     checkStatus();
 
+
     return;
 }
+
+
+
+
+
+
+
+
+///////////////////////////////////////////////////////////////////////////////
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+void Pico::setTrigger_Advanced()
+{
+
+}
+
 
 
 
@@ -894,6 +766,7 @@ void    Pico::getTimebase()
 {
     // create a counter to check how often the pico is asked for the correct value
     uint32_t counter{0};
+    uint32_t counterMax = 5000;
 
     // give the membervariable a non physicsal value to see if it changes
     m_timeInterval_ns = -1.f;
@@ -901,17 +774,16 @@ void    Pico::getTimebase()
     // on exit, the maximum number of samples available.
     uint32_t maxSamples{50000};
 
-    uint32_t counterMax = 5000;
 
 
     while( m_timeInterval_ns < 0 && counter < counterMax )
     {
         m_status = ps6000GetTimebase2(
                         m_handle,
-                        m_timebase,
-                        m_noOfSamplesTotal,
+                        m_data_current->val_timebase,
+                        m_buffer_data_size,
                         &m_timeInterval_ns,
-                        m_oversample,
+                        m_data_current->val_timebase,
                         &maxSamples,
                         m_startIndex                        
                 );
@@ -934,7 +806,7 @@ void    Pico::getTimebase()
 
     // check if the maxSamples variable is large enough
     // since it is equal for all channels, this caluclation should be fine
-    if( maxSamples < ( m_noChannelsEnabled * m_channels->at(0)->getBuffer()->size() ) )
+    if( maxSamples < ( m_noChannelsEnabled * m_buffer_data_size ) )
     {
         throw PicoException("Demanded buffer is too large! Pico cannot allocate it!");
     }
@@ -964,22 +836,22 @@ void    Pico::getValuesBlock()
     uint32_t segmentIndex{0};
     
 
-    uint32_t noOfSamplesReturned = m_noOfSamplesTotal;
+    uint32_t noOfSamplesReturned = m_buffer_data_size;
 
 
     m_status = ps6000GetValues(
                     m_handle,
                     m_startIndex,
                     &noOfSamplesReturned,
-                    m_downSampleRatio,
-                    m_downSamplingRatioMode,
+                    m_data_current->val_downSampleRatio,
+                    m_data_current->val_downSampleRatioMode,
                     segmentIndex,
                     &m_overflow
             );
 
     checkStatus();
 
-    if( noOfSamplesReturned != m_noOfSamplesTotal )
+    if( noOfSamplesReturned != m_buffer_data_size )
     {
         throw PicoException("# of samples returned unequal to # of acquired samples!");
     }

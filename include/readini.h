@@ -43,7 +43,8 @@ class ReadIni
             
             std::string SteeringFile;
 
-            std::string Intermediate;
+            std::string intermediate;
+            std::string constant_config;
 
             std::string Obermaier_HG;
             std::string Merkel_HG;
@@ -53,6 +54,7 @@ class ReadIni
 
             std::string PowerSupply;
             std::string initPico;
+
         };
 
 

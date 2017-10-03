@@ -167,6 +167,8 @@ namespace Utility{
     enum class Claws_Gain
     {
         INTERMEDIATE,
+        HL_GAIN,
+
         HIGH_GAIN,
         LOW_GAIN
     };
@@ -223,38 +225,39 @@ namespace Utility{
     //
 
 
-    struct Pico_Data_Inter
-    {
-
-        // this value are read in every time the database reads in new data
-        uint32_t                preTrigger;
-        uint32_t                postTrigger;
-
-        uint32_t                timebase;
-        Collection_Mode         collMode;
-
-        int16_t                     threshold;
-        PS6000_THRESHOLD_DIRECTION  direction;
-        int                         autoTriggerTime;
-
-        std::string             channels_to_calibrate;
-
-        // the following values are read in only when picos are initialized
-        // since the values will most probably not change
-        enPS6000RatioMode           downSampleRatioMode;
-        uint32_t                    downSampleRatio;
-        int16_t                     oversample;
-        Utility::Pico_Trigger_Mode  triggerMode;
-        uint32_t                    triggerDelay;
-        PS6000_COUPLING             coupling;
-        PS6000_RANGE                range;
-        PS6000_BANDWIDTH_LIMITER    bandwidth;
-        float                       analogueOffset;
-    };
-
-
-
-
+/*     struct Pico_Data_Inter
+ *     {
+ * 
+ *         // this value are read in every time the database reads in new data
+ *         uint32_t                preTrigger;
+ *         uint32_t                postTrigger;
+ * 
+ *         uint32_t                timebase;
+ *         Collection_Mode         collMode;
+ * 
+ *         int16_t                     threshold;
+ *         PS6000_THRESHOLD_DIRECTION  direction;
+ *         int                         autoTriggerTime;
+ * 
+ *         std::string             channels_to_calibrate;
+ * 
+ *         // the following values are read in only when picos are initialized
+ *         // since the values will most probably not change
+ *         enPS6000RatioMode           downSampleRatioMode;
+ *         uint32_t                    downSampleRatio;
+ *         int16_t                     oversample;
+ *         Utility::Pico_Trigger_Mode  triggerMode;
+ *         uint32_t                    triggerDelay;
+ *         PS6000_COUPLING             coupling;
+ *         PS6000_RANGE                range;
+ *         PS6000_BANDWIDTH_LIMITER    bandwidth;
+ *         float                       analogueOffset;
+ *     };
+ * 
+ * 
+ * 
+ * 
+ */
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -387,7 +390,8 @@ namespace Utility{
     struct Pico_Data_HL_Gain
     {
         //! Constructor takes care about the channels.
-        Pico_Data_HL_Gain() : 
+        Pico_Data_HL_Gain( Utility::Claws_Gain tgain ) : 
+            gain( tgain ),
             channels( new std::vector< Utility::Pico_Data_Channel* >
                         {
                             new Utility::Pico_Data_Channel(PS6000_CHANNEL_A),
@@ -396,7 +400,7 @@ namespace Utility{
                             new Utility::Pico_Data_Channel(PS6000_CHANNEL_D)
                         }
                     ),
-            trigger( new Utility::Pico_Data_Trigger_Simple() )
+            data_trigger( new Utility::Pico_Data_Trigger_Simple() )
         {};
 
         //! Destructor takes care about the channels.
@@ -414,27 +418,29 @@ namespace Utility{
             channels = nullptr;
 
             // delete if not empty
-            delete trigger;
-            trigger = nullptr;
+            delete data_trigger;
+            data_trigger = nullptr;
 
         };
+
+        Utility::Claws_Gain      gain;
 
 
         std::vector< Utility::Pico_Data_Channel* >* channels;
 
 
-        Pico_Data_Trigger_Simple* trigger;
+        Pico_Data_Trigger_Simple* data_trigger;
 
-        Pico_Trigger_Mode       triggerMode;
+        Pico_Trigger_Mode       mode_trigger;
 
-        uint32_t                preTrigger;
-        uint32_t                postTrigger;
+        uint32_t                val_preTrigger;
+        uint32_t                val_postTrigger;
 
-        uint32_t                timebase;
-        int16_t                 oversample;
+        uint32_t                val_timebase;
+        int16_t                 val_oversample;
 
-        enPS6000RatioMode       downSampleRatioMode;
-        uint32_t                downSampleRatio;
+        enPS6000RatioMode       val_downSampleRatioMode;
+        uint32_t                val_downSampleRatio;
 
         friend std::ostream& operator<<(
                 std::ostream& out, Utility::Pico_Data_HL_Gain& data );
@@ -450,9 +456,9 @@ namespace Utility{
     struct Pico_Data_Pico
     {
         Pico_Data_Pico( std::string tserial, std::string tlocation ) :
-            dataLowGain( new Utility::Pico_Data_HL_Gain() ),
-            dataHighGain( new Utility:: Pico_Data_HL_Gain() ),
-            dataInter( new Utility::Pico_Data_Inter() )
+            data_lowGain( new Utility::Pico_Data_HL_Gain( Utility::Claws_Gain::LOW_GAIN ) ),
+            data_highGain( new Utility:: Pico_Data_HL_Gain( Utility::Claws_Gain::HIGH_GAIN ) ),
+            data_inter( new Utility::Pico_Data_HL_Gain( Utility::Claws_Gain::INTERMEDIATE ) )
         {
             // check if the serial is longer than 100 chars.
             if ( tserial.size() > 100 )
@@ -461,7 +467,7 @@ namespace Utility{
             }
 
             // translate the string to the demanded int8_t type
-            Utility::stringToInt8_t( serial, tserial );
+            Utility::stringToInt8_t( val_serial, tserial );
 
 
             ///////////////////////////////////////////////////////////////////
@@ -483,7 +489,7 @@ namespace Utility{
                 }
             }
             
-            dummybool ? location = tlocation : throw PicoException(
+            dummybool ? val_location = tlocation : throw PicoException(
                     "Location not valid!");
 
 
@@ -492,26 +498,26 @@ namespace Utility{
         ~Pico_Data_Pico()
         {
             // delete data pointers
-            delete dataLowGain;
-            dataLowGain = nullptr;
+            delete data_lowGain;
+            data_lowGain = nullptr;
 
-            delete dataHighGain;
-            dataHighGain = nullptr;
+            delete data_highGain;
+            data_highGain = nullptr;
 
-            delete dataInter;
-            dataInter = nullptr;
+            delete data_inter;
+            data_inter = nullptr;
         }
 
 
         ///////////////////////////////////////////////////////////////////////
 
-        int8_t                  serial[100];
-        std::string             location;
+        int8_t                  val_serial[100];
+        std::string             val_location;
 
-        Pico_Data_HL_Gain*      dataLowGain;
-        Pico_Data_HL_Gain*      dataHighGain;
+        Pico_Data_HL_Gain*      data_lowGain;
+        Pico_Data_HL_Gain*      data_highGain;
 
-        Pico_Data_Inter*        dataInter;
+        Pico_Data_HL_Gain*      data_inter;
 
         friend std::ostream& operator<<(
                 std::ostream& out, Utility::Pico_Data_Pico& data );
