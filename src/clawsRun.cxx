@@ -818,7 +818,7 @@ void            ClawsRun::printData()
                     }
                 }
 
-                m_picos->at(ii)->stop();
+//                m_picos->at(ii)->stop();
             }
             catch( ChannelException& excep )
             {

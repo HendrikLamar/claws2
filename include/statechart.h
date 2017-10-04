@@ -378,13 +378,14 @@ struct SystemRun : sc::state< SystemRun, Active::orthogonal<1> >
             std::cout << "Entering SystemRun\n";
             context< ClawsDAQ >().getClawsRun()->run();
 
+            post_event( EvStartStop() );
             // Initialize PSU with the database as parameter.
 //            N6700 psu(context< ClawsDAQ >().getDatabase());
 //            m_thread = std::thread(&N6700::run, psu);
         };
         virtual ~SystemRun()
         {
-            m_thread.join();
+//            m_thread.join();
             std::cout << "Exiting SystemRun\n";
         };
 
