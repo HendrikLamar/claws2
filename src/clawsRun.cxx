@@ -152,8 +152,11 @@ void        ClawsRun::initialize()
 
 void    ClawsRun::run()
 {
+    m_database->Claws_incrCounter();
 
     Pico_runInter();
+
+    m_database->Claws_writeCounter();
 
     return;
 

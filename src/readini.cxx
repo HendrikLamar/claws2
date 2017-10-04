@@ -63,26 +63,27 @@ void ReadIni::initialize(){
 
     // absolute path to the initializer file with complex conversion from
     // boost::path to string type
-    std::string pathInitializer = m_pathIniDir.string() + fileInitializer;
+    m_pathInitializer = m_pathIniDir.string() + fileInitializer;
 
     // create and parse the property tree
     boost::property_tree::ptree ptree;
-    boost::property_tree::ini_parser::read_ini(pathInitializer.c_str(), ptree);
+    boost::property_tree::ini_parser::read_ini(m_pathInitializer.c_str(), ptree);
     
     // uniform initilization of the Initstruct structure
     m_initstruct = {\
 //                ptree.get<std::string>("Initializer.ConfigFile_Path"),            
 
-        m_pathIniDir.string() + ptree.get<std::string>("Initializer.ClawsDAQ_config"),        \
-        m_pathIniDir.string() + ptree.get<std::string>("Initializer.intermediate"),      \
-        m_pathIniDir.string() + ptree.get<std::string>("Initializer.constant_config"),      \
-        m_pathIniDir.string() + ptree.get<std::string>("Initializer.physics_Obermaier"), \
-        m_pathIniDir.string() + ptree.get<std::string>("Initializer.physics_Merkel"),    \
-        m_pathIniDir.string() + ptree.get<std::string>("Initializer.physics_Schiffer"),  \
-        m_pathIniDir.string() + ptree.get<std::string>("Initializer.physics_Klum"),      \
-        m_pathIniDir.string() + ptree.get<std::string>("Initializer.physics_Garrn"),     \
-        m_pathIniDir.string() + ptree.get<std::string>("Initializer.powerSupply"),     \
-        m_pathIniDir.string() + ptree.get<std::string>("Initializer.picoInit"),
+        m_pathIniDir.string() + ptree.get<std::string>("Path.ClawsDAQ_config"),        \
+        m_pathIniDir.string() + ptree.get<std::string>("Path.intermediate"),      \
+        m_pathIniDir.string() + ptree.get<std::string>("Path.constant_config"),      \
+        m_pathIniDir.string() + ptree.get<std::string>("Path.physics_Obermaier"), \
+        m_pathIniDir.string() + ptree.get<std::string>("Path.physics_Merkel"),    \
+        m_pathIniDir.string() + ptree.get<std::string>("Path.physics_Schiffer"),  \
+        m_pathIniDir.string() + ptree.get<std::string>("Path.physics_Klum"),      \
+        m_pathIniDir.string() + ptree.get<std::string>("Path.physics_Garrn"),     \
+        m_pathIniDir.string() + ptree.get<std::string>("Path.powerSupply"),     \
+        m_pathIniDir.string() + ptree.get<std::string>("Path.picoInit"),
+        ptree.get< unsigned int >("Settings.runNumber"),
     };
     
 };

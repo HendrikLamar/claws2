@@ -94,6 +94,27 @@ class Database
         std::vector< Utility::Pico_Data_Pico* >*     m_picoData;     
 
 
+        ///////////////////////////////////////////////////////////////////
+        //
+        //                START general clawsRun 
+        //
+        ///////////////////////////////////////////////////////////////////
+
+
+        unsigned int    Claws_getCounter();
+        void            Claws_incrCounter();
+        void            Claws_writeCounter( std::string file = "", std::string id = "Settings.RunNumber" );
+
+
+
+
+
+
+        ///////////////////////////////////////////////////////////////////
+        //
+        //                END general clawsRun 
+        //
+        ///////////////////////////////////////////////////////////////////
     
     private:
         bool                        m_stopSwitch;
