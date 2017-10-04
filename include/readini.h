@@ -55,8 +55,7 @@ class ReadIni
             std::string PowerSupply;
             std::string initPico;
 
-            unsigned int    runNumber;
-
+            std::string runNumber;
         };
 
 
@@ -66,8 +65,6 @@ class ReadIni
         void            initialize();
 
         Initstruct      getInitstruct() const;
-
-        std::string     m_pathInitializer;
 
 
 

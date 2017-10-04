@@ -63,11 +63,11 @@ void ReadIni::initialize(){
 
     // absolute path to the initializer file with complex conversion from
     // boost::path to string type
-    m_pathInitializer = m_pathIniDir.string() + fileInitializer;
+    std::string pathInitializer = m_pathIniDir.string() + fileInitializer;
 
     // create and parse the property tree
     boost::property_tree::ptree ptree;
-    boost::property_tree::ini_parser::read_ini(m_pathInitializer.c_str(), ptree);
+    boost::property_tree::ini_parser::read_ini(pathInitializer.c_str(), ptree);
     
     // uniform initilization of the Initstruct structure
     m_initstruct = {\
@@ -83,8 +83,9 @@ void ReadIni::initialize(){
         m_pathIniDir.string() + ptree.get<std::string>("Path.physics_Garrn"),     \
         m_pathIniDir.string() + ptree.get<std::string>("Path.powerSupply"),     \
         m_pathIniDir.string() + ptree.get<std::string>("Path.picoInit"),
-        ptree.get< unsigned int >("Settings.runNumber"),
+        m_pathIniDir.string() + ptree.get<std::string>("Path.runNumber")
     };
+
     
 };
 

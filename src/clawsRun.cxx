@@ -156,7 +156,7 @@ void    ClawsRun::run()
 
     Pico_runInter();
 
-    m_database->Claws_writeCounter();
+    m_database->Claws_rwCounter('w');
 
     return;
 
@@ -796,21 +796,26 @@ void            ClawsRun::printData()
     void ClawsRun::Pico_runInter()
     {
         //! \todo Extend for multiple Picos!
-        for( unsigned int ii = 0; ii < m_picos->size(); ++ii)
+        for( unsigned int ii = 0; ii < 1; ++ii)
+//        for( unsigned int ii = 0; ii < m_picos->size(); ++ii)
         {
         
             try
             {
                 m_picos->at(ii)->setConfig( Utility::Claws_Gain::INTERMEDIATE );
                 m_picos->at(ii)->setReadyBlock();
-                m_picos->at(ii)->runBlock();
-
-                std::vector< int16_t >* data = m_picos->at(ii)->getCh(ii)->getBuffer();
-
-
-                for( auto& tmp : *data )
+                for(int i = 0; i<2; ++i)
                 {
-                    std::cout << tmp << "\n";
+
+                    m_picos->at(ii)->runBlock();
+
+                    std::vector< int16_t >* data = m_picos->at(ii)->getCh(ii)->getBuffer();
+
+
+                    for( auto& tmp : *data )
+                    {
+                        std::cout << tmp << "\n";
+                    }
                 }
 
                 m_picos->at(ii)->stop();

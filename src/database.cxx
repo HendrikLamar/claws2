@@ -57,7 +57,7 @@ Database::Database() try :
         throw;
     }
 
-    m_counter = m_initReader->getInitstruct().runNumber;
+    Claws_rwCounter('r');
 
 
     ///////////////////////////////////////////////////////////////////////////
@@ -1030,7 +1030,7 @@ Utility::Pico_Data_HL_Gain*    Database::Pico_getHLGainStruct(
 unsigned int    Database::Claws_getCounter()
 {
 
-    return m_counter;
+    return m_runNumber;
 }
 
 
@@ -1050,7 +1050,7 @@ unsigned int    Database::Claws_getCounter()
 
 void            Database::Claws_incrCounter()
 {
-    ++m_counter;
+    ++m_runNumber;
 
     return;
 }
@@ -1070,17 +1070,28 @@ void            Database::Claws_incrCounter()
 
 
 
-void            Database::Claws_writeCounter( std::string file, std::string id )
+void            Database::Claws_rwCounter( char rw, std::string file, std::string id )
 {
     boost::property_tree::ptree ptree;
     
     if( !file.compare("") )
     {
-        file = getInitReader()->m_pathInitializer;
+        file = getInitReader()->getInitstruct().runNumber;
     }
 
-    ptree.put(id, m_counter);
-    boost::property_tree::ini_parser::write_ini(file, ptree);
+    switch( rw )
+    {
+        case 'r':
+            m_runNumber = getInitReader()->getKey<unsigned int>(file, id);
+            break;
+        case 'w':
+            ptree.put(id, m_runNumber);
+            boost::property_tree::ini_parser::write_ini(file, ptree);
+            break;
+        default:
+            throw ClawsException("Mode not accessible!");
+
+    }
 
     return;
 }

@@ -103,7 +103,7 @@ class Database
 
         unsigned int    Claws_getCounter();
         void            Claws_incrCounter();
-        void            Claws_writeCounter( std::string file = "", std::string id = "Settings.RunNumber" );
+        void            Claws_rwCounter(char rw, std::string file = "", std::string id = "Settings.runNumber" );
 
 
 
@@ -204,7 +204,7 @@ class Database
         ///////////////////////////////////////////////////////////////////
 
 
-        unsigned int        m_counter;
+        unsigned int        m_runNumber;
 
 
 
