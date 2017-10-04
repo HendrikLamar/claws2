@@ -796,10 +796,11 @@ void            ClawsRun::printData()
     void ClawsRun::Pico_runInter()
     {
         //! \todo Extend for multiple Picos!
-        for( unsigned int ii = 0; ii < 1; ++ii)
-//        for( unsigned int ii = 0; ii < m_picos->size(); ++ii)
+//        for( unsigned int ii = 0; ii < 1; ++ii)
+        for( unsigned int ii = 0; ii < m_picos->size(); ++ii)
         {
         
+            std::cout << "Pico#" << ii << std::endl;
             try
             {
                 m_picos->at(ii)->setConfig( Utility::Claws_Gain::INTERMEDIATE );
@@ -818,7 +819,7 @@ void            ClawsRun::printData()
                     }
                 }
 
-//                m_picos->at(ii)->stop();
+                m_picos->at(ii)->stop();
             }
             catch( ChannelException& excep )
             {
