@@ -41,7 +41,7 @@ class ReadIni
         struct Initstruct
         {
             
-            std::string SteeringFile;
+            std::string ClawsConfig;
 
             std::string intermediate;
             std::string constant_config;
