@@ -48,7 +48,7 @@ Database::Database() try :
     try
     {
 
-        readSteeringFile();
+        Claws_readConfig();
 
     }
     catch( boost::property_tree::ptree_error& excep )
@@ -159,7 +159,7 @@ ReadIni* Database::getInitReader()
 
 
 
-Utility::Steering_Data* Database::getSteeringData()
+Utility::Steering_Data* Database::Claws_getConfig()
 {
     return m_steeringData;
 }
@@ -195,7 +195,7 @@ void Database::setNoOfPicosInitialized( unsigned int numb )
 
 
 
-void Database::readSteeringFile()
+void Database::Claws_readConfig()
 {
     std::string root = "General.";
 

@@ -185,7 +185,7 @@ void            ClawsRun::loadConfig()
     {
         std::cout << "Reading steering file...";
         // load general of database
-        m_database->readSteeringFile();
+        m_database->Claws_readConfig();
         std::cout << "done!\n";
     }
     catch( UtilityException& excep )
@@ -212,7 +212,7 @@ void            ClawsRun::loadConfig()
     {
         std::cout << "Reading Pico high gain settings...";
         // load pico configs for the set run mode...
-        m_database->Pico_readSettings( m_database->getSteeringData()->runMode_HighGain );
+        m_database->Pico_readSettings( m_database->Claws_getConfig()->runMode_HighGain );
         std::cout << "done!\n";
     }
     catch( UtilityException& excep )
@@ -224,7 +224,7 @@ void            ClawsRun::loadConfig()
     try
     {
         std::cout << "Reading low gain settings...";
-        m_database->Pico_readSettings( m_database->getSteeringData()->runMode_LowGain );
+        m_database->Pico_readSettings( m_database->Claws_getConfig()->runMode_LowGain );
         std::cout << "done!\n";
     }
     catch( UtilityException& excep )
@@ -262,7 +262,7 @@ void            ClawsRun::loadConfig()
 void            ClawsRun::printData()
 {
 
-    Utility::Steering_Data tmp = *m_database->getSteeringData();
+    Utility::Steering_Data tmp = *m_database->Claws_getConfig();
     std::cout << tmp << std::endl;
 
 

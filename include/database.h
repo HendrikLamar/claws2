@@ -54,10 +54,6 @@ class Database
         ///////////////////////////////////////////////////////////////////////
 
 
-        Utility::Steering_Data* getSteeringData();
-        void                    readSteeringFile();
-
-
         ///////////////////////////////////////////////////////////////////////
         //                  Power Supply
         //   All settings for the powersupply are send as strings. 
@@ -101,9 +97,24 @@ class Database
         ///////////////////////////////////////////////////////////////////
 
 
+        //! Return the current run number.
         unsigned int    Claws_getCounter();
+        //! Increments the run number.
         void            Claws_incrCounter();
-        void            Claws_rwCounter(char rw, std::string file = "", std::string id = "Settings.runNumber" );
+        //! Reads/writes the run number, either to/from the standard file defined
+        //! by initilizer.ini or to a file you define with the id you define.
+        //! @
+        void            Claws_rwCounter(
+                char rw,                                //!< 'r' for read, 'w' for write.
+                std::string file = "",                  //!< when blank, the argument from initializer.ini is used
+                std::string id = "Settings.runNumber"   //!< when blank, the standard "Settings.runNumber" is used
+                );
+
+
+        Utility::Steering_Data* Claws_getConfig();
+        void                    Claws_readConfig();
+
+
 
 
 

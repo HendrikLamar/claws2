@@ -225,52 +225,6 @@ namespace Utility{
     //
 
 
-/*     struct Pico_Data_Inter
- *     {
- * 
- *         // this value are read in every time the database reads in new data
- *         uint32_t                preTrigger;
- *         uint32_t                postTrigger;
- * 
- *         uint32_t                timebase;
- *         Collection_Mode         collMode;
- * 
- *         int16_t                     threshold;
- *         PS6000_THRESHOLD_DIRECTION  direction;
- *         int                         autoTriggerTime;
- * 
- *         std::string             channels_to_calibrate;
- * 
- *         // the following values are read in only when picos are initialized
- *         // since the values will most probably not change
- *         enPS6000RatioMode           downSampleRatioMode;
- *         uint32_t                    downSampleRatio;
- *         int16_t                     oversample;
- *         Utility::Pico_Trigger_Mode  triggerMode;
- *         uint32_t                    triggerDelay;
- *         PS6000_COUPLING             coupling;
- *         PS6000_RANGE                range;
- *         PS6000_BANDWIDTH_LIMITER    bandwidth;
- *         float                       analogueOffset;
- *     };
- * 
- * 
- * 
- * 
- */
-
-///////////////////////////////////////////////////////////////////////////////
-
-
-
-
-
-
-
-
-
-
-
     //! Data structure for on channel of a picoscope. This data needs to be read-in.
     //! Supported input parameters:
     //!      - enabled:
