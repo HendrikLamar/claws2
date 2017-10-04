@@ -635,6 +635,8 @@ namespace Utility{
     struct Steering_Data
     {
         Claws_Gain              gain_current;
+
+        Pico_RunMode            runMode_current;
         Pico_RunMode            runMode_HighGain;
         Pico_RunMode            runMode_LowGain;
 
