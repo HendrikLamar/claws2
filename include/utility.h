@@ -537,6 +537,9 @@ namespace Utility{
     //! String to enum for Utility::Collection_Mode
     Utility::Collection_Mode    Pico_StringToEnum_collection( std::string& enumerator );
 
+    //! String to enum for Utility::Claws_Gain
+    Utility::Claws_Gain         Pico_StringToEnum_gain( std::string& enumerator );
+
     //
     //                      END Pico_StringToEnum functions
     ///////////////////////////////////////////////////////////////////////////
@@ -631,12 +634,13 @@ namespace Utility{
     
     struct Steering_Data
     {
+        Claws_Gain              gain_current;
         Pico_RunMode            runMode_HighGain;
         Pico_RunMode            runMode_LowGain;
 
 
-        int                     loopsPhysics;
-        int                     loopsIntermediate;
+        int                     loops_Physics;
+        int                     loops_Intermediate;
 
         std::string             savePath_1;
         std::string             savePath_2;

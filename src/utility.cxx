@@ -639,6 +639,49 @@ namespace Utility{
 
 
 
+///////////////////////////////////////////////////////////////////////////////
+
+
+
+
+
+
+
+
+
+    Utility::Claws_Gain         Pico_StringToEnum_gain( std::string& enumerator )
+    {
+        if ( !enumerator.compare("INTERMEDIATE") )
+        {
+            return Utility::Claws_Gain::INTERMEDIATE;
+        }
+        if( !enumerator.compare("HL_GAIN") )
+        {
+            return Utility::Claws_Gain::HL_GAIN;
+        }
+        if( !enumerator.compare("HIGH_GAIN") )
+        {
+            return Utility::Claws_Gain::HIGH_GAIN;
+        }
+        if( !enumerator.compare("LOW_GAIN") )
+        {
+            return Utility::Claws_Gain::LOW_GAIN;
+        }
+
+        throw PicoException("Wrong gain mode inserted.");
+    }
+
+
+
+
+
+
+
+
+
+
+
+
 
     ///////////////////////////////////////////////////////////////////////////
     //
@@ -1091,8 +1134,8 @@ namespace Utility{
                 out << "+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++";
                 out << "\t\tHighGain: " << Pico_EnumToString_runMode( data.runMode_HighGain );
                 out << "\t\tLowGain: " << Pico_EnumToString_runMode( data.runMode_LowGain );
-                out << "\nLoopsPhysics: " << data.loopsPhysics;
-                out << "\t\t\tLoopsInter: " << data.loopsIntermediate;
+                out << "\nLoopsPhysics: " << data.loops_Physics;
+                out << "\t\t\tLoopsInter: " << data.loops_Intermediate;
                 out << "\t\tSavePath#1: " << data.savePath_1;
                 out << "\nSavePath#2: " << data.savePath_2;
                 out << "\t\tSavePath#3: " << data.savePath_3;
