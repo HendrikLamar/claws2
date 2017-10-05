@@ -98,7 +98,7 @@ class Database
 
 
         //! Return the current run number.
-        unsigned int    Claws_getCounter();
+        unsigned long   Claws_getCounter();
         //! Increments the run number.
         void            Claws_incrCounter();
         //! Reads/writes the run number, either to/from the standard file defined
@@ -215,7 +215,7 @@ class Database
         ///////////////////////////////////////////////////////////////////
 
 
-        unsigned int        m_runNumber;
+        unsigned long        m_runNumber;
 
 
 

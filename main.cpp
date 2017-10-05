@@ -31,24 +31,104 @@
 #include <libps6000-1.4/PicoStatus.h>
 #include <libps6000-1.4/ps6000Api.h>
 
+#include <boost/date_time/gregorian/gregorian.hpp>
+#include <boost/filesystem.hpp>
+
 int main()
 {
 
-    MyState* mystate;
+/*     MyState* mystate;
+ * 
+ *     try
+ *     {
+ *         mystate = new MyState();
+ *         mystate->run();
+ *     }
+ *     catch(...)
+ *     {
+ *         std::cout << "Unknown error occured. Exiting..." << std::endl;
+ *     }
+ * 
+ * 
+ *     delete mystate;
+ *     mystate = nullptr;
+ * 
+ */
 
-    try
+
+    boost::gregorian::date current_date(boost::gregorian::day_clock::local_day());
+
+    std::cout << to_iso_extended_string(current_date) << std::endl;
+
+    boost::filesystem::path dir{boost::filesystem::canonical(
+            boost::filesystem::current_path())};
+
+    std::cout << dir.string() << std::endl;
+
+    dir += boost::filesystem::path("/abcd/efz");
+
+    if( boost::filesystem::create_directories(dir))
     {
-        mystate = new MyState();
-        mystate->run();
-    }
-    catch(...)
-    {
-        std::cout << "Unknown error occured. Exiting..." << std::endl;
+        std::cout << "success!\n";
     }
 
+    std::cout << sizeof(unsigned long) << std::endl;
 
-    delete mystate;
-    mystate = nullptr;
+
+
+
+
+    std::string m_location_save{"/mnt/claws_disk_7"};
+    unsigned long runNum{4001443};
+    std::string tsubdir{"/int"};
+
+    // get the current date in YYYY-MM-DD format
+    std::string curDay{to_iso_extended_string(
+            boost::gregorian::day_clock::local_day())};
+
+    // create the final path
+    std::string finalPathStr = 
+        m_location_save +
+        "/data/" +
+        curDay +
+        "/run-" +
+        std::to_string(runNum) +
+        "/raw" +
+        tsubdir;
+
+    boost::filesystem::path finalPath{finalPathStr};
+
+
+    boost::filesystem::create_directories(finalPath);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

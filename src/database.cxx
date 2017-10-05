@@ -1054,7 +1054,7 @@ Utility::Pico_Data_HL_Gain*    Database::Pico_getHLGainStruct(
 
 
 
-unsigned int    Database::Claws_getCounter()
+unsigned long   Database::Claws_getCounter()
 {
 
     return m_runNumber;

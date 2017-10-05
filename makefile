@@ -20,7 +20,7 @@ ifeq ($(shell uname -s),Linux)
 	# boost libs
 	CFLAGS +=
 #	LFLAGS += -L/usr/lib/x86_64-linux-gnu/libboost_system.so.1.58.0 -L/usr/lib/x86_64-linux-gnu/libboost_filesystem.so.1.58.0
-	LFLAGS += -lboost_system -lboost_filesystem
+	LFLAGS += -lboost_system -lboost_filesystem -lboost_date_time
 
 	CC = g++
 
