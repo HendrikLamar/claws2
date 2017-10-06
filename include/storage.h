@@ -39,17 +39,19 @@ class Storage
         };
 
         std::string     m_location_pico;
-        std::string*    m_location_save;
+        std::string     m_location_save;
         void            makePath( unsigned long runNum, subdir kind );
 
 
+        TH1I*   m_hist_inter;
+        TH1I*   m
 
 
     public:
 
         Storage( 
-                std::string  picoLocation,   //!< the location of the pico
-                std::string* saveLocation    //!< root path of the save location (hdd)
+                std::string picoLocation,   //!< the location of the pico
+                std::string saveLocation    //!< root path of the save location (hdd)
                 );
 
         ~Storage();

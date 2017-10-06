@@ -22,6 +22,7 @@
 #include <boost/date_time/gregorian/gregorian.hpp>
 #include <boost/filesystem.hpp>
 
+#include <TH1I.h>
 
 
 
@@ -38,7 +39,10 @@
 
 
 
-Storage::Storage( std::string picoLocation, std::string* saveLocation ) :
+Storage::Storage( 
+        std::string picoLocation, 
+        std::string saveLocation
+        ) :
     m_location_pico( picoLocation ),
     m_location_save( saveLocation )
 {}
@@ -118,7 +122,10 @@ Storage::~Storage()
 
 void Storage::intermediate( unsigned long runNum, unsigned int subRunNum)
 {
+    makePath( runNum, subdir::INTER );
 
+    m_hist_inter->SaveAs()
+    
 }
 
 
@@ -178,7 +185,7 @@ void Storage::intermediate( unsigned long runNum, unsigned int subRunNum)
 
 
 
-void Storage::makePath( unsigned long runNum , Storage::subdir kind )
+std::string Storage::makePath( unsigned long runNum , Storage::subdir kind )
 {
     // check for which analysis mode we need the dir
     std::string tsubdir;
@@ -213,7 +220,7 @@ void Storage::makePath( unsigned long runNum , Storage::subdir kind )
 
     boost::filesystem::create_directories(finalPath);
 
-    return;
+    return finalPathStr;
 
 }
 
