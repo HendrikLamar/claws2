@@ -30,7 +30,17 @@
 #include <libps6000-1.4/ps6000Api.h>
 #include <libps6000-1.4/PicoStatus.h>
 
+#include <TH1I.h>
+
+
+
+
+typedef std::vector< std::pair< PS6000_CHANNEL, std::vector< int16_t >* >* > pico_data_raw;
+typedef std::vector< std::pair< PS6000_CHANNEL, TH1I* >* > pico_data_hist;
+
+
 namespace Utility{
+
 
     ///////////////////////////////////////////////////////////////////////////
     /*

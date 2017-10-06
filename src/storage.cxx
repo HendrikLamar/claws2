@@ -122,7 +122,7 @@ Storage::~Storage()
 
 void Storage::intermediate( unsigned long runNum, unsigned int subRunNum)
 {
-    makePath( runNum, subdir::INTER );
+    std::string tpath = makePath( runNum, subdir::INTER );
 
     m_hist_inter->SaveAs()
     
@@ -208,7 +208,7 @@ std::string Storage::makePath( unsigned long runNum , Storage::subdir kind )
 
     // create the final path
     std::string finalPathStr = 
-        *m_location_save +
+        m_location_save +
         "/data/" +
         curDay +
         "/run-" +

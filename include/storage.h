@@ -26,6 +26,7 @@
 
 
 #include "utility.h"
+#include "processData.h"
 
 class Storage
 {
@@ -40,31 +41,36 @@ class Storage
 
         std::string     m_location_pico;
         std::string     m_location_save;
-        void            makePath( unsigned long runNum, subdir kind );
+
+        // creates the path where to save the data
+        std::string     makePath( unsigned long runNum, subdir kind );
 
 
-        TH1I*   m_hist_inter;
-        TH1I*   m
+
+        // gives new data to the instance
+        void    setData( char ip, pico_data* data );
+
+
 
 
     public:
-
-        Storage( 
-                std::string picoLocation,   //!< the location of the pico
-                std::string saveLocation    //!< root path of the save location (hdd)
-                );
+        Storage( Utility::Pico_Data_Pico data_pico );
 
         ~Storage();
 
 
+        //! Stores intermediate data and saves the belonging settings.ini file.
         void intermediate( 
                 unsigned long runNum,       //!< Specified in runNumber.ini
                 unsigned int subRunNum);    //!< Defined in ClawsConfig loops_physics
         
+        //! Stores physics data and saves the belonging settings.ini file.
         void physics( 
                 unsigned long runNum,       //!< Specified in runNumber.ini
                 unsigned int subRunNum);    //!< Defined in ClawsConfig loops_physics
 
+
+        friend ProcessData;
 };
 
 
