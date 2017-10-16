@@ -37,27 +37,28 @@ class ProcessData
 {
 
     private:
+        friend Storage;
         
         pico_data_raw*      m_data_raw;
         pico_data_hist*     m_data_hist;
 
         Utility::Pico_Data_Pico*    m_config_data;
+        Utility::Claws_Gain         m_current_gain;
+        Storage*                    m_save;
 
-        Storage*    m_save;
-
-        // 'i' is intermediate, 'p' is physics
-        char    m_current_dataset;
-
+        // declares where the current data should be saved
+        Storage::subdir      m_current_dataset;
 
     public:
 
         ProcessData();
+        ProcessData( Utility::Pico_Data_Pico* config );
         ~ProcessData();
 
         Storage* save();
 
         void setData(   
-                char ip,   //!< 'i' for intermediate data - 'p' for physics data
+                Utility::Claws_Gain gain, //!< Tell if it is intermediate or physics data
                 pico_data_raw* data //!< Vector with data to analyze and store.
                 );
 

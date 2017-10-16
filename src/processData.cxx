@@ -15,6 +15,7 @@
 // 
 // =====================================================================================
 
+#include "utility.h"
 #include "processData.h"
 #include "storage.h"
 
@@ -30,7 +31,8 @@
 
 
 ProcessData::ProcessData() :
-    m_save( new )
+    m_save( new Storage() )
+{}
 
 
 
@@ -38,8 +40,37 @@ ProcessData::ProcessData() :
 
 
 
+///////////////////////////////////////////////////////////////////////////////
 
 
+
+
+
+
+ProcessData::ProcessData( Utility::Pico_Data_Pico* config ) :
+    m_config_data( config ),
+    m_save( new Storage() )
+{}
+
+
+
+
+
+
+
+///////////////////////////////////////////////////////////////////////////////
+
+
+
+
+
+
+ProcessData::~ProcessData()
+{
+    delete m_save;
+    m_save = nullptr;
+
+}
 
 
 
@@ -110,8 +141,25 @@ ProcessData::ProcessData() :
 
 ///////////////////////////////////////////////////////////////////////////////
 //
-//              START Con- & Destructor
+//              START Public Member Functions 
 //
+///////////////////////////////////////////////////////////////////////////////
+
+
+
+
+
+Storage* ProcessData::save()
+{
+    return m_save;
+}
+
+
+
+
+
+
+
 ///////////////////////////////////////////////////////////////////////////////
 
 
@@ -121,7 +169,37 @@ ProcessData::ProcessData() :
 
 
 
+void ProcessData::setData(
+        Utility::Claws_Gain gain,
+        pico_data_raw* data )
+{
+    m_current_gain = gain;
 
+
+    return;
+}
+
+
+
+
+
+
+
+///////////////////////////////////////////////////////////////////////////////
+
+
+
+
+
+
+
+void ProcessData::setConfig( Utility::Pico_Data_Pico* config )
+{
+    m_config_data = config;
+
+
+    return;
+}
 
 
 
@@ -135,6 +213,6 @@ ProcessData::ProcessData() :
 
 ///////////////////////////////////////////////////////////////////////////////
 //
-//              END Con- & Destructor
+//              END Public Member Functions
 //
 ///////////////////////////////////////////////////////////////////////////////

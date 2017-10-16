@@ -46,15 +46,11 @@ class Storage
         std::string     makePath( unsigned long runNum, subdir kind );
 
 
-
-        // gives new data to the instance
-        void    setData( char ip, pico_data* data );
-
-
+        subdir*         m_current_dataset;
 
 
     public:
-        Storage( Utility::Pico_Data_Pico data_pico );
+        Storage();
 
         ~Storage();
 
@@ -70,7 +66,7 @@ class Storage
                 unsigned int subRunNum);    //!< Defined in ClawsConfig loops_physics
 
 
-        friend ProcessData;
+        friend class ProcessData;
 };
 
 
