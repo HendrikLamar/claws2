@@ -274,6 +274,29 @@ int16_t Channel::getEnabled()
 
 
 ///////////////////////////////////////////////////////////////////////////////
+
+
+
+
+
+
+
+PS6000_CHANNEL      Channel::getChNo()
+{
+    PS6000_CHANNEL tmpCh = m_channel;
+
+    return tmpCh;
+}
+
+
+
+
+
+
+
+
+
+///////////////////////////////////////////////////////////////////////////////
 //
 //             END Public member functions
 //

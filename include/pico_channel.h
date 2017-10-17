@@ -169,6 +169,9 @@ class Channel
         //! Returns true if channel is enabled.
         int16_t                     getEnabled();
 
+        //! Returns channel number.
+        PS6000_CHANNEL              getChNo();
+
 
 
 

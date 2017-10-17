@@ -7,7 +7,7 @@ ifeq ($(shell uname -s),Linux)
 	LFLAGS += -L/opt/picoscope/lib -lps6000
 	
 	# general cpp flags
-	CFLAGS += -c -fmessage-length=0 -std=c++11
+	CFLAGS += -c -fmessage-length=0 -std=c++11 -pthread
 	
 	# ROOT
 	CFLAGS += `root-config --cflags`

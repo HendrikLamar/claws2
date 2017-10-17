@@ -35,19 +35,27 @@
 
 
 
-class ProcessData : public std::shared
+class ProcessData : public std::enable_shared_from_this< ProcessData >
 {
 
     private:
         
         std::vector< Pico* >*       m_picos;
 
-        Storage*                    m_save;
+        std::unique_ptr<Storage>    m_save;
 
         // translates the vector data to Root::TH1I
         void    makeTH1I();
         
-        std::vector< std::pair< std::string, pico_data_hist* >* >*  m_picos_hist;
+        std::shared_ptr < 
+            std::vector< 
+                std::shared_ptr< 
+                    std::pair< 
+                        std::string, std::shared_ptr<pico_data_hist> 
+                        > 
+                    > 
+                >
+            >  m_picos_hist;
 
 
         // declares where the current data should be saved
