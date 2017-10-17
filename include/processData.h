@@ -20,7 +20,7 @@
 
 #include "storage.h"
 #include "utility.h"
-#include "storage.h"
+#include "pico.h"
 
 #include <TH1I.h>
 
@@ -29,22 +29,26 @@
 
 #include <vector>
 #include <utility>
+#include <map>
+#include <memory>
 
 
 
 
-class ProcessData
+class ProcessData : public std::shared
 {
 
     private:
-        friend Storage;
         
-        pico_data_raw*      m_data_raw;
-        pico_data_hist*     m_data_hist;
+        std::vector< Pico* >*       m_picos;
 
-        Utility::Pico_Data_Pico*    m_config_data;
-        Utility::Claws_Gain         m_current_gain;
         Storage*                    m_save;
+
+        // translates the vector data to Root::TH1I
+        void    makeTH1I();
+        
+        std::vector< std::pair< std::string, pico_data_hist* >* >*  m_picos_hist;
+
 
         // declares where the current data should be saved
         Storage::subdir      m_current_dataset;
@@ -52,17 +56,13 @@ class ProcessData
     public:
 
         ProcessData();
-        ProcessData( Utility::Pico_Data_Pico* config );
         ~ProcessData();
 
         Storage* save();
 
-        void setData(   
-                Utility::Claws_Gain gain, //!< Tell if it is intermediate or physics data
-                pico_data_raw* data //!< Vector with data to analyze and store.
-                );
+        //! Syncs the data with the picos.
+        ProcessData*    sync();
 
-        void setConfig( Utility::Pico_Data_Pico* config );
 
 
 };

@@ -19,6 +19,9 @@
 #include "processData.h"
 #include "storage.h"
 
+#include <memory>
+
+#include <TH1I.h>
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -33,25 +36,6 @@
 ProcessData::ProcessData() :
     m_save( new Storage() )
 {}
-
-
-
-
-
-
-
-///////////////////////////////////////////////////////////////////////////////
-
-
-
-
-
-
-ProcessData::ProcessData( Utility::Pico_Data_Pico* config ) :
-    m_config_data( config ),
-    m_save( new Storage() )
-{}
-
 
 
 
@@ -168,16 +152,12 @@ Storage* ProcessData::save()
 
 
 
-
-void ProcessData::setData(
-        Utility::Claws_Gain gain,
-        pico_data_raw* data )
+ProcessData*    ProcessData::sync()
 {
-    m_current_gain = gain;
 
-
-    return;
+    return this;
 }
+
 
 
 
@@ -193,13 +173,6 @@ void ProcessData::setData(
 
 
 
-void ProcessData::setConfig( Utility::Pico_Data_Pico* config )
-{
-    m_config_data = config;
-
-
-    return;
-}
 
 
 
@@ -214,5 +187,117 @@ void ProcessData::setConfig( Utility::Pico_Data_Pico* config )
 ///////////////////////////////////////////////////////////////////////////////
 //
 //              END Public Member Functions
+//
+///////////////////////////////////////////////////////////////////////////////
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+///////////////////////////////////////////////////////////////////////////////
+//
+//              START Private Member Functions 
+//
+///////////////////////////////////////////////////////////////////////////////
+
+
+
+
+
+
+
+
+void ProcessData::makeTH1I()
+{
+    // the first four entries indicate if the channels of the first pico are enabled
+    // or not, the second four for pico #2, etc...
+    std::shared_ptr< std::vector< int16_t > >  picoChannelEnabled;
+
+    TH1I* hist;
+
+    for( unsigned int ii = 0; ii < m_picos->size(); ++ii )
+    {
+        for( unsigned int kk = 0; kk < 4; ++kk )
+        {
+            picoChannelEnabled->push_back(m_picos->at(ii)->getCh(kk)->getEnabled());
+            if( m_picos->at(ii)->getCh(kk)->getEnabled() )
+            {
+                hist = new TH1I( "hist", "", 
+                        m_picos->at(ii)->getCh(kk)->getBuffer()->size(), 
+                        0, 
+                        m_picos->at(ii)->getCh(kk)->getBuffer()->size()
+                        );
+            }
+        }
+    }
+
+
+
+}
+
+
+
+
+
+
+
+
+///////////////////////////////////////////////////////////////////////////////
+
+
+
+
+
+
+
+
+///////////////////////////////////////////////////////////////////////////////
+//
+//              END Private Member Functions
 //
 ///////////////////////////////////////////////////////////////////////////////

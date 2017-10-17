@@ -347,6 +347,9 @@ class Pico
         Channel* getCh( PS6000_CHANNEL cha );
         Channel* getCh( int cha );
 
+        //! Returns the pico location.
+        std::string     getLocation();
+
         //! Loads the in the argument demanded settings from the Database and stores it in member variables.
         void setConfig( Utility::Claws_Gain gain );
 
