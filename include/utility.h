@@ -36,7 +36,7 @@
 
 
 
-typedef std::shared_ptr< std::vector< std::pair< PS6000_CHANNEL, std::shared_ptr<TH1I> > > > pico_data_hist;
+typedef std::vector< std::shared_ptr< std::pair< PS6000_CHANNEL, std::shared_ptr<TH1I> > > > pico_data_hist;
 
 
 namespace Utility{
