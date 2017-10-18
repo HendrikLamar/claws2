@@ -262,11 +262,11 @@ void Database::Claws_readConfig()
     {
         m_steeringData->runMode_current = m_steeringData->runMode_LowGain;
     }
-    else if( m_steeringData->gain_current == Utility::Claws_Gain::HL_GAIN )
+    else if( m_steeringData->gain_current == Utility::Claws_Gain::HIGH_GAIN )
     {
         m_steeringData->runMode_current = m_steeringData->runMode_HighGain;
     }
-    else throw PicoException("Wrong current run mode entered!");
+    else throw PicoException("Wrong 'current run mode' entered!");
 
     return;
 }

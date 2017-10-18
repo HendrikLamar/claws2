@@ -55,15 +55,23 @@ class ProcessData : public std::enable_shared_from_this< ProcessData >
         // translates the vector data to Root::TH1I
         void    makeTH1I();
         
+        // very complicated data structure to store
         std::shared_ptr < 
             std::vector< 
                 std::shared_ptr< 
                     std::pair< 
-                        std::string, std::shared_ptr<std::vector< std::shared_ptr< std::pair< PS6000_CHANNEL, std::shared_ptr<TH1I> > > > > 
+                        std::string, std::shared_ptr<
+                            std::vector< 
+                                std::shared_ptr< 
+                                    std::pair< PS6000_CHANNEL, std::shared_ptr<TH1I> 
+                                    > 
+                                > 
+                            > 
                         > 
                     > 
-                >
-            >  m_picos_hist;
+                > 
+            >
+        >  m_picos_hist;
 
 
         // declares where the current data should be saved
