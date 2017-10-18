@@ -1,4 +1,5 @@
-// =====================================================================================
+// =
+// ====================================================================================
 // 
 //       Filename:  storage.cxx
 // 
@@ -39,12 +40,12 @@
 
 
 
-Storage::Storage( 
-        std::string picoLocation, 
-        std::string saveLocation
-        ) :
-    m_location_pico( picoLocation ),
-    m_location_save( saveLocation )
+Storage::Storage()
+//        std::string picoLocation, 
+//        std::string saveLocation
+//        ) :
+//    m_location_pico( picoLocation ),
+//    m_location_save( saveLocation )
 {}
 
 
@@ -122,9 +123,8 @@ Storage::~Storage()
 
 void Storage::intermediate( unsigned long runNum, unsigned int subRunNum)
 {
-    std::string tpath = makePath( runNum, subdir::INTER );
+    std::string tpath = makePath( runNum, Utility::Dir_Struct::INTER );
 
-    m_hist_inter->SaveAs()
     
 }
 
@@ -185,19 +185,19 @@ void Storage::intermediate( unsigned long runNum, unsigned int subRunNum)
 
 
 
-std::string Storage::makePath( unsigned long runNum , Storage::subdir kind )
+std::string Storage::makePath( unsigned long runNum , Utility::Dir_Struct kind )
 {
     // check for which analysis mode we need the dir
     std::string tsubdir;
     switch( kind )
     {
-        case subdir::INTER:
+        case Utility::Dir_Struct::INTER:
             tsubdir = "/inter";
             break;
-        case subdir::PHYSICS:
+        case Utility::Dir_Struct::PHYSICS:
             tsubdir = "/physics";
             break;
-        case subdir::LIVE:
+        case Utility::Dir_Struct::LIVE:
             tsubdir = "/live";
             break;
     }

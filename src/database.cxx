@@ -56,6 +56,10 @@ Database::Database() try :
         std::cout << excep.what() << std::endl;
         throw;
     }
+    catch( ClawsException& excep )
+    {
+        std::cout << excep.what() << std::endl;
+    }
 
     Claws_rwCounter('r');
 

@@ -18,7 +18,7 @@ PICO_OBJS += ./build/src/n6700.o
 PICO_OBJS += ./build/src/clawsRun.o
 PICO_OBJS += ./build/src/pico_channel.o
 PICO_OBJS += ./build/src/storage.o
-
+PICO_OBJS += ./build/src/processData.o
 
 
 #CALI_OBJS += ./build/src/channel.o

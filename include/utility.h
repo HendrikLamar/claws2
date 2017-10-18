@@ -94,6 +94,9 @@ namespace Utility{
     //! Searches for a picoscope and returns its serial number as a string.
     //! On exit, handle holds the unique handle value for the picoscope.
     std::string Pico_preInitializer( int16_t* handle );
+
+    //! Closes the pico if it is not needed.
+    void        Pico_preClose( int16_t handle );
     
 
     
@@ -198,6 +201,29 @@ namespace Utility{
         RAPID,
         INTERMEDIATE
     };
+
+
+
+
+
+
+
+
+///////////////////////////////////////////////////////////////////////////////
+
+
+
+
+    enum class Dir_Struct
+    {
+        INTER,
+        PHYSICS,
+        LIVE
+    };
+
+
+
+
 
 
 

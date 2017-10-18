@@ -675,6 +675,12 @@ void            ClawsRun::printData()
                         };
     
                     }
+                    // in the case the if condition before is false and it is the
+                    // loop, close the pico since it is not needed
+                    else if (tt == serialLocation.size()-1 )
+                    {
+                        Utility::Pico_preClose(tmp_handle);
+                    }
                 }
             }
             

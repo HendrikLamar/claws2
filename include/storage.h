@@ -26,27 +26,20 @@
 
 
 #include "utility.h"
-#include "processData.h"
+//#include "processData.h"
 
 class Storage
 {
     private:
 
-        enum class subdir 
-        {
-            INTER,
-            PHYSICS,
-            LIVE
-        };
-
         std::string     m_location_pico;
         std::string     m_location_save;
 
         // creates the path where to save the data
-        std::string     makePath( unsigned long runNum, subdir kind );
+        std::string     makePath( unsigned long runNum, Utility::Dir_Struct kind );
 
 
-        subdir*         m_current_dataset;
+        std::unique_ptr< Utility::Dir_Struct >  m_current_dataset;
 
 
     public:
@@ -65,8 +58,6 @@ class Storage
                 unsigned long runNum,       //!< Specified in runNumber.ini
                 unsigned int subRunNum);    //!< Defined in ClawsConfig loops_physics
 
-
-        friend class ProcessData;
 };
 
 

@@ -39,10 +39,18 @@ class ProcessData : public std::enable_shared_from_this< ProcessData >
 {
 
     private:
+
+        enum class subdir 
+        {
+            INTER,
+            PHYSICS,
+            LIVE
+        };
+
         
         std::vector< Pico* >*       m_picos;
 
-        std::unique_ptr<Storage>    m_save;
+        std::shared_ptr<Storage>    m_save;
 
         // translates the vector data to Root::TH1I
         void    makeTH1I();
@@ -51,7 +59,7 @@ class ProcessData : public std::enable_shared_from_this< ProcessData >
             std::vector< 
                 std::shared_ptr< 
                     std::pair< 
-                        std::string, std::shared_ptr<pico_data_hist> 
+                        std::string, std::shared_ptr<std::vector< std::shared_ptr< std::pair< PS6000_CHANNEL, std::shared_ptr<TH1I> > > > > 
                         > 
                     > 
                 >
@@ -59,19 +67,20 @@ class ProcessData : public std::enable_shared_from_this< ProcessData >
 
 
         // declares where the current data should be saved
-        Storage::subdir      m_current_dataset;
+        subdir      m_current_dataset;
 
     public:
 
         ProcessData();
         ~ProcessData();
 
-        Storage* save();
+        std::shared_ptr< Storage >  save();
 
         //! Syncs the data with the picos.
         ProcessData*    sync();
 
 
+        friend class Storage;
 
 };
 

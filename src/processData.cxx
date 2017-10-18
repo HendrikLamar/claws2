@@ -137,7 +137,7 @@ ProcessData::~ProcessData()
 
 
 
-Storage* ProcessData::save()
+std::shared_ptr< Storage >  ProcessData::save()
 {
     return m_save;
 }
@@ -287,17 +287,17 @@ void ProcessData::makeTH1I()
                 std::shared_ptr< std::pair< PS6000_CHANNEL, std::shared_ptr< TH1I > > > tipair{
                     std::make_shared< std::pair< PS6000_CHANNEL, std::shared_ptr< TH1I > > >
                         ( std::make_pair( m_picos->at(ii)->getCh(kk)->getChNo(), hist ) )};
-
-                // another wrong and not easy to read way to construct one unit of m_picos_hist
-                std::shared_ptr< std::pair< std::string, std::shared_ptr< pico_data_hist > > > topair
-                {
-                    std::make_shared< std::pair< std::string, std::shared_ptr< pico_data_hist > > >
-                    (
-                        std::make_pair( m_picos->at(ii)->getLocation(), tipair )
-                    )
-                };
-
-                m_picos_hist->push_back(topair);
+//
+//                // another wrong and not easy to read way to construct one unit of m_picos_hist
+//                std::shared_ptr< std::pair< std::string, std::shared_ptr< std::vector< std::shared_ptr< std::pair< PS6000_CHANNEL, std::shared_ptr<TH1I> > > > > > > topair
+//                {
+//                    std::make_shared< std::pair< std::string, std::shared_ptr< std::vector< std::shared_ptr< std::pair< PS6000_CHANNEL, std::shared_ptr<TH1I> > > > > > >
+//                    (
+//                        std::make_pair( m_picos->at(ii)->getLocation(), tipair )
+//                    )
+//                };
+//
+//                m_picos_hist->push_back(topair);
             }
         }
     }
