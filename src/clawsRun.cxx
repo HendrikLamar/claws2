@@ -674,6 +674,7 @@ void            ClawsRun::printData()
                             m_database->m_picoData->at(ii) = nullptr;
                         };
     
+                        break;
                     }
                     // in the case the if condition before is false and it is the
                     // loop, close the pico since it is not needed
