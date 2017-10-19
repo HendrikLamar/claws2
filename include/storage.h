@@ -32,14 +32,10 @@ class Storage
 {
     private:
 
-        std::string     m_location_pico;
         std::string     m_location_save;
 
         // creates the path where to save the data
         std::string     makePath( unsigned long runNum, Utility::Dir_Struct kind );
-
-
-        std::unique_ptr< Utility::Dir_Struct >  m_current_dataset;
 
 
     public:
@@ -58,6 +54,8 @@ class Storage
                 unsigned long runNum,       //!< Specified in runNumber.ini
                 unsigned int subRunNum);    //!< Defined in ClawsConfig loops_physics
 
+        //! Set the location where the data should be saved.
+        void setSaveLocation( std::string saveLocation );
 };
 
 

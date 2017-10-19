@@ -124,9 +124,55 @@ Storage::~Storage()
 void Storage::intermediate( unsigned long runNum, unsigned int subRunNum)
 {
     std::string tpath = makePath( runNum, Utility::Dir_Struct::INTER );
-
     
+
+
+    return;
 }
+
+
+
+
+
+///////////////////////////////////////////////////////////////////////////////
+
+
+
+
+
+
+void Storage::physics( unsigned long runNum, unsigned int subRunNum )
+{
+
+    std::string tpath = makePath( runNum, Utility::Dir_Struct::PHYSICS );
+
+
+    return;
+}
+
+
+
+
+
+
+
+
+///////////////////////////////////////////////////////////////////////////////
+
+
+
+
+
+
+void Storage::setSaveLocation( std::string saveLocation )
+{
+    m_location_save = saveLocation;
+    return;
+}
+
+
+
+
 
 
 
@@ -192,7 +238,7 @@ std::string Storage::makePath( unsigned long runNum , Utility::Dir_Struct kind )
     switch( kind )
     {
         case Utility::Dir_Struct::INTER:
-            tsubdir = "/inter";
+            tsubdir = "/intermediate";
             break;
         case Utility::Dir_Struct::PHYSICS:
             tsubdir = "/physics";
@@ -203,14 +249,14 @@ std::string Storage::makePath( unsigned long runNum , Utility::Dir_Struct kind )
     }
 
     // get the current date in YYYY-MM-DD format
-    std::string curDay{to_iso_extended_string(
+    std::string currDay{to_iso_extended_string(
             boost::gregorian::day_clock::local_day())};
 
     // create the final path
     std::string finalPathStr = 
         m_location_save +
         "/data/" +
-        curDay +
+        currDay +
         "/run-" +
         std::to_string(runNum) +
         "/raw" +
