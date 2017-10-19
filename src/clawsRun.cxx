@@ -617,8 +617,15 @@ void            ClawsRun::printData()
         if ( serialLocation.size() > 0 )
         {
             
-            for ( unsigned int ii = 0; ii < serialLocation.size(); ++ii )
+            std::vector< int16_t > picosFoundButToBeClosed;
+//            for ( unsigned int ii = 0; ii < serialLocation.size(); ++ii )
+            for ( unsigned int ii = 0; ii < 4; ++ii )
             {
+                // exit the loop if all possible picos are found already
+                if( serialLocation.size() == m_picos->size() )
+                {
+                    break;
+                }
                 int16_t tmp_handle;
                 std::string tmp_serial;
                 try
@@ -633,6 +640,7 @@ void            ClawsRun::printData()
 
 
                 // search for correct location to the given serial
+                int safetyCounter = 0;
                 for( unsigned int tt = 0; tt < serialLocation.size(); ++tt )
                 {
                     if( tmp_serial.compare( serialLocation.at(tt).first ) == 0 )
@@ -662,7 +670,7 @@ void            ClawsRun::printData()
                         try
                         {
                             m_picos->push_back(
-                                    new Pico( m_database->m_picoData->at(ii), tmp_handle )
+                                    new Pico( m_database->m_picoData->at(safetyCounter), tmp_handle )
                                     );
                         }
                         catch( PicoException& error )
@@ -670,37 +678,27 @@ void            ClawsRun::printData()
                             initCounter.at(ii) = 0;
 
                             // delete the data from the m_picoData vector which is not needed
-                            delete m_database->m_picoData->at(ii);
-                            m_database->m_picoData->at(ii) = nullptr;
+                            delete m_database->m_picoData->at(safetyCounter);
+                            m_database->m_picoData->at(safetyCounter) = nullptr;
                         };
     
+                        ++safetyCounter;
                         break;
                     }
                     // in the case the if condition before is false and it is the
                     // loop, close the pico since it is not needed
                     else if (tt == serialLocation.size()-1 )
                     {
-                        Utility::Pico_preClose(tmp_handle);
+                        picosFoundButToBeClosed.push_back(tmp_handle);
                     }
                 }
             }
+
+            for( auto tmp : picosFoundButToBeClosed )
+            {
+                Utility::Pico_preClose(tmp);
+            }
             
-//            // make m_picoData the same size as clawsRun::m_picos,
-//            // otherwise going through both vector leads to problems,
-//            // e.g. data for m_pico->at(0) is at m_picoData->at(1)
-//            std::vector< Utility::Pico_Conf_Pico* >* tmp = 
-//                new std::vector< Utility::Pico_Conf_Pico* >;
-//            for( unsigned int bb = 0; bb < m_database->m_picoData->size(); ++bb )
-//            {
-//                if( m_database->m_picoData->at( bb ) )
-//                {
-//                    tmp->push_back(m_database->m_picoData->at( bb ) );
-//                    m_database->m_picoData->at( bb ) = nullptr;
-//                }
-//            }
-//
-//            m_database->m_picoData = tmp;
-//            tmp = nullptr;
         }
 
 
