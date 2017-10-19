@@ -257,7 +257,7 @@ namespace Utility{
 
     
     ///////////////////////////////////////////////////////////////////////////
-    //                  Pico Data Structures
+    //                  Pico Setting Structures
     //
 
 
@@ -517,7 +517,7 @@ namespace Utility{
 
 
     //
-    //                      END Pico Data Structures
+    //                      END Pico Setting Structures
     ///////////////////////////////////////////////////////////////////////////
 
 

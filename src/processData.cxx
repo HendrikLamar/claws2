@@ -266,6 +266,7 @@ void ProcessData::makeTH1I()
 
     for( unsigned int ii = 0; ii < m_picos->size(); ++ii )
     {
+        std::vector< 
         for( unsigned int kk = 0; kk < 4; ++kk )
         {
             picoChannelEnabled->push_back(m_picos->at(ii)->getCh(kk)->getEnabled());
@@ -287,16 +288,8 @@ void ProcessData::makeTH1I()
                 std::shared_ptr< std::pair< PS6000_CHANNEL, std::shared_ptr< TH1I > > > tipair{
                     std::make_shared< std::pair< PS6000_CHANNEL, std::shared_ptr< TH1I > > >
                         ( std::make_pair( m_picos->at(ii)->getCh(kk)->getChNo(), hist ) )};
-//
-//                // another wrong and not easy to read way to construct one unit of m_picos_hist
-//                std::shared_ptr< std::pair< std::string, std::shared_ptr< std::vector< std::shared_ptr< std::pair< PS6000_CHANNEL, std::shared_ptr<TH1I> > > > > > > topair
-//                {
-//                    std::make_shared< std::pair< std::string, std::shared_ptr< std::vector< std::shared_ptr< std::pair< PS6000_CHANNEL, std::shared_ptr<TH1I> > > > > > >
-//                    (
-//                        std::make_pair( m_picos->at(ii)->getLocation(), tipair )
-//                    )
-//                };
-//
+
+
 //                m_picos_hist->push_back(topair);
             }
         }
