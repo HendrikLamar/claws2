@@ -19,6 +19,9 @@
 #include "utility.h"
 
 #include <iostream>
+#include <memory>
+#include <vector>
+#include <string>
 
 #include <libps6000-1.4/ps6000Api.h>
 #include <libps6000-1.4/PicoStatus.h>
@@ -99,6 +102,96 @@ namespace Utility{
 
 
 ///////////////////////////////////////////////////////////////////////////////
+
+
+    ///////////////////////////////////////////////////////////////////////////
+    //                  START Hist Structures
+    //
+
+    
+    ///////////////////////////////////////////////////////////////////////////
+    //              Start Pico_Hist_Channel
+
+    Pico_Hist_Channel::Pico_Hist_Channel( PS6000_CHANNEL cha )
+    {
+        channel = cha;
+    };
+    Pico_Hist_Channel::Pico_Hist_Channel( int cha )
+    {
+        channel = intToCh(cha);
+    };
+    Pico_Hist_Channel::Pico_Hist_Channel( PS6000_CHANNEL cha, std::shared_ptr<TH1I> hist )
+    {
+        set( cha, hist );
+    };
+    Pico_Hist_Channel::Pico_Hist_Channel( int cha, std::shared_ptr<TH1I> hist )
+    {
+        set( cha, hist );
+    }
+    Pico_Hist_Channel::~Pico_Hist_Channel()
+    {};
+
+
+    void    Pico_Hist_Channel::set( std::shared_ptr<TH1I> hist )
+    {
+        data = hist;
+
+        return;
+    }
+
+    std::shared_ptr<TH1>    Pico_Hist_Channel::get()
+    {
+        return data;
+    }
+
+
+    PS6000_CHANNEL Pico_Hist_Channel::getCh()
+    {
+        return channel;
+    }
+
+
+
+
+    PS6000_CHANNEL  Pico_Hist_Channel::intToCh( int ch )
+    {
+        switch( ch )
+        {
+            case 0:
+                return PS6000_CHANNEL_A;
+            case 1:
+                return PS6000_CHANNEL_B;
+            case 2:
+                return PS6000_CHANNEL_C;
+            case 3:
+                return PS6000_CHANNEL_D;
+            default:
+                throw PicoException("No known channel conversion available!");
+        }
+    }
+
+
+    void    Pico_Hist_Channel::set( int cha, std::shared_ptr<TH1I> hist )
+    {
+        
+        channel = intToCh(cha);
+        data = hist;
+        
+        return;
+    }
+
+    //              END Pico_Hist_Channel
+    ///////////////////////////////////////////////////////////////////////////
+
+
+///////////////////////////////////////////////////////////////////////////////
+
+
+
+
+
+
+
 
 
 

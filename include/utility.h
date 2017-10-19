@@ -270,78 +270,35 @@ namespace Utility{
 
 
 
+    //! Struct to store the data of one channel as a TH1I histogramm.
     struct Pico_Hist_Channel
     {
-        Pico_Hist_Channel( PS6000_CHANNEL cha )
-        {
-            channel = cha;
-        };
-        Pico_Hist_Channel( int cha )
-        {
-            channel = intToCh(cha);
-        };
-        Pico_Hist_Channel( PS6000_CHANNEL cha, std::shared_ptr<TH1I> hist )
-        {
-            set( cha, hist );
-        }
-        Pico_Hist_Channel( int cha, std::shared_ptr<TH1I> hist )
-        {
-            set( cha, hist );
-        }
+        Pico_Hist_Channel( PS6000_CHANNEL cha );
+        Pico_Hist_Channel( int cha );
+        Pico_Hist_Channel( PS6000_CHANNEL cha, std::shared_ptr<TH1I> hist );
+        Pico_Hist_Channel( int cha, std::shared_ptr<TH1I> hist );
         ~Pico_Hist_Channel();
 
 
         ///////////////////////////////////////////////////////////////////////
 
-        void                    set( std::shared_ptr<TH1I> hist )
-        {
-            data = hist;
+        //! Sets a set of data if the channel was created empty or redefine.
+        void                    set( std::shared_ptr<TH1I> hist );
 
-            return;
-        }
+        //! Returns the TH1I of the channel.
+        std::shared_ptr<TH1>    get();
 
-        std::shared_ptr<TH1>    get()
-        {
-            return data;
-        }
-
-
-        PS6000_CHANNEL getCh()
-        {
-            return channel;
-        }
+        //! Returns the channel number.
+        PS6000_CHANNEL getCh();
 
 
         private:
             std::shared_ptr< TH1I >         data;
             PS6000_CHANNEL                  channel;
 
-            PS6000_CHANNEL  intToCh( int ch )
-            {
-                switch( ch )
-                {
-                    case 0:
-                        return PS6000_CHANNEL_A;
-                    case 1:
-                        return PS6000_CHANNEL_B;
-                    case 2:
-                        return PS6000_CHANNEL_C;
-                    case 3:
-                        return PS6000_CHANNEL_D;
-                    default:
-                        throw PicoException("No known channel conversion available!");
-                }
-            }
+            PS6000_CHANNEL  intToCh( int ch );
 
-
-            void                    set( int cha, std::shared_ptr<TH1I> hist )
-            {
-                
-                channel = intToCh(cha);
-                data = hist;
-                
-                return;
-            }
+            void   set( int cha, std::shared_ptr<TH1I> hist );
 
 
 
@@ -353,94 +310,95 @@ namespace Utility{
     
 
 
-    struct Pico_Hist_Pico
-    {
-
-        Pico_Hist_Pico()
-        {
-            data = std::make_shared< std::vector< std::shared_ptr<Pico_Hist_Channel> > >();
-        }
-
-        void add( std::shared_ptr<Pico_Hist_Channel> hist )
-        {
-            bool isUnique{ true };
-            for( auto& tmp : *data )
-            {
-                if( tmp->getCh() == hist->getCh() )
-                {
-                    isUnique = false;
-                    break;
-                }
-
-            }
-
-            if( isUnique )
-            {
-                data->push_back(hist);
-            }
-
-            return;
-        }
-
-        std::shared_ptr<TH1I>  get( PS6000_CHANNEL ch )
-        {
-            std::shared_ptr<TH1I> tdata;
-            for( auto& tmp : *data )
-            {
-                if( tmp->getCh() == ch )
-                {
-                    tdata = tmp->get();
-                    break;
-                }
-            }
-
-            return tdata;
-        }
-
-        std::shared_ptr<TH1I>  get( int ch )
-        {
-            PS6000_CHANNEL tch = intToCh( ch );
-            std::shared_ptr<TH1I> tdata;
-            for( auto& tmp : *data )
-            {
-                if( tmp->getCh() == tch )
-                {
-                    tdata = tmp->get();
-                    break;
-                }
-            }
-
-            return tdata;
-        }
-
-
-
-        ///////////////////////////////////////////////////////////////////////
-
-
-
-        private:
-            std::shared_ptr< std::vector< std::shared_ptr<Pico_Hist_Channel> > >    data;
-
-            PS6000_CHANNEL  intToCh( int ch )
-            {
-                switch( ch )
-                {
-                    case 0:
-                        return PS6000_CHANNEL_A;
-                    case 1:
-                        return PS6000_CHANNEL_B;
-                    case 2:
-                        return PS6000_CHANNEL_C;
-                    case 3:
-                        return PS6000_CHANNEL_D;
-                    default:
-                        throw PicoException("No known channel conversion available!");
-                }
-            }
-
-    };
-
+/*     struct Pico_Hist_Pico
+ *     {
+ * 
+ *         Pico_Hist_Pico()
+ *         {
+ *             data = std::make_shared< std::vector< std::shared_ptr<Pico_Hist_Channel> > >();
+ *         }
+ * 
+ *         void add( std::shared_ptr<Pico_Hist_Channel> hist )
+ *         {
+ *             bool isUnique{ true };
+ *             for( auto& tmp : *data )
+ *             {
+ *                 if( tmp->getCh() == hist->getCh() )
+ *                 {
+ *                     isUnique = false;
+ *                     break;
+ *                 }
+ * 
+ *             }
+ * 
+ *             if( isUnique )
+ *             {
+ *                 data->push_back(hist);
+ *             }
+ * 
+ *             return;
+ *         }
+ * 
+ *         std::shared_ptr<TH1I>  get( PS6000_CHANNEL ch )
+ *         {
+ *             std::shared_ptr<TH1I> tdata;
+ *             for( auto& tmp : *data )
+ *             {
+ *                 if( tmp->getCh() == ch )
+ *                 {
+ *                     tdata = tmp->get();
+ *                     break;
+ *                 }
+ *             }
+ * 
+ *             return tdata;
+ *         }
+ * 
+ *         std::shared_ptr<TH1I>  get( int ch )
+ *         {
+ *             PS6000_CHANNEL tch = intToCh( ch );
+ *             std::shared_ptr<TH1I> tdata;
+ *             for( auto& tmp : *data )
+ *             {
+ *                 if( tmp->getCh() == tch )
+ *                 {
+ *                     tdata = tmp->get();
+ *                     break;
+ *                 }
+ *             }
+ * 
+ *             return tdata;
+ *         }
+ * 
+ * 
+ * 
+ *         ///////////////////////////////////////////////////////////////////////
+ * 
+ * 
+ * 
+ *         private:
+ *             std::shared_ptr< std::vector< std::shared_ptr<Pico_Hist_Channel> > >    data;
+ * 
+ *             PS6000_CHANNEL  intToCh( int ch )
+ *             {
+ *                 switch( ch )
+ *                 {
+ *                     case 0:
+ *                         return PS6000_CHANNEL_A;
+ *                     case 1:
+ *                         return PS6000_CHANNEL_B;
+ *                     case 2:
+ *                         return PS6000_CHANNEL_C;
+ *                     case 3:
+ *                         return PS6000_CHANNEL_D;
+ *                     default:
+ *                         throw PicoException("No known channel conversion available!");
+ *                 }
+ *             }
+ * 
+ * 
+ *   };
+ */
     //
     //                   END Hist Structures 
     ///////////////////////////////////////////////////////////////////////////
