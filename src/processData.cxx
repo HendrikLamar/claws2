@@ -40,7 +40,10 @@
 
 ProcessData::ProcessData() :
     m_save( new Storage() )
-{}
+{
+
+    m_picos_hist = std::make_shared< std::vector< std::shared_ptr< Utility::Pico_Hist_Pico > > >();
+}
 
 
 
@@ -156,10 +159,10 @@ std::shared_ptr< Storage >  ProcessData::save()
 
 
 
-ProcessData*    ProcessData::sync()
+std::shared_ptr<ProcessData>    ProcessData::sync()
 {
 
-    return this;
+    return shared_from_this();
 }
 
 
@@ -266,31 +269,50 @@ void ProcessData::makeTH1I()
 
     for( unsigned int ii = 0; ii < m_picos->size(); ++ii )
     {
+        
+        // create instance to hold all the data for one pico
+        std::shared_ptr< Utility::Pico_Hist_Pico >  tpico{
+            std::make_shared<Utility::Pico_Hist_Pico>(m_picos->at(ii)->getLocation())};
+
         for( unsigned int kk = 0; kk < 4; ++kk )
         {
             picoChannelEnabled->push_back(m_picos->at(ii)->getCh(kk)->getEnabled());
 
             if( m_picos->at(ii)->getCh(kk)->getEnabled() )
             {
+
+                // since the channel is enabled, create instance to hold the data for the channel
+                std::shared_ptr<Utility::Pico_Hist_Channel> cha{
+                    std::make_shared<Utility::Pico_Hist_Channel>(m_picos->at(ii)->getCh(kk)->getChNo())};
+
+                // create histogramm instance
                 hist = std::make_shared< TH1I >("hist", "", 
                         m_picos->at(ii)->getCh(kk)->getBuffer()->size(), 
                         0, 
                         m_picos->at(ii)->getCh(kk)->getBuffer()->size()
                         );
 
+                // copy the data
                 for( unsigned tt = 0; tt < m_picos->at(ii)->getCh(kk)->getBuffer()->size(); ++tt )
                 {
                     hist->SetBinContent( tt, m_picos->at(ii)->getCh(kk)->getBuffer()->at(tt) );
                 }
 
+                // set the data to the channel data instance
+                cha->set( hist );
 
-
-//                m_picos_hist->push_back(topair);
+                // add the channel instance to the pico container
+                tpico->add( cha );
             }
         }
+
+        // append the pico to the m_picos_hist vector
+        m_picos_hist->push_back( tpico );
+
     }
 
 
+    return;
 
 }
 

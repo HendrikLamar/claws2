@@ -36,9 +36,6 @@
 
 
 
-typedef std::vector< std::shared_ptr< std::pair< PS6000_CHANNEL, std::shared_ptr<TH1I> > > > pico_data_hist;
-
-
 namespace Utility{
 
 
@@ -334,7 +331,7 @@ namespace Utility{
     struct Pico_Hist_Pico
     {
 
-        Pico_Hist_Pico();
+        Pico_Hist_Pico( std::string loc );
 
         void add( std::shared_ptr<Pico_Hist_Channel> hist );
 
@@ -342,10 +339,13 @@ namespace Utility{
 
         std::shared_ptr<TH1I>  get( int ch );
 
+        std::string getLoc();
+
         ///////////////////////////////////////////////////////////////////////
 
         private:
             std::shared_ptr< std::vector< std::shared_ptr<Pico_Hist_Channel> > >    data;
+            std::string location;
 
             PS6000_CHANNEL  intToCh( int ch );
 

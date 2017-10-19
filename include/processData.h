@@ -56,22 +56,7 @@ class ProcessData : public std::enable_shared_from_this< ProcessData >
         void    makeTH1I();
         
         // very complicated data structure to store
-        std::shared_ptr < 
-            std::vector< 
-                std::shared_ptr< 
-                    std::pair< 
-                        std::string, std::shared_ptr<
-                            std::vector< 
-                                std::shared_ptr< 
-                                    std::pair< PS6000_CHANNEL, std::shared_ptr<TH1I> 
-                                    > 
-                                > 
-                            > 
-                        > 
-                    > 
-                > 
-            >
-        >  m_picos_hist;
+        std::shared_ptr < std::vector< std::shared_ptr< Utility::Pico_Hist_Pico > > > m_picos_hist;
 
 
         // declares where the current data should be saved
@@ -84,8 +69,8 @@ class ProcessData : public std::enable_shared_from_this< ProcessData >
 
         std::shared_ptr< Storage >  save();
 
-        //! Syncs the data with the picos.
-        ProcessData*    sync();
+        //! Syncs the histogram with the latest picoscope data.
+        std::shared_ptr<ProcessData> sync();
 
 
         friend class Storage;

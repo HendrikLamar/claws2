@@ -215,7 +215,8 @@ namespace Utility{
     //              START Pico_Hist_Pico
 
 
-    Pico_Hist_Pico::Pico_Hist_Pico()
+    Pico_Hist_Pico::Pico_Hist_Pico( std::string loc ) :
+        location( loc )
     {
         data = std::make_shared< std::vector< std::shared_ptr<Pico_Hist_Channel> > >();
     }
@@ -276,6 +277,10 @@ namespace Utility{
 
     }
 
+    std::string     Pico_Hist_Pico::getLoc()
+    {
+        return location;
+    }
 
 
 
