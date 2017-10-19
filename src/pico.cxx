@@ -39,11 +39,11 @@
 
 
 
-Pico::Pico( Utility::Pico_Data_Pico* picoData ) :
+Pico::Pico( Utility::Pico_Conf_Pico* picoData ) :
     m_data_pico( picoData ),
     m_serial( m_data_pico->val_serial ),
     m_location( &m_data_pico->val_location ),
-    m_data_current( new Utility::Pico_Data_HL_Gain( Utility::Claws_Gain::INTERMEDIATE ) ),
+    m_data_current( new Utility::Pico_Conf_HL_Gain( Utility::Claws_Gain::INTERMEDIATE ) ),
     m_channels( 
             new std::vector< Channel* >
                 {
@@ -90,12 +90,12 @@ Pico::Pico( Utility::Pico_Data_Pico* picoData ) :
 
 
 
-Pico::Pico( Utility::Pico_Data_Pico* picoData, int16_t handle ) :
+Pico::Pico( Utility::Pico_Conf_Pico* picoData, int16_t handle ) :
     m_data_pico( picoData ),
     m_handle( handle ),
     m_serial( m_data_pico->val_serial ),
     m_location( &m_data_pico->val_location ),
-    m_data_current( new Utility::Pico_Data_HL_Gain( Utility::Claws_Gain::INTERMEDIATE ) ),
+    m_data_current( new Utility::Pico_Conf_HL_Gain( Utility::Claws_Gain::INTERMEDIATE ) ),
     m_channels( 
             new std::vector< Channel* >
                 {

@@ -266,7 +266,6 @@ void ProcessData::makeTH1I()
 
     for( unsigned int ii = 0; ii < m_picos->size(); ++ii )
     {
-        std::vector< 
         for( unsigned int kk = 0; kk < 4; ++kk )
         {
             picoChannelEnabled->push_back(m_picos->at(ii)->getCh(kk)->getEnabled());
@@ -284,10 +283,6 @@ void ProcessData::makeTH1I()
                     hist->SetBinContent( tt, m_picos->at(ii)->getCh(kk)->getBuffer()->at(tt) );
                 }
 
-                // very very long way (thanks to shr_ptr to construct a pair of pico_data_hist
-                std::shared_ptr< std::pair< PS6000_CHANNEL, std::shared_ptr< TH1I > > > tipair{
-                    std::make_shared< std::pair< PS6000_CHANNEL, std::shared_ptr< TH1I > > >
-                        ( std::make_pair( m_picos->at(ii)->getCh(kk)->getChNo(), hist ) )};
 
 
 //                m_picos_hist->push_back(topair);

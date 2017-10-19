@@ -255,6 +255,230 @@ namespace Utility{
 
 
 
+
+
+
+
+
+
+
+
+
+    ///////////////////////////////////////////////////////////////////////////
+    //                  START Hist Structures
+    //
+
+
+
+    struct Pico_Hist_Channel
+    {
+        Pico_Hist_Channel( PS6000_CHANNEL cha )
+        {
+            channel = cha;
+        };
+        Pico_Hist_Channel( int cha )
+        {
+            channel = intToCh(cha);
+        };
+        Pico_Hist_Channel( PS6000_CHANNEL cha, std::shared_ptr<TH1I> hist )
+        {
+            set( cha, hist );
+        }
+        Pico_Hist_Channel( int cha, std::shared_ptr<TH1I> hist )
+        {
+            set( cha, hist );
+        }
+        ~Pico_Hist_Channel();
+
+
+        ///////////////////////////////////////////////////////////////////////
+
+        void                    set( std::shared_ptr<TH1I> hist )
+        {
+            data = hist;
+
+            return;
+        }
+
+        std::shared_ptr<TH1>    get()
+        {
+            return data;
+        }
+
+
+        PS6000_CHANNEL getCh()
+        {
+            return channel;
+        }
+
+
+        private:
+            std::shared_ptr< TH1I >         data;
+            PS6000_CHANNEL                  channel;
+
+            PS6000_CHANNEL  intToCh( int ch )
+            {
+                switch( ch )
+                {
+                    case 0:
+                        return PS6000_CHANNEL_A;
+                    case 1:
+                        return PS6000_CHANNEL_B;
+                    case 2:
+                        return PS6000_CHANNEL_C;
+                    case 3:
+                        return PS6000_CHANNEL_D;
+                    default:
+                        throw PicoException("No known channel conversion available!");
+                }
+            }
+
+
+            void                    set( int cha, std::shared_ptr<TH1I> hist )
+            {
+                
+                channel = intToCh(cha);
+                data = hist;
+                
+                return;
+            }
+
+
+
+    };
+
+
+
+    ///////////////////////////////////////////////////////////////////////////
+    
+
+
+    struct Pico_Hist_Pico
+    {
+
+
+        void add( std::shared_ptr<Pico_Hist_Channel> hist )
+        {
+            bool isUnique{ true };
+            for( auto& tmp : *data )
+            {
+                if( tmp->getCh() == hist->getCh() )
+                {
+                    isUnique = false;
+                    break;
+                }
+
+            }
+
+            if( isUnique )
+            {
+                data->push_back(hist);
+            }
+
+            return;
+        }
+
+        std::shared_ptr<TH1I>  get( PS6000_CHANNEL ch )
+        {
+            std::shared_ptr<TH1I> tdata;
+            for( auto& tmp : *data )
+            {
+                if( tmp->getCh() == ch )
+                {
+                    tdata = tmp->get();
+                    break;
+                }
+            }
+
+            return tdata;
+        }
+
+        std::shared_ptr<TH1I>  get( int ch )
+        {
+            PS6000_CHANNEL tch = intToCh( ch );
+            std::shared_ptr<TH1I> tdata;
+            for( auto& tmp : *data )
+            {
+                if( tmp->getCh() == tch )
+                {
+                    tdata = tmp->get();
+                    break;
+                }
+            }
+
+            return tdata;
+        }
+
+
+
+        ///////////////////////////////////////////////////////////////////////
+
+
+
+        private:
+            std::shared_ptr< std::vector< std::shared_ptr<Pico_Hist_Channel> > >    data;
+
+            PS6000_CHANNEL  intToCh( int ch )
+            {
+                switch( ch )
+                {
+                    case 0:
+                        return PS6000_CHANNEL_A;
+                    case 1:
+                        return PS6000_CHANNEL_B;
+                    case 2:
+                        return PS6000_CHANNEL_C;
+                    case 3:
+                        return PS6000_CHANNEL_D;
+                    default:
+                        throw PicoException("No known channel conversion available!");
+                }
+            }
+
+    };
+
+    //
+    //                   END Hist Structures 
+    ///////////////////////////////////////////////////////////////////////////
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     
     ///////////////////////////////////////////////////////////////////////////
     //                  Pico Setting Structures
@@ -283,9 +507,9 @@ namespace Utility{
     //!          - PS6000_10V
     //!          - PS6000_20V
     //
-    struct Pico_Data_Channel
+    struct Pico_Conf_Channel
     {
-        Pico_Data_Channel( PS6000_CHANNEL tchannel ) : channel(tchannel) {};
+        Pico_Conf_Channel( PS6000_CHANNEL tchannel ) : channel(tchannel) {};
         //! Holds the channel number in the pico. Not set by the ini-file.
         const PS6000_CHANNEL        channel;
 
@@ -296,7 +520,7 @@ namespace Utility{
         PS6000_BANDWIDTH_LIMITER    bandwidth;
 
         friend std::ostream& operator<<(
-                std::ostream& out, Utility::Pico_Data_Channel& data );
+                std::ostream& out, Utility::Pico_Conf_Channel& data );
     };
 
 
@@ -335,7 +559,7 @@ namespace Utility{
     //!          - autoTriggerTime:
     //!              - Integer given in milliseconds.
     //!              - 0 = no auto trigger
-    struct Pico_Data_Trigger_Simple
+    struct Pico_Conf_Trigger_Simple
     {
         int16_t                     enabled;
         PS6000_CHANNEL              source;
@@ -345,13 +569,13 @@ namespace Utility{
         int16_t                     autoTriggerTime;
 
         friend std::ostream& operator<<(
-                std::ostream& out, Utility::Pico_Data_Trigger_Simple& data );
+                std::ostream& out, Utility::Pico_Conf_Trigger_Simple& data );
     };
 
     //! Data structure for an entire picoscope. All the data need to be read-in.
     //! Supported input parameters:
     //!      - Ch1-4:
-    //!          - see Utility::Pico_Data_Channel
+    //!          - see Utility::Pico_Conf_Channel
     //!      - serial:
     //!          - the serial of the pico (written on the osci)
     //!      - location:
@@ -377,24 +601,24 @@ namespace Utility{
     //!          - PS6000_RATIO_MODE_NONE
     //!      - downSampleRatio:
     //!          - 1
-    struct Pico_Data_HL_Gain
+    struct Pico_Conf_HL_Gain
     {
         //! Constructor takes care about the channels.
-        Pico_Data_HL_Gain( Utility::Claws_Gain tgain ) : 
+        Pico_Conf_HL_Gain( Utility::Claws_Gain tgain ) : 
             gain( tgain ),
-            channels( new std::vector< Utility::Pico_Data_Channel* >
+            channels( new std::vector< Utility::Pico_Conf_Channel* >
                         {
-                            new Utility::Pico_Data_Channel(PS6000_CHANNEL_A),
-                            new Utility::Pico_Data_Channel(PS6000_CHANNEL_B),
-                            new Utility::Pico_Data_Channel(PS6000_CHANNEL_C),
-                            new Utility::Pico_Data_Channel(PS6000_CHANNEL_D)
+                            new Utility::Pico_Conf_Channel(PS6000_CHANNEL_A),
+                            new Utility::Pico_Conf_Channel(PS6000_CHANNEL_B),
+                            new Utility::Pico_Conf_Channel(PS6000_CHANNEL_C),
+                            new Utility::Pico_Conf_Channel(PS6000_CHANNEL_D)
                         }
                     ),
-            data_trigger( new Utility::Pico_Data_Trigger_Simple() )
+            data_trigger( new Utility::Pico_Conf_Trigger_Simple() )
         {};
 
         //! Destructor takes care about the channels.
-        ~Pico_Data_HL_Gain()
+        ~Pico_Conf_HL_Gain()
         {
             for ( auto& tmp: *channels )
             {
@@ -416,10 +640,10 @@ namespace Utility{
         Utility::Claws_Gain      gain;
 
 
-        std::vector< Utility::Pico_Data_Channel* >* channels;
+        std::vector< Utility::Pico_Conf_Channel* >* channels;
 
 
-        Pico_Data_Trigger_Simple* data_trigger;
+        Pico_Conf_Trigger_Simple* data_trigger;
 
         Pico_Trigger_Mode       mode_trigger;
 
@@ -433,7 +657,7 @@ namespace Utility{
         uint32_t                val_downSampleRatio;
 
         friend std::ostream& operator<<(
-                std::ostream& out, Utility::Pico_Data_HL_Gain& data );
+                std::ostream& out, Utility::Pico_Conf_HL_Gain& data );
 
     };
 
@@ -443,12 +667,12 @@ namespace Utility{
 
 
 
-    struct Pico_Data_Pico
+    struct Pico_Conf_Pico
     {
-        Pico_Data_Pico( std::string tserial, std::string tlocation ) :
-            data_lowGain( new Utility::Pico_Data_HL_Gain( Utility::Claws_Gain::LOW_GAIN ) ),
-            data_highGain( new Utility:: Pico_Data_HL_Gain( Utility::Claws_Gain::HIGH_GAIN ) ),
-            data_inter( new Utility::Pico_Data_HL_Gain( Utility::Claws_Gain::INTERMEDIATE ) )
+        Pico_Conf_Pico( std::string tserial, std::string tlocation ) :
+            data_lowGain( new Utility::Pico_Conf_HL_Gain( Utility::Claws_Gain::LOW_GAIN ) ),
+            data_highGain( new Utility:: Pico_Conf_HL_Gain( Utility::Claws_Gain::HIGH_GAIN ) ),
+            data_inter( new Utility::Pico_Conf_HL_Gain( Utility::Claws_Gain::INTERMEDIATE ) )
         {
             // check if the serial is longer than 100 chars.
             if ( tserial.size() > 100 )
@@ -485,7 +709,7 @@ namespace Utility{
 
         };
 
-        ~Pico_Data_Pico()
+        ~Pico_Conf_Pico()
         {
             // delete data pointers
             delete data_lowGain;
@@ -504,13 +728,13 @@ namespace Utility{
         int8_t                  val_serial[100];
         std::string             val_location;
 
-        Pico_Data_HL_Gain*      data_lowGain;
-        Pico_Data_HL_Gain*      data_highGain;
+        Pico_Conf_HL_Gain*      data_lowGain;
+        Pico_Conf_HL_Gain*      data_highGain;
 
-        Pico_Data_HL_Gain*      data_inter;
+        Pico_Conf_HL_Gain*      data_inter;
 
         friend std::ostream& operator<<(
-                std::ostream& out, Utility::Pico_Data_Pico& data );
+                std::ostream& out, Utility::Pico_Conf_Pico& data );
     };
 
 
@@ -709,3 +933,4 @@ namespace Utility{
 
 
 #endif //UTILITY_H
+

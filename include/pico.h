@@ -57,7 +57,7 @@ class Pico
         
 
         //! Const pointer to a variable set of pico data.
-        Utility::Pico_Data_Pico* const          m_data_pico;
+        Utility::Pico_Conf_Pico* const          m_data_pico;
 
         //! Handle value is defined during the initialization of the pico.
         int16_t                                 m_handle;
@@ -71,7 +71,7 @@ class Pico
 
         // this pointer point to the data which is is needed for the current
         // run mode
-        Utility::Pico_Data_HL_Gain*             m_data_current;
+        Utility::Pico_Conf_HL_Gain*             m_data_current;
 
         
         // Vector holding the four channels of the pico
@@ -275,9 +275,9 @@ class Pico
         //! Initializes the picoscope.
         void init();
 
-/*         // Returns a Utility::Pico_Data_HL_Gain pointer to the correct data set
+/*         // Returns a Utility::Pico_Conf_HL_Gain pointer to the correct data set
  *         // for the demanded gain mode.
- *         Utility::Pico_Data_HL_Gain*  getHLGainData( Utility::Claws_Gain& mode );
+ *         Utility::Pico_Conf_HL_Gain*  getHLGainData( Utility::Claws_Gain& mode );
  */
 
         // Sets the Trigger settings.
@@ -328,11 +328,11 @@ class Pico
         /*
          *! Constructor to be called if pico is initialized by serial.
          */
-        Pico( Utility::Pico_Data_Pico* picoData );
+        Pico( Utility::Pico_Conf_Pico* picoData );
 
         //! Constructor to be called when pico is initialized before which means
         //! that its unique handle is known.
-        Pico( Utility::Pico_Data_Pico* picoData, int16_t handle );
+        Pico( Utility::Pico_Conf_Pico* picoData, int16_t handle );
         ///////////////////////////////////////////////////////////////////////
         /*
          *! Destructor

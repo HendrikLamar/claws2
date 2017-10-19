@@ -87,7 +87,7 @@ class Database
         //! intermediate settings are read-in standardly.
         void Pico_readSettings( Utility::Pico_RunMode mode );
 
-        std::vector< Utility::Pico_Data_Pico* >*     m_picoData;     
+        std::vector< Utility::Pico_Conf_Pico* >*     m_picoData;     
 
 
         ///////////////////////////////////////////////////////////////////
@@ -180,7 +180,7 @@ class Database
 
         void Pico_readIntermediateSettings( int picoNo );
 
-        Utility::Pico_Data_HL_Gain* Pico_getHLGainStruct( 
+        Utility::Pico_Conf_HL_Gain* Pico_getHLGainStruct( 
                 Utility::Pico_RunMode mode,
                 int picoNo
                 );

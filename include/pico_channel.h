@@ -50,9 +50,9 @@ class Channel
         
         //! Pointer to the current run mode data. The pointer changes a lot, 
         //! e.g. to intermediate, high gain, low gain.
-        Utility::Pico_Data_HL_Gain*         m_data;
+        Utility::Pico_Conf_HL_Gain*         m_data;
 
-        Utility::Pico_Data_Channel*         m_data_channel;
+        Utility::Pico_Conf_Channel*         m_data_channel;
 
 
         ///////////////////////////////////////////////////////////////////////
@@ -129,7 +129,7 @@ class Channel
          */
         Channel(PS6000_CHANNEL channel, 
                 int16_t* handle, 
-                Utility::Pico_Data_HL_Gain* dataHLGain
+                Utility::Pico_Conf_HL_Gain* dataHLGain
                );
         ///////////////////////////////////////////////////////////////////////
         /*
