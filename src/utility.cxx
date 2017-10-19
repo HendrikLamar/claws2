@@ -139,7 +139,7 @@ namespace Utility{
         return;
     }
 
-    std::shared_ptr<TH1>    Pico_Hist_Channel::get()
+    std::shared_ptr<TH1I>    Pico_Hist_Channel::get()
     {
         return data;
     }
@@ -183,6 +183,125 @@ namespace Utility{
     //              END Pico_Hist_Channel
     ///////////////////////////////////////////////////////////////////////////
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    ///////////////////////////////////////////////////////////////////////////
+    //              START Pico_Hist_Pico
+
+
+    Pico_Hist_Pico::Pico_Hist_Pico()
+    {
+        data = std::make_shared< std::vector< std::shared_ptr<Pico_Hist_Channel> > >();
+    }
+
+    void Pico_Hist_Pico::add( std::shared_ptr<Pico_Hist_Channel> hist )
+    {
+        bool isUnique{ true };
+        for( std::shared_ptr<Pico_Hist_Channel> tmp : *data )
+        {
+            if( tmp->getCh() == hist->getCh() )
+            {
+                isUnique = false;
+                break;
+            }
+
+        }
+
+        if( isUnique )
+        {
+            data->push_back(hist);
+        }
+
+        return;
+
+    }
+
+    std::shared_ptr<TH1I>  Pico_Hist_Pico::get( PS6000_CHANNEL ch )
+    {
+        std::shared_ptr<TH1I> tdata = nullptr;
+        for( std::shared_ptr<Pico_Hist_Channel> tmp : *data )
+        {
+            if( tmp->getCh() == ch )
+            {
+                tdata = tmp->get();
+                break;
+            }
+        }
+
+
+        return tdata;
+
+    }
+
+    std::shared_ptr<TH1I>  Pico_Hist_Pico::get( int ch )
+    {
+        PS6000_CHANNEL tch = intToCh( ch );
+        std::shared_ptr<TH1I> tdata;
+        for( auto& tmp : *data )
+        {
+            if( tmp->getCh() == tch )
+            {
+                tdata = tmp->get();
+                break;
+            }
+        }
+
+        return tdata;
+
+    }
+
+
+
+
+    PS6000_CHANNEL  Pico_Hist_Pico::intToCh( int ch )
+    {
+        switch( ch )
+        {
+            case 0:
+                return PS6000_CHANNEL_A;
+            case 1:
+                return PS6000_CHANNEL_B;
+            case 2:
+                return PS6000_CHANNEL_C;
+            case 3:
+                return PS6000_CHANNEL_D;
+            default:
+                throw PicoException("No known channel conversion available!");
+        }
+    }
+
+
+
+
+
+    //              END Pico_Hist_Pico
+    ///////////////////////////////////////////////////////////////////////////
 
 ///////////////////////////////////////////////////////////////////////////////
 
