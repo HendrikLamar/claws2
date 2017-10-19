@@ -547,7 +547,7 @@ void Database::Pico_readChannelsSettings( Utility::Pico_RunMode mode, int picoNo
 {
     // returns the corresponding high or low gain data structure according to the
     // run mode
-    Utility::Pico_Data_HL_Gain* tmpDataStruct{
+    Utility::Pico_Conf_HL_Gain* tmpDataStruct{
         Pico_getHLGainStruct( mode, picoNo )};
 
     ///////////////////////////////////////////////////////////////////////////
@@ -575,7 +575,7 @@ void Database::Pico_readChannelsSettings( Utility::Pico_RunMode mode, int picoNo
     rKey = headBegin + m_picoData->at(picoNo)->val_location + headEnd;
 
     // put channels in vector for better accessibility in loop
-    std::vector< Utility::Pico_Data_Channel* >* channels = tmpDataStruct->channels;
+    std::vector< Utility::Pico_Conf_Channel* >* channels = tmpDataStruct->channels;
 
     // loop through the channels
     for ( unsigned int kk = 0; kk < channelList.size(); ++kk )
@@ -615,7 +615,7 @@ void Database::Pico_readAquisitionSettings( Utility::Pico_RunMode mode, int pico
 
     // returns the corresponding high or low gain data structure according to the
     // run mode
-    Utility::Pico_Data_HL_Gain* tmpDataStruct{
+    Utility::Pico_Conf_HL_Gain* tmpDataStruct{
         Pico_getHLGainStruct( mode, picoNo )};
 
     ///////////////////////////////////////////////////////////////////////////
@@ -678,7 +678,7 @@ void Database::Pico_readTriggerSimpleSettings( Utility::Pico_RunMode mode, int p
 {
     // returns the corresponding high or low gain data structure according to the
     // run mode
-    Utility::Pico_Data_HL_Gain* tmpDataStruct{
+    Utility::Pico_Conf_HL_Gain* tmpDataStruct{
         Pico_getHLGainStruct( mode, picoNo )};
 
     ///////////////////////////////////////////////////////////////////////////
@@ -773,7 +773,7 @@ void Database::Pico_readTriggerAdvSettings( Utility::Pico_RunMode mode, int pico
 void Database::Pico_readIntermediateSettings( int picoNo )
 {
 
-    Utility::Pico_Data_HL_Gain*   tmpDataStruct = m_picoData->at(picoNo)->data_inter;
+    Utility::Pico_Conf_HL_Gain*   tmpDataStruct = m_picoData->at(picoNo)->data_inter;
 
     ///////////////////////////////////////////////////////////////////////////
 
@@ -968,7 +968,7 @@ std::string Database::Pico_returnPathToRunMode( Utility::Pico_RunMode mode )
 
 
 
-Utility::Pico_Data_HL_Gain*    Database::Pico_getHLGainStruct(
+Utility::Pico_Conf_HL_Gain*    Database::Pico_getHLGainStruct(
                                         Utility::Pico_RunMode mode,
                                         int picoNo
                                         )
