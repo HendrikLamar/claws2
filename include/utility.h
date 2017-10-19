@@ -356,6 +356,10 @@ namespace Utility{
     struct Pico_Hist_Pico
     {
 
+        Pico_Hist_Pico()
+        {
+            data = std::make_shared< std::vector< std::shared_ptr<Pico_Hist_Channel> > >();
+        }
 
         void add( std::shared_ptr<Pico_Hist_Channel> hist )
         {

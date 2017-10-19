@@ -199,7 +199,7 @@ namespace Utility{
 
 
 
-    std::ostream& operator<<( std::ostream& out, Utility::Pico_Data_Channel& data )
+    std::ostream& operator<<( std::ostream& out, Utility::Pico_Conf_Channel& data )
     {
         PS6000_CHANNEL tmp_channel = data.channel;
 
@@ -238,7 +238,7 @@ namespace Utility{
 
 
 
-    std::ostream& operator<<( std::ostream& out, Utility::Pico_Data_Trigger_Simple& data )
+    std::ostream& operator<<( std::ostream& out, Utility::Pico_Conf_Trigger_Simple& data )
     {
 
         out << "+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++";
@@ -276,7 +276,7 @@ namespace Utility{
 
 
 
-    std::ostream& operator<<( std::ostream& out, Utility::Pico_Data_HL_Gain& data )
+    std::ostream& operator<<( std::ostream& out, Utility::Pico_Conf_HL_Gain& data )
     {
 
         try
@@ -316,7 +316,7 @@ namespace Utility{
 
 
 
-    std::ostream& operator<<( std::ostream& out, Utility::Pico_Data_Pico& data )
+    std::ostream& operator<<( std::ostream& out, Utility::Pico_Conf_Pico& data )
     {
         out << "\n+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\n";
         out << "+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++";

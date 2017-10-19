@@ -343,9 +343,9 @@ void            ClawsRun::printData()
         {
             // delete data behind the pointer and invoke new vector
             delete m_database->m_picoData;
-            m_database->m_picoData = new std::vector< Utility::Pico_Data_Pico* >;
+            m_database->m_picoData = new std::vector< Utility::Pico_Conf_Pico* >;
         }
-        else m_database->m_picoData = new std::vector< Utility::Pico_Data_Pico* >;
+        else m_database->m_picoData = new std::vector< Utility::Pico_Conf_Pico* >;
     
     
         // check if the pico pointer is empty. If yes allocate new, if no delete first.
@@ -419,7 +419,7 @@ void            ClawsRun::printData()
             {
                 try
                 {
-                    Utility::Pico_Data_Pico *pico = new Utility::Pico_Data_Pico( 
+                    Utility::Pico_Conf_Pico *pico = new Utility::Pico_Conf_Pico( 
                             serialLocation.at(ii).first, 
                             serialLocation.at(ii).second);
     
@@ -454,8 +454,8 @@ void            ClawsRun::printData()
             // make m_picoData the same size as clawsRun::m_picos,
             // otherwise going through both vector leads to problems,
             // e.g. data for m_pico->at(0) is at m_picoData->at(1)
-            std::vector< Utility::Pico_Data_Pico* >* tmp = 
-                new std::vector< Utility::Pico_Data_Pico* >;
+            std::vector< Utility::Pico_Conf_Pico* >* tmp = 
+                new std::vector< Utility::Pico_Conf_Pico* >;
             for( unsigned int tt = 0; tt < m_database->m_picoData->size(); ++tt )
             {
                 if( m_database->m_picoData->at( tt ) )
@@ -546,9 +546,9 @@ void            ClawsRun::printData()
         {
             // delete data behind the pointer and invoke new vector
             delete m_database->m_picoData;
-            m_database->m_picoData = new std::vector< Utility::Pico_Data_Pico* >;
+            m_database->m_picoData = new std::vector< Utility::Pico_Conf_Pico* >;
         }
-        else m_database->m_picoData = new std::vector< Utility::Pico_Data_Pico* >;
+        else m_database->m_picoData = new std::vector< Utility::Pico_Conf_Pico* >;
     
     
         // check if the pico pointer is empty. If yes allocate new, if no delete first.
@@ -642,7 +642,7 @@ void            ClawsRun::printData()
                         // the second step
                         try
                         {
-                            Utility::Pico_Data_Pico *pico = new Utility::Pico_Data_Pico( 
+                            Utility::Pico_Conf_Pico *pico = new Utility::Pico_Conf_Pico( 
                                     serialLocation.at(tt).first, 
                                     serialLocation.at(tt).second);
     
@@ -688,8 +688,8 @@ void            ClawsRun::printData()
 //            // make m_picoData the same size as clawsRun::m_picos,
 //            // otherwise going through both vector leads to problems,
 //            // e.g. data for m_pico->at(0) is at m_picoData->at(1)
-//            std::vector< Utility::Pico_Data_Pico* >* tmp = 
-//                new std::vector< Utility::Pico_Data_Pico* >;
+//            std::vector< Utility::Pico_Conf_Pico* >* tmp = 
+//                new std::vector< Utility::Pico_Conf_Pico* >;
 //            for( unsigned int bb = 0; bb < m_database->m_picoData->size(); ++bb )
 //            {
 //                if( m_database->m_picoData->at( bb ) )

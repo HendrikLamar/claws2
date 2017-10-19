@@ -10,8 +10,8 @@ ifeq ($(shell uname -s),Linux)
 	CFLAGS += -c -fmessage-length=0 -std=c++11 -pthread
 	
 	# ROOT
-	CFLAGS += `root-config --cflags`
-	LFLAGS += `root-config --libs --glibs`
+	CFLAGS += `root-config --cflags --libs --glibs`
+	LFLAGS += `root-config --cflags --libs --glibs`
 
 	# DAQ stuff
 	CFLAGS += -I./include
