@@ -18,6 +18,7 @@
 #include "utility.h"
 #include "processData.h"
 #include "storage.h"
+#include "pico.h"
 
 #include <memory>
 #include <algorithm>
@@ -38,8 +39,9 @@
 
 
 
-ProcessData::ProcessData() :
-    m_save( new Storage() )
+ProcessData::ProcessData( std::vector< Pico* > * vPicos ) :
+    m_save( new Storage() ),
+    m_picos( vPicos )
 {
 
     m_picos_hist = std::make_shared< std::vector< std::shared_ptr< Utility::Pico_Hist_Pico > > >();
@@ -161,6 +163,8 @@ std::shared_ptr< Storage >  ProcessData::save()
 
 std::shared_ptr<ProcessData>    ProcessData::sync()
 {
+
+    makeTH1I();
 
     return shared_from_this();
 }

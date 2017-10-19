@@ -35,22 +35,14 @@
 
 
 
+//! Compines the responisbility to save and analyze the data.
 class ProcessData : public std::enable_shared_from_this< ProcessData >
 {
 
     private:
 
-        enum class subdir 
-        {
-            INTER,
-            PHYSICS,
-            LIVE
-        };
-
-        
-        std::vector< Pico* >*       m_picos;
-
         std::shared_ptr<Storage>    m_save;
+        std::vector< Pico* >*       m_picos;
 
         // translates the vector data to Root::TH1I
         void    makeTH1I();
@@ -58,15 +50,12 @@ class ProcessData : public std::enable_shared_from_this< ProcessData >
         // very complicated data structure to store
         std::shared_ptr < std::vector< std::shared_ptr< Utility::Pico_Hist_Pico > > > m_picos_hist;
 
-
-        // declares where the current data should be saved
-        subdir      m_current_dataset;
-
     public:
 
-        ProcessData();
+        ProcessData( std::vector< Pico* >* vPicos );
         ~ProcessData();
 
+        //! Returns
         std::shared_ptr< Storage >  save();
 
         //! Syncs the histogram with the latest picoscope data.
