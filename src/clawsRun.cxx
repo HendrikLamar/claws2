@@ -21,6 +21,7 @@
 #include "pico.h"
 #include "n6700.h"
 #include "database.h"
+#include "processData.h"
 
 #include <boost/property_tree/exceptions.hpp>
 
@@ -152,9 +153,11 @@ void        ClawsRun::initialize()
 
 void    ClawsRun::run()
 {
+
     m_database->Claws_incrCounter();
 
     Pico_runInter();
+
 
     m_database->Claws_rwCounter('w');
 
@@ -800,6 +803,10 @@ void            ClawsRun::printData()
 
     void ClawsRun::Pico_runInter()
     {
+
+        ProcessData saveStuff( m_picos );
+        saveStuff.save()->setSaveLocation(m_database->Claws_getConfig()->savePath_1);
+
         //! \todo Extend for multiple Picos!
 //        for( unsigned int ii = 0; ii < 1; ++ii)
         for( unsigned int ii = 0; ii < m_picos->size(); ++ii)
@@ -810,18 +817,24 @@ void            ClawsRun::printData()
             {
                 m_picos->at(ii)->setConfig( Utility::Claws_Gain::INTERMEDIATE );
                 m_picos->at(ii)->setReadyBlock();
-                for(int i = 0; i<2; ++i)
+                for(int i = 0; i< m_database->Claws_getConfig()->loops_Intermediate; ++i)
                 {
 
+                    if( i%10 == 0)
+                    {
+                        std::cout << "Loop #" << i << "\n";
+                    }
                     m_picos->at(ii)->runBlock();
 
-                    std::vector< int16_t >* data = m_picos->at(ii)->getCh(ii)->getBuffer();
-
-
-                    for( auto& tmp : *data )
-                    {
-                        std::cout << tmp << "\n";
-                    }
+//                    saveStuff.sync();
+/*                     std::vector< int16_t >* data = m_picos->at(ii)->getCh(ii)->getBuffer();
+ * 
+ * 
+ *                     for( auto& tmp : *data )
+ *                     {
+ *                         std::cout << tmp << "\n";
+ *                     }
+ */
                 }
 
                 m_picos->at(ii)->stop();
@@ -839,6 +852,7 @@ void            ClawsRun::printData()
                 std::cout << excep.what() << std::endl;
             }
         }
+
 
         return;
     }

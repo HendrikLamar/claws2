@@ -34,8 +34,14 @@
 #include <boost/date_time/gregorian/gregorian.hpp>
 #include <boost/filesystem.hpp>
 
+#include <TROOT.h>
+
+
+
 int main()
 {
+
+    gROOT->ProcessLine("gErrorIgnoreLevel = 6000");
 
     MyState* mystate;
 

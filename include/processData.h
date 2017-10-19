@@ -59,7 +59,8 @@ class ProcessData : public std::enable_shared_from_this< ProcessData >
         std::shared_ptr< Storage >  save();
 
         //! Syncs the histogram with the latest picoscope data.
-        std::shared_ptr<ProcessData> sync();
+        void    sync();
+//        std::shared_ptr<ProcessData> sync();
 
 
         friend class Storage;

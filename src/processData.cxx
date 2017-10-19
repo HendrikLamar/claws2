@@ -161,12 +161,14 @@ std::shared_ptr< Storage >  ProcessData::save()
 
 
 
-std::shared_ptr<ProcessData>    ProcessData::sync()
+//std::shared_ptr<ProcessData>    ProcessData::sync()
+void ProcessData::sync()
 {
 
     makeTH1I();
 
-    return shared_from_this();
+//    return shared_from_this();
+    return;
 }
 
 
@@ -267,7 +269,8 @@ void ProcessData::makeTH1I()
 {
     // the first four entries indicate if the channels of the first pico are enabled
     // or not, the second four for pico #2, etc...
-    std::shared_ptr< std::vector< int16_t > >  picoChannelEnabled;
+    std::shared_ptr< std::vector< int16_t > >  picoChannelEnabled{
+        std::make_shared<std::vector< int16_t > >()};
 
     std::shared_ptr< TH1I >     hist;
 
