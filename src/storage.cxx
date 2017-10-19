@@ -166,7 +166,16 @@ void Storage::physics( unsigned long runNum, unsigned int subRunNum )
 
 void Storage::setSaveLocation( std::string saveLocation )
 {
+    boost::filesystem::path psaveLocation{saveLocation};
+    
+    // throw exception if this path does not exists
+    if( !boost::filesystem::exists(psaveLocation) )
+    {
+        throw ProcessDataException("Save Location does not exist!");
+    }
+    
     m_location_save = saveLocation;
+
     return;
 }
 

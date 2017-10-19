@@ -32,7 +32,7 @@ class Storage
 {
     private:
 
-        std::string     m_location_save;
+        std::string     m_location_save = "/dev/null";
 
         // creates the path where to save the data
         std::string     makePath( unsigned long runNum, Utility::Dir_Struct kind );

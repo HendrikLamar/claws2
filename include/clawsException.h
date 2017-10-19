@@ -139,5 +139,24 @@ class UtilityException: public ClawsException
 };
 
 
+///////////////////////////////////////////////////////////////////////////////
+
+/** ProcessData specific exception class derived from the ClawsException class.
+ * 
+ */
+
+class ProcessDataException: public ClawsException
+{
+    public:
+        ProcessDataException( std::string error ) : ClawsException(error)
+        {}
+
+        const char* what()
+        {
+            m_errorOut = "ProcessDataException: " + m_errorIn;
+            return m_errorOut.c_str();
+        }
+};
+
 
 #endif // CLAWSEXCEPTION_H
