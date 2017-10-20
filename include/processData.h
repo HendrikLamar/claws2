@@ -62,6 +62,8 @@ class ProcessData : public std::enable_shared_from_this< ProcessData >
         void    sync();
 //        std::shared_ptr<ProcessData> sync();
 
+        //! Clears the TH1I vector.
+        void clear();
 
         friend class Storage;
 

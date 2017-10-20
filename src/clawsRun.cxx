@@ -826,7 +826,8 @@ void            ClawsRun::printData()
                     }
                     m_picos->at(ii)->runBlock();
 
-//                    saveStuff.sync();
+                    saveStuff.sync();
+                    saveStuff.clear();
 /*                     std::vector< int16_t >* data = m_picos->at(ii)->getCh(ii)->getBuffer();
  * 
  * 
