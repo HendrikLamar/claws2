@@ -29,6 +29,7 @@ flags = [
 #################################################################
 
 '-I/home/claws/workspace/include',
+'-I/home/claws/software/epics/base-3.14.12.6/include/',
 
 
 
@@ -47,7 +48,6 @@ flags = [
 #'-I/opt/root/6.00/include/',
 '-I/opt/picoscope/include',
 '-I./include',
-
 
 '-Wall',
 '-Wextra',

@@ -17,6 +17,10 @@ ifeq ($(shell uname -s),Linux)
 	CFLAGS += -I./include
 	LFLAGS += 
 
+	# epics stuff
+	CFLAGS += -I/home/claws/software/epics/base-3.14.12.6/include -I/home/claws/software/epics/base-3.14.12.6/include/os/Linux
+	LFLAGS += -L/home/claws/software/epics/base-3.14.12.6/lib/linux-x86_64 -lca -lcas -ldbIoc -lasIoc
+
 	# boost libs
 	CFLAGS +=
 #	LFLAGS += -L/usr/lib/x86_64-linux-gnu/libboost_system.so.1.58.0 -L/usr/lib/x86_64-linux-gnu/libboost_filesystem.so.1.58.0
