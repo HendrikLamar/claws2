@@ -25,6 +25,7 @@
 
 #include <boost/property_tree/exceptions.hpp>
 
+#include <numeric>
 #include <iostream>
 #include <exception>
 #include <memory>
@@ -561,7 +562,7 @@ void            ClawsRun::printData()
         std::string nameLocation = "_location";
     
 
-        std::vector<int> isInitialized;       //! Counts which serials could be initialized.
+        std::vector< std::pair< int, std::string > > isInitialized;//! Counts which serials could be initialized.
     
         // read all serials from the ini file. Four at maximum.
         for ( int i = 0 ; i < 4 ; ++i )
@@ -601,11 +602,13 @@ void            ClawsRun::printData()
 
     
             serialLocation.push_back( std::make_pair( tmpSerial, tmpLocation ) );
+            isInitialized.push_back(std::make_pair(0,tmpSerial));
 
         };
 
 
         // find picos for the known serials
+        std::vector<int> isFound{0};
         if( serialLocation.size() > 0 )
 //        for( unsigned int xx = 0; xx < serialLocation.size(); ++xx )
         {
@@ -621,14 +624,14 @@ void            ClawsRun::printData()
                     std::string tmp_serial = Utility::Pico_preInitializer( &tmp_handle );
                     
                     handleSerial.push_back(std::make_pair(tmp_handle, tmp_serial));
-                    isInitialized.push_back(0);
-
+                    isFound.push_back(0);
                 }
                 catch( PicoException& excep )
                 {
                     break;
                 }
             }
+
 
             // check if read-in serial and found serial are equal
             int tcounter = 0;
@@ -649,7 +652,16 @@ void            ClawsRun::printData()
                             m_picos->push_back(
                                     std::make_shared<Pico>(
                                         pico_conf, tmp_pair.first));
-                            isInitialized.at(tcounter) = 1;
+                            isFound.at(tcounter) = 1;
+
+                            // puts the initialized value to 1
+                            for( auto& tmp : isInitialized )
+                            {
+                                if( !tmp.second.compare(tmp_pair.second) )
+                                {
+                                    tmp.first = 1;
+                                }
+                            }
                         }
                         catch( PicoException& excep )
                         {
@@ -662,30 +674,28 @@ void            ClawsRun::printData()
                 ++tcounter;
             }
 
+
             // close remaining picos properly
-            for( unsigned int xx; xx < isInitialized.size(); ++xx )
+            for( unsigned int xx; xx < isFound.size(); ++xx )
             {
-                if( !isInitialized.at(xx) )
+                if( !isFound.at(xx) )
                 {
                     Utility::Pico_preClose( handleSerial.at(xx).first );
                 }
             }
-
         };
 
 
 
+        std::cout << serialLocation.size() << "\t" << isInitialized.size() << std::endl;
 
         int sumI{0};
+        for( auto& tmp : isInitialized )
+        {
+            sumI += tmp.first;
+        }
         if ( serialLocation.size() > 0)
         {
-            for ( unsigned int bb = 0; bb < serialLocation.size(); ++bb )
-            {
-                if ( isInitialized.at(bb) == 1)
-                {
-                    ++sumI;
-                }
-            }
             std::cout << "Serials found:\t\t" << serialLocation.size();
             std::cout << "\nPicos intialized:\t" << sumI << "\n";
             std::cout << "--------------------------------------------------------\n";
@@ -694,7 +704,7 @@ void            ClawsRun::printData()
             // and could be initialized.
             for ( unsigned int ii = 0; ii < serialLocation.size(); ++ii)
             {
-                if ( isInitialized.at(ii) == 1)
+                if ( isInitialized.at(ii).first == 1)
                 {
                     std::cout << "#" << ii << "\t" << serialLocation.at(ii).first;
                     std::cout << "\t" << serialLocation.at(ii).second;

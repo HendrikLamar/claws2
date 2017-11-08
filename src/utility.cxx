@@ -349,7 +349,7 @@ namespace Utility{
                 throw PicoException("Pico fails to open!");
                 break;
             case 0:
-                throw PicoException("");
+                throw PicoException(" ");
                 break;
             default:
                 break;
