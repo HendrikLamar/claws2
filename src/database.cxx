@@ -94,11 +94,7 @@ Database::~Database()
     delete m_N6700_Channels;
     m_N6700_Channels = nullptr;
 
-    if( m_picoData )
-    {
-        delete m_picoData;
-    }
-    m_picoData = nullptr;
+    m_picoData.reset();
     
     delete m_steeringData;
     m_steeringData = nullptr;

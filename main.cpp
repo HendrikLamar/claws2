@@ -45,15 +45,16 @@ int main()
 
     MyState* mystate;
 
-    try
-    {
+//    try
+//    {
         mystate = new MyState();
         mystate->run();
-    }
-    catch(...)
-    {
-        std::cout << "Unknown error occured. Exiting..." << std::endl;
-    }
+//    }
+/*     catch(...)
+ *     {
+ *         std::cout << "Unknown error occured. Exiting..." << std::endl;
+ *     }
+ */
 
 
     delete mystate;

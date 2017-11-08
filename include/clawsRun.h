@@ -20,6 +20,7 @@
 
 
 #include <vector>
+#include <memory>
 
 #include "utility.h"
 #include "pico.h"
@@ -42,7 +43,7 @@ class ClawsRun
         //
         ///////////////////////////////////////////////////////////////////////
         
-        std::vector< Pico* >*           m_picos;
+        std::shared_ptr<std::vector<std::shared_ptr<Pico> > >       m_picos;
 
 
         void Pico_init_bySerial( );

@@ -42,7 +42,7 @@ class ProcessData : public std::enable_shared_from_this< ProcessData >
     private:
 
         std::shared_ptr<Storage>    m_save;
-        std::vector< Pico* >*       m_picos;
+        std::shared_ptr<std::vector< std::shared_ptr< Pico > > >    m_picos;
 
         // translates the vector data to Root::TH1I
         void    makeTH1I();
@@ -52,7 +52,7 @@ class ProcessData : public std::enable_shared_from_this< ProcessData >
 
     public:
 
-        ProcessData( std::vector< Pico* >* vPicos );
+        ProcessData( std::shared_ptr<std::vector< std::shared_ptr< Pico > > > vPicos );
         ~ProcessData();
 
         //! Returns

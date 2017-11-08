@@ -20,6 +20,7 @@
 
 #include <string>
 #include <vector>
+#include <memory>
 
 #include "readini.h"
 #include "utility.h"
@@ -87,7 +88,7 @@ class Database
         //! intermediate settings are read-in standardly.
         void Pico_readSettings( Utility::Pico_RunMode mode );
 
-        std::vector< Utility::Pico_Conf_Pico* >*     m_picoData;     
+        std::unique_ptr<std::vector< std::shared_ptr<Utility::Pico_Conf_Pico> > >     m_picoData;     
 
 
         ///////////////////////////////////////////////////////////////////

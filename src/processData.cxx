@@ -39,7 +39,7 @@
 
 
 
-ProcessData::ProcessData( std::vector< Pico* > * vPicos ) :
+ProcessData::ProcessData( std::shared_ptr<std::vector< std::shared_ptr< Pico > > >    vPicos ) :
     m_save( new Storage() ),
     m_picos( vPicos )
 {

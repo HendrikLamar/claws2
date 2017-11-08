@@ -71,11 +71,11 @@ class Pico
 
         // this pointer point to the data which is is needed for the current
         // run mode
-        Utility::Pico_Conf_HL_Gain*             m_data_current;
+        std::shared_ptr<Utility::Pico_Conf_HL_Gain>             m_data_current;
 
         
         // Vector holding the four channels of the pico
-        const std::vector< Channel* >* const    m_channels;
+        std::shared_ptr<std::vector< std::shared_ptr<Channel> > > m_channels;
 
         ////////////////////////////////////////////////////////////////////////
         // 
@@ -344,8 +344,8 @@ class Pico
         void pingUnit();
 
         //! Returns the channel.
-        Channel* getCh( PS6000_CHANNEL cha );
-        Channel* getCh( int cha );
+        std::shared_ptr<Channel> getCh( PS6000_CHANNEL cha );
+        std::shared_ptr<Channel> getCh( int cha );
 
         //! Returns the pico location.
         std::string     getLocation();
