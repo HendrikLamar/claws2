@@ -531,14 +531,8 @@ void            ClawsRun::printData()
         std::cout << "Pico initialization...\n";
         std::cout << "--------------------------------------------------------\n";
 
-        // check if the picoData pointer is empty. If yes allocate new, 
-        // if no delete first.
-        if ( m_database->m_picoData )
-        {
-            // delete data behind the pointer and invoke new vector
-            m_database->m_picoData.reset(new std::vector< std::shared_ptr<Utility::Pico_Conf_Pico> >);
-        }
-        else m_database->m_picoData.reset(new std::vector< std::shared_ptr<Utility::Pico_Conf_Pico> >);
+        // replace picoData storage
+        m_database->m_picoData.reset(new std::vector< std::shared_ptr<Utility::Pico_Conf_Pico> >);
     
     
         // check if the pico pointer is empty. If yes allocate new, if no delete first.
@@ -608,7 +602,7 @@ void            ClawsRun::printData()
 
 
         // find picos for the known serials
-        std::vector<int> isFound{0};
+        std::vector<int> isFound;
         if( serialLocation.size() > 0 )
 //        for( unsigned int xx = 0; xx < serialLocation.size(); ++xx )
         {
@@ -686,8 +680,6 @@ void            ClawsRun::printData()
         };
 
 
-
-        std::cout << serialLocation.size() << "\t" << isInitialized.size() << std::endl;
 
         int sumI{0};
         for( auto& tmp : isInitialized )
@@ -784,7 +776,16 @@ void            ClawsRun::printData()
     {
 
         ProcessData saveStuff( m_picos );
-        saveStuff.save()->setSaveLocation(m_database->Claws_getConfig()->savePath_1);
+        try
+        {
+            saveStuff.save()->setSaveLocation(m_database->Claws_getConfig()->savePath_1);
+        }
+        catch( ClawsException& excep )
+        {
+            std::cout << excep.what() << "\n";
+            std::cout << "Stopping this run...\n";
+            return;
+        }
 
         //! \todo Extend for multiple Picos!
 //        for( unsigned int ii = 0; ii < 1; ++ii)
