@@ -45,7 +45,7 @@ class Database
         bool            getStop();
 
         
-        ReadIni*        getInitReader();
+        std::shared_ptr<ReadIni>        getInitReader();
 
         //! Sets the number of picos initialized. To be called after initialization.
         void            setNoOfPicosInitialized( unsigned int numb );
@@ -131,7 +131,7 @@ class Database
     private:
         bool                        m_stopSwitch;
 
-        ReadIni*                    m_initReader;
+        std::shared_ptr<ReadIni>    m_initReader;
 
         Utility::Steering_Data*     m_steeringData;
 
@@ -181,7 +181,7 @@ class Database
 
         void Pico_readIntermediateSettings( int picoNo );
 
-        Utility::Pico_Conf_HL_Gain* Pico_getHLGainStruct( 
+        std::shared_ptr<Utility::Pico_Conf_HL_Gain> Pico_getHLGainStruct( 
                 Utility::Pico_RunMode mode,
                 int picoNo
                 );

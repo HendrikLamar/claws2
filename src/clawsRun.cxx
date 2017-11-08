@@ -35,8 +35,8 @@
 
 
 ClawsRun::ClawsRun() :
-    m_database ( new Database() ),
-    m_picos( nullptr ),
+    m_database ( std::make_shared<Database>() ),
+    m_picos( std::make_shared<std::vector<std::shared_ptr<Pico>>>() ),
     m_psu( nullptr )
 {
 
@@ -52,14 +52,10 @@ ClawsRun::~ClawsRun()
     m_picos.reset();
 
     // check if pointing to nullptr
-    if( m_psu )
-    {
-        delete m_psu;
-        m_psu = nullptr;
-    }
+    delete m_psu;
+    m_psu = nullptr;
 
-    delete m_database;
-    m_database = nullptr;
+    m_database.reset();
 
 }
 
@@ -97,7 +93,7 @@ ClawsRun::~ClawsRun()
 
 
 
-Database*   ClawsRun::getDatabase()
+std::shared_ptr<Database> ClawsRun::getDatabase()
 {
     return m_database;
 }
@@ -553,10 +549,10 @@ void            ClawsRun::printData()
             // delete data behind the pointer and invoke new vector
             m_picos.reset();
             m_picos = std::make_shared<
-                std::shared_ptr<std::vector< std::shared_ptr<Pico> > > >();
+                std::vector< std::shared_ptr<Pico> > >();
         }
         else m_picos = std::make_shared<
-            std::shared_ptr<std::vector< std::shared_ptr<Pico> > > >();
+            std::vector< std::shared_ptr<Pico> > >();
 
 
         std::vector< std::pair< std::string, std::string > > serialLocation;

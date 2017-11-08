@@ -25,6 +25,7 @@
 
 #include <vector>
 #include <string>
+#include <memory>
 
 
 
@@ -57,7 +58,7 @@ class Pico
         
 
         //! Const pointer to a variable set of pico data.
-        Utility::Pico_Conf_Pico* const          m_data_pico;
+        std::shared_ptr<Utility::Pico_Conf_Pico> m_data_pico;
 
         //! Handle value is defined during the initialization of the pico.
         int16_t                                 m_handle;
@@ -328,11 +329,11 @@ class Pico
         /*
          *! Constructor to be called if pico is initialized by serial.
          */
-        Pico( Utility::Pico_Conf_Pico* picoData );
+//        Pico( std::shared_ptr<Utility::Pico_Conf_Pico> picoData );
 
         //! Constructor to be called when pico is initialized before which means
         //! that its unique handle is known.
-        Pico( Utility::Pico_Conf_Pico* picoData, int16_t handle );
+        Pico( std::shared_ptr<Utility::Pico_Conf_Pico> picoData, int16_t handle );
         ///////////////////////////////////////////////////////////////////////
         /*
          *! Destructor

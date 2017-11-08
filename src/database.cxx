@@ -37,7 +37,7 @@
 Database::Database() try :
     m_picoData( nullptr ),
     m_stopSwitch( false ),
-    m_initReader( new ReadIni() ),
+    m_initReader( std::make_shared<ReadIni>() ),
     m_steeringData( new Utility::Steering_Data() ),
     m_N6700_Channels( new N6700_Channels() )
 {
@@ -88,8 +88,7 @@ catch(...)
 
 Database::~Database()
 {
-    delete m_initReader;
-    m_initReader = nullptr;
+    m_initReader.reset();
 
     delete m_N6700_Channels;
     m_N6700_Channels = nullptr;
@@ -142,7 +141,7 @@ bool Database::getStop()
 
 
 
-ReadIni* Database::getInitReader()
+std::shared_ptr<ReadIni> Database::getInitReader()
 {
     return m_initReader;
 }
@@ -543,7 +542,7 @@ void Database::Pico_readChannelsSettings( Utility::Pico_RunMode mode, int picoNo
 {
     // returns the corresponding high or low gain data structure according to the
     // run mode
-    Utility::Pico_Conf_HL_Gain* tmpDataStruct{
+    std::shared_ptr<Utility::Pico_Conf_HL_Gain> tmpDataStruct{
         Pico_getHLGainStruct( mode, picoNo )};
 
     ///////////////////////////////////////////////////////////////////////////
@@ -571,7 +570,7 @@ void Database::Pico_readChannelsSettings( Utility::Pico_RunMode mode, int picoNo
     rKey = headBegin + m_picoData->at(picoNo)->val_location + headEnd;
 
     // put channels in vector for better accessibility in loop
-    std::vector< Utility::Pico_Conf_Channel* >* channels = tmpDataStruct->channels;
+    std::shared_ptr< std::vector< std::shared_ptr<Utility::Pico_Conf_Channel> > > channels = tmpDataStruct->channels;
 
     // loop through the channels
     for ( unsigned int kk = 0; kk < channelList.size(); ++kk )
@@ -611,7 +610,7 @@ void Database::Pico_readAquisitionSettings( Utility::Pico_RunMode mode, int pico
 
     // returns the corresponding high or low gain data structure according to the
     // run mode
-    Utility::Pico_Conf_HL_Gain* tmpDataStruct{
+    std::shared_ptr<Utility::Pico_Conf_HL_Gain> tmpDataStruct{
         Pico_getHLGainStruct( mode, picoNo )};
 
     ///////////////////////////////////////////////////////////////////////////
@@ -674,7 +673,7 @@ void Database::Pico_readTriggerSimpleSettings( Utility::Pico_RunMode mode, int p
 {
     // returns the corresponding high or low gain data structure according to the
     // run mode
-    Utility::Pico_Conf_HL_Gain* tmpDataStruct{
+    std::shared_ptr<Utility::Pico_Conf_HL_Gain> tmpDataStruct{
         Pico_getHLGainStruct( mode, picoNo )};
 
     ///////////////////////////////////////////////////////////////////////////
@@ -769,7 +768,7 @@ void Database::Pico_readTriggerAdvSettings( Utility::Pico_RunMode mode, int pico
 void Database::Pico_readIntermediateSettings( int picoNo )
 {
 
-    Utility::Pico_Conf_HL_Gain*   tmpDataStruct = m_picoData->at(picoNo)->data_inter;
+    std::shared_ptr<Utility::Pico_Conf_HL_Gain>   tmpDataStruct = m_picoData->at(picoNo)->data_inter;
 
     ///////////////////////////////////////////////////////////////////////////
 
@@ -964,7 +963,7 @@ std::string Database::Pico_returnPathToRunMode( Utility::Pico_RunMode mode )
 
 
 
-Utility::Pico_Conf_HL_Gain*    Database::Pico_getHLGainStruct(
+std::shared_ptr<Utility::Pico_Conf_HL_Gain> Database::Pico_getHLGainStruct(
                                         Utility::Pico_RunMode mode,
                                         int picoNo
                                         )

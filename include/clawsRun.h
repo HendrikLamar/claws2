@@ -34,7 +34,7 @@ class ClawsRun
 {
     private:
 
-        Database*                       m_database;
+        std::shared_ptr<Database> m_database;
 
 
         ///////////////////////////////////////////////////////////////////////
@@ -43,7 +43,7 @@ class ClawsRun
         //
         ///////////////////////////////////////////////////////////////////////
         
-        std::shared_ptr<std::vector<std::shared_ptr<Pico> > >       m_picos;
+        std::shared_ptr<std::vector<std::shared_ptr<Pico> > > m_picos;
 
 
         void Pico_init_bySerial( );
@@ -138,7 +138,7 @@ class ClawsRun
 
 
         //! Returns the Database().
-        Database*       getDatabase();
+        std::shared_ptr<Database>       getDatabase();
 
         //! Initializes picos, psu and epics.
         void            initialize();

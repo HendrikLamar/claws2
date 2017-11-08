@@ -92,7 +92,7 @@
 
 
 
-Pico::Pico( Utility::Pico_Conf_Pico* picoData, int16_t handle ) :
+Pico::Pico( std::shared_ptr<Utility::Pico_Conf_Pico> picoData, int16_t handle ) :
     m_data_pico( picoData ),
     m_handle( handle ),
     m_serial( m_data_pico->val_serial ),

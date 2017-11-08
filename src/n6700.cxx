@@ -27,12 +27,13 @@
 #include <iostream>
 #include <thread>
 #include <chrono>
+#include <memory>
 
 ///////////////////////////////////////////////////////////////////////////////
 
 
 //N6700::N6700(std::string ipAdress, std::string identity, unsigned short port) :
-N6700::N6700(Database* database) :
+N6700::N6700(std::shared_ptr<Database> database) :
     SCPI(database->N6700_getConnect().ip, std::stoi(database->N6700_getConnect().port)),
     m_database(database),
     m_ID(m_database->N6700_getConnect().id)
