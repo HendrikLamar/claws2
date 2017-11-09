@@ -809,9 +809,7 @@ namespace Utility{
         int                     loops_Physics;
         int                     loops_Intermediate;
 
-        std::string             savePath_1;
-        std::string             savePath_2;
-        std::string             savePath_3;
+        std::string             path_saveData;
 
 
         friend std::ostream& operator<<(

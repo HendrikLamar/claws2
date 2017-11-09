@@ -40,7 +40,7 @@
 
 
 ProcessData::ProcessData( std::shared_ptr<std::vector< std::shared_ptr< Pico > > >    vPicos ) :
-    m_save( new Storage() ),
+    m_save( std::make_shared<Storage>() ),
     m_picos( vPicos )
 {
 
@@ -61,7 +61,7 @@ ProcessData::ProcessData( std::shared_ptr<std::vector< std::shared_ptr< Pico > >
 
 ProcessData::~ProcessData()
 {
-
+    m_picos_hist.reset();
 }
 
 

@@ -112,8 +112,8 @@ class Database
                 );
 
 
-        Utility::Steering_Data* Claws_getConfig();
-        void                    Claws_readConfig();
+        std::shared_ptr<Utility::Steering_Data>     Claws_getConfig();
+        void                                        Claws_readConfig();
 
 
 
@@ -133,7 +133,7 @@ class Database
 
         std::shared_ptr<ReadIni>    m_initReader;
 
-        Utility::Steering_Data*     m_steeringData;
+        std::shared_ptr<Utility::Steering_Data> m_steeringData;
 
         // number of picos initialized. This value is set by clawsRun.
         unsigned int                         m_MaxNoOfPicos;
@@ -144,7 +144,7 @@ class Database
         //   All settings for the powersupply are send as strings. 
         ///////////////////////////////////////////////////////////////////////
 
-        N6700_Channels*             m_N6700_Channels;
+        std::shared_ptr<N6700_Channels> m_N6700_Channels;
         
         Utility::N6700_connect      m_n6700_connect;
 

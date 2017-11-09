@@ -38,8 +38,8 @@ Database::Database() try :
     m_picoData( nullptr ),
     m_stopSwitch( false ),
     m_initReader( std::make_shared<ReadIni>() ),
-    m_steeringData( new Utility::Steering_Data() ),
-    m_N6700_Channels( new N6700_Channels() )
+    m_steeringData( std::make_shared<Utility::Steering_Data>() ),
+    m_N6700_Channels( std::make_shared<N6700_Channels>() )
 {
     ///////////////////////////////////////////////////////////////////////////
     //          General 
@@ -88,15 +88,18 @@ catch(...)
 
 Database::~Database()
 {
+    std::cout <<  "Calling ~Database()....\n";
     m_initReader.reset();
 
-    delete m_N6700_Channels;
-    m_N6700_Channels = nullptr;
+    m_N6700_Channels.reset();
 
     m_picoData.reset();
     
-    delete m_steeringData;
-    m_steeringData = nullptr;
+    m_steeringData.reset();
+
+    std::cout << m_initReader.use_count() << "\t";
+    std::cout << m_N6700_Channels.use_count() << "\t";
+    std::cout << m_steeringData.use_count() << "\n";
 };
 
 
@@ -158,7 +161,7 @@ std::shared_ptr<ReadIni> Database::getInitReader()
 
 
 
-Utility::Steering_Data* Database::Claws_getConfig()
+std::shared_ptr<Utility::Steering_Data> Database::Claws_getConfig()
 {
     return m_steeringData;
 }
@@ -213,18 +216,8 @@ void Database::Claws_readConfig()
             m_initReader->getInitstruct().ClawsConfig, tpath );
 
     // read in save path # 1
-   tpath  = root + "save_path_1";
-    m_steeringData->savePath_1 = m_initReader->getKey<std::string>(
-            m_initReader->getInitstruct().ClawsConfig, tpath );
-    
-    // read in save path # 2
-    tpath = root + "save_path_2";
-    m_steeringData->savePath_2 = m_initReader->getKey<std::string>(
-            m_initReader->getInitstruct().ClawsConfig, tpath );
-
-    // read in save path # 3
-    tpath = root + "save_path_3";
-    m_steeringData->savePath_3 = m_initReader->getKey<std::string>(
+   tpath  = root + "path_saveData";
+    m_steeringData->path_saveData = m_initReader->getKey<std::string>(
             m_initReader->getInitstruct().ClawsConfig, tpath );
 
     

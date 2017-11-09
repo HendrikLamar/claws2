@@ -30,6 +30,8 @@
 #include <exception>
 #include <memory>
 #include <utility>
+#include <thread>
+#include <mutex>
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -775,15 +777,15 @@ void            ClawsRun::printData()
     void ClawsRun::Pico_runInter()
     {
 
-        ProcessData saveStuff( m_picos );
+        ProcessData dataProcessor( m_picos );
         try
         {
-            saveStuff.save()->setSaveLocation(m_database->Claws_getConfig()->savePath_1);
+            dataProcessor.save()->setSaveLocation(m_database->Claws_getConfig()->path_saveData);
         }
         catch( ClawsException& excep )
         {
             std::cout << excep.what() << "\n";
-            std::cout << "Stopping this run...\n";
+            std::cout << "Stopping current run...\n";
             return;
         }
 
@@ -806,16 +808,9 @@ void            ClawsRun::printData()
                     }
                     m_picos->at(ii)->runBlock();
 
-                    saveStuff.sync();
-                    saveStuff.clear();
-/*                     std::vector< int16_t >* data = m_picos->at(ii)->getCh(ii)->getBuffer();
- * 
- * 
- *                     for( auto& tmp : *data )
- *                     {
- *                         std::cout << tmp << "\n";
- *                     }
- */
+                    dataProcessor.sync();
+                    dataProcessor.save()->intermediate(m_database->Claws_getCounter(), ii);
+                    dataProcessor.clear();
                 }
 
                 m_picos->at(ii)->stop();

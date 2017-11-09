@@ -32,12 +32,16 @@ class Storage
 {
     private:
 
+        // backup save location
         std::string     m_location_save = "/dev/null";
 
         // creates the path where to save the data
         std::string     makePath( unsigned long runNum, Utility::Dir_Struct kind );
 
-        void    save( unsigned long runNum, unsigned int subRunNum );
+        void save( 
+                unsigned long runNum, 
+                unsigned int subRunNum, 
+                Utility::Dir_Struct kind );
 
 
     public:
