@@ -39,8 +39,8 @@ class Storage
         std::string     makePath( unsigned long runNum, Utility::Dir_Struct kind );
 
         void save( 
-                unsigned long runNum, 
-                unsigned int subRunNum, 
+                unsigned long& runNum, 
+                unsigned int& subRunNum, 
                 Utility::Dir_Struct kind );
 
 

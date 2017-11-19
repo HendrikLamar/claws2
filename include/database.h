@@ -99,13 +99,13 @@ class Database
 
 
         //! Return the current run number.
-        unsigned long   Claws_getCounter();
+        std::shared_ptr<unsigned long>  Claws_getCounter();
         //! Increments the run number.
-        void            Claws_incrCounter();
+        void                            Claws_incrCounter();
         //! Reads/writes the run number, either to/from the standard file defined
         //! by initilizer.ini or to a file you define with the id you define.
         //! @
-        void            Claws_rwCounter(
+        void Claws_rwCounter(
                 char rw,                                //!< 'r' for read, 'w' for write.
                 std::string file = "",                  //!< when blank, the argument from initializer.ini is used
                 std::string id = "Settings.runNumber"   //!< when blank, the standard "Settings.runNumber" is used
@@ -216,7 +216,7 @@ class Database
         ///////////////////////////////////////////////////////////////////
 
 
-        unsigned long        m_runNumber;
+        std::shared_ptr<unsigned long> m_runNumber;
 
 
 

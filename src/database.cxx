@@ -39,7 +39,8 @@ Database::Database() try :
     m_stopSwitch( false ),
     m_initReader( std::make_shared<ReadIni>() ),
     m_steeringData( std::make_shared<Utility::Steering_Data>() ),
-    m_N6700_Channels( std::make_shared<N6700_Channels>() )
+    m_N6700_Channels( std::make_shared<N6700_Channels>() ),
+    m_runNumber(std::make_shared<unsigned long>())
 {
     ///////////////////////////////////////////////////////////////////////////
     //          General 
@@ -60,6 +61,8 @@ Database::Database() try :
     {
         std::cout << excep.what() << std::endl;
     }
+
+
 
     Claws_rwCounter('r');
 
@@ -1046,7 +1049,7 @@ std::shared_ptr<Utility::Pico_Conf_HL_Gain> Database::Pico_getHLGainStruct(
 
 
 
-unsigned long   Database::Claws_getCounter()
+std::shared_ptr<unsigned long> Database::Claws_getCounter()
 {
 
     return m_runNumber;
@@ -1069,7 +1072,7 @@ unsigned long   Database::Claws_getCounter()
 
 void            Database::Claws_incrCounter()
 {
-    ++m_runNumber;
+    ++(*m_runNumber);
 
     return;
 }
@@ -1089,7 +1092,7 @@ void            Database::Claws_incrCounter()
 
 
 
-void            Database::Claws_rwCounter( char rw, std::string file, std::string id )
+void Database::Claws_rwCounter( char rw, std::string file, std::string id )
 {
     boost::property_tree::ptree ptree;
     
@@ -1101,7 +1104,7 @@ void            Database::Claws_rwCounter( char rw, std::string file, std::strin
     switch( rw )
     {
         case 'r':
-            m_runNumber = getInitReader()->getKey<unsigned int>(file, id);
+            *m_runNumber = getInitReader()->getKey<unsigned int>(file, id);
             break;
         case 'w':
             ptree.put(id, m_runNumber);

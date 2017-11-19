@@ -50,10 +50,16 @@ class ProcessData : public std::enable_shared_from_this< ProcessData >
         // very complicated data structure to store
         std::shared_ptr < std::vector< std::shared_ptr< Utility::Pico_Hist_Pico > > > m_picos_hist;
 
+        std::shared_ptr<unsigned long>  m_runNum;
+        std::shared_ptr<unsigned int>   m_subRunNum;
+
     public:
 
         ProcessData( std::shared_ptr<std::vector< std::shared_ptr< Pico > > > vPicos );
         ~ProcessData();
+
+        //! 
+        void setRunNumbers( unsigned long& runNum, unsigned int& subRunNum );
 
         //! Returns
         std::shared_ptr< Storage >  save();

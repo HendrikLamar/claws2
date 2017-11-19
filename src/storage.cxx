@@ -296,10 +296,15 @@ std::string Storage::makePath( unsigned long runNum , Utility::Dir_Struct kind )
 
 
 void Storage::save( 
-        unsigned long runNum, 
-        unsigned int subRunNum, 
+        unsigned long& runNum, 
+        unsigned int& subRunNum, 
         Utility::Dir_Struct kind )
 {
+
+    std::string tfileName{
+        "Event-" +
+        std::to_string(runNum)};
+    std::shared_ptr<TFile> file{std::make_shared<TFile>(tfileName.c_str())}; 
 
 
 

@@ -1111,7 +1111,7 @@ namespace Utility{
 
 
     //! Enum to string for PS6000_CHANNEL
-    std::string     Pico_EnumToString_channel( PS6000_CHANNEL& var )
+    std::string     Pico_EnumToString_channel( PS6000_CHANNEL var )
     {
         std::string output;
         switch( var ) 
