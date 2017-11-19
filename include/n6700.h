@@ -22,6 +22,7 @@
 #include <vector>
 #include <string>
 #include <map>
+#include <memory>
 
 #include "database.h"
 //#include "n6700_channels.h"
@@ -40,7 +41,7 @@ class N6700 : public SCPI
          * 
          */
 //        N6700(std::string ipAdress, std::string identity, unsigned short port = 5025);
-        N6700( Database* database );
+        N6700( std::shared_ptr<Database> database );
 
         virtual ~N6700();
 
@@ -72,7 +73,7 @@ class N6700 : public SCPI
 
     private:
         std::string::size_type  m_sz;
-        Database*               m_database;
+        std::shared_ptr<Database> m_database;
 
 
 

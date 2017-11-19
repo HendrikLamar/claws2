@@ -23,8 +23,10 @@
 #include <boost/date_time/gregorian/gregorian.hpp>
 #include <boost/filesystem.hpp>
 
+#include <TFile.h>
 #include <TH1I.h>
 
+#include <memory>
 
 
 
@@ -278,6 +280,42 @@ std::string Storage::makePath( unsigned long runNum , Utility::Dir_Struct kind )
     return finalPathStr;
 
 }
+
+
+
+
+
+
+
+///////////////////////////////////////////////////////////////////////////////
+
+
+
+
+
+
+
+void Storage::save( 
+        unsigned long& runNum, 
+        unsigned int& subRunNum, 
+        Utility::Dir_Struct kind )
+{
+
+    std::string tfileName{
+        "Event-" +
+        std::to_string(runNum)};
+    std::shared_ptr<TFile> file{std::make_shared<TFile>(tfileName.c_str())}; 
+
+
+
+
+    return;
+}
+
+
+
+
+
 
 
 

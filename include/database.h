@@ -20,6 +20,7 @@
 
 #include <string>
 #include <vector>
+#include <memory>
 
 #include "readini.h"
 #include "utility.h"
@@ -44,7 +45,7 @@ class Database
         bool            getStop();
 
         
-        ReadIni*        getInitReader();
+        std::shared_ptr<ReadIni>        getInitReader();
 
         //! Sets the number of picos initialized. To be called after initialization.
         void            setNoOfPicosInitialized( unsigned int numb );
@@ -87,7 +88,7 @@ class Database
         //! intermediate settings are read-in standardly.
         void Pico_readSettings( Utility::Pico_RunMode mode );
 
-        std::vector< Utility::Pico_Conf_Pico* >*     m_picoData;     
+        std::unique_ptr<std::vector< std::shared_ptr<Utility::Pico_Conf_Pico> > >     m_picoData;     
 
 
         ///////////////////////////////////////////////////////////////////
@@ -98,21 +99,21 @@ class Database
 
 
         //! Return the current run number.
-        unsigned long   Claws_getCounter();
+        std::shared_ptr<unsigned long>  Claws_getCounter();
         //! Increments the run number.
-        void            Claws_incrCounter();
+        void                            Claws_incrCounter();
         //! Reads/writes the run number, either to/from the standard file defined
         //! by initilizer.ini or to a file you define with the id you define.
         //! @
-        void            Claws_rwCounter(
+        void Claws_rwCounter(
                 char rw,                                //!< 'r' for read, 'w' for write.
                 std::string file = "",                  //!< when blank, the argument from initializer.ini is used
                 std::string id = "Settings.runNumber"   //!< when blank, the standard "Settings.runNumber" is used
                 );
 
 
-        Utility::Steering_Data* Claws_getConfig();
-        void                    Claws_readConfig();
+        std::shared_ptr<Utility::Steering_Data>     Claws_getConfig();
+        void                                        Claws_readConfig();
 
 
 
@@ -130,9 +131,9 @@ class Database
     private:
         bool                        m_stopSwitch;
 
-        ReadIni*                    m_initReader;
+        std::shared_ptr<ReadIni>    m_initReader;
 
-        Utility::Steering_Data*     m_steeringData;
+        std::shared_ptr<Utility::Steering_Data> m_steeringData;
 
         // number of picos initialized. This value is set by clawsRun.
         unsigned int                         m_MaxNoOfPicos;
@@ -143,7 +144,7 @@ class Database
         //   All settings for the powersupply are send as strings. 
         ///////////////////////////////////////////////////////////////////////
 
-        N6700_Channels*             m_N6700_Channels;
+        std::shared_ptr<N6700_Channels> m_N6700_Channels;
         
         Utility::N6700_connect      m_n6700_connect;
 
@@ -180,7 +181,7 @@ class Database
 
         void Pico_readIntermediateSettings( int picoNo );
 
-        Utility::Pico_Conf_HL_Gain* Pico_getHLGainStruct( 
+        std::shared_ptr<Utility::Pico_Conf_HL_Gain> Pico_getHLGainStruct( 
                 Utility::Pico_RunMode mode,
                 int picoNo
                 );
@@ -215,7 +216,7 @@ class Database
         ///////////////////////////////////////////////////////////////////
 
 
-        unsigned long        m_runNumber;
+        std::shared_ptr<unsigned long> m_runNumber;
 
 
 

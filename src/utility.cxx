@@ -349,7 +349,7 @@ namespace Utility{
                 throw PicoException("Pico fails to open!");
                 break;
             case 0:
-                throw PicoException("");
+                throw PicoException(" ");
                 break;
             default:
                 break;
@@ -1111,7 +1111,7 @@ namespace Utility{
 
 
     //! Enum to string for PS6000_CHANNEL
-    std::string     Pico_EnumToString_channel( PS6000_CHANNEL& var )
+    std::string     Pico_EnumToString_channel( PS6000_CHANNEL var )
     {
         std::string output;
         switch( var ) 
@@ -1376,9 +1376,7 @@ namespace Utility{
                 out << "\t\tLowGain: " << Pico_EnumToString_runMode( data.runMode_LowGain );
                 out << "\nLoopsPhysics: " << data.loops_Physics;
                 out << "\t\t\tLoopsInter: " << data.loops_Intermediate;
-                out << "\t\tSavePath#1: " << data.savePath_1;
-                out << "\nSavePath#2: " << data.savePath_2;
-                out << "\t\tSavePath#3: " << data.savePath_3;
+                out << "\t\tSavePath#1: " << data.path_saveData;
                 out << "\n";
 
         }

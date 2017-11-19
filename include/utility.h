@@ -344,7 +344,7 @@ namespace Utility{
         ///////////////////////////////////////////////////////////////////////
 
         private:
-            std::shared_ptr< std::vector< std::shared_ptr<Pico_Hist_Channel> > >    data;
+            std::shared_ptr< std::vector< std::shared_ptr<Pico_Hist_Channel> > > data;
             std::string location;
 
             PS6000_CHANNEL  intToCh( int ch );
@@ -529,12 +529,12 @@ namespace Utility{
         //! Constructor takes care about the channels.
         Pico_Conf_HL_Gain( Utility::Claws_Gain tgain ) : 
             gain( tgain ),
-            channels( new std::vector< Utility::Pico_Conf_Channel* >
+            channels( new std::vector< std::shared_ptr<Utility::Pico_Conf_Channel> >
                         {
-                            new Utility::Pico_Conf_Channel(PS6000_CHANNEL_A),
-                            new Utility::Pico_Conf_Channel(PS6000_CHANNEL_B),
-                            new Utility::Pico_Conf_Channel(PS6000_CHANNEL_C),
-                            new Utility::Pico_Conf_Channel(PS6000_CHANNEL_D)
+                            std::make_shared<Utility::Pico_Conf_Channel>(PS6000_CHANNEL_A),
+                            std::make_shared<Utility::Pico_Conf_Channel>(PS6000_CHANNEL_B),
+                            std::make_shared<Utility::Pico_Conf_Channel>(PS6000_CHANNEL_C),
+                            std::make_shared<Utility::Pico_Conf_Channel>(PS6000_CHANNEL_D)
                         }
                     ),
             data_trigger( new Utility::Pico_Conf_Trigger_Simple() )
@@ -543,30 +543,17 @@ namespace Utility{
         //! Destructor takes care about the channels.
         ~Pico_Conf_HL_Gain()
         {
-            for ( auto& tmp: *channels )
-            {
-                // delete if empty
-                delete tmp;
-                tmp = nullptr;
-            }
-
-            // delete if empty
-            delete channels;
-            channels = nullptr;
-
-            // delete if not empty
-            delete data_trigger;
-            data_trigger = nullptr;
-
+            channels.reset();
+            data_trigger.reset();
         };
 
         Utility::Claws_Gain      gain;
 
 
-        std::vector< Utility::Pico_Conf_Channel* >* channels;
+        std::shared_ptr<std::vector< std::shared_ptr<Utility::Pico_Conf_Channel> > > channels;
 
 
-        Pico_Conf_Trigger_Simple* data_trigger;
+        std::shared_ptr<Pico_Conf_Trigger_Simple> data_trigger;
 
         Pico_Trigger_Mode       mode_trigger;
 
@@ -635,14 +622,9 @@ namespace Utility{
         ~Pico_Conf_Pico()
         {
             // delete data pointers
-            delete data_lowGain;
-            data_lowGain = nullptr;
-
-            delete data_highGain;
-            data_highGain = nullptr;
-
-            delete data_inter;
-            data_inter = nullptr;
+            data_lowGain.reset();
+            data_highGain.reset();
+            data_inter.reset();
         }
 
 
@@ -651,10 +633,10 @@ namespace Utility{
         int8_t                  val_serial[100];
         std::string             val_location;
 
-        Pico_Conf_HL_Gain*      data_lowGain;
-        Pico_Conf_HL_Gain*      data_highGain;
+        std::shared_ptr<Pico_Conf_HL_Gain>      data_lowGain;
+        std::shared_ptr<Pico_Conf_HL_Gain>      data_highGain;
 
-        Pico_Conf_HL_Gain*      data_inter;
+        std::shared_ptr<Pico_Conf_HL_Gain>      data_inter;
 
         friend std::ostream& operator<<(
                 std::ostream& out, Utility::Pico_Conf_Pico& data );
@@ -752,7 +734,7 @@ namespace Utility{
     std::string     Pico_EnumToString_ratio( PS6000_RATIO_MODE& var );
 
     //! Enum to string for PS6000_CHANNEL
-    std::string     Pico_EnumToString_channel( PS6000_CHANNEL& var );
+    std::string     Pico_EnumToString_channel( PS6000_CHANNEL var );
 
     //! Enum to string for PS6000_THRESHOLD_DIRECTION
     std::string     Pico_EnumToString_thresDir( PS6000_THRESHOLD_DIRECTION& var );
@@ -827,9 +809,7 @@ namespace Utility{
         int                     loops_Physics;
         int                     loops_Intermediate;
 
-        std::string             savePath_1;
-        std::string             savePath_2;
-        std::string             savePath_3;
+        std::string             path_saveData;
 
 
         friend std::ostream& operator<<(

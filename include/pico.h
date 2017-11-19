@@ -25,6 +25,7 @@
 
 #include <vector>
 #include <string>
+#include <memory>
 
 
 
@@ -57,7 +58,7 @@ class Pico
         
 
         //! Const pointer to a variable set of pico data.
-        Utility::Pico_Conf_Pico* const          m_data_pico;
+        std::shared_ptr<Utility::Pico_Conf_Pico> m_data_pico;
 
         //! Handle value is defined during the initialization of the pico.
         int16_t                                 m_handle;
@@ -71,11 +72,11 @@ class Pico
 
         // this pointer point to the data which is is needed for the current
         // run mode
-        Utility::Pico_Conf_HL_Gain*             m_data_current;
+        std::shared_ptr<Utility::Pico_Conf_HL_Gain>             m_data_current;
 
         
         // Vector holding the four channels of the pico
-        const std::vector< Channel* >* const    m_channels;
+        std::shared_ptr<std::vector< std::shared_ptr<Channel> > > m_channels;
 
         ////////////////////////////////////////////////////////////////////////
         // 
@@ -328,11 +329,11 @@ class Pico
         /*
          *! Constructor to be called if pico is initialized by serial.
          */
-        Pico( Utility::Pico_Conf_Pico* picoData );
+//        Pico( std::shared_ptr<Utility::Pico_Conf_Pico> picoData );
 
         //! Constructor to be called when pico is initialized before which means
         //! that its unique handle is known.
-        Pico( Utility::Pico_Conf_Pico* picoData, int16_t handle );
+        Pico( std::shared_ptr<Utility::Pico_Conf_Pico> picoData, int16_t handle );
         ///////////////////////////////////////////////////////////////////////
         /*
          *! Destructor
@@ -344,8 +345,8 @@ class Pico
         void pingUnit();
 
         //! Returns the channel.
-        Channel* getCh( PS6000_CHANNEL cha );
-        Channel* getCh( int cha );
+        std::shared_ptr<Channel> getCh( PS6000_CHANNEL cha );
+        std::shared_ptr<Channel> getCh( int cha );
 
         //! Returns the pico location.
         std::string     getLocation();

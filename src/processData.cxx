@@ -39,8 +39,8 @@
 
 
 
-ProcessData::ProcessData( std::vector< Pico* > * vPicos ) :
-    m_save( new Storage() ),
+ProcessData::ProcessData( std::shared_ptr<std::vector< std::shared_ptr< Pico > > >    vPicos ) :
+    m_save( std::make_shared<Storage>() ),
     m_picos( vPicos )
 {
 
@@ -61,7 +61,7 @@ ProcessData::ProcessData( std::vector< Pico* > * vPicos ) :
 
 ProcessData::~ProcessData()
 {
-
+    m_picos_hist.reset();
 }
 
 
@@ -137,6 +137,31 @@ ProcessData::~ProcessData()
 //              START Public Member Functions 
 //
 ///////////////////////////////////////////////////////////////////////////////
+
+
+
+
+
+void ProcessData::setRunNumbers( unsigned long& runNum, unsigned int& subRunNum )
+{
+
+    
+    return;
+}
+
+
+
+
+
+
+///////////////////////////////////////////////////////////////////////////////
+
+
+
+
+
+
+
 
 
 
@@ -304,6 +329,9 @@ void ProcessData::makeTH1I()
         std::make_shared<std::vector< int16_t > >()};
 
     std::shared_ptr< TH1I >     hist;
+    std::string                 channel;
+    std::string                 location;
+    std::string                 nameTotal;
 
     for( unsigned int ii = 0; ii < m_picos->size(); ++ii )
     {
@@ -311,6 +339,7 @@ void ProcessData::makeTH1I()
         // create instance to hold all the data for one pico
         std::shared_ptr< Utility::Pico_Hist_Pico >  tpico{
             std::make_shared<Utility::Pico_Hist_Pico>(m_picos->at(ii)->getLocation())};
+        location = m_picos->at(ii)->getLocation();
 
         for( unsigned int kk = 0; kk < 4; ++kk )
         {
@@ -323,8 +352,14 @@ void ProcessData::makeTH1I()
                 std::shared_ptr<Utility::Pico_Hist_Channel> cha{
                     std::make_shared<Utility::Pico_Hist_Channel>(m_picos->at(ii)->getCh(kk)->getChNo())};
 
+                // create proper name
+                channel = Utility::Pico_EnumToString_channel(m_picos->at(ii)->getCh(kk)->getChNo());
+                nameTotal = location + "_" + channel;
+                
                 // create histogramm instance
-                hist = std::make_shared< TH1I >("hist", "", 
+                hist = std::make_shared< TH1I >(
+                        nameTotal.c_str(),
+                        nameTotal.c_str(),
                         m_picos->at(ii)->getCh(kk)->getBuffer()->size(), 
                         0, 
                         m_picos->at(ii)->getCh(kk)->getBuffer()->size()

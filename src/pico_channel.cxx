@@ -35,7 +35,7 @@ Channel::Channel
     (
         PS6000_CHANNEL channel,
         int16_t* handle, 
-        Utility::Pico_Conf_HL_Gain* const dataHLGain
+        std::shared_ptr<Utility::Pico_Conf_HL_Gain> const dataHLGain
     ) :
     m_channel( channel ),
     m_handle( handle ),

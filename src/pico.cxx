@@ -40,42 +40,43 @@
 
 
 
-Pico::Pico( Utility::Pico_Conf_Pico* picoData ) :
-    m_data_pico( picoData ),
-    m_serial( m_data_pico->val_serial ),
-    m_location( &m_data_pico->val_location ),
-    m_data_current( new Utility::Pico_Conf_HL_Gain( Utility::Claws_Gain::INTERMEDIATE ) ),
-    m_channels( 
-            new std::vector< Channel* >
-                {
-                    new Channel( 
-                            PS6000_CHANNEL_A, 
-                            &m_handle, 
-                            m_data_current
-                            ),
-                    new Channel( 
-                            PS6000_CHANNEL_B, 
-                            &m_handle, 
-                            m_data_current
-                            ),
-                    new Channel( 
-                            PS6000_CHANNEL_C, 
-                            &m_handle, 
-                            m_data_current
-                            ),
-                    new Channel( 
-                            PS6000_CHANNEL_D, 
-                            &m_handle, 
-                            m_data_current
-                            ),
-                }
-               )
-{
-    // initialize pico
-    init();
-    turnOffUnneeded();
-
-}
+/* Pico::Pico( Utility::Pico_Conf_Pico* picoData ) :
+ *     m_data_pico( picoData ),
+ *     m_serial( m_data_pico->val_serial ),
+ *     m_location( &m_data_pico->val_location ),
+ *     m_data_current( new Utility::Pico_Conf_HL_Gain( Utility::Claws_Gain::INTERMEDIATE ) ),
+ *     m_channels( 
+ *             new std::vector< Channel* >
+ *                 {
+ *                     new Channel( 
+ *                             PS6000_CHANNEL_A, 
+ *                             &m_handle, 
+ *                             m_data_current
+ *                             ),
+ *                     new Channel( 
+ *                             PS6000_CHANNEL_B, 
+ *                             &m_handle, 
+ *                             m_data_current
+ *                             ),
+ *                     new Channel( 
+ *                             PS6000_CHANNEL_C, 
+ *                             &m_handle, 
+ *                             m_data_current
+ *                             ),
+ *                     new Channel( 
+ *                             PS6000_CHANNEL_D, 
+ *                             &m_handle, 
+ *                             m_data_current
+ *                             ),
+ *                 }
+ *                )
+ * {
+ *     // initialize pico
+ *     init();
+ *     turnOffUnneeded();
+ * 
+ * }
+ */
 
 
 
@@ -91,38 +92,35 @@ Pico::Pico( Utility::Pico_Conf_Pico* picoData ) :
 
 
 
-Pico::Pico( Utility::Pico_Conf_Pico* picoData, int16_t handle ) :
+Pico::Pico( std::shared_ptr<Utility::Pico_Conf_Pico> picoData, int16_t handle ) :
     m_data_pico( picoData ),
     m_handle( handle ),
     m_serial( m_data_pico->val_serial ),
     m_location( &m_data_pico->val_location ),
     m_data_current( new Utility::Pico_Conf_HL_Gain( Utility::Claws_Gain::INTERMEDIATE ) ),
     m_channels( 
-            new std::vector< Channel* >
-                {
-                    new Channel( 
-                            PS6000_CHANNEL_A, 
-                            &m_handle, 
-                            m_data_current
-                            ),
-                    new Channel( 
-                            PS6000_CHANNEL_B, 
-                            &m_handle, 
-                            m_data_current
-                            ),
-                    new Channel( 
-                            PS6000_CHANNEL_C, 
-                            &m_handle, 
-                            m_data_current
-                            ),
-                    new Channel( 
-                            PS6000_CHANNEL_D, 
-                            &m_handle, 
-                            m_data_current
-                            ),
-                }
-               )
+            std::make_shared<std::vector< std::shared_ptr<Channel> > >() )
 {
+    m_channels->push_back(std::make_shared<Channel>( 
+                                        PS6000_CHANNEL_A, 
+                                        &m_handle, 
+                                        m_data_current
+                                        ));
+    m_channels->push_back(std::make_shared<Channel>( 
+                                        PS6000_CHANNEL_B, 
+                                        &m_handle, 
+                                        m_data_current
+                                        ));
+    m_channels->push_back(std::make_shared<Channel>( 
+                                        PS6000_CHANNEL_C, 
+                                        &m_handle, 
+                                        m_data_current
+                                        ));
+    m_channels->push_back(std::make_shared<Channel>( 
+                                        PS6000_CHANNEL_D, 
+                                        &m_handle, 
+                                        m_data_current
+                                        ));
     // no initialization needed since the handle is known
     
     pingUnit();
@@ -144,13 +142,9 @@ Pico::Pico( Utility::Pico_Conf_Pico* picoData, int16_t handle ) :
 
 Pico::~Pico()
 {
-    for ( auto& tmp : *m_channels )
-    {
-        delete tmp;
-    }
-    delete m_channels;
+    m_channels.reset();
 
-    delete m_data_current;
+    m_data_current.reset();
 
     close();
 }
@@ -272,7 +266,7 @@ void Pico::setConfig( Utility::Claws_Gain gain )
 
 
 
-Channel* Pico::getCh( PS6000_CHANNEL cha )
+std::shared_ptr<Channel> Pico::getCh( PS6000_CHANNEL cha )
 {
     switch( cha )
     {
@@ -290,7 +284,7 @@ Channel* Pico::getCh( PS6000_CHANNEL cha )
 }
 
 
-Channel* Pico::getCh( int cha )
+std::shared_ptr<Channel> Pico::getCh( int cha )
 {
     switch( cha )
     {
