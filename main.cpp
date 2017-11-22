@@ -41,7 +41,7 @@
 int main()
 {
 
-    gROOT->ProcessLine("gErrorIgnoreLevel = 6000");
+//    gROOT->ProcessLine("gErrorIgnoreLevel = 6000");
 
     MyState* mystate;
 

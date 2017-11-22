@@ -42,12 +42,9 @@
 
 
 
-Storage::Storage()
-//        std::string picoLocation, 
-//        std::string saveLocation
-//        ) :
-//    m_location_pico( picoLocation ),
-//    m_location_save( saveLocation )
+Storage::Storage(std::shared_ptr < std::vector< std::shared_ptr< Utility::Pico_Hist_Pico > > > picos_hist, std::shared_ptr<unsigned long> runNum ) :
+    m_picos_hist( picos_hist ),
+    m_runNum( runNum )
 {}
 
 
@@ -123,10 +120,11 @@ Storage::~Storage()
 
 
 
-void Storage::intermediate( unsigned long runNum, unsigned int subRunNum)
+void Storage::intermediate( unsigned int& subRunNum)
 {
-    std::string tpath = makePath( runNum, Utility::Dir_Struct::INTER );
+    std::string tpath = makePath( *m_runNum, Utility::Dir_Struct::INTER );
     
+    save( *m_runNum, subRunNum, tpath );
 
 
     return;
@@ -143,10 +141,11 @@ void Storage::intermediate( unsigned long runNum, unsigned int subRunNum)
 
 
 
-void Storage::physics( unsigned long runNum, unsigned int subRunNum )
+void Storage::physics( unsigned int& subRunNum )
 {
 
-    std::string tpath = makePath( runNum, Utility::Dir_Struct::PHYSICS );
+    std::string tpath = makePath( *m_runNum, Utility::Dir_Struct::PHYSICS );
+    save( *m_runNum, subRunNum, tpath );
 
 
     return;
@@ -298,16 +297,62 @@ std::string Storage::makePath( unsigned long runNum , Utility::Dir_Struct kind )
 void Storage::save( 
         unsigned long& runNum, 
         unsigned int& subRunNum, 
-        Utility::Dir_Struct kind )
+        std::string& tpath )
 {
 
-    std::string tfileName{
-        "Event-" +
-        std::to_string(runNum)};
-    std::shared_ptr<TFile> file{std::make_shared<TFile>(tfileName.c_str())}; 
+    std::string tfileName{"Event-"};
+    
+    tfileName += std::to_string(runNum);
+
+    tfileName += "-";
+
+    // extend with zeros to three digits
+    if( subRunNum < 10 )
+    {
+        tfileName += "000" +
+        std::to_string(subRunNum);
+    }
+    else if( subRunNum < 100 )
+    {
+        tfileName += "00" +
+        std::to_string(subRunNum);
+    }
+    else if( subRunNum < 1000 )
+    {
+        tfileName += "0" +
+        std::to_string(subRunNum);
+    }
+    else if( subRunNum < 10000 )
+    {
+        tfileName += "" +
+        std::to_string(subRunNum);
+    };
+
+    tfileName += ".root";
+
+    ////////////////////////////////////////////////////////////////////////////
+
+    std::string fpath = tpath + "/" + tfileName;
+    std::shared_ptr<TFile> file{std::make_shared<TFile>(fpath.c_str(), "recreate")}; 
+    file->cd();
+
+    for( auto& tmp : *m_picos_hist )
+    {
+        for( int ii = 0; ii < tmp->getSize(); ++ii )
+        {
+            tmp->get(ii)->Write();
+        }
+    }
 
 
 
+//    file->SaveAs(fpath.c_str());
+    file->Write();
+    file->Close();
+
+
+
+    ///////////////////////////////////////////////////////////////////////////
 
     return;
 }

@@ -151,12 +151,20 @@ void        ClawsRun::initialize()
 void    ClawsRun::run()
 {
 
-    m_database->Claws_incrCounter();
+//    for( int i = 0; i < 1; ++i)
+    for( int i = 0; i < m_database->Claws_getConfig()->loops_Physics; ++i)
+    {
+        if( i%50 == 0)
+        {
+            std::cout << "\t\tLOOP #" << i << std::endl;
+        }
+        m_database->Claws_incrCounter();
+        m_database->Claws_rwCounter('w');
 
-    Pico_runInter();
+        Pico_runInter();
 
 
-    m_database->Claws_rwCounter('w');
+    }
 
     return;
 
@@ -777,7 +785,9 @@ void            ClawsRun::printData()
     void ClawsRun::Pico_runInter()
     {
 
-        ProcessData dataProcessor( m_picos );
+        // create a process data instance and give it the vector with the pointers
+        // and the claws-global counter
+        ProcessData dataProcessor( m_picos, m_database->Claws_getCounter() );
         try
         {
             dataProcessor.save()->setSaveLocation(m_database->Claws_getConfig()->path_saveData);
@@ -789,31 +799,42 @@ void            ClawsRun::printData()
             return;
         }
 
-        //! \todo Extend for multiple Picos!
+
+        // load each pico with a config and make it ready before running in the
+        // loop
+        for( auto& tmp : *m_picos )
+        {
+            tmp->setConfig( Utility::Claws_Gain::INTERMEDIATE );
+            tmp->setReadyBlock();
+        }
+
+
+        // let each pico acquire data in its own thread
+        std::vector<std::thread>    threads;
+        for( unsigned int counter1 = 0; counter1 < m_database->Claws_getConfig()->loops_Intermediate; ++counter1 )
+        {
+            
+        }
+
+
+
 //        for( unsigned int ii = 0; ii < 1; ++ii)
         for( unsigned int ii = 0; ii < m_picos->size(); ++ii)
         {
-        
-            std::cout << "Pico#" << ii << std::endl;
             try
             {
-                m_picos->at(ii)->setConfig( Utility::Claws_Gain::INTERMEDIATE );
-                m_picos->at(ii)->setReadyBlock();
                 for(int i = 0; i< m_database->Claws_getConfig()->loops_Intermediate; ++i)
+//                for(int i = 0; i< 2 ; ++i)
                 {
 
-                    if( i%10 == 0)
-                    {
-                        std::cout << "Loop #" << i << "\n";
-                    }
+                    unsigned int ti{static_cast<unsigned int>(i)};
                     m_picos->at(ii)->runBlock();
 
-                    dataProcessor.sync();
-                    dataProcessor.save()->intermediate(m_database->Claws_getCounter(), ii);
+                    dataProcessor.sync(ti);
+                    dataProcessor.save()->intermediate(ti);
                     dataProcessor.clear();
                 }
 
-                m_picos->at(ii)->stop();
             }
             catch( ChannelException& excep )
             {
@@ -829,6 +850,11 @@ void            ClawsRun::printData()
             }
         }
 
+        // tell pico that data taking is done
+        for( auto& tmp : *m_picos )
+        {
+            tmp->stop();
+        }
 
         return;
     }

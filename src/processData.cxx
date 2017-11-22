@@ -39,14 +39,14 @@
 
 
 
-ProcessData::ProcessData( std::shared_ptr<std::vector< std::shared_ptr< Pico > > >    vPicos ) :
-    m_save( std::make_shared<Storage>() ),
-    m_picos( vPicos )
+ProcessData::ProcessData( std::shared_ptr<std::vector< std::shared_ptr< Pico > > > vPicos, std::shared_ptr<unsigned long> runNum ) :
+    m_picos( vPicos ),
+    m_runNum( runNum )
 {
 
     m_picos_hist = std::make_shared< std::vector< std::shared_ptr< Utility::Pico_Hist_Pico > > >();
+    m_save = std::make_shared<Storage>(m_picos_hist, m_runNum );
 }
-
 
 
 
@@ -142,28 +142,6 @@ ProcessData::~ProcessData()
 
 
 
-void ProcessData::setRunNumbers( unsigned long& runNum, unsigned int& subRunNum )
-{
-
-    
-    return;
-}
-
-
-
-
-
-
-///////////////////////////////////////////////////////////////////////////////
-
-
-
-
-
-
-
-
-
 
 
 
@@ -187,10 +165,10 @@ std::shared_ptr< Storage >  ProcessData::save()
 
 
 //std::shared_ptr<ProcessData>    ProcessData::sync()
-void ProcessData::sync()
+void ProcessData::sync( unsigned int& subRunNum )
 {
 
-    makeTH1I();
+    makeTH1I( subRunNum );
 
 //    return shared_from_this();
     return;
@@ -321,7 +299,7 @@ void    ProcessData::clear()
 
 
 
-void ProcessData::makeTH1I()
+void ProcessData::makeTH1I( unsigned int& subRunNum )
 {
     // the first four entries indicate if the channels of the first pico are enabled
     // or not, the second four for pico #2, etc...
@@ -331,7 +309,8 @@ void ProcessData::makeTH1I()
     std::shared_ptr< TH1I >     hist;
     std::string                 channel;
     std::string                 location;
-    std::string                 nameTotal;
+    std::string                 name;
+    std::string                 title;
 
     for( unsigned int ii = 0; ii < m_picos->size(); ++ii )
     {
@@ -353,22 +332,40 @@ void ProcessData::makeTH1I()
                     std::make_shared<Utility::Pico_Hist_Channel>(m_picos->at(ii)->getCh(kk)->getChNo())};
 
                 // create proper name
-                channel = Utility::Pico_EnumToString_channel(m_picos->at(ii)->getCh(kk)->getChNo());
-                nameTotal = location + "_" + channel;
+                switch( m_picos->at(ii)->getCh(kk)->getChNo() )
+                {
+                    case PS6000_CHANNEL_A:
+                        channel = "1";
+                        break;
+                    case PS6000_CHANNEL_B:
+                        channel = "2";
+                        break;
+                    case PS6000_CHANNEL_C:
+                        channel = "3";
+                        break;
+                    case PS6000_CHANNEL_D:
+                        channel = "4";
+                        break;
+                    default:
+                        channel = "XY";
+                
+                }
+                name = location + "_" + channel;
+                title = location+ "+" + channel + "_" + std::to_string(subRunNum);
                 
                 // create histogramm instance
                 hist = std::make_shared< TH1I >(
-                        nameTotal.c_str(),
-                        nameTotal.c_str(),
+                        name.c_str(),
+                        title.c_str(),
                         m_picos->at(ii)->getCh(kk)->getBuffer()->size(), 
                         0, 
                         m_picos->at(ii)->getCh(kk)->getBuffer()->size()
                         );
 
                 // copy the data
-                for( unsigned tt = 0; tt < m_picos->at(ii)->getCh(kk)->getBuffer()->size(); ++tt )
+                for( unsigned tt = 0; tt < m_picos->at(ii)->getCh(kk)->getBuffer()->size() ; ++tt )
                 {
-                    hist->SetBinContent( tt, m_picos->at(ii)->getCh(kk)->getBuffer()->at(tt) );
+                    hist->SetBinContent( tt-1, m_picos->at(ii)->getCh(kk)->getBuffer()->at(tt) );
                 }
 
                 // set the data to the channel data instance

@@ -64,7 +64,15 @@ Database::Database() try :
 
 
 
-    Claws_rwCounter('r');
+    try
+    {
+        Claws_rwCounter('r');
+    }
+    catch( boost::property_tree::ptree_error& excep )
+    {
+        std::cout << excep.what() << std::endl;
+        throw;
+    }
 
 
     ///////////////////////////////////////////////////////////////////////////
@@ -91,7 +99,6 @@ catch(...)
 
 Database::~Database()
 {
-    std::cout <<  "Calling ~Database()....\n";
     m_initReader.reset();
 
     m_N6700_Channels.reset();
@@ -99,10 +106,6 @@ Database::~Database()
     m_picoData.reset();
     
     m_steeringData.reset();
-
-    std::cout << m_initReader.use_count() << "\t";
-    std::cout << m_N6700_Channels.use_count() << "\t";
-    std::cout << m_steeringData.use_count() << "\n";
 };
 
 
@@ -210,12 +213,12 @@ void Database::Claws_readConfig()
 
     // read in loopsPhysics
     tpath = root + "loops_physics";
-    m_steeringData->loops_Physics = m_initReader->getKey<int>(
+    m_steeringData->loops_Physics = m_initReader->getKey<unsigned int>(
             m_initReader->getInitstruct().ClawsConfig, tpath);
 
     // read in loopsIntermediate
     tpath = root + "loops_intermediate";
-    m_steeringData->loops_Intermediate = m_initReader->getKey<int>(
+    m_steeringData->loops_Intermediate = m_initReader->getKey<unsigned int>(
             m_initReader->getInitstruct().ClawsConfig, tpath );
 
     // read in save path # 1
@@ -1107,7 +1110,7 @@ void Database::Claws_rwCounter( char rw, std::string file, std::string id )
             *m_runNumber = getInitReader()->getKey<unsigned int>(file, id);
             break;
         case 'w':
-            ptree.put(id, m_runNumber);
+            ptree.put(id, *m_runNumber);
             boost::property_tree::ini_parser::write_ini(file, ptree);
             break;
         default:

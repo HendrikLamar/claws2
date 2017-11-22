@@ -32,33 +32,37 @@ class Storage
 {
     private:
 
+        std::shared_ptr < std::vector< std::shared_ptr< 
+            Utility::Pico_Hist_Pico > > > m_picos_hist;
+
+        std::shared_ptr<unsigned long> m_runNum;
+
         // backup save location
         std::string     m_location_save = "/dev/null";
 
         // creates the path where to save the data
         std::string     makePath( unsigned long runNum, Utility::Dir_Struct kind );
 
-        void save( 
-                unsigned long& runNum, 
+        void save(
+                unsigned long& runNum,
                 unsigned int& subRunNum, 
-                Utility::Dir_Struct kind );
+                std::string& fpath );
+
 
 
     public:
-        Storage();
+        Storage( std::shared_ptr < std::vector< std::shared_ptr< Utility::Pico_Hist_Pico > > > picos_hist, std::shared_ptr<unsigned long> runNum );
 
         ~Storage();
 
 
         //! Stores intermediate data and saves the belonging settings.ini file.
         void intermediate( 
-                unsigned long runNum,       //!< Specified in runNumber.ini
-                unsigned int subRunNum);    //!< Defined in ClawsConfig loops_physics
+                unsigned int& subRunNum);    //!< Defined in ClawsConfig loops_physics
         
         //! Stores physics data and saves the belonging settings.ini file.
         void physics( 
-                unsigned long runNum,       //!< Specified in runNumber.ini
-                unsigned int subRunNum);    //!< Defined in ClawsConfig loops_physics
+                unsigned int& subRunNum);    //!< Defined in ClawsConfig loops_physics
 
         //! Set the location where the data should be saved.
         void setSaveLocation( std::string saveLocation );

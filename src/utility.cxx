@@ -302,6 +302,11 @@ namespace Utility{
     }
 
 
+    int Pico_Hist_Pico::getSize()
+    {
+        return data->size();
+    }
+
 
 
 

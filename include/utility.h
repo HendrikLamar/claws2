@@ -280,7 +280,7 @@ namespace Utility{
         ///////////////////////////////////////////////////////////////////////
 
         //! Sets a set of data if the channel was created empty or redefine.
-        void                    set( std::shared_ptr<TH1I> hist );
+        void set( std::shared_ptr<TH1I> hist );
 
         //! Returns the TH1I of the channel.
         std::shared_ptr<TH1I>    get();
@@ -288,7 +288,6 @@ namespace Utility{
         //! Returns the channel number.
         PS6000_CHANNEL getCh();
 
-            std::shared_ptr< TH1I >         data;
 
         private:
             PS6000_CHANNEL                  channel;
@@ -296,6 +295,8 @@ namespace Utility{
             PS6000_CHANNEL  intToCh( int ch );
 
             void   set( int cha, std::shared_ptr<TH1I> hist );
+
+            std::shared_ptr< TH1I >         data;
 
 
 
@@ -340,6 +341,8 @@ namespace Utility{
         std::shared_ptr<TH1I>  get( int ch );
 
         std::string getLoc();
+
+        int         getSize();
 
         ///////////////////////////////////////////////////////////////////////
 
@@ -806,8 +809,8 @@ namespace Utility{
         Pico_RunMode            runMode_LowGain;
 
 
-        int                     loops_Physics;
-        int                     loops_Intermediate;
+        unsigned int            loops_Physics;
+        unsigned int            loops_Intermediate;
 
         std::string             path_saveData;
 
