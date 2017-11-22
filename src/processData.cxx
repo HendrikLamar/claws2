@@ -165,10 +165,10 @@ std::shared_ptr< Storage >  ProcessData::save()
 
 
 //std::shared_ptr<ProcessData>    ProcessData::sync()
-void ProcessData::sync( unsigned int& subRunNum )
+void ProcessData::sync( unsigned int& subRunNum, std::shared_ptr<Pico> tpico )
 {
 
-    makeTH1I( subRunNum );
+    makeTH1I( subRunNum, tpico );
 
 //    return shared_from_this();
     return;
@@ -299,8 +299,13 @@ void    ProcessData::clear()
 
 
 
-void ProcessData::makeTH1I( unsigned int& subRunNum )
+void ProcessData::makeTH1I( 
+        unsigned int& subRunNum,
+        std::shared_ptr<Pico> tpico )
 {
+    // create mutex to lock variables for certain times
+    std::mutex tmp_mutex_pico;
+
     // the first four entries indicate if the channels of the first pico are enabled
     // or not, the second four for pico #2, etc...
     std::shared_ptr< std::vector< int16_t > >  picoChannelEnabled{
@@ -312,73 +317,74 @@ void ProcessData::makeTH1I( unsigned int& subRunNum )
     std::string                 name;
     std::string                 title;
 
-    for( unsigned int ii = 0; ii < m_picos->size(); ++ii )
-    {
         
-        // create instance to hold all the data for one pico
-        std::shared_ptr< Utility::Pico_Hist_Pico >  tpico{
-            std::make_shared<Utility::Pico_Hist_Pico>(m_picos->at(ii)->getLocation())};
-        location = m_picos->at(ii)->getLocation();
+    // create instance to hold all the data for one pico
+    std::shared_ptr< Utility::Pico_Hist_Pico >  hist_pico{
+        std::make_shared<Utility::Pico_Hist_Pico>(tpico->getLocation())};
+    location = tpico->getLocation();
 
-        for( unsigned int kk = 0; kk < 4; ++kk )
+    for( unsigned int kk = 0; kk < 4; ++kk )
+    {
+        picoChannelEnabled->push_back(tpico->getCh(kk)->getEnabled());
+
+        if( tpico->getCh(kk)->getEnabled() )
         {
-            picoChannelEnabled->push_back(m_picos->at(ii)->getCh(kk)->getEnabled());
 
-            if( m_picos->at(ii)->getCh(kk)->getEnabled() )
+            // since the channel is enabled, create instance to hold the data for the channel
+            std::shared_ptr<Utility::Pico_Hist_Channel> cha{
+                std::make_shared<Utility::Pico_Hist_Channel>(tpico->getCh(kk)->getChNo())};
+
+            // create proper name
+            switch( tpico->getCh(kk)->getChNo() )
             {
-
-                // since the channel is enabled, create instance to hold the data for the channel
-                std::shared_ptr<Utility::Pico_Hist_Channel> cha{
-                    std::make_shared<Utility::Pico_Hist_Channel>(m_picos->at(ii)->getCh(kk)->getChNo())};
-
-                // create proper name
-                switch( m_picos->at(ii)->getCh(kk)->getChNo() )
-                {
-                    case PS6000_CHANNEL_A:
-                        channel = "1";
-                        break;
-                    case PS6000_CHANNEL_B:
-                        channel = "2";
-                        break;
-                    case PS6000_CHANNEL_C:
-                        channel = "3";
-                        break;
-                    case PS6000_CHANNEL_D:
-                        channel = "4";
-                        break;
-                    default:
-                        channel = "XY";
-                
-                }
-                name = location + "_" + channel;
-                title = location+ "+" + channel + "_" + std::to_string(subRunNum);
-                
-                // create histogramm instance
-                hist = std::make_shared< TH1I >(
-                        name.c_str(),
-                        title.c_str(),
-                        m_picos->at(ii)->getCh(kk)->getBuffer()->size(), 
-                        0, 
-                        m_picos->at(ii)->getCh(kk)->getBuffer()->size()
-                        );
-
-                // copy the data
-                for( unsigned tt = 0; tt < m_picos->at(ii)->getCh(kk)->getBuffer()->size() ; ++tt )
-                {
-                    hist->SetBinContent( tt-1, m_picos->at(ii)->getCh(kk)->getBuffer()->at(tt) );
-                }
-
-                // set the data to the channel data instance
-                cha->set( hist );
-
-                // add the channel instance to the pico container
-                tpico->add( cha );
+                case PS6000_CHANNEL_A:
+                    channel = "1";
+                    break;
+                case PS6000_CHANNEL_B:
+                    channel = "2";
+                    break;
+                case PS6000_CHANNEL_C:
+                    channel = "3";
+                    break;
+                case PS6000_CHANNEL_D:
+                    channel = "4";
+                    break;
+                default:
+                    channel = "XY";
+            
             }
+            name = location + "_" + channel;
+            title = location+ "+" + channel + "_" + std::to_string(subRunNum);
+            
+            // create histogramm instance
+            hist = std::make_shared< TH1I >(
+                    name.c_str(),
+                    title.c_str(),
+                    tpico->getCh(kk)->getBuffer()->size(), 
+                    0, 
+                    tpico->getCh(kk)->getBuffer()->size()
+                    );
+
+            // copy the data
+            for( unsigned tt = 0; tt < tpico->getCh(kk)->getBuffer()->size() ; ++tt )
+            {
+                hist->SetBinContent( tt-1, tpico->getCh(kk)->getBuffer()->at(tt) );
+            }
+
+            // set the data to the channel data instance
+            cha->set( hist );
+
+            // add the channel instance to the pico container
+            hist_pico->add( cha );
         }
+    }
 
-        // append the pico to the m_picos_hist vector
-        m_picos_hist->push_back( tpico );
-
+    // append the pico to the m_picos_hist vector
+    // this action must be secured with a mutex which is freed after
+    // going out of scope
+    {
+        std::lock_guard<std::mutex> guard(tmp_mutex_pico);
+        m_picos_hist->push_back( hist_pico );
     }
 
 

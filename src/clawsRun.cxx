@@ -813,6 +813,18 @@ void            ClawsRun::printData()
         std::vector<std::thread>    threads;
         for( unsigned int counter1 = 0; counter1 < m_database->Claws_getConfig()->loops_Intermediate; ++counter1 )
         {
+            for( auto& tpico : *m_picos )
+            {
+                threads.push_back(std::thread(
+                            [&dataProcessor, counter1, &tpico]
+                            (ProcessData dataprocessor, 
+                             unsigned int counter1, Pico tpico)
+                                {
+                                    tpico.runBlock();
+                                    dataProcessor.sync(counter1);
+                                }));
+            }
+
             
         }
 
