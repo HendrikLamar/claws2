@@ -152,7 +152,7 @@ void    ClawsRun::run()
 {
 
 //    for( int i = 0; i < 1; ++i)
-    for( int i = 0; i < m_database->Claws_getConfig()->loops_Physics; ++i)
+    for( unsigned int i = 0; i < m_database->Claws_getConfig()->loops_Physics; ++i)
     {
         if( i%50 == 0)
         {
@@ -816,51 +816,69 @@ void            ClawsRun::printData()
             for( auto& tpico : *m_picos )
             {
                 threads.push_back(std::thread(
-                            [&dataProcessor, counter1, &tpico]
-                            (ProcessData dataprocessor, 
-                             unsigned int counter1, Pico tpico)
+                            [&dataProcessor, counter1, tpico]
+                            (ProcessData dataProcessor, 
+                             unsigned int counter1, 
+                             std::shared_ptr<Pico> tpico) mutable
                                 {
-                                    tpico.runBlock();
-                                    dataProcessor.sync(counter1);
-                                }));
+                                    tpico->runBlock();
+                                    dataProcessor.sync(counter1, tpico);
+                                }, dataProcessor, counter1, tpico));
+                std::cout << "Thread started...\n";
             }
+
+            std::cout << "Waiting for threads...\n";
+            for( auto& tthread : threads )
+            {
+                if( tthread.joinable() )
+                {
+                    tthread.join(); 
+                    std::cout << "Thread ended...\n";
+                }
+            }
+            threads.clear();
+            dataProcessor.save()->intermediate(counter1);
+            std::cout << "Data saved\n";
+            dataProcessor.clear();
+            std::cout << "Data cleared.\n";
 
             
         }
 
 
 
-//        for( unsigned int ii = 0; ii < 1; ++ii)
-        for( unsigned int ii = 0; ii < m_picos->size(); ++ii)
-        {
-            try
-            {
-                for(int i = 0; i< m_database->Claws_getConfig()->loops_Intermediate; ++i)
-//                for(int i = 0; i< 2 ; ++i)
-                {
-
-                    unsigned int ti{static_cast<unsigned int>(i)};
-                    m_picos->at(ii)->runBlock();
-
-                    dataProcessor.sync(ti);
-                    dataProcessor.save()->intermediate(ti);
-                    dataProcessor.clear();
-                }
-
-            }
-            catch( ChannelException& excep )
-            {
-                std::cout << excep.what() << std::endl;
-            }
-            catch( PicoException& excep )
-            {
-                std::cout << excep.what() << std::endl;
-            }
-            catch( ClawsException& excep )
-            {
-                std::cout << excep.what() << std::endl;
-            }
-        }
+/* //        for( unsigned int ii = 0; ii < 1; ++ii)
+ *         for( unsigned int ii = 0; ii < m_picos->size(); ++ii)
+ *         {
+ *             try
+ *             {
+ *                 for(int i = 0; i< m_database->Claws_getConfig()->loops_Intermediate; ++i)
+ * //                for(int i = 0; i< 2 ; ++i)
+ *                 {
+ * 
+ *                     unsigned int ti{static_cast<unsigned int>(i)};
+ *                     m_picos->at(ii)->runBlock();
+ * 
+ *                     dataProcessor.sync(ti);
+ *                     dataProcessor.save()->intermediate(ti);
+ *                     dataProcessor.clear();
+ *                 }
+ * 
+ *             }
+ *             catch( ChannelException& excep )
+ *             {
+ *                 std::cout << excep.what() << std::endl;
+ *             }
+ *             catch( PicoException& excep )
+ *             {
+ *                 std::cout << excep.what() << std::endl;
+ *             }
+ *             catch( ClawsException& excep )
+ *             {
+ *                 std::cout << excep.what() << std::endl;
+ *             }
+ *         }
+ */
 
         // tell pico that data taking is done
         for( auto& tmp : *m_picos )
