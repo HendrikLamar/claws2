@@ -33,6 +33,7 @@
 #include <thread>
 #include <mutex>
 
+#include <TROOT.h>
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -151,20 +152,12 @@ void        ClawsRun::initialize()
 void    ClawsRun::run()
 {
 
-//    for( int i = 0; i < 1; ++i)
-    for( unsigned int i = 0; i < m_database->Claws_getConfig()->loops_Physics; ++i)
-    {
-        if( i%50 == 0)
-        {
-            std::cout << "\t\tLOOP #" << i << std::endl;
-        }
-        m_database->Claws_incrCounter();
-        m_database->Claws_rwCounter('w');
+    m_database->Claws_incrCounter();
+    m_database->Claws_rwCounter('w');
 
-        Pico_runInter();
+    Pico_run( Utility::Claws_Gain::INTERMEDIATE );
+    Pico_run( Utility::Claws_Gain::HL_GAIN );
 
-
-    }
 
     return;
 
@@ -782,8 +775,28 @@ void            ClawsRun::printData()
 
 
 
-    void ClawsRun::Pico_runInter()
+    void ClawsRun::Pico_run( Utility::Claws_Gain gain )
     {
+
+        Utility::Claws_Gain tgain;
+        unsigned int tloops;
+        bool isPhysics;
+
+        switch( gain )
+        {
+            case Utility::Claws_Gain::INTERMEDIATE:
+                tgain = Utility::Claws_Gain::INTERMEDIATE;
+                tloops = m_database->Claws_getConfig()->loops_Intermediate;
+                isPhysics = false;
+                break;
+
+            default:
+                tgain = m_database->Claws_getConfig()->gain_current;
+                tloops = m_database->Claws_getConfig()->loops_Physics;
+                isPhysics = true;
+        }
+
+        
 
         // create a process data instance and give it the vector with the pointers
         // and the claws-global counter
@@ -804,26 +817,24 @@ void            ClawsRun::printData()
         // loop
         for( auto& tmp : *m_picos )
         {
-            tmp->setConfig( Utility::Claws_Gain::INTERMEDIATE );
+            tmp->setConfig( tgain );
             tmp->setReadyBlock();
         }
 
 
         // let each pico acquire data in its own thread
         std::vector<std::thread>    threads;
-        for( unsigned int counter1 = 0; counter1 < m_database->Claws_getConfig()->loops_Intermediate; ++counter1 )
+        ROOT::EnableThreadSafety();
+        for( unsigned int counter1 = 0; counter1 < tloops; ++counter1 )
         {
             for( auto& tpico : *m_picos )
             {
                 threads.push_back(std::thread(
-                            [&dataProcessor, counter1, tpico]
-                            (ProcessData dataProcessor, 
-                             unsigned int counter1, 
-                             std::shared_ptr<Pico> tpico) mutable
+                            [&]
                                 {
                                     tpico->runBlock();
                                     dataProcessor.sync(counter1, tpico);
-                                }, dataProcessor, counter1, tpico));
+                                }));
                 std::cout << "Thread started...\n";
             }
 
@@ -837,7 +848,12 @@ void            ClawsRun::printData()
                 }
             }
             threads.clear();
-            dataProcessor.save()->intermediate(counter1);
+
+            if( isPhysics )
+            {
+                dataProcessor.save()->physics(counter1);
+            }
+            else dataProcessor.save()->intermediate(counter1);
             std::cout << "Data saved\n";
             dataProcessor.clear();
             std::cout << "Data cleared.\n";
@@ -845,40 +861,6 @@ void            ClawsRun::printData()
             
         }
 
-
-
-/* //        for( unsigned int ii = 0; ii < 1; ++ii)
- *         for( unsigned int ii = 0; ii < m_picos->size(); ++ii)
- *         {
- *             try
- *             {
- *                 for(int i = 0; i< m_database->Claws_getConfig()->loops_Intermediate; ++i)
- * //                for(int i = 0; i< 2 ; ++i)
- *                 {
- * 
- *                     unsigned int ti{static_cast<unsigned int>(i)};
- *                     m_picos->at(ii)->runBlock();
- * 
- *                     dataProcessor.sync(ti);
- *                     dataProcessor.save()->intermediate(ti);
- *                     dataProcessor.clear();
- *                 }
- * 
- *             }
- *             catch( ChannelException& excep )
- *             {
- *                 std::cout << excep.what() << std::endl;
- *             }
- *             catch( PicoException& excep )
- *             {
- *                 std::cout << excep.what() << std::endl;
- *             }
- *             catch( ClawsException& excep )
- *             {
- *                 std::cout << excep.what() << std::endl;
- *             }
- *         }
- */
 
         // tell pico that data taking is done
         for( auto& tmp : *m_picos )

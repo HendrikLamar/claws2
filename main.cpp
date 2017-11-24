@@ -41,6 +41,7 @@
 int main()
 {
 
+    ROOT::EnableThreadSafety();
 //    gROOT->ProcessLine("gErrorIgnoreLevel = 6000");
 
     MyState* mystate;

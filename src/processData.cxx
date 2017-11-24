@@ -304,7 +304,7 @@ void ProcessData::makeTH1I(
         std::shared_ptr<Pico> tpico )
 {
     // create mutex to lock variables for certain times
-    std::mutex tmp_mutex_pico;
+//    std::mutex tmp_mutex_pico;
 
     // the first four entries indicate if the channels of the first pico are enabled
     // or not, the second four for pico #2, etc...
@@ -384,7 +384,7 @@ void ProcessData::makeTH1I(
     // this action must be secured with a mutex which is freed after
     // going out of scope
     {
-        std::lock_guard<std::mutex> guard(tmp_mutex_pico);
+        std::lock_guard<std::mutex> guard(m_local_mutex);
         m_picos_hist->push_back( hist_pico );
     }
 

@@ -31,6 +31,7 @@
 #include <utility>
 #include <map>
 #include <memory>
+#include <mutex>
 
 
 
@@ -52,6 +53,8 @@ class ProcessData : public std::enable_shared_from_this< ProcessData >
         std::shared_ptr < std::vector< std::shared_ptr< Utility::Pico_Hist_Pico > > > m_picos_hist;
 
         std::shared_ptr<unsigned long>  m_runNum;
+
+        std::mutex m_local_mutex;
 
     public:
 
