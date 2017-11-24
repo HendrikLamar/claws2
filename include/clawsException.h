@@ -73,12 +73,90 @@ class SCPIException : public ClawsException
 
 
 
+///////////////////////////////////////////////////////////////////////////////
+
+/** Pico specific exception class derived from the ClawsException class.
+ * 
+ */
+
+class PicoException : public ClawsException
+{
+    public:
+        PicoException( std::string error) : ClawsException(error)
+        {}
+
+        const char* what()
+        {
+            m_errorOut = "PicoException: " + m_errorIn;
+            return m_errorOut.c_str();
+        }
+};
 
 
 
 
 
+///////////////////////////////////////////////////////////////////////////////
 
+/** Channel specific exception class derived from the ClawsException class.
+ * 
+ */
+
+class ChannelException : public ClawsException
+{
+    public:
+        ChannelException( std::string error) : ClawsException(error)
+        {}
+
+        const char* what()
+        {
+            m_errorOut = "ChannelException: " + m_errorIn;
+            return m_errorOut.c_str();
+        }
+};
+
+
+
+
+
+///////////////////////////////////////////////////////////////////////////////
+
+/** Utility specific exception class derived from the ClawsException class.
+ * 
+ */
+
+class UtilityException: public ClawsException
+{
+    public:
+        UtilityException( std::string error) : ClawsException(error)
+        {}
+
+        const char* what()
+        {
+            m_errorOut = "UtilityException: " + m_errorIn;
+            return m_errorOut.c_str();
+        }
+};
+
+
+///////////////////////////////////////////////////////////////////////////////
+
+/** ProcessData specific exception class derived from the ClawsException class.
+ * 
+ */
+
+class ProcessDataException: public ClawsException
+{
+    public:
+        ProcessDataException( std::string error ) : ClawsException(error)
+        {}
+
+        const char* what()
+        {
+            m_errorOut = "ProcessDataException: " + m_errorIn;
+            return m_errorOut.c_str();
+        }
+};
 
 
 #endif // CLAWSEXCEPTION_H

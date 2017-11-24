@@ -14,7 +14,10 @@
 //        License:  GPLv3 - 2017, Hendrik Windel 
 // 
 // =====================================================================================
-
+#include <iostream>
+#include <vector>
+#include <cstdlib>
+#include <cstring>
 #include <string>
 #include <sstream>
 #include <sys/socket.h>
@@ -27,6 +30,24 @@
 #include "clawsException.h"
 #include "scpi.h"
 
+
+///////////////////////////////////////////////////////////////////////////////
+
+
+SCPI::SCPI(std::string ipAdress, unsigned short port) : 
+    m_ipAdress(ipAdress),
+    m_port(port)
+{
+};
+
+
+SCPI::~SCPI()
+{
+};
+
+
+
+///////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////
 
 void    SCPI::initSocket()
@@ -34,8 +55,8 @@ void    SCPI::initSocket()
     /*
      * Initialize socket with folling options and test if this is doable.
      */
-    int sSocket = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
-    if ( sSocket == -1 )
+    m_socket = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
+    if ( m_socket == -1 )
     {
         throw SCPIException("Initialization failed. Socket not found!");
     }
@@ -66,6 +87,7 @@ void    SCPI::initSocket()
 
 void    SCPI::openSocket()
 {
+    initSocket();
     int result = connect(m_socket, reinterpret_cast<sockaddr*>(&m_server), sizeof(m_server));
     if ( result == -1 )
     {
@@ -87,6 +109,9 @@ void    SCPI::setCommand(std::string command)
     while( bytesSent < size )
     {
         int result = send(m_socket, fcommand.c_str() + bytesSent, size-bytesSent, 0);
+
+        //! \todo A log collecting all the data sent to the psu is possible here
+//        std::cout << fcommand.c_str() + bytesSent << std::endl;
         if( result < 0 )
         {
             throw SCPIException("Command could not be sent!");
@@ -120,7 +145,8 @@ void SCPI::closeSocket()
 {
     close(m_socket);
 
-    /// \todo Ideally check if the socket is really closed. But currently does not work.
+    /// \todo Ideally check if the socket is really closed. But currently it does not work
+    //  -> see below.
 //    isClosed();
 }
 
@@ -140,6 +166,45 @@ void SCPI::closeSocket()
  *   return n == 0;
  * } 
  */
+
+
+///////////////////////////////////////////////////////////////////////////////
+
+
+
+
+std::vector < double > SCPI::splitStringbyComma( std::string text )
+{
+    std::string tmp;
+    std::vector< double > output;
+
+    for ( std::string::iterator it = text.begin(); it != text.end(); ++it)
+    {
+
+        if ( strncmp( &*it, ",", 1 ) == 0 )
+        {
+            output.push_back( atof( tmp.c_str() ) );
+            tmp.erase(); 
+        }
+        else if ( it == text.end() - 1 )
+        {
+            tmp += *it;
+            output.push_back( atof( tmp.c_str() ) );
+            break;
+
+        }
+        else
+        {
+            tmp += *it;
+        }
+
+    }
+
+    return output;
+}
+
+
+
 
 
 

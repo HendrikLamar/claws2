@@ -41,7 +41,7 @@ class MyState
         char getKey();
 
         // check the user input and react accordingly
-        void doMenu();
+        void run();
 
     private:
         // counter for the getKey() function
@@ -54,25 +54,23 @@ class MyState
         std::vector<char>               m_nickname{
             'i',
             'l',
-            'c',
             's',
             '1',
             '0',
             'q',
             'h'
-        }; // 8 inputs
+        }; // 7 inputs
 
         // member variable of the vector containing the information for the menu
         std::vector<std::string>        m_description{
             "Initialize Pico & PowerSupply",
-            "Load config file (default: Merkel)",
-            "Check System",
+            "ReLoad config files",
             "Show current Status",
             "Start/Stop Measurement",
             "Force Stop",
             "Quit",
             "Print help!"
-        }; // 8 inputs
+        }; // 7 inputs
 
         // member vector containing the pairs for creating the help function
         std::vector< std::pair<char, std::string> >   m_tuple;

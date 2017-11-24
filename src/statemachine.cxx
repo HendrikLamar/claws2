@@ -19,6 +19,8 @@
 #include "statechart.h"
 #include "database.h"
 #include "utility.h"
+#include "scpi.h"
+#include "clawsException.h"
 
 #include <chrono>
 #include <thread>
@@ -38,16 +40,13 @@ MyState::MyState() :
     // create a vector of pairs to create the 'printHelp()' function
     for(unsigned int i = 0; i < m_nickname.size(); ++i){
         m_tuple.push_back(std::make_pair(m_nickname.at(i), m_description.at(i)));
+    }
 
     m_daq->initiate();
-
-    }
+}
 
 
 ///////////////////////////////////////////////////////////////////////////////
-
-
-}
 
 MyState::~MyState()
 {
@@ -88,14 +87,19 @@ char MyState::getKey()
     std::cout << "claws[" << m_inputCounter << "]> ";
     ++m_inputCounter;
     char key;
-    std::cin >> key;
+    std::cin >> std::noskipws >> key;
+    if ( key != '\n' )
+    {
+        std::cin.ignore(32767, '\n'); // clear characters until a '\n' character is removed
+    }
+
     return key;
 }
 
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void MyState::doMenu()
+void MyState::run()
 {
     printWelcome();
     char key = getKey();
@@ -103,18 +107,16 @@ void MyState::doMenu()
     {
         switch(key)
         {
+            // skip empty inputs
+            case '\n':
+                break;
 
             case 'i':
-                std::cout << "Not available yet :(\n";
+                m_daq->process_event( ClawsStatemachine::EvInit() );
                 break;
 
             case 'l':
-                std::cout << "Not available yet :(\n";
-                break;
-
-            case 'c':
-                std::cout << "Not available yet :(\n";
-                std::cout << "Probably obsolete soon.\n";
+                m_daq->process_event( ClawsStatemachine::EvLoadConfig() );
                 break;
 
             case 's':
@@ -134,8 +136,6 @@ void MyState::doMenu()
                 // state again and stop in the the while loop. See the next
                 // if-statement.
                 m_daq->process_event( ClawsStatemachine::EvQuit() );
-                std::this_thread::sleep_for(std::chrono::milliseconds(200));
-                m_daq->process_event( ClawsStatemachine::EvQuit() );
                 break;
 
             case 'h':
@@ -147,7 +147,7 @@ void MyState::doMenu()
         };
 
         // checks if the system shall shut down or not.
-        if ( m_daq->getDatabase()->getStop() )
+        if ( m_daq->getClawsRun()->getDatabase()->getStop() )
         {
             break;
         }

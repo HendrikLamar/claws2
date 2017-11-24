@@ -31,10 +31,11 @@
 #include <boost/statechart/custom_reaction.hpp>
 #include <boost/mpl/list.hpp>
 
-#include "database.h"
+#include "clawsRun.h"
 
 #include <iostream>
 #include <thread>
+#include <chrono>
 
 namespace ClawsStatemachine{
 
@@ -68,8 +69,7 @@ namespace mpl = boost::mpl;
 /* !Events accessible with keyboard inputs:
  *
  * i = Initialize Pico, PowerSupply, Epics & co.
- * l = Load config file (default: Merkel
- * c = Do a system check
+ * l = ReLoad config file (default: Merkel)
  * s = Show current status
  * 1 = Start/Stop measurement
  * 0 = Force Stop the measurement
@@ -96,6 +96,8 @@ struct Active;
 struct MenuIdle;
 /// Status state
 struct Status;
+/// Intialize state
+struct Init;
 /// Config state
 struct Config;
 /// Quit state
@@ -117,6 +119,8 @@ struct SystemRun;
 
 /// Changes into the status state
 struct EvStatus : sc::event< EvStatus > {};
+/// Start initialization
+struct EvInit: sc::event< EvInit > {};
 /// Changes into the load config state
 struct EvLoadConfig: sc::event< EvLoadConfig > {};
 /// Start and stops the data taking
@@ -138,15 +142,16 @@ struct EvQuit : sc::event< EvQuit > {};
 struct ClawsDAQ : sc::state_machine< ClawsDAQ, Active >
 {
     protected:
-        Database*   m_database;
+        ClawsRun*   m_clawsRun;
 
     public:
-        ClawsDAQ() : m_database(new Database)
+        ClawsDAQ() : m_clawsRun(new ClawsRun)
         {};
         virtual ~ClawsDAQ() 
         {
-            delete m_database;
-            m_database = nullptr;
+            delete m_clawsRun;
+            m_clawsRun = nullptr;
+            std::this_thread::sleep_for(std::chrono::seconds(2));
 
             std::cout << 
     "+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\n";
@@ -158,24 +163,16 @@ struct ClawsDAQ : sc::state_machine< ClawsDAQ, Active >
         
 
         /// Returns the database 
-        Database * getDatabase()
+        ClawsRun* getClawsRun()
         {
-            return m_database;
+            return m_clawsRun;
         }
 
 
-/*         /// 
- *         char getKey()
- *         {
- *             std::cout << "[" << m_database->getInputCounter() << "]> "; 
- *             char key;
- *             std::cin >> key;
- *             return key;
- *         };
- */
 };
 
 
+///////////////////////////////////////////////////////////////////////////////
 
 
 //! Outermost state of ClawsDAQ. Contains and handles all the inner states, also
@@ -192,7 +189,6 @@ struct Active : sc::simple_state< Active, ClawsDAQ,
 
     public:
 
-//        Active() :  m_database(new Database)
         Active() 
         {
             // \todo Functionality to be added!
@@ -202,33 +198,12 @@ struct Active : sc::simple_state< Active, ClawsDAQ,
         {
             std::cout << "Exiting Active\n";
         };
-/*         virtual ~Active() 
- *         {
- *             delete m_database;
- *             m_database = nullptr;
- * 
- *             std::cout << 
- *     "+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\n";
- *             std::cout << "\t\t ClawsDAQ says Goodbye!\n";
- *             std::cout << "\n\t\t ROOOOOOOOAAAAAAAR!\n";
- *             std::cout << 
- *     "+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\n";
- *         };
- */
-
-
-/*         /// Returns the database 
- *         Database * getDatabase()
- *         {
- *             return m_database;
- *         }
- */
         
-
 
 };
 
 
+///////////////////////////////////////////////////////////////////////////////
 
 
 
@@ -242,9 +217,23 @@ struct MenuIdle : sc::simple_state< MenuIdle, Active::orthogonal<0> >
             sc::transition< EvLoadConfig, Config >,
             sc::transition< EvStatus, Status >,
 //            sc::custom_reaction< EvQuit > 
-            sc::transition< EvQuit, Quit >
+            sc::transition< EvQuit, Quit >,
+            sc::custom_reaction< EvInit >
                 > reactions;
 
+        sc::result react( const EvInit & )
+        {
+            if ( state_downcast< const SystemIdle * >() != 0 )
+            {
+                return transit< Init >();
+            }
+            else 
+            {
+                std::cout << 
+                    "\nData aquisition is ongoing. Reinitialization not possible!\n\n";
+                return discard_event();
+            }
+        };
 
 /*         // Forward declaration of the custom_reaction. Implementation in .cpp-file
  *         sc::result react( const EvQuit & );
@@ -262,6 +251,7 @@ struct MenuIdle : sc::simple_state< MenuIdle, Active::orthogonal<0> >
 };
 
 
+///////////////////////////////////////////////////////////////////////////////
 
 
 
@@ -280,6 +270,8 @@ struct Status : sc::state< Status, Active::orthogonal<0> >
         {
             // \todo Add functionality!
             std::cout << "Entering Status\n";
+            context< ClawsDAQ >().getClawsRun()->printData();
+            post_event( EvStatus() );
         };
 
         virtual ~Status() 
@@ -289,7 +281,34 @@ struct Status : sc::state< Status, Active::orthogonal<0> >
 };
 
 
+///////////////////////////////////////////////////////////////////////////////
 
+
+
+//! Initializes Pico, Epics & so on. Concurrency level <0>
+struct Init : sc::state< Init, Active::orthogonal<0> >
+{
+    public:
+        typedef sc::transition< EvInit, MenuIdle > reactions;
+
+
+        Init( my_context ctx ) : my_base( ctx )
+        {
+            
+            context< ClawsDAQ >().getClawsRun()->initialize();
+
+            post_event( EvInit() );
+        }
+        virtual ~Init()
+        {
+            std::cout << "Leaving Init!\n";
+        }
+};
+
+
+
+
+///////////////////////////////////////////////////////////////////////////////
 
 
 
@@ -304,8 +323,9 @@ struct Config : sc::state< Config, Active::orthogonal<0> >
 
         Config( my_context ctx ) : my_base( ctx )
         {
-            // \todo Add functionality!
             std::cout << "Entering Config\n";
+            context< ClawsDAQ >().getClawsRun()->loadConfig();
+            post_event( EvLoadConfig() );
         };
         virtual ~Config() 
         {
@@ -314,6 +334,7 @@ struct Config : sc::state< Config, Active::orthogonal<0> >
 };
 
 
+///////////////////////////////////////////////////////////////////////////////
 
 
 
@@ -336,6 +357,7 @@ struct SystemIdle : sc::state< SystemIdle, Active::orthogonal<1> >
 };
 
 
+///////////////////////////////////////////////////////////////////////////////
 
 
 
@@ -344,6 +366,9 @@ struct SystemIdle : sc::state< SystemIdle, Active::orthogonal<1> >
 //! to handle the data taking.
 struct SystemRun : sc::state< SystemRun, Active::orthogonal<1> >
 {
+    private:
+        std::thread         m_thread;
+
     public:
         typedef sc::transition< EvStartStop, SystemIdle> reactions;
         
@@ -351,6 +376,12 @@ struct SystemRun : sc::state< SystemRun, Active::orthogonal<1> >
         {
             // \todo Add functionality! Run function in m_thread!
             std::cout << "Entering SystemRun\n";
+            context< ClawsDAQ >().getClawsRun()->run();
+
+            post_event( EvStartStop() );
+            // Initialize PSU with the database as parameter.
+//            N6700 psu(context< ClawsDAQ >().getDatabase());
+//            m_thread = std::thread(&N6700::run, psu);
         };
         virtual ~SystemRun()
         {
@@ -358,11 +389,10 @@ struct SystemRun : sc::state< SystemRun, Active::orthogonal<1> >
             std::cout << "Exiting SystemRun\n";
         };
 
-    private:
-        std::thread         m_thread;
 };
 
 
+///////////////////////////////////////////////////////////////////////////////
 
 
 
@@ -379,8 +409,9 @@ struct Quit : sc::state< Quit, Active::orthogonal<0> >
         /// system can be shut down confidently.
         Quit( my_context ctx ) : my_base( ctx )
         {
-            context< ClawsDAQ >().getDatabase()->setStop(true);
+            context< ClawsDAQ >().getClawsRun()->getDatabase()->setStop(true);
             std::cout << "Entering Quit\n";
+            post_event( EvQuit() );
         };
         virtual ~Quit() 
         {
@@ -389,6 +420,7 @@ struct Quit : sc::state< Quit, Active::orthogonal<0> >
 
 };
 
+///////////////////////////////////////////////////////////////////////////////
 
 
 

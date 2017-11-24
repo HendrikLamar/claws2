@@ -7,7 +7,7 @@ ifeq ($(shell uname -s),Linux)
 	LFLAGS += -L/opt/picoscope/lib -lps6000
 	
 	# general cpp flags
-	CFLAGS += -c -fmessage-length=0 -std=c++11
+	CFLAGS += -c -fmessage-length=0 -std=c++11 -pthread
 	
 	# ROOT
 	CFLAGS += `root-config --cflags`
@@ -17,10 +17,14 @@ ifeq ($(shell uname -s),Linux)
 	CFLAGS += -I./include
 	LFLAGS += 
 
+	# epics stuff
+	CFLAGS += -I/home/claws/software/epics/base-3.14.12.6/include -I/home/claws/software/epics/base-3.14.12.6/include/os/Linux
+	LFLAGS += -L/home/claws/software/epics/base-3.14.12.6/lib/linux-x86_64 -lca -lcas -ldbIoc -lasIoc
+
 	# boost libs
 	CFLAGS +=
 #	LFLAGS += -L/usr/lib/x86_64-linux-gnu/libboost_system.so.1.58.0 -L/usr/lib/x86_64-linux-gnu/libboost_filesystem.so.1.58.0
-	LFLAGS += -lboost_system -lboost_filesystem
+	LFLAGS += -lboost_system -lboost_filesystem -lboost_date_time
 
 	CC = g++
 
@@ -34,11 +38,14 @@ endif
 #
 ###################################
 all: CFLAGS += -g -O0 -Wall
-all: clean build
+all: build
+#all: clean build
 
 # run release compilation
 release: CFLAGS += -O3
 release: clean build
+
+clean: clean
 
 
 VERSION = 1.1
@@ -73,4 +80,5 @@ clean:
 doc:
 	@echo 'Building docs...'
 	doxygen config_doxygen
+	rsync -arz --delete ./docs -e ssh hwindel@pcbelle20.mpp.mpg.de:~/public_html/claws2_doc/
 	@echo ' '
