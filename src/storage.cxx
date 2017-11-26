@@ -305,7 +305,7 @@ void Storage::save(
     switch( gain )
     {
         case Utility::Claws_Gain::INTERMEDIATE:
-            tfileName = "inter=";
+            tfileName = "inter-";
             break;
         default:
             tfileName = "physics-";

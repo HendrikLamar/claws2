@@ -159,8 +159,38 @@ void    ClawsRun::run()
         m_database->Claws_incrCounter();
         m_database->Claws_rwCounter('w');
 
-        Pico_run( Utility::Claws_Gain::INTERMEDIATE );
-        Pico_run( Utility::Claws_Gain::HL_GAIN );
+        auto time1{std::chrono::system_clock::now()};
+        try
+        {
+            Pico_run( Utility::Claws_Gain::INTERMEDIATE );
+        }
+        catch( ClawsException& excep )
+        {
+            std::cout << excep.what() << std::endl;
+        }
+        catch( std::exception& excep )
+        {
+            std::cout << excep.what() << std::endl;
+        }
+        auto time2{std::chrono::system_clock::now()};
+        auto diff{std::chrono::duration_cast<std::chrono::seconds>(time2 - time1)};
+        std::cout << "Inter: " << diff.count() << "sec\n";
+        
+        try
+        {
+            Pico_run( Utility::Claws_Gain::HL_GAIN );
+        }
+        catch( ClawsException& excep )
+        {
+            std::cout << excep.what() << std::endl;
+        }
+        catch( std::exception& excep )
+        {
+            std::cout << excep.what() << std::endl;
+        }
+        auto time3{std::chrono::system_clock::now()};
+        diff = std::chrono::duration_cast<std::chrono::seconds>(time3 - time2);
+        std::cout << "Physics: " << diff.count() << "sec\n";
     }
 
     return;

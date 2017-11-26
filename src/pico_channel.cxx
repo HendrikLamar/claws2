@@ -225,6 +225,8 @@ PICO_STATUS Channel::setChannel()
 {
     PICO_STATUS output;
 
+    std::cout << m_data_channel->bandwidth << std::endl;
+
             output = ps6000SetChannel(
                     *m_handle,
                     m_channel,

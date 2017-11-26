@@ -596,6 +596,11 @@ void Database::Pico_readChannelsSettings( Utility::Pico_RunMode mode, int picoNo
         fKey = iKey + "analogueOffset";
         channels->at(kk)->analogueOffset = ptree.get< float >( fKey );
 
+        // read bandwith parameter
+        fKey = iKey + "bandwidth";
+        tmp = ptree.get< std::string > (fKey);
+        channels->at(kk)->bandwidth = Utility::Pico_StringToEnum_bandwidth( tmp );
+
     }
 
     return;

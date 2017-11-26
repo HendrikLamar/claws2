@@ -353,7 +353,7 @@ void Pico::setReadyBlock( )
     for( auto& tmp : *m_channels )
     {
         tmp->setDataBuffer();
-        std::this_thread::sleep_for(std::chrono::milliseconds(200));
+        std::this_thread::sleep_for(std::chrono::milliseconds(50));
     }
 
 
