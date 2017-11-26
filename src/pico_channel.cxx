@@ -44,10 +44,10 @@ Channel::Channel
     loadConfig();
 
     // create data buffer and reserve maximum needed space on disk/RAM
-    m_buffer_block_data = new std::vector< int16_t >;
+    m_buffer_block_data = std::make_shared<std::vector< int16_t >>();
     m_buffer_block_data->reserve( m_buffer_block_sizeReserve );
 
-    m_buffer_inter_data = new std::vector< int16_t >;
+    m_buffer_inter_data = std::make_shared<std::vector< int16_t >>();
     m_buffer_inter_data->reserve( m_buffer_inter_sizeReserver );
 }
 
@@ -61,11 +61,6 @@ Channel::Channel
 
 Channel::~Channel()
 {
-    delete m_buffer_block_data;
-    m_buffer_block_data = nullptr;
-
-    delete m_buffer_inter_data;
-    m_buffer_inter_data = nullptr;
 }
 
 
@@ -105,7 +100,7 @@ Channel::~Channel()
 
 
 
-std::vector< int16_t >*     Channel::getBuffer()
+std::shared_ptr<std::vector< int16_t >>     Channel::getBuffer()
 {
     return m_buffer_current_data;
 }

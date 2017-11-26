@@ -290,13 +290,15 @@ namespace Utility{
 
 
         private:
-            PS6000_CHANNEL                  channel;
+            PS6000_CHANNEL  channel;
 
             PS6000_CHANNEL  intToCh( int ch );
 
-            void   set( int cha, std::shared_ptr<TH1I> hist );
+            void set( 
+                    int cha, 
+                    std::shared_ptr<TH1I> hist );
 
-            std::shared_ptr< TH1I >         data;
+            std::shared_ptr< TH1I > data;
 
 
 

@@ -19,6 +19,7 @@
 #include "processData.h"
 #include "storage.h"
 #include "pico.h"
+#include "pico_channel.h"
 
 #include <memory>
 #include <algorithm>
@@ -46,6 +47,8 @@ ProcessData::ProcessData( std::shared_ptr<std::vector< std::shared_ptr< Pico > >
 
     m_picos_hist = std::make_shared< std::vector< std::shared_ptr< Utility::Pico_Hist_Pico > > >();
     m_save = std::make_shared<Storage>(m_picos_hist, m_runNum );
+
+    makePicoHist();
 }
 
 
@@ -164,32 +167,6 @@ std::shared_ptr< Storage >  ProcessData::save()
 
 
 
-//std::shared_ptr<ProcessData>    ProcessData::sync()
-void ProcessData::sync( unsigned int& subRunNum, std::shared_ptr<Pico> tpico )
-{
-
-    makeTH1I( subRunNum, tpico );
-
-//    return shared_from_this();
-    return;
-}
-
-
-
-
-
-
-
-
-///////////////////////////////////////////////////////////////////////////////
-
-
-
-
-
-
-
-
 void    ProcessData::clear()
 {
     m_picos_hist->clear();
@@ -298,99 +275,149 @@ void    ProcessData::clear()
 
 
 
+void ProcessData::makePicoHist()
+{
 
-void ProcessData::makeTH1I( 
+    for( auto& tpico : *m_picos )
+    {
+        // create instance to hold all the data for one pico
+        std::shared_ptr< Utility::Pico_Hist_Pico >  hist_pico{
+            std::make_shared<Utility::Pico_Hist_Pico>(tpico->getLocation())};
+
+        for(int kk = 0; kk < 4; ++kk )
+        {
+
+            if( tpico->getCh(kk)->getEnabled() )
+            {
+
+                // since the channel is enabled, create instance to hold the 
+                // data for the channel
+                std::shared_ptr< TH1I >     hist;
+                std::string                 channel;
+                std::string                 location;
+                std::string                 name;
+                std::string                 title;
+            
+                location = tpico->getLocation();
+            
+                // create proper name
+                switch( tpico->getCh(kk)->getChNo() )
+                {
+                    case PS6000_CHANNEL_A:
+                        channel = "1";
+                        break;
+                    case PS6000_CHANNEL_B:
+                        channel = "2";
+                        break;
+                    case PS6000_CHANNEL_C:
+                        channel = "3";
+                        break;
+                    case PS6000_CHANNEL_D:
+                        channel = "4";
+                        break;
+                    default:
+                        channel = "XY";
+                
+                }
+                name = location + "_" + channel;
+            
+                // create histogramm instance
+                hist = std::make_shared< TH1I >(
+                        name.c_str(),
+                        name.c_str(),
+                        tpico->getCh(kk)->getBuffer()->size(), 
+                        0, 
+                        tpico->getCh(kk)->getBuffer()->size()
+                        );
+            
+
+                std::shared_ptr<Utility::Pico_Hist_Channel> cha{
+                    std::make_shared<Utility::Pico_Hist_Channel>(
+                            tpico->getCh(kk)->getChNo(), hist)};
+
+
+                // add the channel instance to the pico container
+                hist_pico->add( cha );
+            }
+        }
+        m_picos_hist->push_back(hist_pico);
+    }
+}
+
+
+
+
+
+
+
+
+///////////////////////////////////////////////////////////////////////////////
+
+
+
+
+
+
+
+
+void ProcessData::sync( 
         unsigned int& subRunNum,
         std::shared_ptr<Pico> tpico )
 {
     // create mutex to lock variables for certain times
 //    std::mutex tmp_mutex_pico;
-
-    // the first four entries indicate if the channels of the first pico are enabled
-    // or not, the second four for pico #2, etc...
-    std::shared_ptr< std::vector< int16_t > >  picoChannelEnabled{
-        std::make_shared<std::vector< int16_t > >()};
-
-    std::shared_ptr< TH1I >     hist;
-    std::string                 channel;
-    std::string                 location;
-    std::string                 name;
-    std::string                 title;
-
-        
-    // create instance to hold all the data for one pico
-    std::shared_ptr< Utility::Pico_Hist_Pico >  hist_pico{
-        std::make_shared<Utility::Pico_Hist_Pico>(tpico->getLocation())};
-    location = tpico->getLocation();
-
-    for( unsigned int kk = 0; kk < 4; ++kk )
+    std::shared_ptr<Utility::Pico_Hist_Pico> hist_pico;
+    for( auto& tmp : *m_picos_hist )
     {
-        picoChannelEnabled->push_back(tpico->getCh(kk)->getEnabled());
-
-        if( tpico->getCh(kk)->getEnabled() )
+        if( tmp->getLoc().compare( tpico->getLocation() ) == 0 )
         {
-
-            // since the channel is enabled, create instance to hold the data for the channel
-            std::shared_ptr<Utility::Pico_Hist_Channel> cha{
-                std::make_shared<Utility::Pico_Hist_Channel>(tpico->getCh(kk)->getChNo())};
-
-            // create proper name
-            switch( tpico->getCh(kk)->getChNo() )
-            {
-                case PS6000_CHANNEL_A:
-                    channel = "1";
-                    break;
-                case PS6000_CHANNEL_B:
-                    channel = "2";
-                    break;
-                case PS6000_CHANNEL_C:
-                    channel = "3";
-                    break;
-                case PS6000_CHANNEL_D:
-                    channel = "4";
-                    break;
-                default:
-                    channel = "XY";
-            
-            }
-            name = location + "_" + channel;
-            title = location+ "+" + channel + "_" + std::to_string(subRunNum);
-
-            
-            // create histogramm instance
-            hist = std::make_shared< TH1I >(
-                    name.c_str(),
-                    title.c_str(),
-                    tpico->getCh(kk)->getBuffer()->size(), 
-                    0, 
-                    tpico->getCh(kk)->getBuffer()->size()
-                    );
-
-            // copy the data
-            for( unsigned tt = 0; tt < tpico->getCh(kk)->getBuffer()->size() ; ++tt )
-            {
-                hist->SetBinContent( tt-1, tpico->getCh(kk)->getBuffer()->at(tt) );
-            }
-
-            // set the data to the channel data instance
-            cha->set( hist );
-
-            // add the channel instance to the pico container
-            hist_pico->add( cha );
+            hist_pico = tmp;
         }
     }
 
-    // append the pico to the m_picos_hist vector
-    // this action must be secured with a mutex which is freed after
-    // going out of scope
+    std::string location{tpico->getLocation()};
+
+    for( int i = 0; i < 4; ++i )
     {
-        std::lock_guard<std::mutex> guard(m_local_mutex);
-        m_picos_hist->push_back( hist_pico );
+        std::shared_ptr<Channel> channel{tpico->getCh(i)};
+        std::shared_ptr<TH1I>   hist{hist_pico->get(i)};
+        std::string                 name;
+        std::string                 title;
+        std::string                 channelNo;
+
+        if( channel->getEnabled() )
+        {
+            // create proper name
+            switch( channel->getChNo() )
+            {
+                case PS6000_CHANNEL_A:
+                    channelNo = "1";
+                    break;
+                case PS6000_CHANNEL_B:
+                    channelNo = "2";
+                    break;
+                case PS6000_CHANNEL_C:
+                    channelNo = "3";
+                    break;
+                case PS6000_CHANNEL_D:
+                    channelNo = "4";
+                    break;
+                default:
+                    channelNo = "XY";
+            
+            }
+            title = location + "_" + channelNo + "_" + std::to_string(subRunNum);
+            hist->SetTitle(title.c_str());
+
+            // copy the data
+            for( unsigned tt = 0; tt < channel->getBuffer()->size() ; ++tt )
+            {
+                hist->SetBinContent( tt-1, channel->getBuffer()->at(tt) );
+            }
+        }
     }
 
-
     return;
-
 }
 
 

@@ -21,6 +21,7 @@
 #include "storage.h"
 #include "utility.h"
 #include "pico.h"
+#include "pico_channel.h"
 
 #include <TH1I.h>
 
@@ -45,16 +46,15 @@ class ProcessData : public std::enable_shared_from_this< ProcessData >
         std::shared_ptr<Storage>    m_save;
         std::shared_ptr<std::vector< std::shared_ptr< Pico > > >    m_picos;
 
-        // translates the vector data to Root::TH1I and adds it to m_picos_hist
-        // -> is threadsave
-        void makeTH1I( unsigned int& subRunNum, std::shared_ptr<Pico> tpico );
-        
         // very complicated data structure to store data
         std::shared_ptr < std::vector< std::shared_ptr< Utility::Pico_Hist_Pico > > > m_picos_hist;
 
         std::shared_ptr<unsigned long>  m_runNum;
 
         std::mutex m_local_mutex;
+
+        // Populates the m_picos_hist data structure.
+        void makePicoHist();
 
     public:
 
@@ -64,9 +64,10 @@ class ProcessData : public std::enable_shared_from_this< ProcessData >
         //! Returns
         std::shared_ptr< Storage >  save();
 
-        //! Syncs the histograms of the given pico threadsafe.
-        void    sync( unsigned int& subRunNum, std::shared_ptr<Pico> tpico );
-//        std::shared_ptr<ProcessData> sync();
+        //! Syncs the histograms of the given pico threadsafe. 
+        void sync( 
+            unsigned int& subRunNum,
+            std::shared_ptr<Pico> tpico );
 
         //! Clears the TH1I vector.
         void clear();

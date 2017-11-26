@@ -42,7 +42,7 @@ flags = [
 
 
 #ROOT flags - only absolute paths are allowed (?!)
-'-I/home/claws/software/root/root-6.08.06/build/include',
+'-I/home/claws/software/root/root-6.10.08/build/include',
 '-m64',
 '-pthread',
 #'-I/opt/root/6.00/include/',

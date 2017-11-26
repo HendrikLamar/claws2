@@ -46,7 +46,8 @@ class Storage
         void save(
                 unsigned long& runNum,
                 unsigned int& subRunNum, 
-                std::string& fpath );
+                std::string& fpath,
+                Utility::Claws_Gain gain );
 
 
 
