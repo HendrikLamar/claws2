@@ -143,11 +143,9 @@ void N6700::loadConfig()
                         break;
                     case 1:
                         cha->limit_current = ptree.get<float>(fstring);
-                        std::cout << "Curr: " << cha->limit_current;
                         break;
                     case 2:
                         cha->limit_volt = ptree.get<float>(fstring);
-                        std::cout << "\tVolt: " << cha->limit_volt << "\n";
                         break;
                     default:
                         throw SCPIException("Unknown PSU readin attribute");
@@ -238,7 +236,6 @@ void N6700::sendConf( Utility::Claws_Gain HIGH_LOW_GAIN )
             + ", " + sCh + std::to_string(i+1) + eCh;
         if( i != m_config_current->getNoOfCh()-1 ) cmd += spacer;
     }
-    std::cout << cmd << std::endl;
     sendCommand( cmd );
 
 
@@ -251,7 +248,6 @@ void N6700::sendConf( Utility::Claws_Gain HIGH_LOW_GAIN )
             + ", " + sCh + std::to_string(i+1) + eCh;
         if( i != m_config_current->getNoOfCh()-1 ) cmd += spacer;
     }
-    std::cout << cmd << std::endl;
     sendCommand( cmd );
 
 
@@ -302,7 +298,6 @@ void N6700::start()
 
     };
 
-    std::cout << tcmd << std::endl;
     std::string cmd = "OUTP ON, (@" + tcmd + ")";
 
     sendCommand(cmd);
