@@ -119,8 +119,9 @@ void        ClawsRun::initialize()
 {
 
 //    Pico_init_bySerial();
-    Pico_init_byNullptr();
-    m_database->setNoOfPicosInitialized(m_picos->size());
+/*     Pico_init_byNullptr();
+ *     m_database->setNoOfPicosInitialized(m_picos->size());
+ */
 
     PSU_init();
 
@@ -153,46 +154,65 @@ void        ClawsRun::initialize()
 
 void    ClawsRun::run()
 {
+    std::cout << "sendConf...\n";
+    m_psu->sendConf( Utility::Claws_Gain::HIGH_GAIN );
+    std::cout << "start...\n";
+    m_psu->start();
 
-    for( int i = 0; i < 1; ++i )
-    {
-        m_database->Claws_incrCounter();
-        m_database->Claws_rwCounter('w');
+    std::this_thread::sleep_for(std::chrono::seconds(10));
 
-        auto time1{std::chrono::system_clock::now()};
-        try
-        {
-            Pico_runRapid();
-        }
-        catch( ClawsException& excep )
-        {
-            std::cout << excep.what() << std::endl;
-        }
-        catch( std::exception& excep )
-        {
-            std::cout << excep.what() << std::endl;
-        }
-        auto time2{std::chrono::system_clock::now()};
-        auto diff{std::chrono::duration_cast<std::chrono::seconds>(time2 - time1)};
-        std::cout << "Inter: " << diff.count() << "sec\n";
-        
-        try
-        {
-//            Pico_runBlock( Utility::Claws_Gain::HL_GAIN );
-        }
-        catch( ClawsException& excep )
-        {
-            std::cout << excep.what() << std::endl;
-        }
-        catch( std::exception& excep )
-        {
-            std::cout << excep.what() << std::endl;
-        }
-        auto time3{std::chrono::system_clock::now()};
-        diff = std::chrono::duration_cast<std::chrono::seconds>(time3 - time2);
-        std::cout << "Physics: " << diff.count() << "sec\n";
-    }
+    std::cout << "stop...\n";
+    m_psu->stop();
 
+//    std::cout << "sendConf...\n";
+//    m_psu->sendConf( Utility::Claws_Gain::LOW_GAIN );
+//    std::cout << "start...\n";
+//    m_psu->start();
+//
+//    std::this_thread::sleep_for(std::chrono::seconds(10));
+//
+//    std::cout << "stoping...\n";
+//    m_psu->stop();
+/*     for( int i = 0; i < 1; ++i )
+ *     {
+ *         m_database->Claws_incrCounter();
+ *         m_database->Claws_rwCounter('w');
+ * 
+ *         auto time1{std::chrono::system_clock::now()};
+ *         try
+ *         {
+ *             Pico_runRapid();
+ *         }
+ *         catch( ClawsException& excep )
+ *         {
+ *             std::cout << excep.what() << std::endl;
+ *         }
+ *         catch( std::exception& excep )
+ *         {
+ *             std::cout << excep.what() << std::endl;
+ *         }
+ *         auto time2{std::chrono::system_clock::now()};
+ *         auto diff{std::chrono::duration_cast<std::chrono::seconds>(time2 - time1)};
+ *         std::cout << "Inter: " << diff.count() << "sec\n";
+ *         
+ *         try
+ *         {
+ * //            Pico_runBlock( Utility::Claws_Gain::HL_GAIN );
+ *         }
+ *         catch( ClawsException& excep )
+ *         {
+ *             std::cout << excep.what() << std::endl;
+ *         }
+ *         catch( std::exception& excep )
+ *         {
+ *             std::cout << excep.what() << std::endl;
+ *         }
+ *         auto time3{std::chrono::system_clock::now()};
+ *         diff = std::chrono::duration_cast<std::chrono::seconds>(time3 - time2);
+ *         std::cout << "Physics: " << diff.count() << "sec\n";
+ *     }
+ * 
+ */
     return;
 
 }
@@ -233,7 +253,7 @@ void            ClawsRun::loadConfig()
         std::cout << "Reading PSU connection settings...";
         // load PSU configs
         m_database->N6700_readConnectSettings();
-        m_database->N6700_readChSettings();
+        m_psu->loadConfig();
         std::cout << "done!\n";
     }
     catch( UtilityException& excep )
@@ -244,42 +264,43 @@ void            ClawsRun::loadConfig()
 
 
 
-    try
-    {
-        std::cout << "Reading Pico high gain settings...";
-        // load pico configs for the set run mode...
-        m_database->Pico_readSettings( m_database->Claws_getConfig()->runMode_HighGain );
-        std::cout << "done!\n";
-    }
-    catch( UtilityException& excep )
-    {
-        std::cout << "\n" << excep.what() << std::endl;
-    }
-
-
-    try
-    {
-        std::cout << "Reading low gain settings...";
-        m_database->Pico_readSettings( m_database->Claws_getConfig()->runMode_LowGain );
-        std::cout << "done!\n";
-    }
-    catch( UtilityException& excep )
-    {
-        std::cout << "\n" << excep.what() << std::endl;
-    }
-
-    try
-    {
-        std::cout << "Reading intermediate settings...";
-        // ...and for the intermediate mode
-        m_database->Pico_readSettings( Utility::Pico_RunMode::INTERMEDIATE );
-        std::cout << "done!\n";
-    }
-    catch( UtilityException& excep )
-    {
-        std::cout << "\n" << excep.what() << std::endl;
-    }
-
+/*     try
+ *     {
+ *         std::cout << "Reading Pico high gain settings...";
+ *         // load pico configs for the set run mode...
+ *         m_database->Pico_readSettings( m_database->Claws_getConfig()->runMode_HighGain );
+ *         std::cout << "done!\n";
+ *     }
+ *     catch( UtilityException& excep )
+ *     {
+ *         std::cout << "\n" << excep.what() << std::endl;
+ *     }
+ * 
+ * 
+ *     try
+ *     {
+ *         std::cout << "Reading low gain settings...";
+ *         m_database->Pico_readSettings( m_database->Claws_getConfig()->runMode_LowGain );
+ *         std::cout << "done!\n";
+ *     }
+ *     catch( UtilityException& excep )
+ *     {
+ *         std::cout << "\n" << excep.what() << std::endl;
+ *     }
+ * 
+ *     try
+ *     {
+ *         std::cout << "Reading intermediate settings...";
+ *         // ...and for the intermediate mode
+ *         m_database->Pico_readSettings( Utility::Pico_RunMode::INTERMEDIATE );
+ *         std::cout << "done!\n";
+ *     }
+ *     catch( UtilityException& excep )
+ *     {
+ *         std::cout << "\n" << excep.what() << std::endl;
+ *     }
+ * 
+ */
 
     return;
 }

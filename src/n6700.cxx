@@ -39,7 +39,9 @@
 N6700::N6700(std::shared_ptr<Database> database) :
     SCPI(database->N6700_getConnect().ip, std::stoi(database->N6700_getConnect().port)),
     m_database(database),
-    m_ID(m_database->N6700_getConnect().id)
+    m_ID(m_database->N6700_getConnect().id),
+    m_config_high(std::make_shared<Utility::PSU_Config>()),
+    m_config_low(std::make_shared<Utility::PSU_Config>())
 {
     checkDevice();
 };
@@ -112,6 +114,7 @@ void N6700::loadConfig()
                 config = config_high;
                 break;
         }
+        config->clear();
 
         std::vector< std::string > channels{"Ch1", "Ch2", "Ch3", "Ch4"};
         std::vector< std::string > attribute{"Power", "CurrLimit", "Volt"};
@@ -137,16 +140,22 @@ void N6700::loadConfig()
                 {
                     case 0:
                         cha->powerOnOff = ptree.get<std::string>(fstring);
+                        break;
                     case 1:
-                        cha->limit_volt = ptree.get<float>(fstring);
-                    case 2:
                         cha->limit_current = ptree.get<float>(fstring);
+                        std::cout << "Curr: " << cha->limit_current;
+                        break;
+                    case 2:
+                        cha->limit_volt = ptree.get<float>(fstring);
+                        std::cout << "\tVolt: " << cha->limit_volt << "\n";
+                        break;
                     default:
                         throw SCPIException("Unknown PSU readin attribute");
                 }
 
                 ++count2;
             }
+            config->setCh(cha);
             count2 = 0;
             ++count1;
         }
@@ -211,7 +220,6 @@ void N6700::sendConf( Utility::Claws_Gain HIGH_LOW_GAIN )
             break;
         default:
             m_config_current = m_config_high;
-            break;
     }
     
     std::string cmd;
@@ -230,16 +238,20 @@ void N6700::sendConf( Utility::Claws_Gain HIGH_LOW_GAIN )
             + ", " + sCh + std::to_string(i+1) + eCh;
         if( i != m_config_current->getNoOfCh()-1 ) cmd += spacer;
     }
+    std::cout << cmd << std::endl;
     sendCommand( cmd );
 
 
     // send current settings
+    cmd = "";
     for( unsigned int i = 0; i < m_config_current->getNoOfCh(); ++i )
     {
-        cmd += rSetCurr + std::to_string(m_config_current->getCh(i)->limit_volt) 
+        cmd += rSetCurr + 
+            std::to_string(m_config_current->getCh(i)->limit_current) 
             + ", " + sCh + std::to_string(i+1) + eCh;
         if( i != m_config_current->getNoOfCh()-1 ) cmd += spacer;
     }
+    std::cout << cmd << std::endl;
     sendCommand( cmd );
 
 
@@ -271,6 +283,7 @@ void N6700::start()
         }
     }
 
+
     // second, add a ',' between each channel number
     //
     std::string tcmd{""};
@@ -289,6 +302,7 @@ void N6700::start()
 
     };
 
+    std::cout << tcmd << std::endl;
     std::string cmd = "OUTP ON, (@" + tcmd + ")";
 
     sendCommand(cmd);

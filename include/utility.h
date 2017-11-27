@@ -930,6 +930,14 @@ namespace Utility{
                 return channels->size();
             }
 
+            //! Remove all of the channels.
+            void clear()
+            {
+                channels->clear();
+
+                return;
+            }
+
         private:
             std::shared_ptr<std::vector< std::shared_ptr<PSU_Channel>>> channels;
     };
