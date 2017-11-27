@@ -860,18 +860,75 @@ namespace Utility{
 
     struct PSU_Channel
     {
-        int     channelNo;
+        std::string     name;
+        int             channelNo;
 
-        float   limit_volt;
-        float   limit_current;
-    }
+        bool            isActive;
+        float           limit_volt;
+        float           limit_current;
+    };
 
 
 
     struct PSU_Config
     {
-        
+        public:
+            //! Standard constructor.
+            PSU_Config()
+            {
+                channels = std::make_shared<std::vector<
+                    std::shared_ptr<PSU_Channel>>>();
+            }
+
+            ~PSU_Config(){};
+
+            //! Returns the channel settings.
+            std::shared_ptr<PSU_Channel> getCh( int i )
+            {
+                std::shared_ptr<PSU_Channel> output;
+                for( auto& tmp : *channels )
+                {
+                    if( tmp->channelNo == i )
+                    {
+                        output = tmp;
+                        break;
+                    }
+                }
+                return output;
+            }
+            
+            //! Returns the channel settings.
+            std::shared_ptr<PSU_Channel> getCh( std::string name )
+            {
+                std::shared_ptr<PSU_Channel> output;
+                for( auto& tmp : *channels )
+                {
+                    if( !(tmp->name.compare(name)) )
+                    {
+                        output = tmp;
+                        break;
+                    }
+                }
+                return output;
+            }
+
+            //! Sets a new channel.
+            void setCh( std::shared_ptr<PSU_Channel> channel )
+            {
+                channels->push_back(channel);
+                return;
+            }
+
+            //! Returns the amount of channels in this conifguration.
+            unsigned int getNoOfCh()
+            {
+                return channels->size();
+            }
+
+        private:
+            std::shared_ptr<std::vector< std::shared_ptr<PSU_Channel>>> channels;
     };
+
 
 
 
