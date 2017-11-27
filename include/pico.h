@@ -242,6 +242,9 @@ class Pico
                                                 
         uint32_t            m_noMemoryMaxSamples;   // holds the max number of samples
                                                     // available in each memory segment
+        // since in block mode we only have on index with index # 0, 
+        // we use this hardcoded -> doesn't matter for rapid mode
+        uint32_t            m_segmentIndex{0};
 
         ////////////////////////////////////////////////////////////////////////
         //
@@ -300,6 +303,9 @@ class Pico
 
         // Only needed when rapid block mode is used. Otherwise its 1 by default.
         void    setMemorySegments( uint32_t nSegments );
+
+        // Sets the number of captures to be collected in rapid block mode.
+        void    setNoOfCaptures( uint32_t nCaptures );
 
         // Checks m_status for possible error and throws a PicoException() if it is
         // the case. Should be called after every ps6000-function.

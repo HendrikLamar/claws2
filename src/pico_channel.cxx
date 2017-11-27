@@ -47,8 +47,12 @@ Channel::Channel
     m_buffer_block_data = std::make_shared<std::vector< int16_t >>();
     m_buffer_block_data->reserve( m_buffer_block_sizeReserve );
 
-    m_buffer_inter_data = std::make_shared<std::vector< int16_t >>();
-    m_buffer_inter_data->reserve( m_buffer_inter_sizeReserver );
+    // set intermediate data buffer for rapid block mode
+    m_buffer_rapid = std::make_shared<std::vector<
+        std::shared_ptr< std::vector< int16_t >>>>(
+                        1000,
+                        std::make_shared< std::vector< int16_t >>(
+                            m_buffer_rapid_sizeReserver, 0));
 }
 
 
@@ -100,9 +104,9 @@ Channel::~Channel()
 
 
 
-std::shared_ptr<std::vector< int16_t >>     Channel::getBuffer()
+std::shared_ptr<std::vector< int16_t >>     Channel::getBufferBlock()
 {
-    return m_buffer_current_data;
+    return m_buffer_block_data;
 }
 
 
@@ -110,6 +114,27 @@ std::shared_ptr<std::vector< int16_t >>     Channel::getBuffer()
 
 
 ///////////////////////////////////////////////////////////////////////////////
+
+
+
+
+std::shared_ptr< std::vector< 
+    std::shared_ptr< std::vector< int16_t >>>> Channel::getBufferRapid()
+{
+    return m_buffer_rapid;
+}
+
+
+
+
+///////////////////////////////////////////////////////////////////////////////
+
+
+
+
+
+
+
 
 
 
@@ -152,15 +177,15 @@ std::shared_ptr<std::vector< int16_t >>     Channel::getBuffer()
 void    Channel::loadConfig()
 {
 
-    switch( m_data->gain )
-    {
-        case Utility::Claws_Gain::INTERMEDIATE:
-            m_buffer_current_data = m_buffer_inter_data;
-            m_buffer_current_size = &m_buffer_inter_size;
-        default:
-            m_buffer_current_data = m_buffer_block_data;
-            m_buffer_current_size = &m_buffer_block_size;
-    }
+//    switch( m_data->gain )
+//    {
+////        case Utility::Claws_Gain::INTERMEDIATE:
+////            m_buffer_current_data = m_buffer_inter_data;
+////            m_buffer_current_size = &m_buffer_inter_size;
+//        default:
+//            m_buffer_current_data = m_buffer_block_data;
+//            m_buffer_current_size = &m_buffer_block_size;
+//    }
 
     // first, find the correct channel in the database
     for ( auto& tmp : *m_data->channels )
@@ -186,21 +211,22 @@ void    Channel::loadConfig()
 
 
 
-PICO_STATUS Channel::setDataBuffer()
+PICO_STATUS Channel::setDataBufferBlock()
 {
 
     PICO_STATUS output; 
 
-    if( m_buffer_current_data->size() != *m_buffer_current_size )
+    if( m_buffer_block_data->size() != m_buffer_block_size )
     {
-        m_buffer_current_data->resize( *m_buffer_current_size );
+        m_buffer_block_data->resize( m_buffer_block_size );
+        m_buffer_block_data->shrink_to_fit();
     }
 
     output = ps6000SetDataBuffer(
             *m_handle,
             m_channel,
-            &m_buffer_current_data->at(0),
-            *m_buffer_current_size,
+            &m_buffer_block_data->at(0),
+            m_buffer_block_size,
             m_data->val_downSampleRatioMode
             );
 
@@ -208,6 +234,56 @@ PICO_STATUS Channel::setDataBuffer()
     return output;
 
 }
+
+
+
+
+
+
+
+
+///////////////////////////////////////////////////////////////////////////////
+
+
+
+
+
+
+
+PICO_STATUS Channel::setDataBufferRapidBlock()
+{
+    PICO_STATUS output;
+
+    for( auto& tmp : *m_buffer_rapid )
+    {
+        tmp->resize(m_buffer_rapid_size);
+//        tmp->shrink_to_fit();
+    }
+
+    m_buffer_rapid->resize(
+            m_data->loops_inter, 
+            std::make_shared< std::vector< int16_t >>(m_buffer_rapid_size));
+//    m_buffer_rapid->shrink_to_fit();
+
+
+    for( unsigned int waveformNo = 0; waveformNo < m_data->loops_inter; ++waveformNo )
+    {
+        output = ps6000SetDataBufferBulk(
+                *m_handle,
+                m_channel,
+                &m_buffer_rapid->at(waveformNo)->at(0),
+                m_buffer_rapid_size,
+                waveformNo,
+                m_data->val_downSampleRatioMode
+                );
+        if( output != PICO_OK ) break;
+    }
+
+    return output; 
+
+}
+
+
 
 
 
@@ -225,7 +301,6 @@ PICO_STATUS Channel::setChannel()
 {
     PICO_STATUS output;
 
-    std::cout << m_data_channel->bandwidth << std::endl;
 
             output = ps6000SetChannel(
                     *m_handle,
@@ -341,6 +416,7 @@ PS6000_CHANNEL      Channel::getChNo()
 void    Channel::calcDataBufferSize()
 {
     m_buffer_block_size = m_data->val_preTrigger + m_data->val_postTrigger;
+    m_buffer_rapid_size = m_data->val_preTrigger + m_data->val_postTrigger;
 
     return;
 }

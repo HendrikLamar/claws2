@@ -52,7 +52,9 @@ class ClawsRun
 
         void Pico_close();
 
-        void Pico_run( Utility::Claws_Gain gain );
+        void Pico_runBlock( Utility::Claws_Gain gain );
+
+        void Pico_runRapid();
 
 
         ///////////////////////////////////////////////////////////////////////

@@ -345,6 +345,9 @@ void Pico::setReadyBlock( )
 {
     setChannels();
 
+    // divide local pico memory in N pieces
+    setMemorySegments(1);
+
     getTimebase();
 
     setTrigger();
@@ -352,8 +355,8 @@ void Pico::setReadyBlock( )
     // set data buffer for each channel to define where the data should be stored
     for( auto& tmp : *m_channels )
     {
-        tmp->setDataBuffer();
-        std::this_thread::sleep_for(std::chrono::milliseconds(50));
+        tmp->setDataBufferBlock();
+        std::this_thread::sleep_for(std::chrono::milliseconds(20));
     }
 
 
@@ -379,8 +382,24 @@ void Pico::setReadyBlock( )
 
 void Pico::setReadyRapid()
 {
-    //! \todo Fill this function.
+    setChannels();
 
+    setMemorySegments(m_data_current->loops_inter);
+
+    setNoOfCaptures(m_data_current->loops_inter);
+
+    getTimebase();
+
+    setTrigger();
+
+    for( auto& tmp : *m_channels )
+    {
+        tmp->setDataBufferRapidBlock();
+        std::this_thread::sleep_for(std::chrono::milliseconds(20));
+    }
+
+
+    return;
 }
 
 
@@ -432,9 +451,7 @@ void Pico::runBlock()
 //    int16_t*    ready = nullptr;
 
 
-
-    // Wait until data collection is done the ready pointer changes its value
-    // when this is the case. System can not be triggered for a long time, thats why it
+// Wait until data collection is done the ready pointer changes its value // when this is the case. System can not be triggered for a long time, thats why it
     // can take some time!
     // \todo Here a stop switch would be imlementable!
     while( !ready )
@@ -468,8 +485,44 @@ void Pico::runBlock()
 
 void Pico::runRapid()
 {
-    //! \todo Fill this function.
 
+    // Make the pico ready! Afterwards wait until the trigger is fired and
+    // the data is collected.
+    m_status = ps6000RunBlock(
+                m_handle,
+                m_data_current->val_preTrigger,
+                m_data_current->val_postTrigger,
+                m_data_current->val_timebase,
+                m_data_current->val_oversample,
+                &m_timeIndisposedMS,
+                m_startIndex,
+                nullptr,
+                nullptr
+            );
+
+    checkStatus();
+
+
+    // Now, check if data taking is done!
+    int16_t     ready = 0;
+//    int16_t*    ready = nullptr;
+
+
+
+    // Wait until data collection is done the ready pointer changes its value
+    // when this is the case. System can not be triggered for a long time, thats why it
+    // can take some time!
+    // \todo Here a stop switch would be imlementable!
+    while( !ready )
+    {
+        m_status = ps6000IsReady( m_handle, &ready);
+        checkStatus();
+        std::this_thread::sleep_for(std::chrono::milliseconds(1));
+    }
+
+    getValuesRapid();
+
+    return;
 }
 
 
@@ -491,7 +544,7 @@ void Pico::runRapid()
 
 void Pico::stop()
 {
-    std::this_thread::sleep_for(std::chrono::milliseconds(100));
+    std::this_thread::sleep_for(std::chrono::milliseconds(50));
 
     m_status = ps6000Stop(m_handle);
     checkStatus();
@@ -854,8 +907,6 @@ void    Pico::getTimebase()
 void    Pico::getValuesBlock()
 {
 
-    // since in block mode we only have on index with index # 0, we use this hardcoded
-    uint32_t segmentIndex{0};
     
 
     uint32_t noOfSamplesReturned = m_buffer_data_size;
@@ -867,7 +918,7 @@ void    Pico::getValuesBlock()
                     &noOfSamplesReturned,
                     m_data_current->val_downSampleRatio,
                     m_data_current->val_downSampleRatioMode,
-                    segmentIndex,
+                    m_segmentIndex,
                     &m_overflow
             );
 
@@ -899,7 +950,29 @@ void    Pico::getValuesBlock()
 
 void    Pico::getValuesRapid()
 {
-    //! \todo Pico::getValuesRapid needs to be written!
+
+    uint32_t noOfSamplesReturned = m_buffer_data_size;
+
+
+    m_status = ps6000GetValuesBulk(
+                    m_handle,
+                    &noOfSamplesReturned,
+                    m_startIndex,
+                    m_data_current->loops_inter-1,
+                    m_data_current->val_downSampleRatio,
+                    m_data_current->val_downSampleRatioMode,
+                    &m_overflow
+            );
+
+    checkStatus();
+
+    if( noOfSamplesReturned != m_buffer_data_size )
+    {
+        throw PicoException(
+                "# of samples returned unequal to # of acquired samples!");
+    };
+
+    return;
 }
 
 
@@ -926,6 +999,36 @@ void    Pico::setMemorySegments( uint32_t nSegments )
 
     return;
 }
+
+
+
+
+
+
+
+
+///////////////////////////////////////////////////////////////////////////////
+
+
+
+
+
+
+
+
+void    Pico::setNoOfCaptures( uint32_t nCaptures )
+{
+    m_status = ps6000SetNoOfCaptures(
+                    m_handle,
+                    nCaptures
+                    );
+    checkStatus();
+
+    return;
+}
+
+
+
 
 
 

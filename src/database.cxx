@@ -816,6 +816,8 @@ void Database::Pico_readIntermediateSettings( int picoNo )
     fKey = iKey + "autoTriggerTime";
     tmpDataStruct->data_trigger->autoTriggerTime = ptree.get < int > ( fKey );
 
+    tmpDataStruct->loops_inter = static_cast<uint32_t>(Claws_getConfig()->loops_Intermediate);
+
     // find out which channel is enabled
     fKey = iKey + "channels_to_calibrate";
     tmp = ptree.get< std::string >( fKey );

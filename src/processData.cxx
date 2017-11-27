@@ -325,9 +325,9 @@ void ProcessData::makePicoHist()
                 hist = std::make_shared< TH1I >(
                         name.c_str(),
                         name.c_str(),
-                        tpico->getCh(kk)->getBuffer()->size(), 
+                        tpico->getCh(kk)->getBufferBlock()->size(), 
                         0, 
-                        tpico->getCh(kk)->getBuffer()->size()
+                        tpico->getCh(kk)->getBufferBlock()->size()
                         );
             
 
@@ -410,9 +410,9 @@ void ProcessData::sync(
             hist->SetTitle(title.c_str());
 
             // copy the data
-            for( unsigned tt = 0; tt < channel->getBuffer()->size() ; ++tt )
+            for( unsigned tt = 0; tt < channel->getBufferBlock()->size() ; ++tt )
             {
-                hist->SetBinContent( tt-1, channel->getBuffer()->at(tt) );
+                hist->SetBinContent( tt-1, channel->getBufferBlock()->at(tt) );
             }
         }
     }

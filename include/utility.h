@@ -571,6 +571,8 @@ namespace Utility{
         enPS6000RatioMode       val_downSampleRatioMode;
         uint32_t                val_downSampleRatio;
 
+        uint32_t                loops_inter;
+
         friend std::ostream& operator<<(
                 std::ostream& out, Utility::Pico_Conf_HL_Gain& data );
 
@@ -837,6 +839,51 @@ namespace Utility{
 ///////////////////////////////////////////////////////////////////////////////
 
 
+
+
+
+
+
+
+
+
+
+
+
+///////////////////////////////////////////////////////////////////////////////
+//
+//                  START PSU settings
+//
+///////////////////////////////////////////////////////////////////////////////
+
+
+
+    struct PSU_Channel
+    {
+        int     channelNo;
+
+        float   limit_volt;
+        float   limit_current;
+    }
+
+
+
+    struct PSU_Config
+    {
+        
+    };
+
+
+
+
+
+
+
+///////////////////////////////////////////////////////////////////////////////
+//
+//                  START PSU settings
+//
+///////////////////////////////////////////////////////////////////////////////
 } // END Namespace Utility
 
 

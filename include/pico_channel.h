@@ -90,19 +90,20 @@ class Channel
         
         //! data vector to store data coming from physics block mode
         std::shared_ptr<std::vector< int16_t >> m_buffer_block_data;
-        uint32_t                        m_buffer_block_size;
+        uint32_t                                m_buffer_block_size;
         // reserve a data buffer of that size per channel when initializing the pico
         // 500 000 000 is 2GS divided by 4 channels
         uint32_t        m_buffer_block_sizeReserve{500000000};
 
 
         // data vector to store data coming from intermediate mode
-        std::shared_ptr<std::vector< int16_t >> m_buffer_inter_data;
-        uint32_t m_buffer_inter_size;
-        uint32_t m_buffer_inter_sizeReserver{500};
+        std::shared_ptr< std::vector< std::shared_ptr< 
+            std::vector< int16_t >>>> m_buffer_rapid;
+        uint32_t m_buffer_rapid_size;
+        uint32_t m_buffer_rapid_sizeReserver{500};
 
-        std::shared_ptr<std::vector< int16_t >> m_buffer_current_data;
-        uint32_t*                       m_buffer_current_size;
+//        std::shared_ptr<std::vector< int16_t >> m_buffer_current_data;
+//        uint32_t*                       m_buffer_current_size;
         // calculates the buffer size by adding pre and posttrigger. needed 
         // as input parameter for several pico functions
         void        calcDataBufferSize( );
@@ -147,7 +148,11 @@ class Channel
 
 
         //! Returns the channel buffer.
-        std::shared_ptr<std::vector< int16_t >> getBuffer();
+        std::shared_ptr<std::vector< int16_t >> getBufferBlock();
+
+        //! Returns the channel buffer for rapid mode.
+        std::shared_ptr< std::vector< 
+            std::shared_ptr< std::vector< int16_t >>>> getBufferRapid();
 
 /*         //! Sets the run mode. This function needs to be called before loadConfig(),
  *         //! setDataBuffer() and setChannel().
@@ -159,8 +164,11 @@ class Channel
         //! Loads the settings stored in the database to the channel.
         void                        loadConfig();
 
-        //! Tells the Pico where to store the data for this channel.
-        PICO_STATUS                 setDataBuffer();
+        //! Tells the Pico where to store the block mode data for this channel.
+        PICO_STATUS                 setDataBufferBlock();
+
+        //! Tells the Pico where to store the rapid block mode for this channel.
+        PICO_STATUS                 setDataBufferRapidBlock();
 
         //! Configures the channel with the current loaded data. You might want
         //! to update the data first with loadConfig().
