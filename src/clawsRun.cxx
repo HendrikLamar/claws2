@@ -233,6 +233,7 @@ void            ClawsRun::loadConfig()
         std::cout << "Reading PSU connection settings...";
         // load PSU configs
         m_database->N6700_readConnectSettings();
+        m_database->N6700_readChSettings();
         std::cout << "done!\n";
     }
     catch( UtilityException& excep )

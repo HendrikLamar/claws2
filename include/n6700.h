@@ -48,9 +48,8 @@ class N6700 : public SCPI
         //! Checks if the device is available and respons the device name we expect
         void checkDevice();
 
-        //! Sends the command to the PSU.
-        void sendCommand( std::string cmd );
-
+        //! Load config from config file.
+        void loadConfig();
 
         //! Sends the configuration stored in the database to the PSU
         void setConf( Utility::Claws_Gain gain );
@@ -77,9 +76,16 @@ class N6700 : public SCPI
 
 
 
+
         const std::string       m_ID;           ///< Name of the device.
                                                 ///< It must be the answer to the 
                                                 ///< "*IDN?" command.
+                                                
+        std::shared_ptr<Utility::PSU_Config>     m_config_high;
+        std::shared_ptr<Utility::PSU_Config>     m_config_low;
+
+        //! Sends the command to the PSU.
+        void sendCommand( std::string cmd );
                                                 
 };
 

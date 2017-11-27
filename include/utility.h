@@ -860,10 +860,15 @@ namespace Utility{
 
     struct PSU_Channel
     {
+        PSU_Channel( std::string tname, int tchannelNo ) :
+            name(tname),
+            channelNo(tchannelNo)
+        {};
+
         std::string     name;
         int             channelNo;
 
-        bool            isActive;
+        std::string     powerOnOff;
         float           limit_volt;
         float           limit_current;
     };

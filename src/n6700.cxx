@@ -24,6 +24,9 @@
 
 #include <string>
 
+#include <boost/property_tree/ptree.hpp>
+#include <boost/property_tree/ini_parser.hpp>
+
 #include <iostream>
 #include <thread>
 #include <chrono>
@@ -80,6 +83,96 @@ void N6700::checkDevice()
 
 
 ///////////////////////////////////////////////////////////////////////////////
+
+
+
+
+
+
+void N6700::loadConfig()
+{
+
+    auto loadHL = [](
+            std::shared_ptr<Utility::PSU_Config> config_low,
+            std::shared_ptr<Utility::PSU_Config> config_high,
+            std::shared_ptr<Database> database,
+            Utility::Claws_Gain tgain
+            )
+    {
+        std::string gain;
+        std::shared_ptr<Utility::PSU_Config> config;
+        switch( tgain )
+        {
+            case Utility::Claws_Gain::LOW_GAIN:
+                gain = "Low_Gain";
+                config = config_low;
+                break;
+            default:
+                gain = "High_Gain";
+                config = config_high;
+                break;
+        }
+
+        std::vector< std::string > channels{"Ch1", "Ch2", "Ch3", "Ch4"};
+        std::vector< std::string > attribute{"Power", "CurrLimit", "Volt"};
+
+        boost::property_tree::ptree ptree;
+        boost::property_tree::ini_parser::read_ini(
+                database->getInitReader()->getInitstruct().PowerSupply.c_str(), 
+                ptree);
+
+        std::string fstring;
+
+        int count1{0};
+        int count2{0};
+        for( auto tmp1 : channels )
+        {
+            std::shared_ptr<Utility::PSU_Channel> cha{
+                std::make_shared<Utility::PSU_Channel>( tmp1, count1)};
+
+            for( auto tmp2 : attribute )
+            {
+                fstring = gain + "." + tmp1 + tmp2;
+                switch( count2 )
+                {
+                    case 0:
+                        cha->powerOnOff = ptree.get<std::string>(fstring);
+                    case 1:
+                        cha->limit_volt = ptree.get<float>(fstring);
+                    case 2:
+                        cha->limit_current = ptree.get<float>(fstring);
+                    default:
+                        throw SCPIException("Unknown PSU readin attribute");
+                }
+
+                ++count2;
+            }
+            count2 = 0;
+            ++count1;
+        }
+    };
+
+
+    loadHL( m_config_low, m_config_high, m_database, Utility::Claws_Gain::LOW_GAIN );
+    loadHL( m_config_low, m_config_high, m_database, Utility::Claws_Gain::HIGH_GAIN);
+
+    return;
+}
+
+
+
+
+
+
+
+///////////////////////////////////////////////////////////////////////////////
+
+
+
+
+
+
+
 
 
 
