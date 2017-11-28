@@ -119,9 +119,9 @@ void        ClawsRun::initialize()
 {
 
 //    Pico_init_bySerial();
-/*     Pico_init_byNullptr();
- *     m_database->setNoOfPicosInitialized(m_picos->size());
- */
+    Pico_init_byNullptr();
+    m_database->setNoOfPicosInitialized(m_picos->size());
+
 
     PSU_init();
 
@@ -155,8 +155,8 @@ void        ClawsRun::initialize()
 void    ClawsRun::run()
 {
 
-    m_psu->sendConf( Utility::Claws_Gain::HIGH_GAIN);
-    m_psu->start();
+//    m_psu->sendConf( Utility::Claws_Gain::HIGH_GAIN);
+//    m_psu->start();
 
     for( int i = 0; i < 1; ++i )
     {
@@ -196,7 +196,7 @@ void    ClawsRun::run()
         diff = std::chrono::duration_cast<std::chrono::seconds>(time3 - time2);
         std::cout << "Physics: " << diff.count() << "sec\n";
     }
-    m_psu->stop();
+//    m_psu->stop();
 
     return;
 
@@ -249,43 +249,43 @@ void            ClawsRun::loadConfig()
 
 
 
-/*     try
- *     {
- *         std::cout << "Reading Pico high gain settings...";
- *         // load pico configs for the set run mode...
- *         m_database->Pico_readSettings( m_database->Claws_getConfig()->runMode_HighGain );
- *         std::cout << "done!\n";
- *     }
- *     catch( UtilityException& excep )
- *     {
- *         std::cout << "\n" << excep.what() << std::endl;
- *     }
- * 
- * 
- *     try
- *     {
- *         std::cout << "Reading low gain settings...";
- *         m_database->Pico_readSettings( m_database->Claws_getConfig()->runMode_LowGain );
- *         std::cout << "done!\n";
- *     }
- *     catch( UtilityException& excep )
- *     {
- *         std::cout << "\n" << excep.what() << std::endl;
- *     }
- * 
- *     try
- *     {
- *         std::cout << "Reading intermediate settings...";
- *         // ...and for the intermediate mode
- *         m_database->Pico_readSettings( Utility::Pico_RunMode::INTERMEDIATE );
- *         std::cout << "done!\n";
- *     }
- *     catch( UtilityException& excep )
- *     {
- *         std::cout << "\n" << excep.what() << std::endl;
- *     }
- * 
- */
+    try
+    {
+        std::cout << "Reading Pico high gain settings...";
+        // load pico configs for the set run mode...
+        m_database->Pico_readSettings( m_database->Claws_getConfig()->runMode_HighGain );
+        std::cout << "done!\n";
+    }
+    catch( UtilityException& excep )
+    {
+        std::cout << "\n" << excep.what() << std::endl;
+    }
+
+
+    try
+    {
+        std::cout << "Reading low gain settings...";
+        m_database->Pico_readSettings( m_database->Claws_getConfig()->runMode_LowGain );
+        std::cout << "done!\n";
+    }
+    catch( UtilityException& excep )
+    {
+        std::cout << "\n" << excep.what() << std::endl;
+    }
+
+    try
+    {
+        std::cout << "Reading intermediate settings...";
+        // ...and for the intermediate mode
+        m_database->Pico_readSettings( Utility::Pico_RunMode::INTERMEDIATE );
+        std::cout << "done!\n";
+    }
+    catch( UtilityException& excep )
+    {
+        std::cout << "\n" << excep.what() << std::endl;
+    }
+
+
 
     return;
 }
@@ -978,7 +978,6 @@ void            ClawsRun::printData()
                 tgain = Utility::Claws_Gain::INTERMEDIATE;
                 tloops = m_database->Claws_getConfig()->loops_Intermediate;
                 isPhysics = false;
-
                 break;
 
             default:

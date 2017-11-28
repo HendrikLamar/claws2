@@ -170,6 +170,12 @@ class Channel
         //! Tells the Pico where to store the rapid block mode for this channel.
         PICO_STATUS                 setDataBufferRapidBlock();
 
+        //! Set the data buffer for this channel to fake or real buffer.
+        //! Channel::setDataBufferRapidBlock() must be called before.
+        //! true -> Yes, set data buffer.
+        //! false -> Set fake buffer.
+        PICO_STATUS                 setDataBufferIntermediate( bool yesno );
+
         //! Configures the channel with the current loaded data. You might want
         //! to update the data first with loadConfig().
         PICO_STATUS                 setChannel();

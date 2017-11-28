@@ -533,6 +533,29 @@ void Pico::runRapid()
 
 
 
+///////////////////////////////////////////////////////////////////////////////
+
+
+
+
+
+
+
+
+void Pico::runIntermediate()
+{
+
+
+    return;
+}
+
+
+
+
+
+
+
+
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -742,20 +765,71 @@ void    Pico::setTrigger( )
 
 
 
-void Pico::setTrigger_Simple()
+void Pico::setTrigger_Simple( int cha  )
 {
-    m_status = ps6000SetSimpleTrigger
-        (
-         m_handle,
-         m_data_current->data_trigger->enabled,
-         m_data_current->data_trigger->source,
-         m_data_current->data_trigger->threshold,
-         m_data_current->data_trigger->direction,
-         m_data_current->data_trigger->delay,
-         m_data_current->data_trigger->autoTriggerTime);
+    switch( cha )
+    {
+        case 0:
+            m_status = ps6000SetSimpleTrigger
+                (
+                 m_handle,
+                 m_data_current->data_trigger->enabled,
+                 m_data_current->data_trigger->source,
+                 m_data_current->data_trigger->threshold,
+                 m_data_current->data_trigger->direction,
+                 m_data_current->data_trigger->delay,
+                 m_data_current->data_trigger->autoTriggerTime);
+            break;
+        case 1:
+            m_status = ps6000SetSimpleTrigger
+                (
+                 m_handle,
+                 m_data_current->data_trigger->enabled,
+                 PS6000_CHANNEL_A,
+                 m_data_current->data_trigger->threshold,
+                 m_data_current->data_trigger->direction,
+                 m_data_current->data_trigger->delay,
+                 m_data_current->data_trigger->autoTriggerTime);
+            break;
+        case 2:
+            m_status = ps6000SetSimpleTrigger
+                (
+                 m_handle,
+                 m_data_current->data_trigger->enabled,
+                 PS6000_CHANNEL_B,
+                 m_data_current->data_trigger->threshold,
+                 m_data_current->data_trigger->direction,
+                 m_data_current->data_trigger->delay,
+                 m_data_current->data_trigger->autoTriggerTime);
+            break;
+        case 3:
+            m_status = ps6000SetSimpleTrigger
+                (
+                 m_handle,
+                 m_data_current->data_trigger->enabled,
+                 PS6000_CHANNEL_C,
+                 m_data_current->data_trigger->threshold,
+                 m_data_current->data_trigger->direction,
+                 m_data_current->data_trigger->delay,
+                 m_data_current->data_trigger->autoTriggerTime);
+            break;
+        case 4:
+            m_status = ps6000SetSimpleTrigger
+                (
+                 m_handle,
+                 m_data_current->data_trigger->enabled,
+                 PS6000_CHANNEL_D,
+                 m_data_current->data_trigger->threshold,
+                 m_data_current->data_trigger->direction,
+                 m_data_current->data_trigger->delay,
+                 m_data_current->data_trigger->autoTriggerTime);
+            break;
+        default:
+            throw PicoException("This channel is not available for the trigger");
 
+
+    }
     checkStatus();
-
 
     return;
 }

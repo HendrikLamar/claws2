@@ -288,7 +288,12 @@ class Pico
         void    setTrigger( );
 
         void    setTrigger_Advanced( );
-        void    setTrigger_Simple( );
+
+        //! Sets the trigger.
+        //! 0 -> Set trigger according to config file.
+        //! 1-4 -> Set trigger on channel N. This is needed in 
+        //! intermediate mode.
+        void    setTrigger_Simple( int cha = 0 );
 
         // Configures the channels.
         void    setChannels();
@@ -375,6 +380,9 @@ class Pico
 
         //! Starts the rapid block mode.
         void runRapid();
+
+        //! Starts the intermediate mode.
+        void runIntermediate();
 
         //! Stops the data taking properly. If this is called before a trigger event
         //! occurs, the data array might contain non valid data.

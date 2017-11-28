@@ -279,9 +279,68 @@ PICO_STATUS Channel::setDataBufferRapidBlock()
         if( output != PICO_OK ) break;
     }
 
+
     return output; 
 
 }
+
+
+
+
+
+
+
+
+///////////////////////////////////////////////////////////////////////////////
+
+
+
+
+
+
+
+
+PICO_STATUS Channel::setDataBufferIntermediate( bool yesno )
+{
+    PICO_STATUS output = PICO_OK;
+    if( yesno )
+    {
+        for( unsigned int waveformNo = 0; 
+                waveformNo < m_data->loops_inter; ++waveformNo )
+        {
+            output = ps6000SetDataBufferBulk(
+                    *m_handle,
+                    m_channel,
+                    &m_buffer_rapid->at(waveformNo)->at(0),
+                    m_buffer_rapid_size,
+                    waveformNo,
+                    m_data->val_downSampleRatioMode
+                    );
+            if( output != PICO_OK ) break;
+        }
+    }
+    else
+    {
+        for( unsigned int waveformNo = 0; 
+                waveformNo < m_data->loops_inter; ++waveformNo )
+        {
+            output = ps6000SetDataBufferBulk(
+                    *m_handle,
+                    m_channel,
+                    nullptr,
+                    m_buffer_rapid_size,
+                    waveformNo,
+                    m_data->val_downSampleRatioMode
+                    );
+            if( output != PICO_OK ) break;
+        }
+
+    }
+
+
+    return output;
+}
+
 
 
 
