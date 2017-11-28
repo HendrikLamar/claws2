@@ -544,6 +544,71 @@ void Pico::runRapid()
 
 void Pico::runIntermediate()
 {
+    // trigger once on every channel to get the data
+    for( int i = 0; i < 4; ++i )
+    {
+        if( !m_channels->at(i)->getEnabled() ) continue;
+
+        setTrigger_Simple( i+1 );
+
+        for( auto& tmp : *m_channels )
+        {
+            if( tmp->getChNo() == m_channels->at( i )->getChNo() )
+            {
+                tmp->setDataBufferIntermediate( true );
+            }
+            else tmp->setDataBufferIntermediate( false );
+        }
+
+
+        m_status = ps6000RunBlock(
+                    m_handle,
+                    m_data_current->val_preTrigger,
+                    m_data_current->val_postTrigger,
+                    m_data_current->val_timebase,
+                    m_data_current->val_oversample,
+                    &m_timeIndisposedMS,
+                    m_startIndex,
+                    nullptr,
+                    nullptr
+                );
+
+        checkStatus();
+
+
+        // Now, check if data taking is done!
+        int16_t     ready = 0;
+
+
+        // Wait until data collection is done the ready pointer changes its value
+        // when this is the case. System can not be triggered for a long time, thats why it
+        // can take some time!
+        // \todo Here a stop switch would be imlementable!
+        while( !ready )
+        {
+            m_status = ps6000IsReady( m_handle, &ready);
+            checkStatus();
+            std::this_thread::sleep_for(std::chrono::milliseconds(1));
+        }
+
+        getValuesRapid();
+
+        // DEBUG
+        // print all the channel data in each loop
+//        for( auto& tmp : *m_channels )
+//        {
+//            std::cout << "Channel #"<< tmp->getChNo() << "\n";
+//            for( auto& tmp1 : *tmp->getBufferRapid() )
+//            {
+//                for( auto& tmp2 : *tmp1 )
+//                {
+//                    std::cout << tmp2 << "  " << std::flush;
+//                }
+//                std::cout << "\n";
+//            }
+//        }
+    }
+
 
 
     return;

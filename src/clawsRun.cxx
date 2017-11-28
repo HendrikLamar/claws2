@@ -166,7 +166,8 @@ void    ClawsRun::run()
         auto time1{std::chrono::system_clock::now()};
         try
         {
-            Pico_runRapid();
+//            Pico_runRapid();
+            Pico_runIntermediate();
         }
         catch( ClawsException& excep )
         {
@@ -1094,6 +1095,159 @@ void            ClawsRun::printData()
         return;
     }
     
+
+
+
+
+
+
+
+///////////////////////////////////////////////////////////////////////////////
+
+
+
+
+
+
+
+
+
+    void ClawsRun::Pico_runIntermediate()
+    {
+
+/*         // ensures that the first case is used always, I might extend this method
+ *         // at some point in future
+ *         Utility::Claws_Gain gain{Utility::Claws_Gain::INTERMEDIATE};
+ * 
+ *         Utility::Claws_Gain tgain;
+ *         unsigned int tloops;
+ *         bool isPhysics;
+ * 
+ *         switch( gain )
+ *         {
+ *             case Utility::Claws_Gain::INTERMEDIATE:
+ *                 tgain = Utility::Claws_Gain::INTERMEDIATE;
+ *                 tloops = m_database->Claws_getConfig()->loops_Intermediate;
+ *                 isPhysics = false;
+ *                 break;
+ * 
+ *             default:
+ *                 tgain = m_database->Claws_getConfig()->gain_current;
+ *                 tloops = m_database->Claws_getConfig()->loops_Physics;
+ *                 isPhysics = true;
+ *         }
+ */
+
+
+        // load each pico with a config and make it ready before running in the
+        // loop
+        for( auto& tmp : *m_picos )
+        {
+            tmp->setConfig( Utility::Claws_Gain::INTERMEDIATE );
+            tmp->setReadyRapid();
+        }
+
+        // define work
+        auto work = [](
+                std::shared_ptr<Pico> tpico,
+                std::shared_ptr<ProcessData> dataProcessor )
+                {
+                    tpico->runIntermediate();
+//                    dataProcessor->sync(subRunNum, tpico);
+                };
+
+
+        // create a process data instance and give it the vector with the pointers
+        // and the claws-global counter
+        std::shared_ptr<ProcessData> dataProcessor{
+            std::make_shared<ProcessData>( 
+                    m_picos, m_database->Claws_getCounter() )};
+        try
+        {
+            dataProcessor->save()->setSaveLocation(
+                    m_database->Claws_getConfig()->path_saveData);
+        }
+        catch( ClawsException& excep )
+        {
+            std::cout << excep.what() << "\n";
+            std::cout << "Stopping current run...\n";
+            return;
+        }
+
+
+        // let each pico acquire data in its own thread
+        std::vector<std::thread>    workers;
+        ROOT::EnableThreadSafety();
+        for( std::shared_ptr<Pico> tpico : *m_picos )
+        {
+                workers.emplace_back(
+                                    work, 
+                                    tpico,
+                                    dataProcessor);
+//                std::cout << "Thread started...\n";
+        };
+
+
+        for( auto& worker : workers )
+        {
+            if( worker.joinable() )
+            {
+                worker.join(); 
+//                std::cout << "Thread ended...\n";
+            }
+        }
+        workers.clear();
+
+        
+//        for( auto& tmp1 : *m_picos->at(0)->getCh(0)->getBufferRapid() )
+//        {
+//            for( auto& tmp2 : *tmp1 )
+//            {
+//                std::cout << tmp2 << "  " << std::flush;
+//            };
+//            std::cout << std::endl;
+//        };
+
+//            if( isPhysics )
+//            {
+//                dataProcessor->save()->physics(counter1);
+//            }
+//            else dataProcessor->save()->intermediate(counter1);
+//            std::cout << "Data saved\n";
+//            dataProcessor.clear();
+//            std::cout << "Data cleared.\n";
+
+            
+
+        std::cout << "Going to stop picos from data taking...\n";
+        // tell pico that data taking is done
+        for( auto& tmp : *m_picos )
+        {
+            try
+            {
+                tmp->stop();
+            }
+            catch( PicoException& excep )
+            {
+                std::cout << excep.what() << std::endl;
+            }
+            catch( ClawsException& excep )
+            {
+                std::cout << excep.what() << std::endl;
+            }
+            catch( std::exception& excep )
+            {
+                std::cout << excep.what() << std::endl;
+            }
+
+            std::cout << "Pico closed\n";
+        }
+
+        return;
+    }
+
+
+
 
 
 

@@ -56,6 +56,8 @@ class ClawsRun
 
         void Pico_runRapid();
 
+        void Pico_runIntermediate();
+
 
         ///////////////////////////////////////////////////////////////////////
         //
