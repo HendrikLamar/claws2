@@ -159,6 +159,32 @@ std::shared_ptr< Storage >  ProcessData::save()
 
 
 
+
+///////////////////////////////////////////////////////////////////////////////
+
+
+
+
+
+
+void ProcessData::syncBlock( 
+        unsigned int& subRunNum,
+        std::shared_ptr<Pico> tpico )
+{
+
+    sync( subRunNum, tpico, false );
+
+
+    return;
+}
+
+
+
+
+
+
+
+
 ///////////////////////////////////////////////////////////////////////////////
 
 
@@ -362,7 +388,8 @@ void ProcessData::makePicoHist()
 
 void ProcessData::sync( 
         unsigned int& subRunNum,
-        std::shared_ptr<Pico> tpico )
+        std::shared_ptr<Pico> tpico,
+        bool isRapid )
 {
     // create mutex to lock variables for certain times
 //    std::mutex tmp_mutex_pico;
@@ -409,10 +436,17 @@ void ProcessData::sync(
             title = location + "_" + channelNo + "_" + std::to_string(subRunNum);
             hist->SetTitle(title.c_str());
 
-            // copy the data
-            for( unsigned tt = 0; tt < channel->getBufferBlock()->size() ; ++tt )
+            std::shared_ptr< std::vector<int16_t> > data;
+            if( isRapid )
             {
-                hist->SetBinContent( tt-1, channel->getBufferBlock()->at(tt) );
+                data = channel->getBufferRapid()->at(subRunNum);
+            }
+            else data = channel->getBufferBlock();
+
+            // copy the data
+            for( unsigned tt = 0; tt < data->size() ; ++tt )
+            {
+                hist->SetBinContent( tt-1, data->at(tt) );
             }
         }
     }

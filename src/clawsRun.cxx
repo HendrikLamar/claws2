@@ -183,7 +183,7 @@ void    ClawsRun::run()
         
         try
         {
-//            Pico_runBlock( Utility::Claws_Gain::HL_GAIN );
+            Pico_runBlock( Utility::Claws_Gain::HL_GAIN );
         }
         catch( ClawsException& excep )
         {
@@ -853,8 +853,15 @@ void            ClawsRun::printData()
                 std::shared_ptr<Pico> tpico,
                 std::shared_ptr<ProcessData> dataProcessor )
                 {
-                    tpico->runBlock();
-                    dataProcessor->sync(subRunNum, tpico);
+                    try
+                    {
+                        tpico->runBlock();
+                        dataProcessor->syncBlock(subRunNum, tpico);
+                    }
+                    catch( PicoException& excep )
+                    {
+                        std::cout << excep.what() << std::endl;
+                    }
                 };
 
 
@@ -1114,30 +1121,6 @@ void            ClawsRun::printData()
 
     void ClawsRun::Pico_runIntermediate()
     {
-
-/*         // ensures that the first case is used always, I might extend this method
- *         // at some point in future
- *         Utility::Claws_Gain gain{Utility::Claws_Gain::INTERMEDIATE};
- * 
- *         Utility::Claws_Gain tgain;
- *         unsigned int tloops;
- *         bool isPhysics;
- * 
- *         switch( gain )
- *         {
- *             case Utility::Claws_Gain::INTERMEDIATE:
- *                 tgain = Utility::Claws_Gain::INTERMEDIATE;
- *                 tloops = m_database->Claws_getConfig()->loops_Intermediate;
- *                 isPhysics = false;
- *                 break;
- * 
- *             default:
- *                 tgain = m_database->Claws_getConfig()->gain_current;
- *                 tloops = m_database->Claws_getConfig()->loops_Physics;
- *                 isPhysics = true;
- *         }
- */
-
 
         // load each pico with a config and make it ready before running in the
         // loop

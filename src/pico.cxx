@@ -348,6 +348,8 @@ void Pico::setReadyBlock( )
     // divide local pico memory in N pieces
     setMemorySegments(1);
 
+    setNoOfCaptures(1);
+    
     getTimebase();
 
     setTrigger();

@@ -56,6 +56,11 @@ class ProcessData : public std::enable_shared_from_this< ProcessData >
         // Populates the m_picos_hist data structure.
         void makePicoHist();
 
+        void sync(
+                unsigned int& subRunNum,
+                std::shared_ptr<Pico> tpico,
+                bool isRapid );
+
     public:
 
         ProcessData( std::shared_ptr<std::vector< std::shared_ptr< Pico > > > vPicos, std::shared_ptr<unsigned long> runNum );
@@ -65,7 +70,7 @@ class ProcessData : public std::enable_shared_from_this< ProcessData >
         std::shared_ptr< Storage >  save();
 
         //! Syncs the histograms of the given pico threadsafe. 
-        void sync( 
+        void syncBlock( 
             unsigned int& subRunNum,
             std::shared_ptr<Pico> tpico );
 
