@@ -325,9 +325,9 @@ void ProcessData::makePicoHist()
                 hist = std::make_shared< TH1I >(
                         name.c_str(),
                         name.c_str(),
-                        tpico->getCh(kk)->getBufferBlock()->size(), 
+                        tpico->getCh(kk)->getBufferSize(), 
                         0, 
-                        tpico->getCh(kk)->getBufferBlock()->size()
+                        tpico->getCh(kk)->getBufferSize()
                         );
             
 

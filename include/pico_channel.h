@@ -148,11 +148,16 @@ class Channel
 
 
         //! Returns the channel buffer.
+        //! Don't use size() method on this. Use getBufferSize() instead!
         std::shared_ptr<std::vector< int16_t >> getBufferBlock();
 
         //! Returns the channel buffer for rapid mode.
+        //! Don't use size() method on this. Use getBufferSize() instead!
         std::shared_ptr< std::vector< 
             std::shared_ptr< std::vector< int16_t >>>> getBufferRapid();
+
+        //! Returns the size of the current data buffer.
+        unsigned int                getBufferSize();
 
 /*         //! Sets the run mode. This function needs to be called before loadConfig(),
  *         //! setDataBuffer() and setChannel().

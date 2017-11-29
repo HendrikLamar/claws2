@@ -547,7 +547,7 @@ void Pico::runIntermediate()
     // trigger once on every channel to get the data
     for( int i = 0; i < 4; ++i )
     {
-        if( !m_channels->at(i)->getEnabled() ) continue;
+        if( getCh(i)->getEnabled() < 1 ) continue;
 
         setTrigger_Simple( i+1 );
 

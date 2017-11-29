@@ -127,6 +127,26 @@ std::shared_ptr< std::vector<
 
 
 
+
+
+
+
+///////////////////////////////////////////////////////////////////////////////
+
+
+
+
+
+
+unsigned int Channel::getBufferSize()
+{
+    return m_buffer_block_size;
+}
+
+
+
+
+
 ///////////////////////////////////////////////////////////////////////////////
 
 
@@ -281,7 +301,6 @@ PICO_STATUS Channel::setDataBufferRapidBlock()
 
 
     return output; 
-
 }
 
 
