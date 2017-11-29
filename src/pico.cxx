@@ -522,7 +522,7 @@ void Pico::runRapid()
         std::this_thread::sleep_for(std::chrono::milliseconds(1));
     }
 
-    getValuesRapid();
+    getValuesRapid( m_startIndex, m_data_current->loops_inter );
 
     return;
 }
@@ -551,7 +551,24 @@ void Pico::runIntermediate()
     {
         if( getCh(i)->getEnabled() < 1 ) continue;
 
-        setTrigger_Simple( i+1 );
+//        // first, run setReadyRapid in a modified way again
+//        // turn all channels of only the needed one
+//        for( auto& tmp : *m_channels )
+//        {
+//            if( tmp->getChNo() == m_channels->at( i )->getChNo() )
+//            {
+//                tmp->setChannel( false, true );
+//            }
+//            else tmp->setChannel( false, false );
+//        }
+//        setMemorySegments( m_data_current->loops_inter );
+//        std::cout << "setNoOfCaptures...\n";
+//        setNoOfCaptures( m_data_current->loops_inter );
+//        std::cout << "getTimebase...\n";
+//        getTimebase();
+//        std::cout << "setTrigger...\n";
+//        setTrigger_Simple( i+1 );
+//        std::cout << "beforeDataBuffer...\n";
 
         for( auto& tmp : *m_channels )
         {
@@ -563,6 +580,7 @@ void Pico::runIntermediate()
         }
 
 
+//        std::cout << "ps6000RunBlock...\n";
         m_status = ps6000RunBlock(
                     m_handle,
                     m_data_current->val_preTrigger,
@@ -593,7 +611,22 @@ void Pico::runIntermediate()
             std::this_thread::sleep_for(std::chrono::milliseconds(1));
         }
 
-        getValuesRapid();
+        uint32_t stepSize{9};
+        uint32_t stopIndex;
+        for( unsigned int startIndex = 0; startIndex < m_data_current->loops_inter;
+                startIndex += stepSize+1 )
+        {
+            stopIndex = startIndex + stepSize;
+            if( (m_data_current->loops_inter - startIndex) < stepSize )
+            {
+                stopIndex = m_data_current->loops_inter-1;
+            }
+
+//            std::cout << " Startindex: " << startIndex
+//                << "\tStopindex: " << stopIndex << "\n";
+            getValuesRapid( startIndex, stopIndex );
+
+        }
 
         // DEBUG
         // print all the channel data in each loop
@@ -1089,17 +1122,17 @@ void    Pico::getValuesBlock()
 
 
 
-void    Pico::getValuesRapid()
+void    Pico::getValuesRapid( uint32_t startIndex, uint32_t lastIndex )
 {
 
     uint32_t noOfSamplesReturned = m_buffer_data_size;
 
-
+//    std::cout << "ps6000GetValuesBulk...\n";
     m_status = ps6000GetValuesBulk(
                     m_handle,
                     &noOfSamplesReturned,
-                    m_startIndex,
-                    m_data_current->loops_inter-1,
+                    startIndex,
+                    lastIndex,
                     m_data_current->val_downSampleRatio,
                     m_data_current->val_downSampleRatioMode,
                     &m_overflow
@@ -1115,6 +1148,7 @@ void    Pico::getValuesRapid()
 
     return;
 }
+
 
 
 

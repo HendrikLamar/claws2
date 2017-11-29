@@ -183,7 +183,9 @@ class Channel
 
         //! Configures the channel with the current loaded data. You might want
         //! to update the data first with loadConfig().
-        PICO_STATUS                 setChannel();
+        PICO_STATUS                 setChannel(
+                                        bool followsSettings = true,
+                                        bool ifNotIsEnabled = false );
 
         //! Returns true if channel is enabled.
         int16_t                     getEnabled();

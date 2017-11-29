@@ -347,7 +347,7 @@ PICO_STATUS Channel::setDataBufferIntermediate( bool yesno )
                     *m_handle,
                     m_channel,
                     nullptr,
-                    m_buffer_rapid_size,
+                    0,
                     waveformNo,
                     m_data->val_downSampleRatioMode
                     );
@@ -375,20 +375,30 @@ PICO_STATUS Channel::setDataBufferIntermediate( bool yesno )
 
 
 
-PICO_STATUS Channel::setChannel()
+PICO_STATUS Channel::setChannel( bool followsSettings, bool ifNotIsEnabled )
 {
     PICO_STATUS output;
 
+    int16_t isEnabled;
 
+    if( followsSettings )
+    {
+        isEnabled = getEnabled();
+    }
+    else ifNotIsEnabled ? isEnabled = 1 : isEnabled = 0;
+
+
+    
             output = ps6000SetChannel(
                     *m_handle,
                     m_channel,
-                    getEnabled(),
+                    isEnabled,
                     m_data_channel->coupling,
                     m_data_channel->range,
                     m_data_channel->analogueOffset,
                     m_data_channel->bandwidth
                     );
+
 
     return output;
 }

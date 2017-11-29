@@ -193,6 +193,46 @@ void ProcessData::syncBlock(
 
 
 
+
+void ProcessData::syncSaveRapid( unsigned int& subRunNum )
+{
+
+    // loop through all waveforms
+    for( unsigned int noWaveform = 0; noWaveform < subRunNum; ++noWaveform )
+    {
+        // loop through all picos -> no multithreading yet (or at all)
+        for( auto& tmp : *m_picos )
+        {
+            sync( noWaveform, tmp ,true );
+
+        }
+
+        save()->intermediate(noWaveform);
+
+    }
+
+
+
+    return;
+}
+
+
+
+
+
+
+
+
+
+
+///////////////////////////////////////////////////////////////////////////////
+
+
+
+
+
+
+
 void    ProcessData::clear()
 {
     m_picos_hist->clear();

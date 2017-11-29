@@ -1132,11 +1132,9 @@ void            ClawsRun::printData()
 
         // define work
         auto work = [](
-                std::shared_ptr<Pico> tpico,
-                std::shared_ptr<ProcessData> dataProcessor )
+                std::shared_ptr<Pico> tpico)
                 {
                     tpico->runIntermediate();
-//                    dataProcessor->sync(subRunNum, tpico);
                 };
 
 
@@ -1165,9 +1163,8 @@ void            ClawsRun::printData()
         {
                 workers.emplace_back(
                                     work, 
-                                    tpico,
-                                    dataProcessor);
-//                std::cout << "Thread started...\n";
+                                    tpico);
+
         };
 
 
@@ -1176,11 +1173,17 @@ void            ClawsRun::printData()
             if( worker.joinable() )
             {
                 worker.join(); 
-//                std::cout << "Thread ended...\n";
             }
         }
         workers.clear();
 
+
+        auto time1{std::chrono::system_clock::now()};
+        unsigned int loops = m_database->Claws_getConfig()->loops_Intermediate;
+        dataProcessor->syncSaveRapid(loops);
+        auto time2{std::chrono::system_clock::now()};
+        auto diff{std::chrono::duration_cast<std::chrono::seconds>(time2 - time1)};
+        std::cout << "SaveDataInter: " << diff.count() << "sec\n";
         
 //        for( auto& tmp1 : *m_picos->at(0)->getCh(0)->getBufferRapid() )
 //        {

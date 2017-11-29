@@ -74,6 +74,9 @@ class ProcessData : public std::enable_shared_from_this< ProcessData >
             unsigned int& subRunNum,
             std::shared_ptr<Pico> tpico );
 
+        //! Syncs the histograms of all the picos taken in RapidMode.
+        void syncSaveRapid( unsigned int& subRunNum );
+
         //! Clears the TH1I vector.
         void clear();
 

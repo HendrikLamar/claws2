@@ -304,7 +304,7 @@ class Pico
         // Acquires the data from the pico after data taking.
         void    getValuesBlock();
 
-        void    getValuesRapid();
+        void    getValuesRapid( uint32_t startIndex, uint32_t lastIndex );
 
         // Only needed when rapid block mode is used. Otherwise its 1 by default.
         void    setMemorySegments( uint32_t nSegments );
