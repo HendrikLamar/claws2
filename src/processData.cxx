@@ -28,6 +28,7 @@
 #include <utility>
 
 #include <TH1I.h>
+#include <TGraph.h>
 
 
 
@@ -197,17 +198,41 @@ void ProcessData::syncBlock(
 void ProcessData::syncSaveRapid( unsigned int& subRunNum )
 {
 
+    auto work = [this](
+            std::shared_ptr<Pico> tpico,
+            unsigned int noWaveform)
+    {
+        sync( noWaveform, tpico, true );
+    };
+
     // loop through all waveforms
     for( unsigned int noWaveform = 0; noWaveform < subRunNum; ++noWaveform )
     {
+        auto time1{std::chrono::system_clock::now()};
         // loop through all picos -> no multithreading yet (or at all)
+        std::vector< std::thread > workers;
         for( auto& tmp : *m_picos )
         {
-            sync( noWaveform, tmp ,true );
+
+            workers.emplace_back(work, tmp, noWaveform );
+//            sync( noWaveform, tmp ,true );
 
         }
 
+        for( auto& worker : workers )
+        {
+            if( worker.joinable() )
+            {
+                worker.join(); 
+            }
+        }
+        workers.clear();
+
         save()->intermediate(noWaveform);
+        auto time2{std::chrono::system_clock::now()};
+        auto diff{std::chrono::duration_cast<
+            std::chrono::milliseconds>(time2 - time1)};
+        std::cout << "Sync: " << diff.count() << "msec\n";
 
     }
 
@@ -483,6 +508,7 @@ void ProcessData::sync(
             }
             else data = channel->getBufferBlock();
 
+            
             // copy the data
             for( unsigned tt = 0; tt < data->size() ; ++tt )
             {

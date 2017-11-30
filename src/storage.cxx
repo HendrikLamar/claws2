@@ -357,8 +357,12 @@ void Storage::save(
 
 
 //    file->SaveAs(fpath.c_str());
+    auto time1{std::chrono::system_clock::now()};
     file->Write();
     file->Close();
+    auto time2{std::chrono::system_clock::now()};
+    auto diff{std::chrono::duration_cast<std::chrono::milliseconds>(time2 - time1)};
+    std::cout << "WritOneFile: " << diff.count() << "msec\n";
 
 
 

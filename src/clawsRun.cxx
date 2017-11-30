@@ -1177,7 +1177,6 @@ void            ClawsRun::printData()
         }
         workers.clear();
 
-
         auto time1{std::chrono::system_clock::now()};
         unsigned int loops = m_database->Claws_getConfig()->loops_Intermediate;
         dataProcessor->syncSaveRapid(loops);
