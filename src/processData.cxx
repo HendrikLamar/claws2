@@ -21,6 +21,7 @@
 #include "pico.h"
 #include "pico_channel.h"
 
+#include <map>
 #include <memory>
 #include <algorithm>
 #include <mutex>
@@ -198,43 +199,148 @@ void ProcessData::syncBlock(
 void ProcessData::syncSaveRapid( unsigned int& subRunNum )
 {
 
-    auto work = [this](
-            std::shared_ptr<Pico> tpico,
-            unsigned int noWaveform)
+
+    auto channelEnumToStringNo = [](PS6000_CHANNEL cha)->std::string
     {
-        sync( noWaveform, tpico, true );
+        std::string output;
+        switch( cha )
+        {
+            case PS6000_CHANNEL_A:
+                output = "1";
+                break;
+            case PS6000_CHANNEL_B:
+                output = "2";
+                break;
+            case PS6000_CHANNEL_C:
+                output = "3";
+                break;
+            case PS6000_CHANNEL_D:
+                output = "4";
+                break;
+            default:
+                output = "XY";
+        }
+
+        return output;
     };
 
-    // loop through all waveforms
+
+    // array to hold the intermediate data for easier access by loopNo
+    //
+    std::shared_ptr< std::vector<       // size of loops_inter
+        std::shared_ptr< std::vector <  // size of all channels
+            std::shared_ptr< std::pair< std::string, 
+                std::shared_ptr< std::vector <  // size of acquired samples-> contains
+                                            // the data for one waveform
+                int16_t > > > > > > > > data_intermediate{
+                    std::make_shared< std::vector<
+                        std::shared_ptr< std::vector<
+                            std::shared_ptr< std::pair< std::string, 
+                                std::shared_ptr< std::vector< int16_t>>>>>>>>()};
+
+    std::cout << "SubRunNum: " << subRunNum << std::endl;
+
     for( unsigned int noWaveform = 0; noWaveform < subRunNum; ++noWaveform )
     {
-        auto time1{std::chrono::system_clock::now()};
-        // loop through all picos -> no multithreading yet (or at all)
-        std::vector< std::thread > workers;
-        for( auto& tmp : *m_picos )
+        std::shared_ptr< std::vector<
+            std::shared_ptr< std::pair< std::string, 
+                std::shared_ptr< std::vector<int16_t>>>>>> data_waveform{
+                    std::make_shared< std::vector<
+                        std::shared_ptr< std::pair< std::string, 
+                            std::shared_ptr<std::vector<int16_t>>>>>>()};
+
+        for( auto& tmp1 : *m_picos )
         {
-
-            workers.emplace_back(work, tmp, noWaveform );
-//            sync( noWaveform, tmp ,true );
-
-        }
-
-        for( auto& worker : workers )
-        {
-            if( worker.joinable() )
+            for( auto i = 0; i < 4; ++i )
             {
-                worker.join(); 
+                std::string name = tmp1->getLocation() + "_";
+                name += channelEnumToStringNo(tmp1->getCh(i)->getChNo());
+                std::shared_ptr< std::pair< std::string, 
+                    std::shared_ptr< std::vector<int16_t> > > > data_channel{
+                        std::make_shared<std::pair< 
+                            std::string, std::shared_ptr<
+                                std::vector<int16_t>>>>(
+                                name, 
+                                tmp1->getCh(i)->getBufferRapid()->at(noWaveform))};
+
+//                std::cout << tmp1->getCh(i)->getBufferRapid()->at(noWaveform)<< "\n";
+
+/*                 std::cout << name << std::endl;
+ *                 for(auto& tmp3 : *tmp1->getCh(i)->getBufferRapid()->at(noWaveform))
+ *                 {
+ *                     std::cout << tmp3 << "  " << std::flush;
+ *                 }
+ *                 std::cout << "\n";
+ */
+                data_waveform->push_back(data_channel);
             }
         }
-        workers.clear();
-
-        save()->intermediate(noWaveform);
-        auto time2{std::chrono::system_clock::now()};
-        auto diff{std::chrono::duration_cast<
-            std::chrono::milliseconds>(time2 - time1)};
-        std::cout << "Sync: " << diff.count() << "msec\n";
-
+        data_intermediate->push_back(data_waveform);
     }
+
+//    std::cout << "Size of data_intermediate: " << data_intermediate->size() << "\n";
+//    std::cout << "Size of data_waveform: " << data_intermediate->at(0)->size();
+//    std::cout << "\n";
+//    std::cout << "Size for data_channel: " << 
+//        data_intermediate->at(0)->at(0)->second->size() << "\n";
+//    std::cout << "SomeName: " << data_intermediate->at(0)->at(0)->first << "\n";
+
+    unsigned int counter1{0};
+    for( auto& tmp1 : *data_intermediate)
+    {
+        std::cout << "\t\t\t\t#" << counter1 << "\n";
+        for( auto& tmp2 : *tmp1 )
+        {
+            std::cout << tmp2->first << ": " << std::flush;
+            for( auto& tmp3 : *tmp2->second )
+            {
+                std::cout << tmp3 << " " << std::flush;
+            }
+            std::cout << "\n";
+        }
+        std::cout << "\n";
+        ++counter1;
+    }
+
+/*     auto work = [this](
+ *             std::shared_ptr<Pico> tpico,
+ *             unsigned int noWaveform)
+ *     {
+ *         sync( noWaveform, tpico, true );
+ *     };
+ * 
+ * 
+ *     // loop through all waveforms
+ *     for( unsigned int noWaveform = 0; noWaveform < subRunNum; ++noWaveform )
+ *     {
+ *         auto time1{std::chrono::system_clock::now()};
+ *         // loop through all picos -> no multithreading yet (or at all)
+ *         std::vector< std::thread > workers;
+ *         for( auto& tmp : *m_picos )
+ *         {
+ * 
+ *             workers.emplace_back(work, tmp, noWaveform );
+ * //            sync( noWaveform, tmp ,true );
+ * 
+ *         }
+ * 
+ *         for( auto& worker : workers )
+ *         {
+ *             if( worker.joinable() )
+ *             {
+ *                 worker.join(); 
+ *             }
+ *         }
+ *         workers.clear();
+ * 
+ *         save()->intermediate(noWaveform);
+ *         auto time2{std::chrono::system_clock::now()};
+ *         auto diff{std::chrono::duration_cast<
+ *             std::chrono::milliseconds>(time2 - time1)};
+ *         std::cout << "Sync: " << diff.count() << "msec\n";
+ * 
+ *     }
+ */
 
 
 

@@ -386,8 +386,10 @@ void Pico::setReadyRapid()
 {
     setChannels();
 
+//    setMemorySegments(100);
     setMemorySegments(m_data_current->loops_inter);
 
+//    setNoOfCaptures(30);
     setNoOfCaptures(m_data_current->loops_inter);
 
     getTimebase();
@@ -570,14 +572,15 @@ void Pico::runIntermediate()
 //        setTrigger_Simple( i+1 );
 //        std::cout << "beforeDataBuffer...\n";
 
-        for( auto& tmp : *m_channels )
-        {
-            if( tmp->getChNo() == m_channels->at( i )->getChNo() )
-            {
-                tmp->setDataBufferIntermediate( true );
-            }
-            else tmp->setDataBufferIntermediate( false );
-        }
+/*         for( auto& tmp : *m_channels )
+ *         {
+ *             if( tmp->getChNo() == m_channels->at( i )->getChNo() )
+ *             {
+ *                 tmp->setDataBufferIntermediate( true );
+ *             }
+ *             else tmp->setDataBufferIntermediate( false );
+ *         }
+ */
 
 
 //        std::cout << "ps6000RunBlock...\n";
@@ -622,8 +625,8 @@ void Pico::runIntermediate()
                 stopIndex = m_data_current->loops_inter-1;
             }
 
-//            std::cout << " Startindex: " << startIndex
-//                << "\tStopindex: " << stopIndex << "\n";
+            std::cout << " Startindex: " << startIndex
+                << "\tStopindex: " << stopIndex << "\n";
             getValuesRapid( startIndex, stopIndex );
 
         }
@@ -1031,7 +1034,7 @@ void    Pico::getTimebase()
                         m_data_current->val_timebase,
                         m_buffer_data_size,
                         &m_timeInterval_ns,
-                        m_data_current->val_timebase,
+                        m_data_current->val_oversample,
                         &maxSamples,
                         m_startIndex                        
                 );

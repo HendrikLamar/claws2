@@ -49,10 +49,14 @@ Channel::Channel
 
     // set intermediate data buffer for rapid block mode
     m_buffer_rapid = std::make_shared<std::vector<
-        std::shared_ptr< std::vector< int16_t >>>>(
-                        1000,
-                        std::make_shared< std::vector< int16_t >>(
-                            m_buffer_rapid_sizeReserver, 0));
+        std::shared_ptr< std::vector< int16_t >>>>();
+
+    for( unsigned int i = 0; i < 10; ++i )
+    {
+        std::shared_ptr<std::vector<int16_t>> tmp =
+            std::make_shared<std::vector<int16_t>>(m_buffer_rapid_sizeReserver);
+        m_buffer_rapid->push_back(tmp);
+    }
 }
 
 
@@ -274,16 +278,39 @@ PICO_STATUS Channel::setDataBufferRapidBlock()
 {
     PICO_STATUS output;
 
-    for( auto& tmp : *m_buffer_rapid )
-    {
-        tmp->resize(m_buffer_rapid_size);
-//        tmp->shrink_to_fit();
-    }
 
-    m_buffer_rapid->resize(
-            m_data->loops_inter, 
-            std::make_shared< std::vector< int16_t >>(m_buffer_rapid_size));
-//    m_buffer_rapid->shrink_to_fit();
+    if( m_data->loops_inter > m_buffer_rapid->size() )
+    {
+        for( auto& tmp : *m_buffer_rapid )
+        {
+            tmp->resize(m_buffer_rapid_size);
+        }
+        unsigned int counter2{0};
+        std::cout << "Current size: " << m_buffer_rapid->size() << "\n";
+        std::cout << "Size to add: " << m_data->loops_inter-m_buffer_rapid->size();
+        std::cout << "\n";
+        unsigned int noOfLoopsNeeded{static_cast<unsigned int>( 
+                m_data->loops_inter - m_buffer_rapid->size())};
+        for(  unsigned int i = 0; 
+                i < noOfLoopsNeeded; ++i )
+        {
+            m_buffer_rapid->push_back(
+                    std::make_shared< std::vector< int16_t>>(getBufferSize()));
+            ++counter2;
+        }
+        std::cout << "Loops ran: " << counter2 << "\n";
+        std::cout << "Size afterwards: " << m_buffer_rapid->size() << "\n";
+        std::cout << "Must be: " << m_data->loops_inter << "\n";
+    }
+    else 
+    {
+        m_buffer_rapid->resize( m_data->loops_inter );
+
+        for( auto& tmp : *m_buffer_rapid )
+        {
+            tmp->resize(m_buffer_rapid_size);
+        }
+    };
 
 
     for( unsigned int waveformNo = 0; waveformNo < m_data->loops_inter; ++waveformNo )
@@ -324,9 +351,11 @@ PICO_STATUS Channel::setDataBufferIntermediate( bool yesno )
     PICO_STATUS output = PICO_OK;
     if( yesno )
     {
+        unsigned int counter1{0};
         for( unsigned int waveformNo = 0; 
                 waveformNo < m_data->loops_inter; ++waveformNo )
         {
+
             output = ps6000SetDataBufferBulk(
                     *m_handle,
                     m_channel,
@@ -335,8 +364,10 @@ PICO_STATUS Channel::setDataBufferIntermediate( bool yesno )
                     waveformNo,
                     m_data->val_downSampleRatioMode
                     );
+            ++counter1;
             if( output != PICO_OK ) break;
         }
+        std::cout << "setDataBufferIntermediate loops: " << counter1 << "\n";
     }
     else
     {

@@ -23,6 +23,7 @@
 #include <cstdlib>
 #include <cstring>
 #include <vector>
+#include <memory>
 
 //#include "clawsRun.h"
 
@@ -59,6 +60,7 @@ int main()
 
     delete mystate;
     mystate = nullptr;
+
 
 
 

@@ -1181,8 +1181,9 @@ void            ClawsRun::printData()
         unsigned int loops = m_database->Claws_getConfig()->loops_Intermediate;
         dataProcessor->syncSaveRapid(loops);
         auto time2{std::chrono::system_clock::now()};
-        auto diff{std::chrono::duration_cast<std::chrono::seconds>(time2 - time1)};
-        std::cout << "SaveDataInter: " << diff.count() << "sec\n";
+        auto diff{std::chrono::duration_cast<
+            std::chrono::milliseconds>(time2 - time1)};
+        std::cout << "SaveDataInter: " << diff.count() << "msec\n";
         
 //        for( auto& tmp1 : *m_picos->at(0)->getCh(0)->getBufferRapid() )
 //        {
