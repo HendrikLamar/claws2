@@ -29,6 +29,7 @@
 #include <chrono>
 #include <thread>
 #include <memory>
+#include <typeinfo>
 
 
 
@@ -387,6 +388,7 @@ void Pico::setReadyRapid()
     setChannels();
 
 //    setMemorySegments(100);
+    std::cout << "setReadyRapid..." << m_data_current->loops_inter << "\n";
     setMemorySegments(m_data_current->loops_inter);
 
 //    setNoOfCaptures(30);
@@ -399,7 +401,7 @@ void Pico::setReadyRapid()
     for( auto& tmp : *m_channels )
     {
         tmp->setDataBufferRapidBlock();
-        std::this_thread::sleep_for(std::chrono::milliseconds(20));
+        std::this_thread::sleep_for(std::chrono::milliseconds(1));
     }
 
 
@@ -572,25 +574,27 @@ void Pico::runIntermediate()
 //        setTrigger_Simple( i+1 );
 //        std::cout << "beforeDataBuffer...\n";
 
-/*         for( auto& tmp : *m_channels )
- *         {
- *             if( tmp->getChNo() == m_channels->at( i )->getChNo() )
- *             {
- *                 tmp->setDataBufferIntermediate( true );
- *             }
- *             else tmp->setDataBufferIntermediate( false );
- *         }
- */
+        for( auto& tmp : *m_channels )
+        {
+            if( tmp->getChNo() == m_channels->at( i )->getChNo() )
+            {
+                tmp->setDataBufferIntermediate( true );
+            }
+            else tmp->setDataBufferIntermediate( false );
+        }
+
 
 
 //        std::cout << "ps6000RunBlock...\n";
+        std::cout << "Oversample: " << m_data_current->val_oversample << "\n";
         m_status = ps6000RunBlock(
                     m_handle,
                     m_data_current->val_preTrigger,
                     m_data_current->val_postTrigger,
                     m_data_current->val_timebase,
                     m_data_current->val_oversample,
-                    &m_timeIndisposedMS,
+//                    &m_timeIndisposedMS,
+                    nullptr,
                     m_startIndex,
                     nullptr,
                     nullptr
@@ -614,37 +618,25 @@ void Pico::runIntermediate()
             std::this_thread::sleep_for(std::chrono::milliseconds(1));
         }
 
-        uint32_t stepSize{9};
-        uint32_t stopIndex;
-        for( unsigned int startIndex = 0; startIndex < m_data_current->loops_inter;
-                startIndex += stepSize+1 )
-        {
-            stopIndex = startIndex + stepSize;
-            if( (m_data_current->loops_inter - startIndex) < stepSize )
-            {
-                stopIndex = m_data_current->loops_inter-1;
-            }
+            unsigned int stopIndex{m_data_current->loops_inter-1};
+            getValuesRapid( m_startIndex, stopIndex );
 
-            std::cout << " Startindex: " << startIndex
-                << "\tStopindex: " << stopIndex << "\n";
-            getValuesRapid( startIndex, stopIndex );
-
-        }
 
         // DEBUG
         // print all the channel data in each loop
-//        for( auto& tmp : *m_channels )
-//        {
-//            std::cout << "Channel #"<< tmp->getChNo() << "\n";
-//            for( auto& tmp1 : *tmp->getBufferRapid() )
-//            {
-//                for( auto& tmp2 : *tmp1 )
-//                {
-//                    std::cout << tmp2 << "  " << std::flush;
-//                }
-//                std::cout << "\n";
-//            }
-//        }
+/*         for( auto& tmp : *m_channels )
+ *         {
+ *             std::cout << "Channel #"<< tmp->getChNo() << "\n";
+ *             for( auto& tmp1 : *tmp->getBufferRapid() )
+ *             {
+ *                 for( auto& tmp2 : *tmp1 )
+ *                 {
+ *                     std::cout << tmp2 << "  " << std::flush;
+ *                 }
+ *                 std::cout << "\n";
+ *             }
+ *         }
+ */
     }
 
 
@@ -873,6 +865,8 @@ void Pico::setTrigger_Simple( int cha  )
     switch( cha )
     {
         case 0:
+            std::cout << "setTriggerSimple...\n";
+//            std::cout << "setTriggerSimple." << ;
             m_status = ps6000SetSimpleTrigger
                 (
                  m_handle,
@@ -1023,8 +1017,12 @@ void    Pico::getTimebase()
     m_timeInterval_ns = -1.f;
 
     // on exit, the maximum number of samples available.
-    uint32_t maxSamples{50000};
+    uint32_t maxSamples{0};
 
+    std::cout << "getTimebase...\n";
+    std::cout << "timebase: " << m_data_current->val_timebase << "\n";
+    std::cout << "DataSize: " << m_buffer_data_size << "\n";
+    std::cout << "startindex: " << m_startIndex << "\n";
 
 
     while( m_timeInterval_ns < 0 && counter < counterMax )
@@ -1034,7 +1032,7 @@ void    Pico::getTimebase()
                         m_data_current->val_timebase,
                         m_buffer_data_size,
                         &m_timeInterval_ns,
-                        m_data_current->val_oversample,
+                        0,
                         &maxSamples,
                         m_startIndex                        
                 );
@@ -1046,6 +1044,7 @@ void    Pico::getTimebase()
         ++counter;
     }
 
+    std::cout << "timebase: " << m_timeInterval_ns << "\n";
 
 
     // check if the while loop finished properly
@@ -1125,12 +1124,18 @@ void    Pico::getValuesBlock()
 
 
 
-void    Pico::getValuesRapid( uint32_t startIndex, uint32_t lastIndex )
+void    Pico::getValuesRapid( uint32_t& startIndex, uint32_t& lastIndex )
 {
 
     uint32_t noOfSamplesReturned = m_buffer_data_size;
+    std::cout << "NoOfSamplesIN: " << noOfSamplesReturned << "\n";
+    std::cout << "PreTrigger: " << m_data_current->val_preTrigger << "\n";
+    std::cout << "PostTrigger: " << m_data_current->val_postTrigger << "\n";
 
+    std::cout << "DownSampleRatio: " << m_data_current->val_downSampleRatio << "\n";
 //    std::cout << "ps6000GetValuesBulk...\n";
+
+    int16_t overflow[lastIndex+1]{0};
     m_status = ps6000GetValuesBulk(
                     m_handle,
                     &noOfSamplesReturned,
@@ -1138,7 +1143,7 @@ void    Pico::getValuesRapid( uint32_t startIndex, uint32_t lastIndex )
                     lastIndex,
                     m_data_current->val_downSampleRatio,
                     m_data_current->val_downSampleRatioMode,
-                    &m_overflow
+                    overflow
             );
 
     checkStatus();

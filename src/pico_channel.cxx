@@ -312,9 +312,18 @@ PICO_STATUS Channel::setDataBufferRapidBlock()
         }
     };
 
+    std::cout << "setDataBufferBulk...\n";
+    std::cout << "Channel: " << Utility::Pico_EnumToString_channel(m_channel) << "\n";
+    std::cout << "Rapidsize: " << m_buffer_rapid_size  << "\n";
+    std::cout << "DownsampleMode: " << 
+        Utility::Pico_EnumToString_ratio(m_data->val_downSampleRatioMode) 
+        << std::endl;
 
     for( unsigned int waveformNo = 0; waveformNo < m_data->loops_inter; ++waveformNo )
     {
+        std::cout << "#" << waveformNo << "\t" << std::flush;
+        std::cout << "waveformadress: " << &m_buffer_rapid->at(waveformNo)->at(0) 
+            << "\n";
         output = ps6000SetDataBufferBulk(
                 *m_handle,
                 m_channel,
