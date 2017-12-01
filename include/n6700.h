@@ -51,14 +51,15 @@ class N6700 : public SCPI
         //! Load config from config file.
         void loadConfig();
 
-        //! Sends the configuration stored in the database to the PSU
+        //! Sends the configuration stored in the database to the PSU.
+        //! This function has a processing time of 1 sec.
         void sendConf( Utility::Claws_Gain gain );
 
 
-        //! Start power.
+        //! Start power. This function has a processing time of 4 sec.
         void start();
         
-        //! Stop power.
+        //! Stop power. This function has a processing time of 1 sec.
         void stop();
 
         //! Returns the current measured voltage of all channels in a vector

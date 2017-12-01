@@ -238,7 +238,7 @@ void ProcessData::syncSaveRapid( unsigned int& subRunNum )
                             std::shared_ptr< std::pair< std::string, 
                                 std::shared_ptr< std::vector< int16_t>>>>>>>>()};
 
-    std::cout << "SubRunNum: " << subRunNum << std::endl;
+//    std::cout << "SubRunNum: " << subRunNum << std::endl;
 
     for( unsigned int noWaveform = 0; noWaveform < subRunNum; ++noWaveform )
     {
@@ -301,6 +301,10 @@ void ProcessData::syncSaveRapid( unsigned int& subRunNum )
         std::cout << "\n";
         ++counter1;
     }
+
+
+//    auto work = [this](
+//            )
 
 /*     auto work = [this](
  *             std::shared_ptr<Pico> tpico,

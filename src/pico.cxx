@@ -388,7 +388,6 @@ void Pico::setReadyRapid()
     setChannels();
 
 //    setMemorySegments(100);
-    std::cout << "setReadyRapid..." << m_data_current->loops_inter << "\n";
     setMemorySegments(m_data_current->loops_inter);
 
 //    setNoOfCaptures(30);
@@ -571,7 +570,7 @@ void Pico::runIntermediate()
 //        std::cout << "getTimebase...\n";
 //        getTimebase();
 //        std::cout << "setTrigger...\n";
-//        setTrigger_Simple( i+1 );
+        setTrigger_Simple( i+1 );
 //        std::cout << "beforeDataBuffer...\n";
 
         for( auto& tmp : *m_channels )
@@ -586,7 +585,6 @@ void Pico::runIntermediate()
 
 
 //        std::cout << "ps6000RunBlock...\n";
-        std::cout << "Oversample: " << m_data_current->val_oversample << "\n";
         m_status = ps6000RunBlock(
                     m_handle,
                     m_data_current->val_preTrigger,
@@ -862,10 +860,21 @@ void    Pico::setTrigger( )
 
 void Pico::setTrigger_Simple( int cha  )
 {
+/*     std::cout << "Trigger is " << m_data_current->data_trigger->enabled << "\n";
+ *     std::cout << "Threshold: " << m_data_current->data_trigger->threshold << "\n";
+ *     std::cout << "Direction: " << Utility::Pico_EnumToString_thresDir(m_data_current->data_trigger->direction) << "\n";
+ *     std::cout << "AutoTrigger: " << m_data_current->data_trigger->autoTriggerTime << "\n";
+ */
+
+
+
+    /*
+     * If cha is specified. The corresponding trigger is enabled on the 
+     * corresponding channel.
+     */
     switch( cha )
     {
         case 0:
-            std::cout << "setTriggerSimple...\n";
 //            std::cout << "setTriggerSimple." << ;
             m_status = ps6000SetSimpleTrigger
                 (
@@ -881,7 +890,7 @@ void Pico::setTrigger_Simple( int cha  )
             m_status = ps6000SetSimpleTrigger
                 (
                  m_handle,
-                 m_data_current->data_trigger->enabled,
+                 1,
                  PS6000_CHANNEL_A,
                  m_data_current->data_trigger->threshold,
                  m_data_current->data_trigger->direction,
@@ -892,7 +901,7 @@ void Pico::setTrigger_Simple( int cha  )
             m_status = ps6000SetSimpleTrigger
                 (
                  m_handle,
-                 m_data_current->data_trigger->enabled,
+                 1,
                  PS6000_CHANNEL_B,
                  m_data_current->data_trigger->threshold,
                  m_data_current->data_trigger->direction,
@@ -903,7 +912,7 @@ void Pico::setTrigger_Simple( int cha  )
             m_status = ps6000SetSimpleTrigger
                 (
                  m_handle,
-                 m_data_current->data_trigger->enabled,
+                 1,
                  PS6000_CHANNEL_C,
                  m_data_current->data_trigger->threshold,
                  m_data_current->data_trigger->direction,
@@ -914,7 +923,7 @@ void Pico::setTrigger_Simple( int cha  )
             m_status = ps6000SetSimpleTrigger
                 (
                  m_handle,
-                 m_data_current->data_trigger->enabled,
+                 1,
                  PS6000_CHANNEL_D,
                  m_data_current->data_trigger->threshold,
                  m_data_current->data_trigger->direction,
@@ -1019,12 +1028,6 @@ void    Pico::getTimebase()
     // on exit, the maximum number of samples available.
     uint32_t maxSamples{0};
 
-    std::cout << "getTimebase...\n";
-    std::cout << "timebase: " << m_data_current->val_timebase << "\n";
-    std::cout << "DataSize: " << m_buffer_data_size << "\n";
-    std::cout << "startindex: " << m_startIndex << "\n";
-
-
     while( m_timeInterval_ns < 0 && counter < counterMax )
     {
         m_status = ps6000GetTimebase2(
@@ -1044,7 +1047,6 @@ void    Pico::getTimebase()
         ++counter;
     }
 
-    std::cout << "timebase: " << m_timeInterval_ns << "\n";
 
 
     // check if the while loop finished properly
@@ -1128,12 +1130,6 @@ void    Pico::getValuesRapid( uint32_t& startIndex, uint32_t& lastIndex )
 {
 
     uint32_t noOfSamplesReturned = m_buffer_data_size;
-    std::cout << "NoOfSamplesIN: " << noOfSamplesReturned << "\n";
-    std::cout << "PreTrigger: " << m_data_current->val_preTrigger << "\n";
-    std::cout << "PostTrigger: " << m_data_current->val_postTrigger << "\n";
-
-    std::cout << "DownSampleRatio: " << m_data_current->val_downSampleRatio << "\n";
-//    std::cout << "ps6000GetValuesBulk...\n";
 
     int16_t overflow[lastIndex+1]{0};
     m_status = ps6000GetValuesBulk(

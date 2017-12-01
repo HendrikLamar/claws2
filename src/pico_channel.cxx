@@ -286,9 +286,9 @@ PICO_STATUS Channel::setDataBufferRapidBlock()
             tmp->resize(m_buffer_rapid_size);
         }
         unsigned int counter2{0};
-        std::cout << "Current size: " << m_buffer_rapid->size() << "\n";
-        std::cout << "Size to add: " << m_data->loops_inter-m_buffer_rapid->size();
-        std::cout << "\n";
+//        std::cout << "Current size: " << m_buffer_rapid->size() << "\n";
+//        std::cout << "Size to add: " << m_data->loops_inter-m_buffer_rapid->size();
+//        std::cout << "\n";
         unsigned int noOfLoopsNeeded{static_cast<unsigned int>( 
                 m_data->loops_inter - m_buffer_rapid->size())};
         for(  unsigned int i = 0; 
@@ -298,9 +298,9 @@ PICO_STATUS Channel::setDataBufferRapidBlock()
                     std::make_shared< std::vector< int16_t>>(getBufferSize()));
             ++counter2;
         }
-        std::cout << "Loops ran: " << counter2 << "\n";
-        std::cout << "Size afterwards: " << m_buffer_rapid->size() << "\n";
-        std::cout << "Must be: " << m_data->loops_inter << "\n";
+//        std::cout << "Loops ran: " << counter2 << "\n";
+//        std::cout << "Size afterwards: " << m_buffer_rapid->size() << "\n";
+//        std::cout << "Must be: " << m_data->loops_inter << "\n";
     }
     else 
     {
@@ -311,19 +311,19 @@ PICO_STATUS Channel::setDataBufferRapidBlock()
             tmp->resize(m_buffer_rapid_size);
         }
     };
-
-    std::cout << "setDataBufferBulk...\n";
-    std::cout << "Channel: " << Utility::Pico_EnumToString_channel(m_channel) << "\n";
-    std::cout << "Rapidsize: " << m_buffer_rapid_size  << "\n";
-    std::cout << "DownsampleMode: " << 
-        Utility::Pico_EnumToString_ratio(m_data->val_downSampleRatioMode) 
-        << std::endl;
+//
+//    std::cout << "setDataBufferBulk...\n";
+//    std::cout << "Channel: " << Utility::Pico_EnumToString_channel(m_channel) << "\n";
+//    std::cout << "Rapidsize: " << m_buffer_rapid_size  << "\n";
+//    std::cout << "DownsampleMode: " << 
+//        Utility::Pico_EnumToString_ratio(m_data->val_downSampleRatioMode) 
+//        << std::endl;
 
     for( unsigned int waveformNo = 0; waveformNo < m_data->loops_inter; ++waveformNo )
     {
-        std::cout << "#" << waveformNo << "\t" << std::flush;
-        std::cout << "waveformadress: " << &m_buffer_rapid->at(waveformNo)->at(0) 
-            << "\n";
+//        std::cout << "#" << waveformNo << "\t" << std::flush;
+//        std::cout << "waveformadress: " << &m_buffer_rapid->at(waveformNo)->at(0) 
+//            << "\n";
         output = ps6000SetDataBufferBulk(
                 *m_handle,
                 m_channel,
@@ -376,7 +376,7 @@ PICO_STATUS Channel::setDataBufferIntermediate( bool yesno )
             ++counter1;
             if( output != PICO_OK ) break;
         }
-        std::cout << "setDataBufferIntermediate loops: " << counter1 << "\n";
+//        std::cout << "setDataBufferIntermediate loops: " << counter1 << "\n";
     }
     else
     {

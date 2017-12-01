@@ -211,6 +211,7 @@ void N6700::sendCommand( std::string cmd )
 void N6700::sendConf( Utility::Claws_Gain HIGH_LOW_GAIN )
 {
 
+    std::this_thread::sleep_for(std::chrono::seconds(1));
     switch( HIGH_LOW_GAIN )
     {
         case Utility::Claws_Gain::LOW_GAIN:
@@ -269,6 +270,7 @@ void N6700::sendConf( Utility::Claws_Gain HIGH_LOW_GAIN )
 
 void N6700::start()
 {
+    std::this_thread::sleep_for(std::chrono::seconds(1));
     std::string tmpCmd{""};
 
     for( unsigned int i = 0; i < m_config_current->getNoOfCh(); ++i )
@@ -302,6 +304,7 @@ void N6700::start()
 
     sendCommand(cmd);
 
+    std::this_thread::sleep_for(std::chrono::seconds(1));
 
     return;
 }
@@ -325,6 +328,7 @@ void N6700::start()
 
 void N6700::stop()
 {
+    std::this_thread::sleep_for(std::chrono::seconds(1));
     std::string cmd = "OUTP OFF, (@1:4)";
 
     sendCommand(cmd);

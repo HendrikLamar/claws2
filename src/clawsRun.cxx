@@ -155,8 +155,9 @@ void        ClawsRun::initialize()
 void    ClawsRun::run()
 {
 
-//    m_psu->sendConf( Utility::Claws_Gain::HIGH_GAIN);
-//    m_psu->start();
+    m_psu->sendConf( Utility::Claws_Gain::HIGH_GAIN);
+    m_psu->start();
+    std::this_thread::sleep_for(std::chrono::seconds(3));
 
     for( int i = 0; i < 1; ++i )
     {
@@ -177,6 +178,7 @@ void    ClawsRun::run()
         {
             std::cout << excep.what() << std::endl;
         }
+
         auto time2{std::chrono::system_clock::now()};
         auto diff{std::chrono::duration_cast<std::chrono::seconds>(time2 - time1)};
         std::cout << "Inter: " << diff.count() << "sec\n";
@@ -197,7 +199,8 @@ void    ClawsRun::run()
         diff = std::chrono::duration_cast<std::chrono::seconds>(time3 - time2);
         std::cout << "Physics: " << diff.count() << "sec\n";
     }
-//    m_psu->stop();
+
+    m_psu->stop();
 
     return;
 
