@@ -401,7 +401,7 @@ void ProcessData::syncSaveRapid( unsigned int& subRunNum )
     unsigned int ender = stepSize;
 
     int noOfThreads{static_cast<int>(ceil(subRunNum/float(stepSize)))};
-    std::cout << noOfThreads << " threads will be started...\n";
+//    std::cout << noOfThreads << " threads will be started...\n";
     std::vector< std::thread > workers;
     ROOT::EnableThreadSafety();
 
@@ -463,7 +463,7 @@ void ProcessData::syncSaveRapid( unsigned int& subRunNum )
 
     for( auto& tmp : workers )
     {
-        std::cout << "About to join thread " << tmp.get_id() << std::endl;
+//        std::cout << "About to join thread " << tmp.get_id() << std::endl;
         tmp.join();
     };
 

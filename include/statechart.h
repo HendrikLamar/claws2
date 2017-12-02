@@ -36,6 +36,7 @@
 #include <iostream>
 #include <thread>
 #include <chrono>
+#include <vector>
 
 namespace ClawsStatemachine{
 
@@ -148,6 +149,7 @@ struct ClawsDAQ : sc::state_machine< ClawsDAQ, Active >
     protected:
         ClawsRun*   m_clawsRun;
 
+
     public:
         ClawsDAQ() : m_clawsRun(new ClawsRun)
         {};
@@ -165,6 +167,8 @@ struct ClawsDAQ : sc::state_machine< ClawsDAQ, Active >
     "+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\n";
         };
         
+        bool                        m_stop{false};
+        std::vector<std::thread>    m_workers;
 
         /// Returns the database 
         ClawsRun* getClawsRun()
@@ -367,7 +371,6 @@ struct SaveOnOff: sc::state< SaveOnOff, Active::orthogonal<0> >
 ///////////////////////////////////////////////////////////////////////////////
 
 
-
 //! Inital state of concurrency level <1> and is the idle state for
 //! data taking.
 struct SystemIdle : sc::state< SystemIdle, Active::orthogonal<1> >
@@ -403,9 +406,25 @@ struct SystemRun : sc::state< SystemRun, Active::orthogonal<1> >
         
         SystemRun( my_context ctx ) : my_base( ctx )
         {
-            // \todo Add functionality! Run function in m_thread!
             std::cout << "Entering SystemRun\n";
-            context< ClawsDAQ >().getClawsRun()->run();
+
+            auto work = [this]()
+            {
+                context< ClawsDAQ >().getClawsRun()->run();
+            };
+
+
+            if( context< ClawsDAQ >().m_workers.size() )
+            {
+                context< ClawsDAQ >().getClawsRun()->StopRun();
+                for( auto& tmp : context< ClawsDAQ >().m_workers )
+                {
+                    tmp.join();
+                }
+                context< ClawsDAQ >().m_workers.clear();
+
+            }
+            else context< ClawsDAQ >().m_workers.emplace_back(work);
 
             post_event( EvStartStop() );
             // Initialize PSU with the database as parameter.

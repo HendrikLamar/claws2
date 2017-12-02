@@ -21,6 +21,7 @@
 
 #include <vector>
 #include <memory>
+#include <atomic>
 
 #include "utility.h"
 #include "pico.h"
@@ -36,6 +37,7 @@ class ClawsRun
 
         std::shared_ptr<Database> m_database;
 
+        std::atomic<bool>         m_stopRun{false};
 
         ///////////////////////////////////////////////////////////////////////
         //
@@ -154,6 +156,8 @@ class ClawsRun
         void            loadConfig();
 
         void            SaveOnOff();
+
+        void            StopRun();
 
 
 

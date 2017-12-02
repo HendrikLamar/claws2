@@ -159,7 +159,8 @@ void    ClawsRun::run()
     m_psu->start();
     std::this_thread::sleep_for(std::chrono::seconds(3));
 
-    for( int i = 0; i < 1; ++i )
+//    for( int i = 0; i < 1; ++i )
+    while( !m_stopRun )
     {
         m_database->Claws_incrCounter();
         m_database->Claws_rwCounter('w');
@@ -181,7 +182,7 @@ void    ClawsRun::run()
 
         auto time2{std::chrono::system_clock::now()};
         auto diff{std::chrono::duration_cast<std::chrono::seconds>(time2 - time1)};
-        std::cout << "Inter: " << diff.count() << "sec\n";
+//        std::cout << "Inter: " << diff.count() << "sec\n";
         
         try
         {
@@ -197,10 +198,12 @@ void    ClawsRun::run()
         }
         auto time3{std::chrono::system_clock::now()};
         diff = std::chrono::duration_cast<std::chrono::seconds>(time3 - time2);
-        std::cout << "Physics: " << diff.count() << "sec\n";
+//        std::cout << "Physics: " << diff.count() << "sec\n";
     }
 
     m_psu->stop();
+
+    m_stopRun = false;
 
     return;
 
@@ -317,7 +320,7 @@ void ClawsRun::SaveOnOff()
     }
     else m_database->Claws_getConfig()->isSaved = true;
 
-    std::cout << "Data Saving is now turned ";
+    std::cout << "Data Saving ";
     std::cout <<  translate() << std::endl;
 
     return;
@@ -330,6 +333,50 @@ void ClawsRun::SaveOnOff()
 
 
 ///////////////////////////////////////////////////////////////////////////////
+
+
+
+
+
+
+
+
+void ClawsRun::StopRun()
+{
+    m_stopRun = true;
+
+    while( m_stopRun )
+    {
+        std::this_thread::sleep_for(std::chrono::milliseconds(250));
+    }
+
+
+    std::cout << "+++++++\n";
+    std::cout << "      +\n";
+    std::cout << "      -------> Claws DAQ Stopped!\n";
+    std::cout << "      +\n";
+    std::cout << "+++++++\n";
+
+    return;
+}
+
+
+
+
+
+
+
+
+
+
+///////////////////////////////////////////////////////////////////////////////
+
+
+
+
+
+
+
 
 
 
@@ -905,12 +952,6 @@ void ClawsRun::SaveOnOff()
         ROOT::EnableThreadSafety();
         for( unsigned int counter1 = 0; counter1 < tloops; ++counter1 )
         {
-            if( gain == Utility::Claws_Gain::INTERMEDIATE )
-            {
-                std::cout << "Intermediate #" << counter1 << "\n";
-            }
-            else std::cout << "Physics #" << counter1 << "\n";
-
             for( std::shared_ptr<Pico> tpico : *m_picos )
             {
                 workers.emplace_back(
@@ -937,11 +978,13 @@ void ClawsRun::SaveOnOff()
                 dataProcessor->save()->physics(counter1);
             }
 
+            // is stop button is pressed, quit the loop
+            if( m_stopRun ) break;
             
         }
 
 
-        std::cout << "Going to stop picos from data taking...\n";
+//        std::cout << "Going to stop picos from data taking...\n";
         // tell pico that data taking is done
         for( auto& tmp : *m_picos )
         {
@@ -962,7 +1005,7 @@ void ClawsRun::SaveOnOff()
                 std::cout << excep.what() << std::endl;
             }
 
-            std::cout << "Pico closed\n";
+//            std::cout << "Pico closed\n";
         }
 
         return;
@@ -1202,7 +1245,7 @@ void ClawsRun::SaveOnOff()
         auto time2{std::chrono::system_clock::now()};
         auto diff{std::chrono::duration_cast<
             std::chrono::milliseconds>(time2 - time1)};
-        std::cout << "SaveDataInter: " << diff.count() << "msec\n";
+//        std::cout << "SaveDataInter: " << diff.count() << "msec\n";
         
         // tell pico that data taking is done
         for( auto& tmp : *m_picos )
