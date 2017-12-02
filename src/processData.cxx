@@ -285,67 +285,82 @@ void ProcessData::syncSaveRapid( unsigned int& subRunNum )
 //        data_intermediate->at(0)->at(0)->second->size() << "\n";
 //    std::cout << "SomeName: " << data_intermediate->at(0)->at(0)->first << "\n";
 
-    unsigned int counter1{0};
-    for( auto& tmp1 : *data_intermediate)
-    {
-        std::cout << "\t\t\t\t#" << counter1 << "\n";
-        for( auto& tmp2 : *tmp1 )
-        {
-            std::cout << tmp2->first << ": " << std::flush;
-            for( auto& tmp3 : *tmp2->second )
-            {
-                std::cout << tmp3 << " " << std::flush;
-            }
-            std::cout << "\n";
-        }
-        std::cout << "\n";
-        ++counter1;
-    }
-
-
-//    auto work = [this](
-//            )
-
-/*     auto work = [this](
- *             std::shared_ptr<Pico> tpico,
- *             unsigned int noWaveform)
+/*     unsigned int counter1{0};
+ *     for( auto& tmp1 : *data_intermediate)
  *     {
- *         sync( noWaveform, tpico, true );
- *     };
- * 
- * 
- *     // loop through all waveforms
- *     for( unsigned int noWaveform = 0; noWaveform < subRunNum; ++noWaveform )
- *     {
- *         auto time1{std::chrono::system_clock::now()};
- *         // loop through all picos -> no multithreading yet (or at all)
- *         std::vector< std::thread > workers;
- *         for( auto& tmp : *m_picos )
+ *         std::cout << "\t\t\t\t#" << counter1 << "\n";
+ *         for( auto& tmp2 : *tmp1 )
  *         {
- * 
- *             workers.emplace_back(work, tmp, noWaveform );
- * //            sync( noWaveform, tmp ,true );
- * 
- *         }
- * 
- *         for( auto& worker : workers )
- *         {
- *             if( worker.joinable() )
+ *             std::cout << tmp2->first << ": " << std::flush;
+ *             for( auto& tmp3 : *tmp2->second )
  *             {
- *                 worker.join(); 
+ *                 std::cout << tmp3 << " " << std::flush;
  *             }
+ *             std::cout << "\n";
  *         }
- *         workers.clear();
- * 
- *         save()->intermediate(noWaveform);
- *         auto time2{std::chrono::system_clock::now()};
- *         auto diff{std::chrono::duration_cast<
- *             std::chrono::milliseconds>(time2 - time1)};
- *         std::cout << "Sync: " << diff.count() << "msec\n";
- * 
+ *         std::cout << "\n";
+ *         ++counter1;
  *     }
  */
 
+
+    auto work = [this](
+        std::shared_ptr< std::vector<       // size of loops_inter
+            std::shared_ptr< std::vector <  // size of all channels
+                std::shared_ptr< std::pair< std::string, 
+                    std::shared_ptr< std::vector <  // size of acquired samples-> contains
+                                                // the data for one waveform
+                    int16_t > > > > > > > > data_intermediate,
+        unsigned int startIndex,
+        unsigned int lastIndex)
+    {
+
+        std::string title{""};
+        for( auto& tmp : *data_intermediate )
+        {
+            // holds the data in TH1I format for one time waveform taken
+            std::shared_ptr< std::vector< 
+                    std::shared_ptr< TH1I >>> hist_channel{
+                        std::make_shared< std::vector< 
+                            std::shared_ptr<TH1I>>>()};
+
+            // rearrange each channel data into a TH1I
+            for( auto& tmp2 : *tmp )
+            {
+                title = tmp2->first + "_" + std::to_string(startIndex);
+                std::shared_ptr<TH1I> hist = 
+                    std::make_shared<TH1I>(
+                            tmp2->first.c_str(), 
+                            title.c_str(),
+                            tmp2->second->size(),
+                            0,
+                            tmp2->second->size());
+
+                // add the data to the TH1I
+                for( unsigned int ii = 0; ii < tmp2->second->size(); ++ii )
+                {
+                    hist->SetBinContent(ii+1, tmp2->second->at(ii));
+                };
+
+                // add the TH1I to the vector holding all channel data
+                hist_channel->push_back( hist );
+            }
+
+            save()->intermediate(startIndex, hist_channel);
+
+            // last step, increment the subRunNumber
+            ++startIndex;
+        }
+
+        if( startIndex != lastIndex )
+        {
+            std::cout << "startIndex != lastIndex\n";
+        }
+
+        return;
+    };
+
+    work(data_intermediate, 0, data_intermediate->size());
 
 
     return;
@@ -611,6 +626,9 @@ void ProcessData::sync(
             title = location + "_" + channelNo + "_" + std::to_string(subRunNum);
             hist->SetTitle(title.c_str());
 
+            // resets the histogram
+            hist->Reset("M");
+
             std::shared_ptr< std::vector<int16_t> > data;
             if( isRapid )
             {
@@ -618,12 +636,12 @@ void ProcessData::sync(
             }
             else data = channel->getBufferBlock();
 
-            
             // copy the data
             for( unsigned tt = 0; tt < data->size() ; ++tt )
             {
                 hist->SetBinContent( tt-1, data->at(tt) );
             }
+            
         }
     }
 

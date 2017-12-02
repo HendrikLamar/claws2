@@ -120,11 +120,13 @@ Storage::~Storage()
 
 
 
-void Storage::intermediate( unsigned int& subRunNum)
+void Storage::intermediate( 
+        unsigned int& subRunNum,
+        std::shared_ptr<std::vector<std::shared_ptr<TH1I>>> hists )
 {
     std::string tpath = makePath( *m_runNum, Utility::Dir_Struct::INTER );
     
-    save( *m_runNum, subRunNum, tpath, Utility::Claws_Gain::INTERMEDIATE );
+    save( *m_runNum, subRunNum, tpath, Utility::Claws_Gain::INTERMEDIATE, hists );
 
 
     return;
@@ -145,7 +147,7 @@ void Storage::physics( unsigned int& subRunNum )
 {
 
     std::string tpath = makePath( *m_runNum, Utility::Dir_Struct::PHYSICS );
-    save( *m_runNum, subRunNum, tpath, Utility::Claws_Gain::HL_GAIN );
+    save( *m_runNum, subRunNum, tpath, Utility::Claws_Gain::HL_GAIN, nullptr );
 
 
     return;
@@ -298,7 +300,8 @@ void Storage::save(
         unsigned long& runNum, 
         unsigned int& subRunNum, 
         std::string& tpath,
-        Utility::Claws_Gain gain )
+        Utility::Claws_Gain gain,
+        std::shared_ptr<std::vector<std::shared_ptr<TH1I>>> hists )
 {
 
     std::string tfileName;
@@ -346,14 +349,23 @@ void Storage::save(
     std::shared_ptr<TFile> file{std::make_shared<TFile>(fpath.c_str(), "recreate")}; 
     file->cd();
 
-    for( auto& tmp : *m_picos_hist )
+    if( !hists )
     {
-        for( int ii = 0; ii < tmp->getSize(); ++ii )
+        for( auto& tmp : *m_picos_hist )
         {
-            tmp->get(ii)->Write();
+            for( int ii = 0; ii < tmp->getSize(); ++ii )
+            {
+                tmp->get(ii)->Write();
+            }
         }
     }
-
+    else
+    {
+        for( auto& tmp : *hists )
+        {
+            tmp->Write();
+        }
+    }
 
 
 //    file->SaveAs(fpath.c_str());

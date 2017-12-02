@@ -918,11 +918,7 @@ void            ClawsRun::printData()
             }
             workers.clear();
 
-            if( isPhysics )
-            {
-                dataProcessor->save()->physics(counter1);
-            }
-            else dataProcessor->save()->intermediate(counter1);
+            dataProcessor->save()->physics(counter1);
 //            std::cout << "Data saved\n";
 //            dataProcessor.clear();
 //            std::cout << "Data cleared.\n";
