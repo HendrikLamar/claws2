@@ -22,6 +22,8 @@
 #include "database.h"
 #include "processData.h"
 #include "clawsRun.h"
+#include "clawsException.h"
+//#include "utime.h"
 
 #include <boost/property_tree/exceptions.hpp>
 
@@ -120,6 +122,7 @@ void        ClawsRun::initialize()
     Pico_init_byNullptr();
     m_database->setNoOfPicosInitialized(m_picos->size());
 
+
     PSU_init();
 
 
@@ -152,12 +155,52 @@ void        ClawsRun::initialize()
 void    ClawsRun::run()
 {
 
-    m_database->Claws_incrCounter();
-    m_database->Claws_rwCounter('w');
+    m_psu->sendConf( Utility::Claws_Gain::HIGH_GAIN);
+    m_psu->start();
+    std::this_thread::sleep_for(std::chrono::seconds(3));
 
-    Pico_run( Utility::Claws_Gain::INTERMEDIATE );
-    Pico_run( Utility::Claws_Gain::HL_GAIN );
+    for( int i = 0; i < 1; ++i )
+    {
+        m_database->Claws_incrCounter();
+        m_database->Claws_rwCounter('w');
 
+        auto time1{std::chrono::system_clock::now()};
+        try
+        {
+//            Pico_runRapid();
+            Pico_runIntermediate();
+        }
+        catch( ClawsException& excep )
+        {
+            std::cout << excep.what() << std::endl;
+        }
+        catch( std::exception& excep )
+        {
+            std::cout << excep.what() << std::endl;
+        }
+
+        auto time2{std::chrono::system_clock::now()};
+        auto diff{std::chrono::duration_cast<std::chrono::seconds>(time2 - time1)};
+        std::cout << "Inter: " << diff.count() << "sec\n";
+        
+        try
+        {
+            Pico_runBlock( Utility::Claws_Gain::HL_GAIN );
+        }
+        catch( ClawsException& excep )
+        {
+            std::cout << excep.what() << std::endl;
+        }
+        catch( std::exception& excep )
+        {
+            std::cout << excep.what() << std::endl;
+        }
+        auto time3{std::chrono::system_clock::now()};
+        diff = std::chrono::duration_cast<std::chrono::seconds>(time3 - time2);
+        std::cout << "Physics: " << diff.count() << "sec\n";
+    }
+
+    m_psu->stop();
 
     return;
 
@@ -199,6 +242,7 @@ void            ClawsRun::loadConfig()
         std::cout << "Reading PSU connection settings...";
         // load PSU configs
         m_database->N6700_readConnectSettings();
+        m_psu->loadConfig();
         std::cout << "done!\n";
     }
     catch( UtilityException& excep )
@@ -244,6 +288,7 @@ void            ClawsRun::loadConfig()
     {
         std::cout << "\n" << excep.what() << std::endl;
     }
+
 
 
     return;
@@ -775,7 +820,7 @@ void            ClawsRun::printData()
 
 
 
-    void ClawsRun::Pico_run( Utility::Claws_Gain gain )
+    void ClawsRun::Pico_runBlock( Utility::Claws_Gain gain )
     {
 
         Utility::Claws_Gain tgain;
@@ -796,22 +841,6 @@ void            ClawsRun::printData()
                 isPhysics = true;
         }
 
-        
-
-        // create a process data instance and give it the vector with the pointers
-        // and the claws-global counter
-        ProcessData dataProcessor( m_picos, m_database->Claws_getCounter() );
-        try
-        {
-            dataProcessor.save()->setSaveLocation(m_database->Claws_getConfig()->path_saveData);
-        }
-        catch( ClawsException& excep )
-        {
-            std::cout << excep.what() << "\n";
-            std::cout << "Stopping current run...\n";
-            return;
-        }
-
 
         // load each pico with a config and make it ready before running in the
         // loop
@@ -821,51 +850,105 @@ void            ClawsRun::printData()
             tmp->setReadyBlock();
         }
 
+        // define work
+        auto work = [](
+                unsigned int subRunNum,
+                std::shared_ptr<Pico> tpico,
+                std::shared_ptr<ProcessData> dataProcessor )
+                {
+                    try
+                    {
+                        tpico->runBlock();
+                        dataProcessor->syncBlock(subRunNum, tpico);
+                    }
+                    catch( PicoException& excep )
+                    {
+                        std::cout << excep.what() << std::endl;
+                    }
+                };
+
+
+        // create a process data instance and give it the vector with the pointers
+        // and the claws-global counter
+        std::shared_ptr<ProcessData> dataProcessor{
+            std::make_shared<ProcessData>( 
+                    m_picos, m_database->Claws_getCounter() )};
+        try
+        {
+            dataProcessor->save()->setSaveLocation(
+                    m_database->Claws_getConfig()->path_saveData);
+        }
+        catch( ClawsException& excep )
+        {
+            std::cout << excep.what() << "\n";
+            std::cout << "Stopping current run...\n";
+            return;
+        }
+
 
         // let each pico acquire data in its own thread
-        std::vector<std::thread>    threads;
+        std::vector<std::thread>    workers;
         ROOT::EnableThreadSafety();
         for( unsigned int counter1 = 0; counter1 < tloops; ++counter1 )
         {
-            for( auto& tpico : *m_picos )
+            if( gain == Utility::Claws_Gain::INTERMEDIATE )
             {
-                threads.push_back(std::thread(
-                            [&]
-                                {
-                                    tpico->runBlock();
-                                    dataProcessor.sync(counter1, tpico);
-                                }));
-                std::cout << "Thread started...\n";
+                std::cout << "Intermediate #" << counter1 << "\n";
+            }
+            else std::cout << "Physics #" << counter1 << "\n";
+
+            for( std::shared_ptr<Pico> tpico : *m_picos )
+            {
+                workers.emplace_back(
+                                    work, 
+                                    counter1,
+                                    tpico,
+                                    dataProcessor);
+//                std::cout << "Thread started...\n";
             }
 
-            std::cout << "Waiting for threads...\n";
-            for( auto& tthread : threads )
+//            std::cout << "Waiting for threads...\n";
+            for( auto& worker : workers )
             {
-                if( tthread.joinable() )
+                if( worker.joinable() )
                 {
-                    tthread.join(); 
-                    std::cout << "Thread ended...\n";
+                    worker.join(); 
+//                    std::cout << "Thread ended...\n";
                 }
             }
-            threads.clear();
+            workers.clear();
 
-            if( isPhysics )
-            {
-                dataProcessor.save()->physics(counter1);
-            }
-            else dataProcessor.save()->intermediate(counter1);
-            std::cout << "Data saved\n";
-            dataProcessor.clear();
-            std::cout << "Data cleared.\n";
+            dataProcessor->save()->physics(counter1);
+//            std::cout << "Data saved\n";
+//            dataProcessor.clear();
+//            std::cout << "Data cleared.\n";
 
             
         }
 
 
+        std::cout << "Going to stop picos from data taking...\n";
         // tell pico that data taking is done
         for( auto& tmp : *m_picos )
         {
-            tmp->stop();
+            try
+            {
+                tmp->stop();
+            }
+            catch( PicoException& excep )
+            {
+                std::cout << excep.what() << std::endl;
+            }
+            catch( ClawsException& excep )
+            {
+                std::cout << excep.what() << std::endl;
+            }
+            catch( std::exception& excep )
+            {
+                std::cout << excep.what() << std::endl;
+            }
+
+            std::cout << "Pico closed\n";
         }
 
         return;
@@ -885,12 +968,138 @@ void            ClawsRun::printData()
 
 
 
+    void ClawsRun::Pico_runRapid()
+    {
+
+        // ensures that the first case is used always, I might extend this method
+        // at some point in future
+        Utility::Claws_Gain gain{Utility::Claws_Gain::INTERMEDIATE};
+
+        Utility::Claws_Gain tgain;
+        unsigned int tloops;
+        bool isPhysics;
+
+        switch( gain )
+        {
+            case Utility::Claws_Gain::INTERMEDIATE:
+                tgain = Utility::Claws_Gain::INTERMEDIATE;
+                tloops = m_database->Claws_getConfig()->loops_Intermediate;
+                isPhysics = false;
+                break;
+
+            default:
+                tgain = m_database->Claws_getConfig()->gain_current;
+                tloops = m_database->Claws_getConfig()->loops_Physics;
+                isPhysics = true;
+        }
 
 
+        // load each pico with a config and make it ready before running in the
+        // loop
+        for( auto& tmp : *m_picos )
+        {
+            tmp->setConfig( tgain );
+            tmp->setReadyRapid();
+        }
+
+        // define work
+        auto work = [](
+                std::shared_ptr<Pico> tpico,
+                std::shared_ptr<ProcessData> dataProcessor )
+                {
+                    tpico->runRapid();
+//                    dataProcessor->sync(subRunNum, tpico);
+                };
 
 
+        // create a process data instance and give it the vector with the pointers
+        // and the claws-global counter
+        std::shared_ptr<ProcessData> dataProcessor{
+            std::make_shared<ProcessData>( 
+                    m_picos, m_database->Claws_getCounter() )};
+        try
+        {
+            dataProcessor->save()->setSaveLocation(
+                    m_database->Claws_getConfig()->path_saveData);
+        }
+        catch( ClawsException& excep )
+        {
+            std::cout << excep.what() << "\n";
+            std::cout << "Stopping current run...\n";
+            return;
+        }
 
 
+        // let each pico acquire data in its own thread
+        std::vector<std::thread>    workers;
+        ROOT::EnableThreadSafety();
+        for( std::shared_ptr<Pico> tpico : *m_picos )
+        {
+                workers.emplace_back(
+                                    work, 
+                                    tpico,
+                                    dataProcessor);
+//                std::cout << "Thread started...\n";
+        };
+
+
+        for( auto& worker : workers )
+        {
+            if( worker.joinable() )
+            {
+                worker.join(); 
+//                std::cout << "Thread ended...\n";
+            }
+        }
+        workers.clear();
+
+        
+        for( auto& tmp1 : *m_picos->at(0)->getCh(0)->getBufferRapid() )
+        {
+            for( auto& tmp2 : *tmp1 )
+            {
+                std::cout << tmp2 << "  " << std::flush;
+            };
+            std::cout << std::endl;
+        };
+
+//            if( isPhysics )
+//            {
+//                dataProcessor->save()->physics(counter1);
+//            }
+//            else dataProcessor->save()->intermediate(counter1);
+//            std::cout << "Data saved\n";
+//            dataProcessor.clear();
+//            std::cout << "Data cleared.\n";
+
+            
+
+        std::cout << "Going to stop picos from data taking...\n";
+        // tell pico that data taking is done
+        for( auto& tmp : *m_picos )
+        {
+            try
+            {
+                tmp->stop();
+            }
+            catch( PicoException& excep )
+            {
+                std::cout << excep.what() << std::endl;
+            }
+            catch( ClawsException& excep )
+            {
+                std::cout << excep.what() << std::endl;
+            }
+            catch( std::exception& excep )
+            {
+                std::cout << excep.what() << std::endl;
+            }
+
+            std::cout << "Pico closed\n";
+        }
+
+        return;
+    }
     
 
 
@@ -899,116 +1108,139 @@ void            ClawsRun::printData()
 
 
 
+///////////////////////////////////////////////////////////////////////////////
 
 
-/*     void Database::Pico_readSettings( 
- *             Utility::Pico_RunMode mode, 
- *             std::vector< Pico* >* vPicos 
- *             )
- *     {
- *         
- *         // since we have four picos, it loops fouer times
- *         for ( unsigned int i = 0; i < vPicos->size(); ++i )
- *         {
- *     
- *             ///////////////////////////////////////////////////////////////////////
- *             // catch exceptions for each settings separatly and inform the user.
- *             
- *     
- *             // reading in channel settings
- *             try
- *             {
- *                 Pico_readChannelsSettings( mode, i );
- *             }
- *             catch( boost::property_tree::ptree_error excep )
- *             {
- *                 std::cout << "\nChannel settings couldn't be read-in for Pico# ";
- *                 std::cout << i+1 << "\n";
- *                 std::cout << "Please check the ini-file arguments and Claws docs.\n";
- *                 std::cout << excep.what() << "\n" << std::endl;
- *                 continue;
- *             }
- *             catch( PicoException excep )
- *             {
- *                 std::cout << "\nChannel settings couldn't be read-in for Pico# ";
- *                 std::cout << i+1 << "\n";
- *                 std::cout << "Please check the ini-file arguments and Claws docs.\n";
- *                 std::cout << excep.what() << "\n" << std::endl;
- *                 continue;
- *             }
- *     
- *     
- *     
- *             // reading in aquisition settings
- *             try
- *             {
- *                 Pico_readAquisitionSettings( mode, i );
- *             }
- *             catch( boost::property_tree::ptree_error excep )
- *             {
- *                 std::cout << "\nAquisition settings couldn't be read-in for Pico# ";
- *                 std::cout << i+1 << "\n";
- *                 std::cout << "Please check the ini-file arguments and Claws docs.\n";
- *                 std::cout << excep.what() << "\n" << std::endl;
- *                 continue;
- *             }
- *             catch( PicoException excep )
- *             {
- *                 std::cout << "\nAquisition settings couldn't be read-in for Pico# ";
- *                 std::cout << i+1 << "\n";
- *                 std::cout << "Please check the ini-file arguments and Claws docs.\n";
- *                 std::cout << excep.what() << "\n" << std::endl;
- *                 continue;
- *             }
- *     
- *     
- *     
- *             // reading in simple trigger settings
- *             try
- *             {
- *                 Pico_readTriggerSimpleSettings( mode, i );
- *             }
- *             catch( boost::property_tree::ptree_error excep )
- *             {
- *                 std::cout << "\nSimple Trigger settings couldn't be read-in for Pico# ";
- *                 std::cout << i+1 << "\n";
- *                 std::cout << "Please check the ini-file arguments and Claws docs.\n";
- *                 std::cout << excep.what() << "\n" << std::endl;
- *                 continue;
- *             }
- *             catch( PicoException excep )
- *             {
- *                 std::cout << "\nSimple Trigger settings couldn't be read-in for Pico# ";
- *                 std::cout << i+1 << "\n";
- *                 std::cout << "Please check the ini-file arguments and Claws docs.\n";
- *                 std::cout << excep.what() << "\n" << std::endl;
- *                 continue;
- *             }
- *     
- *     
- *     
- *     
- *             // reading in advanced trigger settings
- *             //! \todo This function needs to be filled with some code!
- *     //        try
- *     //        {
- *     //            Pico_readTriggerAdvSettings( mode, i );
- *     //        }
- *     //        catch( boost::property_tree::ptree_error excep )
- *     //        {
- *     //            std::cout << "\nAdvanced Trigger settings couldn't be read-in for Pico# ";
- *     //            std::cout << i+1 << "\n";
- *     //            std::cout << "Please check the ini-file arguments and Claws docs.\n";
- *     //            std::cout << excep.what() << "\n" << std::endl;
- *     //            continue;
- *     //        }
- *     
- *         }
- *     
- *     
- *         return;
- *     }
- */
+
+
+
+
+
+
+
+    void ClawsRun::Pico_runIntermediate()
+    {
+
+        // load each pico with a config and make it ready before running in the
+        // loop
+        for( auto& tmp : *m_picos )
+        {
+            tmp->setConfig( Utility::Claws_Gain::INTERMEDIATE );
+            tmp->setReadyRapid();
+        }
+
+        // define work
+        auto work = [](
+                std::shared_ptr<Pico> tpico)
+                {
+                    tpico->runIntermediate();
+                };
+
+
+        // create a process data instance and give it the vector with the pointers
+        // and the claws-global counter
+        std::shared_ptr<ProcessData> dataProcessor{
+            std::make_shared<ProcessData>( 
+                    m_picos, m_database->Claws_getCounter() )};
+        try
+        {
+            dataProcessor->save()->setSaveLocation(
+                    m_database->Claws_getConfig()->path_saveData);
+        }
+        catch( ClawsException& excep )
+        {
+            std::cout << excep.what() << "\n";
+            std::cout << "Stopping current run...\n";
+            return;
+        }
+
+
+        // let each pico acquire data in its own thread
+        std::vector<std::thread>    workers;
+        ROOT::EnableThreadSafety();
+        for( std::shared_ptr<Pico> tpico : *m_picos )
+        {
+                workers.emplace_back(
+                                    work, 
+                                    tpico);
+
+        };
+
+
+        for( auto& worker : workers )
+        {
+            if( worker.joinable() )
+            {
+                worker.join(); 
+            }
+        }
+        workers.clear();
+
+        auto time1{std::chrono::system_clock::now()};
+        unsigned int loops = m_database->Claws_getConfig()->loops_Intermediate;
+        dataProcessor->syncSaveRapid(loops);
+        auto time2{std::chrono::system_clock::now()};
+        auto diff{std::chrono::duration_cast<
+            std::chrono::milliseconds>(time2 - time1)};
+        std::cout << "SaveDataInter: " << diff.count() << "msec\n";
+        
+//        for( auto& tmp1 : *m_picos->at(0)->getCh(0)->getBufferRapid() )
+//        {
+//            for( auto& tmp2 : *tmp1 )
+//            {
+//                std::cout << tmp2 << "  " << std::flush;
+//            };
+//            std::cout << std::endl;
+//        };
+
+//            if( isPhysics )
+//            {
+//                dataProcessor->save()->physics(counter1);
+//            }
+//            else dataProcessor->save()->intermediate(counter1);
+//            std::cout << "Data saved\n";
+//            dataProcessor.clear();
+//            std::cout << "Data cleared.\n";
+
+            
+
+        std::cout << "Going to stop picos from data taking...\n";
+        // tell pico that data taking is done
+        for( auto& tmp : *m_picos )
+        {
+            try
+            {
+                tmp->stop();
+            }
+            catch( PicoException& excep )
+            {
+                std::cout << excep.what() << std::endl;
+            }
+            catch( ClawsException& excep )
+            {
+                std::cout << excep.what() << std::endl;
+            }
+            catch( std::exception& excep )
+            {
+                std::cout << excep.what() << std::endl;
+            }
+
+            std::cout << "Pico closed\n";
+        }
+
+        return;
+    }
+
+
+
+
+
+
+
+
+
+
+
 
 
     ///////////////////////////////////////////////////////////////////////////

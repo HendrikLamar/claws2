@@ -29,6 +29,7 @@
 #include <chrono>
 #include <thread>
 #include <memory>
+#include <typeinfo>
 
 
 
@@ -345,6 +346,11 @@ void Pico::setReadyBlock( )
 {
     setChannels();
 
+    // divide local pico memory in N pieces
+    setMemorySegments(1);
+
+    setNoOfCaptures(1);
+    
     getTimebase();
 
     setTrigger();
@@ -352,8 +358,8 @@ void Pico::setReadyBlock( )
     // set data buffer for each channel to define where the data should be stored
     for( auto& tmp : *m_channels )
     {
-        tmp->setDataBuffer();
-        std::this_thread::sleep_for(std::chrono::milliseconds(200));
+        tmp->setDataBufferBlock();
+        std::this_thread::sleep_for(std::chrono::milliseconds(20));
     }
 
 
@@ -379,8 +385,26 @@ void Pico::setReadyBlock( )
 
 void Pico::setReadyRapid()
 {
-    //! \todo Fill this function.
+    setChannels();
 
+//    setMemorySegments(100);
+    setMemorySegments(m_data_current->loops_inter);
+
+//    setNoOfCaptures(30);
+    setNoOfCaptures(m_data_current->loops_inter);
+
+    getTimebase();
+
+    setTrigger();
+
+    for( auto& tmp : *m_channels )
+    {
+        tmp->setDataBufferRapidBlock();
+        std::this_thread::sleep_for(std::chrono::milliseconds(1));
+    }
+
+
+    return;
 }
 
 
@@ -432,9 +456,7 @@ void Pico::runBlock()
 //    int16_t*    ready = nullptr;
 
 
-
-    // Wait until data collection is done the ready pointer changes its value
-    // when this is the case. System can not be triggered for a long time, thats why it
+// Wait until data collection is done the ready pointer changes its value // when this is the case. System can not be triggered for a long time, thats why it
     // can take some time!
     // \todo Here a stop switch would be imlementable!
     while( !ready )
@@ -468,10 +490,157 @@ void Pico::runBlock()
 
 void Pico::runRapid()
 {
-    //! \todo Fill this function.
 
+    // Make the pico ready! Afterwards wait until the trigger is fired and
+    // the data is collected.
+    m_status = ps6000RunBlock(
+                m_handle,
+                m_data_current->val_preTrigger,
+                m_data_current->val_postTrigger,
+                m_data_current->val_timebase,
+                m_data_current->val_oversample,
+                &m_timeIndisposedMS,
+                m_startIndex,
+                nullptr,
+                nullptr
+            );
+
+    checkStatus();
+
+
+    // Now, check if data taking is done!
+    int16_t     ready = 0;
+//    int16_t*    ready = nullptr;
+
+
+
+    // Wait until data collection is done the ready pointer changes its value
+    // when this is the case. System can not be triggered for a long time, thats why it
+    // can take some time!
+    // \todo Here a stop switch would be imlementable!
+    while( !ready )
+    {
+        m_status = ps6000IsReady( m_handle, &ready);
+        checkStatus();
+        std::this_thread::sleep_for(std::chrono::milliseconds(1));
+    }
+
+    getValuesRapid( m_startIndex, m_data_current->loops_inter );
+
+    return;
 }
 
+
+
+
+
+
+
+
+
+///////////////////////////////////////////////////////////////////////////////
+
+
+
+
+
+
+
+
+void Pico::runIntermediate()
+{
+    // trigger once on every channel to get the data
+    for( int i = 0; i < 4; ++i )
+    {
+        if( getCh(i)->getEnabled() < 1 ) continue;
+
+//        // first, run setReadyRapid in a modified way again
+//        // turn all channels of only the needed one
+//        for( auto& tmp : *m_channels )
+//        {
+//            if( tmp->getChNo() == m_channels->at( i )->getChNo() )
+//            {
+//                tmp->setChannel( false, true );
+//            }
+//            else tmp->setChannel( false, false );
+//        }
+//        setMemorySegments( m_data_current->loops_inter );
+//        std::cout << "setNoOfCaptures...\n";
+//        setNoOfCaptures( m_data_current->loops_inter );
+//        std::cout << "getTimebase...\n";
+//        getTimebase();
+//        std::cout << "setTrigger...\n";
+        setTrigger_Simple( i+1 );
+//        std::cout << "beforeDataBuffer...\n";
+
+        for( auto& tmp : *m_channels )
+        {
+            if( tmp->getChNo() == m_channels->at( i )->getChNo() )
+            {
+                tmp->setDataBufferIntermediate( true );
+            }
+            else tmp->setDataBufferIntermediate( false );
+        }
+
+
+
+//        std::cout << "ps6000RunBlock...\n";
+        m_status = ps6000RunBlock(
+                    m_handle,
+                    m_data_current->val_preTrigger,
+                    m_data_current->val_postTrigger,
+                    m_data_current->val_timebase,
+                    m_data_current->val_oversample,
+//                    &m_timeIndisposedMS,
+                    nullptr,
+                    m_startIndex,
+                    nullptr,
+                    nullptr
+                );
+
+        checkStatus();
+
+
+        // Now, check if data taking is done!
+        int16_t     ready = 0;
+
+
+        // Wait until data collection is done the ready pointer changes its value
+        // when this is the case. System can not be triggered for a long time, thats why it
+        // can take some time!
+        // \todo Here a stop switch would be imlementable!
+        while( !ready )
+        {
+            m_status = ps6000IsReady( m_handle, &ready);
+            checkStatus();
+            std::this_thread::sleep_for(std::chrono::milliseconds(1));
+        }
+
+            unsigned int stopIndex{m_data_current->loops_inter-1};
+            getValuesRapid( m_startIndex, stopIndex );
+
+
+        // DEBUG
+        // print all the channel data in each loop
+/*         for( auto& tmp : *m_channels )
+ *         {
+ *             std::cout << "Channel #"<< tmp->getChNo() << "\n";
+ *             for( auto& tmp1 : *tmp->getBufferRapid() )
+ *             {
+ *                 for( auto& tmp2 : *tmp1 )
+ *                 {
+ *                     std::cout << tmp2 << "  " << std::flush;
+ *                 }
+ *                 std::cout << "\n";
+ *             }
+ *         }
+ */
+    }
+
+
+
+    return;
+}
 
 
 
@@ -491,7 +660,7 @@ void Pico::runRapid()
 
 void Pico::stop()
 {
-    std::this_thread::sleep_for(std::chrono::milliseconds(100));
+    std::this_thread::sleep_for(std::chrono::milliseconds(50));
 
     m_status = ps6000Stop(m_handle);
     checkStatus();
@@ -689,20 +858,84 @@ void    Pico::setTrigger( )
 
 
 
-void Pico::setTrigger_Simple()
+void Pico::setTrigger_Simple( int cha  )
 {
-    m_status = ps6000SetSimpleTrigger
-        (
-         m_handle,
-         m_data_current->data_trigger->enabled,
-         m_data_current->data_trigger->source,
-         m_data_current->data_trigger->threshold,
-         m_data_current->data_trigger->direction,
-         m_data_current->data_trigger->delay,
-         m_data_current->data_trigger->autoTriggerTime);
+/*     std::cout << "Trigger is " << m_data_current->data_trigger->enabled << "\n";
+ *     std::cout << "Threshold: " << m_data_current->data_trigger->threshold << "\n";
+ *     std::cout << "Direction: " << Utility::Pico_EnumToString_thresDir(m_data_current->data_trigger->direction) << "\n";
+ *     std::cout << "AutoTrigger: " << m_data_current->data_trigger->autoTriggerTime << "\n";
+ */
 
+
+
+    /*
+     * If cha is specified. The corresponding trigger is enabled on the 
+     * corresponding channel.
+     */
+    switch( cha )
+    {
+        case 0:
+//            std::cout << "setTriggerSimple." << ;
+            m_status = ps6000SetSimpleTrigger
+                (
+                 m_handle,
+                 m_data_current->data_trigger->enabled,
+                 m_data_current->data_trigger->source,
+                 m_data_current->data_trigger->threshold,
+                 m_data_current->data_trigger->direction,
+                 m_data_current->data_trigger->delay,
+                 m_data_current->data_trigger->autoTriggerTime);
+            break;
+        case 1:
+            m_status = ps6000SetSimpleTrigger
+                (
+                 m_handle,
+                 1,
+                 PS6000_CHANNEL_A,
+                 m_data_current->data_trigger->threshold,
+                 m_data_current->data_trigger->direction,
+                 m_data_current->data_trigger->delay,
+                 m_data_current->data_trigger->autoTriggerTime);
+            break;
+        case 2:
+            m_status = ps6000SetSimpleTrigger
+                (
+                 m_handle,
+                 1,
+                 PS6000_CHANNEL_B,
+                 m_data_current->data_trigger->threshold,
+                 m_data_current->data_trigger->direction,
+                 m_data_current->data_trigger->delay,
+                 m_data_current->data_trigger->autoTriggerTime);
+            break;
+        case 3:
+            m_status = ps6000SetSimpleTrigger
+                (
+                 m_handle,
+                 1,
+                 PS6000_CHANNEL_C,
+                 m_data_current->data_trigger->threshold,
+                 m_data_current->data_trigger->direction,
+                 m_data_current->data_trigger->delay,
+                 m_data_current->data_trigger->autoTriggerTime);
+            break;
+        case 4:
+            m_status = ps6000SetSimpleTrigger
+                (
+                 m_handle,
+                 1,
+                 PS6000_CHANNEL_D,
+                 m_data_current->data_trigger->threshold,
+                 m_data_current->data_trigger->direction,
+                 m_data_current->data_trigger->delay,
+                 m_data_current->data_trigger->autoTriggerTime);
+            break;
+        default:
+            throw PicoException("This channel is not available for the trigger");
+
+
+    }
     checkStatus();
-
 
     return;
 }
@@ -793,9 +1026,7 @@ void    Pico::getTimebase()
     m_timeInterval_ns = -1.f;
 
     // on exit, the maximum number of samples available.
-    uint32_t maxSamples{50000};
-
-
+    uint32_t maxSamples{0};
 
     while( m_timeInterval_ns < 0 && counter < counterMax )
     {
@@ -804,7 +1035,7 @@ void    Pico::getTimebase()
                         m_data_current->val_timebase,
                         m_buffer_data_size,
                         &m_timeInterval_ns,
-                        m_data_current->val_timebase,
+                        0,
                         &maxSamples,
                         m_startIndex                        
                 );
@@ -854,8 +1085,6 @@ void    Pico::getTimebase()
 void    Pico::getValuesBlock()
 {
 
-    // since in block mode we only have on index with index # 0, we use this hardcoded
-    uint32_t segmentIndex{0};
     
 
     uint32_t noOfSamplesReturned = m_buffer_data_size;
@@ -867,7 +1096,7 @@ void    Pico::getValuesBlock()
                     &noOfSamplesReturned,
                     m_data_current->val_downSampleRatio,
                     m_data_current->val_downSampleRatioMode,
-                    segmentIndex,
+                    m_segmentIndex,
                     &m_overflow
             );
 
@@ -897,10 +1126,33 @@ void    Pico::getValuesBlock()
 
 
 
-void    Pico::getValuesRapid()
+void    Pico::getValuesRapid( uint32_t& startIndex, uint32_t& lastIndex )
 {
-    //! \todo Pico::getValuesRapid needs to be written!
+
+    uint32_t noOfSamplesReturned = m_buffer_data_size;
+
+    int16_t overflow[lastIndex+1]{0};
+    m_status = ps6000GetValuesBulk(
+                    m_handle,
+                    &noOfSamplesReturned,
+                    startIndex,
+                    lastIndex,
+                    m_data_current->val_downSampleRatio,
+                    m_data_current->val_downSampleRatioMode,
+                    overflow
+            );
+
+    checkStatus();
+
+    if( noOfSamplesReturned != m_buffer_data_size )
+    {
+        throw PicoException(
+                "# of samples returned unequal to # of acquired samples!");
+    };
+
+    return;
 }
+
 
 
 
@@ -926,6 +1178,36 @@ void    Pico::setMemorySegments( uint32_t nSegments )
 
     return;
 }
+
+
+
+
+
+
+
+
+///////////////////////////////////////////////////////////////////////////////
+
+
+
+
+
+
+
+
+void    Pico::setNoOfCaptures( uint32_t nCaptures )
+{
+    m_status = ps6000SetNoOfCaptures(
+                    m_handle,
+                    nCaptures
+                    );
+    checkStatus();
+
+    return;
+}
+
+
+
 
 
 

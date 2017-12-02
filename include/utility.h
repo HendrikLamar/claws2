@@ -290,13 +290,15 @@ namespace Utility{
 
 
         private:
-            PS6000_CHANNEL                  channel;
+            PS6000_CHANNEL  channel;
 
             PS6000_CHANNEL  intToCh( int ch );
 
-            void   set( int cha, std::shared_ptr<TH1I> hist );
+            void set( 
+                    int cha, 
+                    std::shared_ptr<TH1I> hist );
 
-            std::shared_ptr< TH1I >         data;
+            std::shared_ptr< TH1I > data;
 
 
 
@@ -569,6 +571,8 @@ namespace Utility{
         enPS6000RatioMode       val_downSampleRatioMode;
         uint32_t                val_downSampleRatio;
 
+        uint32_t                loops_inter;
+
         friend std::ostream& operator<<(
                 std::ostream& out, Utility::Pico_Conf_HL_Gain& data );
 
@@ -835,6 +839,121 @@ namespace Utility{
 ///////////////////////////////////////////////////////////////////////////////
 
 
+
+
+
+
+
+
+
+
+
+
+
+///////////////////////////////////////////////////////////////////////////////
+//
+//                  START PSU settings
+//
+///////////////////////////////////////////////////////////////////////////////
+
+
+
+    struct PSU_Channel
+    {
+        PSU_Channel( std::string tname, int tchannelNo ) :
+            name(tname),
+            channelNo(tchannelNo)
+        {};
+
+        std::string     name;
+        int             channelNo;
+
+        std::string     powerOnOff;
+        float           limit_volt;
+        float           limit_current;
+    };
+
+
+
+    struct PSU_Config
+    {
+        public:
+            //! Standard constructor.
+            PSU_Config()
+            {
+                channels = std::make_shared<std::vector<
+                    std::shared_ptr<PSU_Channel>>>();
+            }
+
+            ~PSU_Config(){};
+
+            //! Returns the channel settings.
+            std::shared_ptr<PSU_Channel> getCh( int i )
+            {
+                std::shared_ptr<PSU_Channel> output;
+                for( auto& tmp : *channels )
+                {
+                    if( tmp->channelNo == i )
+                    {
+                        output = tmp;
+                        break;
+                    }
+                }
+                return output;
+            }
+            
+            //! Returns the channel settings.
+            std::shared_ptr<PSU_Channel> getCh( std::string name )
+            {
+                std::shared_ptr<PSU_Channel> output;
+                for( auto& tmp : *channels )
+                {
+                    if( !(tmp->name.compare(name)) )
+                    {
+                        output = tmp;
+                        break;
+                    }
+                }
+                return output;
+            }
+
+            //! Sets a new channel.
+            void setCh( std::shared_ptr<PSU_Channel> channel )
+            {
+                channels->push_back(channel);
+                return;
+            }
+
+            //! Returns the amount of channels in this conifguration.
+            unsigned int getNoOfCh()
+            {
+                return channels->size();
+            }
+
+            //! Remove all of the channels.
+            void clear()
+            {
+                channels->clear();
+
+                return;
+            }
+
+        private:
+            std::shared_ptr<std::vector< std::shared_ptr<PSU_Channel>>> channels;
+    };
+
+
+
+
+
+
+
+
+///////////////////////////////////////////////////////////////////////////////
+//
+//                  START PSU settings
+//
+///////////////////////////////////////////////////////////////////////////////
 } // END Namespace Utility
 
 

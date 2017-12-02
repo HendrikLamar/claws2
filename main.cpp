@@ -23,6 +23,7 @@
 #include <cstdlib>
 #include <cstring>
 #include <vector>
+#include <memory>
 
 //#include "clawsRun.h"
 
@@ -37,9 +38,9 @@
 #include <TROOT.h>
 
 
-
 int main()
 {
+
 
     ROOT::EnableThreadSafety();
 //    gROOT->ProcessLine("gErrorIgnoreLevel = 6000");
@@ -61,6 +62,68 @@ int main()
     mystate = nullptr;
 
 
+
+
+
+/*     unsigned int loop = 5;
+ *     unsigned int samples = 5;
+ * 
+ *     std::shared_ptr< std::vector< std::shared_ptr< 
+ *         std::vector< int16_t >>>> m_buffer_inter_data;
+ * 
+ *     m_buffer_inter_data = std::make_shared< std::vector<
+ *         std::shared_ptr< std::vector< int16_t>>>>();
+ * //    m_buffer_inter_data->reserve(loop);
+ *     m_buffer_inter_data->resize(
+ *             loop, 
+ *             std::make_shared< std::vector< int16_t >>(samples+3, 2));
+ * 
+ * //    for( unsigned int i = 0; i < loop; ++i )
+ * //    {
+ * //        std::shared_ptr< std::vector< int16_t >> tmp{
+ * //            std::make_shared< std::vector< int16_t>>()};
+ * //        tmp->reserve(samples);
+ * //        tmp->resize(samples, 0);
+ * //        m_buffer_inter_data->push_back(tmp);
+ * //    }
+ * 
+ *     std::cout << "Buffer capacity: " << m_buffer_inter_data->capacity() << std::endl;
+ *     std::cout << "Buffer Size: " << m_buffer_inter_data->size() << "\n" << std::endl;
+ * 
+ * //    for( auto& tmp1 : *m_buffer_inter_data )
+ * //    {
+ * //        for( auto& tmp2 : *tmp1 )
+ * //        {
+ * //            tmp2 = 2;
+ * //        }
+ * //    }
+ * 
+ *     std::cout << "Buffer capacity: " << m_buffer_inter_data->capacity() << std::endl;
+ *     std::cout << "Buffer Size: " << m_buffer_inter_data->size() << "\n" << std::endl;
+ * 
+ *     m_buffer_inter_data->resize(
+ *             loop+1, 
+ *             std::make_shared< std::vector< int16_t >>(samples, 0));
+ *     m_buffer_inter_data->shrink_to_fit();
+ * 
+ *     std::cout << "Buffer capacity: " << m_buffer_inter_data->capacity() << std::endl;
+ *     std::cout << "Buffer Size: " << m_buffer_inter_data->at(0)->size() << std::endl;
+ * 
+ *     int count1{0};
+ *     int count2{0};
+ *     for( auto& tmp1 : *m_buffer_inter_data )
+ *     {
+ * //        for( int16_t& tmp2 : *tmp1 )
+ *         for( unsigned int i = 0; i < tmp1->size(); ++i )
+ *         {
+ *             int16_t tmp2 = tmp1->at(i);
+ *             std::cout << count1 << ":" << count2 << " -> " << tmp2 <<  "\n";
+ *             ++count2;
+ *         }
+ *         count2 = 0;
+ *         ++count1;
+ *     }
+ */
 
 
 /*     boost::gregorian::date current_date(boost::gregorian::day_clock::local_day());

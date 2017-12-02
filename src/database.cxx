@@ -596,6 +596,11 @@ void Database::Pico_readChannelsSettings( Utility::Pico_RunMode mode, int picoNo
         fKey = iKey + "analogueOffset";
         channels->at(kk)->analogueOffset = ptree.get< float >( fKey );
 
+        // read bandwith parameter
+        fKey = iKey + "bandwidth";
+        tmp = ptree.get< std::string > (fKey);
+        channels->at(kk)->bandwidth = Utility::Pico_StringToEnum_bandwidth( tmp );
+
     }
 
     return;
@@ -810,6 +815,8 @@ void Database::Pico_readIntermediateSettings( int picoNo )
 
     fKey = iKey + "autoTriggerTime";
     tmpDataStruct->data_trigger->autoTriggerTime = ptree.get < int > ( fKey );
+
+    tmpDataStruct->loops_inter = static_cast<uint32_t>(Claws_getConfig()->loops_Intermediate);
 
     // find out which channel is enabled
     fKey = iKey + "channels_to_calibrate";

@@ -48,17 +48,19 @@ class N6700 : public SCPI
         //! Checks if the device is available and respons the device name we expect
         void checkDevice();
 
-        //! Sends the command to the PSU.
-        void sendCommand( std::string cmd );
+        //! Load config from config file.
+        void loadConfig();
+
+        //! Sends the configuration stored in the database to the PSU.
+        //! This function has a processing time of 1 sec.
+        void sendConf( Utility::Claws_Gain gain );
 
 
-        //! Sends the configuration stored in the database to the PSU
-        void setConf( Utility::Claws_Gain gain );
-
-
-        //! Turns the channels on (true) or off (false).
-        void turnChannelsOnOff( bool tmp );
+        //! Start power. This function has a processing time of 4 sec.
+        void start();
         
+        //! Stop power. This function has a processing time of 1 sec.
+        void stop();
 
         //! Returns the current measured voltage of all channels in a vector
         //! of doubles. The value for Channel 1 is at vector.at(0) and so on...
@@ -69,7 +71,7 @@ class N6700 : public SCPI
         std::vector < double > getCurr();
 
 
-        void run();
+//        void run();
 
     private:
         std::string::size_type  m_sz;
@@ -77,9 +79,18 @@ class N6700 : public SCPI
 
 
 
+
         const std::string       m_ID;           ///< Name of the device.
                                                 ///< It must be the answer to the 
                                                 ///< "*IDN?" command.
+                                                
+        std::shared_ptr<Utility::PSU_Config>    m_config_high;
+        std::shared_ptr<Utility::PSU_Config>    m_config_low;
+
+        std::shared_ptr<Utility::PSU_Config>    m_config_current;
+
+        //! Sends the command to the PSU.
+        void sendCommand( std::string cmd );
                                                 
 };
 

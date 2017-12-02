@@ -46,7 +46,9 @@ class Storage
         void save(
                 unsigned long& runNum,
                 unsigned int& subRunNum, 
-                std::string& fpath );
+                std::string& fpath,
+                Utility::Claws_Gain gain,
+                std::shared_ptr<std::vector<std::shared_ptr<TH1I>>> hists );
 
 
 
@@ -58,7 +60,8 @@ class Storage
 
         //! Stores intermediate data and saves the belonging settings.ini file.
         void intermediate( 
-                unsigned int& subRunNum);    //!< Defined in ClawsConfig loops_physics
+                unsigned int& subRunNum,    //!< Defined in ClawsConfig loops_physics
+                std::shared_ptr<std::vector<std::shared_ptr<TH1I>>> hists );
         
         //! Stores physics data and saves the belonging settings.ini file.
         void physics( 

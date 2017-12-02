@@ -242,6 +242,9 @@ class Pico
                                                 
         uint32_t            m_noMemoryMaxSamples;   // holds the max number of samples
                                                     // available in each memory segment
+        // since in block mode we only have on index with index # 0, 
+        // we use this hardcoded -> doesn't matter for rapid mode
+        uint32_t            m_segmentIndex{0};
 
         ////////////////////////////////////////////////////////////////////////
         //
@@ -285,7 +288,12 @@ class Pico
         void    setTrigger( );
 
         void    setTrigger_Advanced( );
-        void    setTrigger_Simple( );
+
+        //! Sets the trigger.
+        //! 0 -> Set trigger according to config file.
+        //! 1-4 -> Set trigger on channel N. This is needed in 
+        //! intermediate mode.
+        void    setTrigger_Simple( int cha = 0 );
 
         // Configures the channels.
         void    setChannels();
@@ -296,10 +304,13 @@ class Pico
         // Acquires the data from the pico after data taking.
         void    getValuesBlock();
 
-        void    getValuesRapid();
+        void    getValuesRapid( uint32_t& startIndex, uint32_t& lastIndex );
 
         // Only needed when rapid block mode is used. Otherwise its 1 by default.
         void    setMemorySegments( uint32_t nSegments );
+
+        // Sets the number of captures to be collected in rapid block mode.
+        void    setNoOfCaptures( uint32_t nCaptures );
 
         // Checks m_status for possible error and throws a PicoException() if it is
         // the case. Should be called after every ps6000-function.
@@ -369,6 +380,9 @@ class Pico
 
         //! Starts the rapid block mode.
         void runRapid();
+
+        //! Starts the intermediate mode.
+        void runIntermediate();
 
         //! Stops the data taking properly. If this is called before a trigger event
         //! occurs, the data array might contain non valid data.
