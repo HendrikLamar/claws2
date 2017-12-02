@@ -62,6 +62,50 @@ int main()
     mystate = nullptr;
 
 
+    
+/*     unsigned int starter = 0;
+ *     unsigned int ender = 0;
+ *     unsigned int stepSize = 4;
+ * 
+ *     ender += stepSize;
+ *     std::vector< int > w1{0,1,2,3,4,5,6,7,8,9,10};
+ *     std::vector< int > w2{w1.begin()+starter, w1.begin()+ender};
+ *     starter = ender;
+ *     ender += stepSize;
+ * 
+ *     std::vector< int > w3;
+ *     if( ender > w1.size() )
+ *     {
+ *         std::vector< int > dummy{w1.begin()+starter, w1.end()};
+ *         w3 = dummy;
+ *     }
+ *     else 
+ *     {
+ *         std::vector< int > dummy{w1.begin()+starter, w1.begin()+ender};
+ *         w3 = dummy;
+ *     };
+ * 
+ *     std::cout << "w1: " << std::flush;
+ *     for( auto& tmp : w1 )
+ *     {
+ *         std::cout << tmp << " ";
+ *     }
+ *     std::cout << "\n";
+ * 
+ *     std::cout << "w2: " << std::flush; 
+ *     for( auto& tmp : w2 )
+ *     {
+ *         std::cout << tmp << " ";
+ *     }
+ *     std::cout << "\n";
+ * 
+ *     std::cout << "w3: " << std::flush;
+ *     for( auto& tmp : w3 )
+ *     {
+ *         std::cout << tmp << " ";
+ *     }
+ *     std::cout << "\n";
+ */
 
 
 

@@ -26,10 +26,13 @@
 #include <algorithm>
 #include <mutex>
 #include <thread>
+#include <chrono>
 #include <utility>
+#include <cmath>
 
 #include <TH1I.h>
 #include <TGraph.h>
+#include <TROOT.h>
 
 
 
@@ -230,24 +233,37 @@ void ProcessData::syncSaveRapid( unsigned int& subRunNum )
     std::shared_ptr< std::vector<       // size of loops_inter
         std::shared_ptr< std::vector <  // size of all channels
             std::shared_ptr< std::pair< std::string, 
+                std::shared_ptr< std::pair< std::shared_ptr<TH1I>,
                 std::shared_ptr< std::vector <  // size of acquired samples-> contains
                                             // the data for one waveform
-                int16_t > > > > > > > > data_intermediate{
+                int16_t > > > > > > > > > > data_intermediate{
                     std::make_shared< std::vector<
                         std::shared_ptr< std::vector<
                             std::shared_ptr< std::pair< std::string, 
-                                std::shared_ptr< std::vector< int16_t>>>>>>>>()};
+                                std::shared_ptr< std::pair< 
+                                std::shared_ptr<TH1I>,
+                                std::shared_ptr< std::vector< int16_t>>>>>>>>>>()};
 
 //    std::cout << "SubRunNum: " << subRunNum << std::endl;
 
+
+
+
+
+
+
+    // move the data from each chann into one megafile to be process 
+    // synchronuously by many threads
     for( unsigned int noWaveform = 0; noWaveform < subRunNum; ++noWaveform )
     {
         std::shared_ptr< std::vector<
-            std::shared_ptr< std::pair< std::string, 
-                std::shared_ptr< std::vector<int16_t>>>>>> data_waveform{
+            std::shared_ptr< std::pair< std::string,
+                std::shared_ptr< std::pair< std::shared_ptr<TH1I>,  
+                std::shared_ptr< std::vector<int16_t>>>>>>>> data_waveform{
                     std::make_shared< std::vector<
                         std::shared_ptr< std::pair< std::string, 
-                            std::shared_ptr<std::vector<int16_t>>>>>>()};
+                            std::shared_ptr< std::pair< std::shared_ptr<TH1I>,
+                            std::shared_ptr<std::vector<int16_t>>>>>>>>()};
 
         for( auto& tmp1 : *m_picos )
         {
@@ -255,13 +271,35 @@ void ProcessData::syncSaveRapid( unsigned int& subRunNum )
             {
                 std::string name = tmp1->getLocation() + "_";
                 name += channelEnumToStringNo(tmp1->getCh(i)->getChNo());
-                std::shared_ptr< std::pair< std::string, 
-                    std::shared_ptr< std::vector<int16_t> > > > data_channel{
-                        std::make_shared<std::pair< 
-                            std::string, std::shared_ptr<
-                                std::vector<int16_t>>>>(
-                                name, 
+                name += "_" + std::to_string(noWaveform);
+
+//                std::cout << name << "\n";
+
+                // initialize waveform
+                std::shared_ptr<TH1I> data_hist{std::make_shared<TH1I>(
+                        name.c_str(),
+                        name.c_str(),
+                        tmp1->getCh(i)->getBufferRapid()->at(noWaveform)->size(),
+                        0,
+                        tmp1->getCh(i)->getBufferRapid()->at(noWaveform)->size()
+                        )};
+
+                std::shared_ptr< std::pair< std::shared_ptr<TH1I>,
+                    std::shared_ptr< std::vector<int16_t>>>> tmp1_channel{
+                        std::make_shared< std::pair< std::shared_ptr<TH1I>,
+                            std::shared_ptr< std::vector<int16_t>>>>(
+                                data_hist,
                                 tmp1->getCh(i)->getBufferRapid()->at(noWaveform))};
+
+                std::shared_ptr< std::pair< std::string, 
+                    std::shared_ptr< std::pair< std::shared_ptr<TH1I>,
+                    std::shared_ptr< std::vector<int16_t> > > > > > data_channel{
+                        std::make_shared<std::pair< 
+                            std::string, 
+                                std::shared_ptr< std::pair< std::shared_ptr<TH1I>,
+                                std::shared_ptr< std::vector<int16_t>>>>>>(
+                                name, 
+                                tmp1_channel)};
 
 //                std::cout << tmp1->getCh(i)->getBufferRapid()->at(noWaveform)<< "\n";
 
@@ -308,13 +346,16 @@ void ProcessData::syncSaveRapid( unsigned int& subRunNum )
         std::shared_ptr< std::vector<       // size of loops_inter
             std::shared_ptr< std::vector <  // size of all channels
                 std::shared_ptr< std::pair< std::string, 
-                    std::shared_ptr< std::vector <  // size of acquired samples-> contains
-                                                // the data for one waveform
-                    int16_t > > > > > > > > data_intermediate,
-        unsigned int startIndex,
-        unsigned int lastIndex)
+                    std::shared_ptr< std::pair< std::shared_ptr<TH1I>,
+                    std::shared_ptr< std::vector <  // size of acquired 
+                                                    // samples-> contains
+                                                    // the data for one waveform
+                    int16_t > > > > > > > > > > data_intermediate,
+        unsigned int startIndex)
     {
 
+//        std::cout << "Thread opened. Waiting for 2sec...\n";
+//        std::this_thread::sleep_for(std::chrono::seconds(2));
         std::string title{""};
         for( auto& tmp : *data_intermediate )
         {
@@ -327,19 +368,12 @@ void ProcessData::syncSaveRapid( unsigned int& subRunNum )
             // rearrange each channel data into a TH1I
             for( auto& tmp2 : *tmp )
             {
-                title = tmp2->first + "_" + std::to_string(startIndex);
-                std::shared_ptr<TH1I> hist = 
-                    std::make_shared<TH1I>(
-                            tmp2->first.c_str(), 
-                            title.c_str(),
-                            tmp2->second->size(),
-                            0,
-                            tmp2->second->size());
+                std::shared_ptr<TH1I> hist = tmp2->second->first;
 
                 // add the data to the TH1I
-                for( unsigned int ii = 0; ii < tmp2->second->size(); ++ii )
+                for( unsigned int ii = 0; ii < tmp2->second->second->size(); ++ii )
                 {
-                    hist->SetBinContent(ii+1, tmp2->second->at(ii));
+                    hist->SetBinContent(ii+1, tmp2->second->second->at(ii));
                 };
 
                 // add the TH1I to the vector holding all channel data
@@ -352,15 +386,86 @@ void ProcessData::syncSaveRapid( unsigned int& subRunNum )
             ++startIndex;
         }
 
-        if( startIndex != lastIndex )
-        {
-            std::cout << "startIndex != lastIndex\n";
-        }
 
         return;
     };
 
-    work(data_intermediate, 0, data_intermediate->size());
+
+
+    // since open a thread is a time-expensive process, one thread should work on
+    // 100 waveforms
+
+
+    unsigned int stepSize = 50;
+    unsigned int starter = 0;
+    unsigned int ender = stepSize;
+
+    int noOfThreads{static_cast<int>(ceil(subRunNum/float(stepSize)))};
+    std::cout << noOfThreads << " threads will be started...\n";
+    std::vector< std::thread > workers;
+    ROOT::EnableThreadSafety();
+
+    for( int nThread = 0; nThread < noOfThreads; ++nThread )
+//    for( int nThread = 0; nThread < 2; ++nThread )
+    {
+        std::shared_ptr< std::vector<       // size of loops_inter
+            std::shared_ptr< std::vector <  // size of all channels
+                std::shared_ptr< std::pair< std::string, 
+                    std::shared_ptr< std::pair< std::shared_ptr<TH1I>,
+                    std::shared_ptr< std::vector <  // size of acquired samples-> contains
+                                                // the data for one waveform
+                    int16_t > > > > > > > > > > tmp_data_intermediate;
+        if( ender >= data_intermediate->size() )
+        {
+            tmp_data_intermediate = std::make_shared<
+                std::vector<       // size of loops_inter
+                    std::shared_ptr< std::vector <  // size of all channels
+                        std::shared_ptr< std::pair< std::string, 
+                            std::shared_ptr< std::pair< std::shared_ptr<TH1I>,
+                            std::shared_ptr< std::vector <  // size of acquired samples-> contains
+                                                        // the data for one waveform
+                            int16_t > > > > > > > > > >(
+                                    data_intermediate->begin()+starter,
+                                    data_intermediate->end());
+        }
+        else
+        {
+            tmp_data_intermediate = std::make_shared<
+                std::vector<       // size of loops_inter
+                    std::shared_ptr< std::vector <  // size of all channels
+                        std::shared_ptr< std::pair< std::string, 
+                            std::shared_ptr< std::pair< std::shared_ptr<TH1I>,
+                            std::shared_ptr< std::vector <  // size of acquired samples-> contains
+                                                        // the data for one waveform
+                            int16_t > > > > > > > > > >(
+                                    data_intermediate->begin()+starter,
+                                    data_intermediate->begin()+ender);
+        }
+
+//        std::cout << "Starter: " << starter;
+//        std::cout << "\tEnder: " << ender;
+//        std::cout << "\tSize: " << tmp_data_intermediate->size() << "\n";
+
+        workers.emplace_back( 
+                work, 
+                tmp_data_intermediate, 
+                starter);
+
+
+        
+        // set new start and end ranges
+        starter = ender;
+        ender += stepSize;
+    }
+
+//    work(data_intermediate, 0, data_intermediate->size());
+
+
+    for( auto& tmp : workers )
+    {
+        std::cout << "About to join thread " << tmp.get_id() << std::endl;
+        tmp.join();
+    };
 
 
     return;
