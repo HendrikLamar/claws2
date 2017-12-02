@@ -123,6 +123,10 @@ void MyState::run()
                 m_daq->process_event( ClawsStatemachine::EvStatus() );
                 break;
 
+            case 'd':
+                m_daq->process_event( ClawsStatemachine::EvSave() );
+                break;
+
             case '1':
                 m_daq->process_event( ClawsStatemachine::EvStartStop() );
                 break;

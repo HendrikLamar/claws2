@@ -26,6 +26,7 @@
 #include <string>
 #include <iostream>
 #include <memory>
+#include <atomic>
 //#include <typeinfo>
 
 #include <libps6000-1.4/ps6000Api.h>
@@ -816,6 +817,7 @@ namespace Utility{
         unsigned int            loops_Physics;
         unsigned int            loops_Intermediate;
 
+        std::atomic<bool>       isSaved;
         std::string             path_saveData;
 
 

@@ -28,6 +28,7 @@
 
 #include <iostream>
 #include <string>
+#include <mutex>
 
 ///////////////////////////////////////////////////////////////////////////////
 //
@@ -205,27 +206,32 @@ void Database::setNoOfPicosInitialized( unsigned int numb )
 
 void Database::Claws_readConfig()
 {
+
     std::string tpath;
-
-
     std::string root = "General.";
 
+    std::string tmp;
 
     // read in loopsPhysics
     tpath = root + "loops_physics";
-    m_steeringData->loops_Physics = m_initReader->getKey<unsigned int>(
+    Claws_getConfig()->loops_Physics = m_initReader->getKey<unsigned int>(
             m_initReader->getInitstruct().ClawsConfig, tpath);
 
     // read in loopsIntermediate
     tpath = root + "loops_intermediate";
-    m_steeringData->loops_Intermediate = m_initReader->getKey<unsigned int>(
+    Claws_getConfig()->loops_Intermediate = m_initReader->getKey<unsigned int>(
             m_initReader->getInitstruct().ClawsConfig, tpath );
+
+    // read in isSaved 
+    tpath  = root + "saveData";
+    tmp = m_initReader->getKey<std::string>(
+            m_initReader->getInitstruct().ClawsConfig, tpath );
+    tmp.compare("yes") == 0 ? Claws_getConfig()->isSaved = true : Claws_getConfig()->isSaved = false; 
 
     // read in save path # 1
-   tpath  = root + "path_saveData";
-    m_steeringData->path_saveData = m_initReader->getKey<std::string>(
+    tpath  = root + "path_saveData";
+    Claws_getConfig()->path_saveData = m_initReader->getKey<std::string>(
             m_initReader->getInitstruct().ClawsConfig, tpath );
-
     
 
     
@@ -233,32 +239,32 @@ void Database::Claws_readConfig()
 
     // read in current runmode
     tpath = root + "current";
-    std::string tmp = 
+    tmp = 
         m_initReader->getKey< std::string >(m_initReader->getInitstruct().ClawsConfig, tpath);
-    m_steeringData->gain_current = Utility::Pico_StringToEnum_gain( tmp );
+    Claws_getConfig()->gain_current = Utility::Pico_StringToEnum_gain( tmp );
 
     // read in High Gain Mode
     tpath = root + "highGain";
     tmp = 
         m_initReader->getKey< std::string >(m_initReader->getInitstruct().ClawsConfig, tpath );
-    m_steeringData->runMode_HighGain = Utility::Pico_StringToEnum_runMode( tmp );
+    Claws_getConfig()->runMode_HighGain = Utility::Pico_StringToEnum_runMode( tmp );
 
 
     // read in Low Gain Mode
     tpath = root + "lowGain";
     tmp = m_initReader->getKey< std::string >(m_initReader->getInitstruct().ClawsConfig, tpath );
-    m_steeringData->runMode_LowGain = Utility::Pico_StringToEnum_runMode( tmp );
+    Claws_getConfig()->runMode_LowGain = Utility::Pico_StringToEnum_runMode( tmp );
 
 
 
     // after all values are read-in, define a default run mode
-    if( m_steeringData->gain_current == Utility::Claws_Gain::LOW_GAIN )
+    if( Claws_getConfig()->gain_current == Utility::Claws_Gain::LOW_GAIN )
     {
-        m_steeringData->runMode_current = m_steeringData->runMode_LowGain;
+        Claws_getConfig()->runMode_current = Claws_getConfig()->runMode_LowGain;
     }
-    else if( m_steeringData->gain_current == Utility::Claws_Gain::HIGH_GAIN )
+    else if( Claws_getConfig()->gain_current == Utility::Claws_Gain::HIGH_GAIN )
     {
-        m_steeringData->runMode_current = m_steeringData->runMode_HighGain;
+        Claws_getConfig()->runMode_current = Claws_getConfig()->runMode_HighGain;
     }
     else throw PicoException("Wrong 'current run mode' entered!");
 

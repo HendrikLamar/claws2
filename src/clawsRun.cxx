@@ -305,26 +305,40 @@ void            ClawsRun::loadConfig()
 
 
 
-void            ClawsRun::printData()
+void ClawsRun::SaveOnOff()
 {
 
-    Utility::Steering_Data tmp = *m_database->Claws_getConfig();
-    std::cout << tmp << std::endl;
+    auto translate = [this]()->std::string
+        {return m_database->Claws_getConfig()->isSaved ? "ON" : "OFF";};
 
-
-    for( auto& tmp_pico : *m_database->m_picoData )
+    if( m_database->Claws_getConfig()->isSaved )
     {
-        // m_picoData has size four all the time. herefore print only
-        // entries in which the pointer is not empty
-        if( tmp_pico )
-        {
-            std::cout << *tmp_pico << std::endl;
-        }
+        m_database->Claws_getConfig()->isSaved = false;
     }
+    else m_database->Claws_getConfig()->isSaved = true;
 
+    std::cout << "Data Saving is now turned ";
+    std::cout <<  translate() << std::endl;
 
     return;
 }
+
+
+
+
+
+
+
+///////////////////////////////////////////////////////////////////////////////
+
+
+
+
+
+
+
+
+
 
 
 
@@ -918,10 +932,10 @@ void            ClawsRun::printData()
             }
             workers.clear();
 
-            dataProcessor->save()->physics(counter1);
-//            std::cout << "Data saved\n";
-//            dataProcessor.clear();
-//            std::cout << "Data cleared.\n";
+            if( m_database->Claws_getConfig()->isSaved )
+            {
+                dataProcessor->save()->physics(counter1);
+            }
 
             
         }
@@ -1176,35 +1190,20 @@ void            ClawsRun::printData()
         }
         workers.clear();
 
+
         auto time1{std::chrono::system_clock::now()};
-        unsigned int loops = m_database->Claws_getConfig()->loops_Intermediate;
-        dataProcessor->syncSaveRapid(loops);
+        // check if data should be saved
+        if( m_database->Claws_getConfig()->isSaved )
+        {
+            unsigned int loops = m_database->Claws_getConfig()->loops_Intermediate;
+            dataProcessor->syncSaveRapid(loops);
+        }
+
         auto time2{std::chrono::system_clock::now()};
         auto diff{std::chrono::duration_cast<
             std::chrono::milliseconds>(time2 - time1)};
         std::cout << "SaveDataInter: " << diff.count() << "msec\n";
         
-//        for( auto& tmp1 : *m_picos->at(0)->getCh(0)->getBufferRapid() )
-//        {
-//            for( auto& tmp2 : *tmp1 )
-//            {
-//                std::cout << tmp2 << "  " << std::flush;
-//            };
-//            std::cout << std::endl;
-//        };
-
-//            if( isPhysics )
-//            {
-//                dataProcessor->save()->physics(counter1);
-//            }
-//            else dataProcessor->save()->intermediate(counter1);
-//            std::cout << "Data saved\n";
-//            dataProcessor.clear();
-//            std::cout << "Data cleared.\n";
-
-            
-
-        std::cout << "Going to stop picos from data taking...\n";
         // tell pico that data taking is done
         for( auto& tmp : *m_picos )
         {
@@ -1224,8 +1223,6 @@ void            ClawsRun::printData()
             {
                 std::cout << excep.what() << std::endl;
             }
-
-            std::cout << "Pico closed\n";
         }
 
         return;

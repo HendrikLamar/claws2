@@ -153,8 +153,7 @@ class ClawsRun
         //! (Re)Loads the configurations.
         void            loadConfig();
 
-        //! Prints the current loaded data.
-        void            printData();
+        void            SaveOnOff();
 
 
 

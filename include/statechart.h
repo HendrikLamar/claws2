@@ -102,6 +102,8 @@ struct Init;
 struct Config;
 /// Quit state
 struct Quit;
+//! Turn on 'save data'
+struct SaveOnOff;
 
 /// Idle & initial state of the data taking
 struct SystemIdle;
@@ -127,6 +129,8 @@ struct EvLoadConfig: sc::event< EvLoadConfig > {};
 struct EvStartStop : sc::event< EvStartStop > {};
 /// Checks and - in case - waits for the data taking to stop
 struct EvQuit : sc::event< EvQuit > {};
+//! Turn save on and off
+struct EvSave : sc::event< EvSave > {};
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -151,7 +155,7 @@ struct ClawsDAQ : sc::state_machine< ClawsDAQ, Active >
         {
             delete m_clawsRun;
             m_clawsRun = nullptr;
-            std::this_thread::sleep_for(std::chrono::seconds(2));
+            std::this_thread::sleep_for(std::chrono::milliseconds(500));
 
             std::cout << 
     "+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\n";
@@ -218,6 +222,7 @@ struct MenuIdle : sc::simple_state< MenuIdle, Active::orthogonal<0> >
             sc::transition< EvStatus, Status >,
 //            sc::custom_reaction< EvQuit > 
             sc::transition< EvQuit, Quit >,
+            sc::transition< EvSave, SaveOnOff >,
             sc::custom_reaction< EvInit >
                 > reactions;
 
@@ -270,7 +275,6 @@ struct Status : sc::state< Status, Active::orthogonal<0> >
         {
             // \todo Add functionality!
             std::cout << "Entering Status\n";
-            context< ClawsDAQ >().getClawsRun()->printData();
             post_event( EvStatus() );
         };
 
@@ -336,6 +340,31 @@ struct Config : sc::state< Config, Active::orthogonal<0> >
 
 ///////////////////////////////////////////////////////////////////////////////
 
+
+
+
+//! Changes configuration file(s). Is concurrency level <0>.
+struct SaveOnOff: sc::state< SaveOnOff, Active::orthogonal<0> >
+{
+    public:
+        typedef mpl::list<
+            sc::transition< EvSave, MenuIdle >
+                > reactions;
+
+        SaveOnOff( my_context ctx ) : my_base( ctx )
+        {
+            std::cout << "Entering Config\n";
+            context< ClawsDAQ >().getClawsRun()->SaveOnOff();
+            post_event( EvSave() );
+        };
+        virtual ~SaveOnOff() 
+        {
+            std::cout << "Exiting Config\n";
+        };
+};
+
+
+///////////////////////////////////////////////////////////////////////////////
 
 
 
