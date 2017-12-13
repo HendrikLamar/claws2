@@ -465,6 +465,41 @@ namespace Utility{
 
 
 
+    //! Pico PS6000_TRIGGER_CONDITIONS structure
+#pragma pack(push,1)
+    struct tTriggerConditions
+    {
+        PS6000_TRIGGER_STATE    channelA;
+        PS6000_TRIGGER_STATE    channelB;
+        PS6000_TRIGGER_STATE    channelC;
+        PS6000_TRIGGER_STATE    channelD;
+        PS6000_TRIGGER_STATE    external;
+        PS6000_TRIGGER_STATE    aux;
+        PS6000_TRIGGER_STATE    pulseWidthQualifier;
+    };
+#pragma pack(pop)
+
+
+
+
+
+
+
+///////////////////////////////////////////////////////////////////////////////
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     //! Data structure holding the trigger settings.
     //! Supported input parameters:

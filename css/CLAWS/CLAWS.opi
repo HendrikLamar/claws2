@@ -1,0 +1,1867 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<display typeId="org.csstudio.opibuilder.Display" version="1.0.0">
+  <actions hook="false" hook_all="false" />
+  <auto_scale_widgets>
+    <auto_scale_widgets>false</auto_scale_widgets>
+    <min_width>-1</min_width>
+    <min_height>-1</min_height>
+  </auto_scale_widgets>
+  <auto_zoom_to_fit_all>false</auto_zoom_to_fit_all>
+  <background_color>
+    <color red="240" green="240" blue="240" />
+  </background_color>
+  <boy_version>5.1.0.201707191527</boy_version>
+  <foreground_color>
+    <color red="192" green="192" blue="192" />
+  </foreground_color>
+  <grid_space>6</grid_space>
+  <height>1080</height>
+  <macros>
+    <include_parent_macros>true</include_parent_macros>
+  </macros>
+  <name>Claws Monitor</name>
+  <rules />
+  <scripts />
+  <show_close_button>true</show_close_button>
+  <show_edit_range>true</show_edit_range>
+  <show_grid>true</show_grid>
+  <show_ruler>true</show_ruler>
+  <snap_to_geometry>true</snap_to_geometry>
+  <widget_type>Display</widget_type>
+  <width>1920</width>
+  <wuid>629f26fd:1601658005d:-8000</wuid>
+  <x>-1</x>
+  <y>-1</y>
+  <widget typeId="org.csstudio.opibuilder.widgets.tab" version="1.0.0">
+    <actions hook="false" hook_all="false" />
+    <active_tab>0</active_tab>
+    <background_color>
+      <color red="240" green="240" blue="240" />
+    </background_color>
+    <border_color>
+      <color red="0" green="128" blue="255" />
+    </border_color>
+    <border_style>0</border_style>
+    <border_width>1</border_width>
+    <enabled>true</enabled>
+    <foreground_color>
+      <color red="192" green="192" blue="192" />
+    </foreground_color>
+    <height>1020</height>
+    <horizontal_tabs>true</horizontal_tabs>
+    <macros>
+      <include_parent_macros>true</include_parent_macros>
+    </macros>
+    <minimum_tab_height>10</minimum_tab_height>
+    <name>Tabbed Container</name>
+    <rules />
+    <scale_options>
+      <width_scalable>true</width_scalable>
+      <height_scalable>true</height_scalable>
+      <keep_wh_ratio>false</keep_wh_ratio>
+    </scale_options>
+    <scripts />
+    <tab_0_background_color>
+      <color red="255" green="255" blue="255" />
+    </tab_0_background_color>
+    <tab_0_enabled>true</tab_0_enabled>
+    <tab_0_font>
+      <opifont.name fontName="Nimbus Sans L" height="10" style="0" pixels="false">Default</opifont.name>
+    </tab_0_font>
+    <tab_0_foreground_color>
+      <color red="0" green="0" blue="0" />
+    </tab_0_foreground_color>
+    <tab_0_icon_path></tab_0_icon_path>
+    <tab_0_title>Tab 0</tab_0_title>
+    <tab_count>1</tab_count>
+    <tooltip></tooltip>
+    <visible>true</visible>
+    <widget_type>Tabbed Container</widget_type>
+    <width>1849</width>
+    <wuid>4ed3b009:1604b0f3e04:-7eb4</wuid>
+    <x>114</x>
+    <y>48</y>
+    <widget typeId="org.csstudio.opibuilder.widgets.groupingContainer" version="1.0.0">
+      <actions hook="false" hook_all="false" />
+      <background_color>
+        <color red="240" green="240" blue="240" />
+      </background_color>
+      <border_color>
+        <color red="0" green="128" blue="255" />
+      </border_color>
+      <border_style>0</border_style>
+      <border_width>1</border_width>
+      <enabled>true</enabled>
+      <fc>false</fc>
+      <font>
+        <opifont.name fontName="Nimbus Sans L" height="10" style="0" pixels="false">Default</opifont.name>
+      </font>
+      <foreground_color>
+        <color red="192" green="192" blue="192" />
+      </foreground_color>
+      <height>989</height>
+      <lock_children>false</lock_children>
+      <macros>
+        <include_parent_macros>true</include_parent_macros>
+      </macros>
+      <name>Tab 0</name>
+      <rules />
+      <scale_options>
+        <width_scalable>true</width_scalable>
+        <height_scalable>true</height_scalable>
+        <keep_wh_ratio>false</keep_wh_ratio>
+      </scale_options>
+      <scripts />
+      <show_scrollbar>true</show_scrollbar>
+      <tooltip></tooltip>
+      <transparent>true</transparent>
+      <visible>true</visible>
+      <widget_type>Grouping Container</widget_type>
+      <width>1847</width>
+      <wuid>4ed3b009:1604b0f3e04:-7eb3</wuid>
+      <x>1</x>
+      <y>1</y>
+      <widget typeId="org.csstudio.opibuilder.widgets.TextUpdate" version="1.0.0">
+        <actions hook="false" hook_all="false" />
+        <alarm_pulsing>false</alarm_pulsing>
+        <auto_size>false</auto_size>
+        <backcolor_alarm_sensitive>false</backcolor_alarm_sensitive>
+        <background_color>
+          <color red="255" green="255" blue="255" />
+        </background_color>
+        <border_alarm_sensitive>true</border_alarm_sensitive>
+        <border_color>
+          <color red="0" green="128" blue="255" />
+        </border_color>
+        <border_style>0</border_style>
+        <border_width>1</border_width>
+        <enabled>true</enabled>
+        <font>
+          <opifont.name fontName="Nimbus Sans L" height="10" style="0" pixels="false">Default</opifont.name>
+        </font>
+        <forecolor_alarm_sensitive>false</forecolor_alarm_sensitive>
+        <foreground_color>
+          <color red="0" green="0" blue="0" />
+        </foreground_color>
+        <format_type>0</format_type>
+        <height>20</height>
+        <horizontal_alignment>0</horizontal_alignment>
+        <name>Text Update</name>
+        <precision>0</precision>
+        <precision_from_pv>true</precision_from_pv>
+        <pv_name>BEAST:CLAWS:RC:STATUS</pv_name>
+        <pv_value />
+        <rotation_angle>0.0</rotation_angle>
+        <rules />
+        <scale_options>
+          <width_scalable>true</width_scalable>
+          <height_scalable>true</height_scalable>
+          <keep_wh_ratio>false</keep_wh_ratio>
+        </scale_options>
+        <scripts />
+        <show_units>true</show_units>
+        <text>######</text>
+        <tooltip>$(pv_name)
+$(pv_value)</tooltip>
+        <transparent>false</transparent>
+        <vertical_alignment>1</vertical_alignment>
+        <visible>true</visible>
+        <widget_type>Text Update</widget_type>
+        <width>180</width>
+        <wrap_words>false</wrap_words>
+        <wuid>629f26fd:1601658005d:-7fe6</wuid>
+        <x>336</x>
+        <y>36</y>
+      </widget>
+      <widget typeId="org.csstudio.opibuilder.widgets.Image" version="1.0.0">
+        <actions hook="false" hook_all="false" />
+        <align_to_nearest_second>false</align_to_nearest_second>
+        <auto_size>true</auto_size>
+        <background_color>
+          <color red="240" green="240" blue="240" />
+        </background_color>
+        <border_color>
+          <color red="0" green="128" blue="255" />
+        </border_color>
+        <border_style>0</border_style>
+        <border_width>1</border_width>
+        <crop_bottom>0</crop_bottom>
+        <crop_left>0</crop_left>
+        <crop_right>0</crop_right>
+        <crop_top>0</crop_top>
+        <degree>0</degree>
+        <enabled>true</enabled>
+        <flip_horizontal>false</flip_horizontal>
+        <flip_vertical>false</flip_vertical>
+        <font>
+          <opifont.name fontName="Nimbus Sans L" height="10" style="0" pixels="false">Default</opifont.name>
+        </font>
+        <foreground_color>
+          <color red="192" green="192" blue="192" />
+        </foreground_color>
+        <height>210</height>
+        <image_file>claws_scaled.png</image_file>
+        <name>Image</name>
+        <no_animation>false</no_animation>
+        <permutation_matrix>
+          <row>
+            <col>1.0</col>
+            <col>0.0</col>
+          </row>
+          <row>
+            <col>0.0</col>
+            <col>1.0</col>
+          </row>
+        </permutation_matrix>
+        <rules />
+        <scale_options>
+          <width_scalable>true</width_scalable>
+          <height_scalable>true</height_scalable>
+          <keep_wh_ratio>false</keep_wh_ratio>
+        </scale_options>
+        <scripts />
+        <stretch_to_fit>false</stretch_to_fit>
+        <tooltip></tooltip>
+        <transparency>false</transparency>
+        <visible>true</visible>
+        <widget_type>Image</widget_type>
+        <width>264</width>
+        <wuid>4ed3b009:1604b0f3e04:-7eb0</wuid>
+        <x>36</x>
+        <y>24</y>
+      </widget>
+      <widget typeId="org.csstudio.opibuilder.widgets.intensityGraph" version="1.0.0">
+        <actions hook="false" hook_all="false" />
+        <alarm_pulsing>false</alarm_pulsing>
+        <backcolor_alarm_sensitive>false</backcolor_alarm_sensitive>
+        <background_color>
+          <color red="240" green="240" blue="240" />
+        </background_color>
+        <border_alarm_sensitive>false</border_alarm_sensitive>
+        <border_color>
+          <color red="0" green="128" blue="255" />
+        </border_color>
+        <border_style>0</border_style>
+        <border_width>1</border_width>
+        <color_map>
+          <interpolate>true</interpolate>
+          <autoscale>true</autoscale>
+          <map>3</map>
+        </color_map>
+        <crop_bottom>0</crop_bottom>
+        <crop_left>0</crop_left>
+        <crop_right>0</crop_right>
+        <crop_top>0</crop_top>
+        <data_height>1</data_height>
+        <data_width>1</data_width>
+        <enabled>true</enabled>
+        <font>
+          <opifont.name fontName="Nimbus Sans L" height="10" style="0" pixels="false">Default</opifont.name>
+        </font>
+        <forecolor_alarm_sensitive>false</forecolor_alarm_sensitive>
+        <foreground_color>
+          <color red="0" green="0" blue="0" />
+        </foreground_color>
+        <graph_area_height>126</graph_area_height>
+        <graph_area_width>121</graph_area_width>
+        <height>135</height>
+        <horizon_profile_x_pv_name></horizon_profile_x_pv_name>
+        <horizon_profile_x_pv_value />
+        <horizon_profile_y_pv_name></horizon_profile_y_pv_name>
+        <horizon_profile_y_pv_value />
+        <maximum>1.0</maximum>
+        <minimum>0.0</minimum>
+        <name>Intensity Graph</name>
+        <pixel_info_pv_name></pixel_info_pv_name>
+        <pixel_info_pv_value />
+        <pv_name>BEAST:CLAWS:CH3</pv_name>
+        <pv_value />
+        <rgb_mode>false</rgb_mode>
+        <roi_color>
+          <color red="0" green="255" blue="255" />
+        </roi_color>
+        <roi_count>0</roi_count>
+        <rules />
+        <scale_options>
+          <width_scalable>true</width_scalable>
+          <height_scalable>true</height_scalable>
+          <keep_wh_ratio>true</keep_wh_ratio>
+        </scale_options>
+        <scripts />
+        <show_ramp>true</show_ramp>
+        <single_line_profiling>false</single_line_profiling>
+        <tooltip>$(pv_name)</tooltip>
+        <vertial_profile_x_pv_value />
+        <vertial_profile_y_pv_value />
+        <vertical_profile_x_pv_name></vertical_profile_x_pv_name>
+        <vertical_profile_y_pv_name></vertical_profile_y_pv_name>
+        <visible>true</visible>
+        <widget_type>Intensity Graph</widget_type>
+        <width>175</width>
+        <wuid>4ed3b009:1604b0f3e04:-7d6d</wuid>
+        <x>1506</x>
+        <x_axis_axis_color>
+          <color red="0" green="0" blue="0" />
+        </x_axis_axis_color>
+        <x_axis_axis_title>X Axis</x_axis_axis_title>
+        <x_axis_major_tick_step_hint>50</x_axis_major_tick_step_hint>
+        <x_axis_maximum>8.0</x_axis_maximum>
+        <x_axis_minimum>0.0</x_axis_minimum>
+        <x_axis_scale_font>
+          <opifont.name fontName="Nimbus Sans L" height="10" style="0" pixels="false">Default</opifont.name>
+        </x_axis_scale_font>
+        <x_axis_show_minor_ticks>false</x_axis_show_minor_ticks>
+        <x_axis_title_font>
+          <opifont.name fontName="Nimbus Sans L" height="10" style="1" pixels="false">Default Bold</opifont.name>
+        </x_axis_title_font>
+        <x_axis_visible>false</x_axis_visible>
+        <y>42</y>
+        <y_axis_axis_color>
+          <color red="0" green="0" blue="0" />
+        </y_axis_axis_color>
+        <y_axis_axis_title>Y Axis</y_axis_axis_title>
+        <y_axis_major_tick_step_hint>100</y_axis_major_tick_step_hint>
+        <y_axis_maximum>2.0</y_axis_maximum>
+        <y_axis_minimum>0.0</y_axis_minimum>
+        <y_axis_scale_font>
+          <opifont.name fontName="Nimbus Sans L" height="10" style="0" pixels="false">Default</opifont.name>
+        </y_axis_scale_font>
+        <y_axis_show_minor_ticks>false</y_axis_show_minor_ticks>
+        <y_axis_title_font>
+          <opifont.name fontName="Nimbus Sans L" height="10" style="1" pixels="false">Default Bold</opifont.name>
+        </y_axis_title_font>
+        <y_axis_visible>false</y_axis_visible>
+      </widget>
+      <widget typeId="org.csstudio.opibuilder.widgets.intensityGraph" version="1.0.0">
+        <actions hook="false" hook_all="false" />
+        <alarm_pulsing>false</alarm_pulsing>
+        <backcolor_alarm_sensitive>false</backcolor_alarm_sensitive>
+        <background_color>
+          <color red="240" green="240" blue="240" />
+        </background_color>
+        <border_alarm_sensitive>false</border_alarm_sensitive>
+        <border_color>
+          <color red="0" green="128" blue="255" />
+        </border_color>
+        <border_style>0</border_style>
+        <border_width>1</border_width>
+        <color_map>
+          <interpolate>true</interpolate>
+          <autoscale>true</autoscale>
+          <map>3</map>
+        </color_map>
+        <crop_bottom>0</crop_bottom>
+        <crop_left>0</crop_left>
+        <crop_right>0</crop_right>
+        <crop_top>0</crop_top>
+        <data_height>1</data_height>
+        <data_width>1</data_width>
+        <enabled>true</enabled>
+        <font>
+          <opifont.name fontName="Nimbus Sans L" height="10" style="0" pixels="false">Default</opifont.name>
+        </font>
+        <forecolor_alarm_sensitive>false</forecolor_alarm_sensitive>
+        <foreground_color>
+          <color red="0" green="0" blue="0" />
+        </foreground_color>
+        <graph_area_height>126</graph_area_height>
+        <graph_area_width>131</graph_area_width>
+        <height>135</height>
+        <horizon_profile_x_pv_name></horizon_profile_x_pv_name>
+        <horizon_profile_x_pv_value />
+        <horizon_profile_y_pv_name></horizon_profile_y_pv_name>
+        <horizon_profile_y_pv_value />
+        <maximum>1.0</maximum>
+        <minimum>0.0</minimum>
+        <name>Intensity Graph</name>
+        <pixel_info_pv_name></pixel_info_pv_name>
+        <pixel_info_pv_value />
+        <pv_name>BEAST:CLAWS:CH2</pv_name>
+        <pv_value />
+        <rgb_mode>false</rgb_mode>
+        <roi_color>
+          <color red="0" green="255" blue="255" />
+        </roi_color>
+        <roi_count>0</roi_count>
+        <rules />
+        <scale_options>
+          <width_scalable>true</width_scalable>
+          <height_scalable>true</height_scalable>
+          <keep_wh_ratio>true</keep_wh_ratio>
+        </scale_options>
+        <scripts />
+        <show_ramp>false</show_ramp>
+        <single_line_profiling>false</single_line_profiling>
+        <tooltip>$(pv_name)</tooltip>
+        <vertial_profile_x_pv_value />
+        <vertial_profile_y_pv_value />
+        <vertical_profile_x_pv_name></vertical_profile_x_pv_name>
+        <vertical_profile_y_pv_name></vertical_profile_y_pv_name>
+        <visible>true</visible>
+        <widget_type>Intensity Graph</widget_type>
+        <width>135</width>
+        <wuid>4ed3b009:1604b0f3e04:-7d61</wuid>
+        <x>1372</x>
+        <x_axis_axis_color>
+          <color red="0" green="0" blue="0" />
+        </x_axis_axis_color>
+        <x_axis_axis_title>X Axis</x_axis_axis_title>
+        <x_axis_major_tick_step_hint>50</x_axis_major_tick_step_hint>
+        <x_axis_maximum>8.0</x_axis_maximum>
+        <x_axis_minimum>0.0</x_axis_minimum>
+        <x_axis_scale_font>
+          <opifont.name fontName="Nimbus Sans L" height="10" style="0" pixels="false">Default</opifont.name>
+        </x_axis_scale_font>
+        <x_axis_show_minor_ticks>false</x_axis_show_minor_ticks>
+        <x_axis_title_font>
+          <opifont.name fontName="Nimbus Sans L" height="10" style="1" pixels="false">Default Bold</opifont.name>
+        </x_axis_title_font>
+        <x_axis_visible>false</x_axis_visible>
+        <y>42</y>
+        <y_axis_axis_color>
+          <color red="0" green="0" blue="0" />
+        </y_axis_axis_color>
+        <y_axis_axis_title>Y Axis</y_axis_axis_title>
+        <y_axis_major_tick_step_hint>100</y_axis_major_tick_step_hint>
+        <y_axis_maximum>2.0</y_axis_maximum>
+        <y_axis_minimum>0.0</y_axis_minimum>
+        <y_axis_scale_font>
+          <opifont.name fontName="Nimbus Sans L" height="10" style="0" pixels="false">Default</opifont.name>
+        </y_axis_scale_font>
+        <y_axis_show_minor_ticks>false</y_axis_show_minor_ticks>
+        <y_axis_title_font>
+          <opifont.name fontName="Nimbus Sans L" height="10" style="1" pixels="false">Default Bold</opifont.name>
+        </y_axis_title_font>
+        <y_axis_visible>false</y_axis_visible>
+      </widget>
+      <widget typeId="org.csstudio.opibuilder.widgets.intensityGraph" version="1.0.0">
+        <actions hook="false" hook_all="false" />
+        <alarm_pulsing>false</alarm_pulsing>
+        <backcolor_alarm_sensitive>false</backcolor_alarm_sensitive>
+        <background_color>
+          <color red="240" green="240" blue="240" />
+        </background_color>
+        <border_alarm_sensitive>false</border_alarm_sensitive>
+        <border_color>
+          <color red="0" green="128" blue="255" />
+        </border_color>
+        <border_style>0</border_style>
+        <border_width>1</border_width>
+        <color_map>
+          <interpolate>true</interpolate>
+          <autoscale>true</autoscale>
+          <map>3</map>
+        </color_map>
+        <crop_bottom>0</crop_bottom>
+        <crop_left>0</crop_left>
+        <crop_right>0</crop_right>
+        <crop_top>0</crop_top>
+        <data_height>1</data_height>
+        <data_width>1</data_width>
+        <enabled>true</enabled>
+        <font>
+          <opifont.name fontName="Nimbus Sans L" height="10" style="0" pixels="false">Default</opifont.name>
+        </font>
+        <forecolor_alarm_sensitive>false</forecolor_alarm_sensitive>
+        <foreground_color>
+          <color red="0" green="0" blue="0" />
+        </foreground_color>
+        <graph_area_height>126</graph_area_height>
+        <graph_area_width>131</graph_area_width>
+        <height>135</height>
+        <horizon_profile_x_pv_name></horizon_profile_x_pv_name>
+        <horizon_profile_x_pv_value />
+        <horizon_profile_y_pv_name></horizon_profile_y_pv_name>
+        <horizon_profile_y_pv_value />
+        <maximum>1.0</maximum>
+        <minimum>0.0</minimum>
+        <name>Intensity Graph</name>
+        <pixel_info_pv_name></pixel_info_pv_name>
+        <pixel_info_pv_value />
+        <pv_name>BEAST:CLAWS:CH1</pv_name>
+        <pv_value />
+        <rgb_mode>false</rgb_mode>
+        <roi_color>
+          <color red="0" green="255" blue="255" />
+        </roi_color>
+        <roi_count>0</roi_count>
+        <rules />
+        <scale_options>
+          <width_scalable>true</width_scalable>
+          <height_scalable>true</height_scalable>
+          <keep_wh_ratio>true</keep_wh_ratio>
+        </scale_options>
+        <scripts />
+        <show_ramp>false</show_ramp>
+        <single_line_profiling>false</single_line_profiling>
+        <tooltip>$(pv_name)</tooltip>
+        <vertial_profile_x_pv_value />
+        <vertial_profile_y_pv_value />
+        <vertical_profile_x_pv_name></vertical_profile_x_pv_name>
+        <vertical_profile_y_pv_name></vertical_profile_y_pv_name>
+        <visible>true</visible>
+        <widget_type>Intensity Graph</widget_type>
+        <width>135</width>
+        <wuid>4ed3b009:1604b0f3e04:-7d59</wuid>
+        <x>1238</x>
+        <x_axis_axis_color>
+          <color red="0" green="0" blue="0" />
+        </x_axis_axis_color>
+        <x_axis_axis_title>X Axis</x_axis_axis_title>
+        <x_axis_major_tick_step_hint>50</x_axis_major_tick_step_hint>
+        <x_axis_maximum>8.0</x_axis_maximum>
+        <x_axis_minimum>0.0</x_axis_minimum>
+        <x_axis_scale_font>
+          <opifont.name fontName="Nimbus Sans L" height="10" style="0" pixels="false">Default</opifont.name>
+        </x_axis_scale_font>
+        <x_axis_show_minor_ticks>false</x_axis_show_minor_ticks>
+        <x_axis_title_font>
+          <opifont.name fontName="Nimbus Sans L" height="10" style="1" pixels="false">Default Bold</opifont.name>
+        </x_axis_title_font>
+        <x_axis_visible>false</x_axis_visible>
+        <y>42</y>
+        <y_axis_axis_color>
+          <color red="0" green="0" blue="0" />
+        </y_axis_axis_color>
+        <y_axis_axis_title>Y Axis</y_axis_axis_title>
+        <y_axis_major_tick_step_hint>100</y_axis_major_tick_step_hint>
+        <y_axis_maximum>2.0</y_axis_maximum>
+        <y_axis_minimum>0.0</y_axis_minimum>
+        <y_axis_scale_font>
+          <opifont.name fontName="Nimbus Sans L" height="10" style="0" pixels="false">Default</opifont.name>
+        </y_axis_scale_font>
+        <y_axis_show_minor_ticks>false</y_axis_show_minor_ticks>
+        <y_axis_title_font>
+          <opifont.name fontName="Nimbus Sans L" height="10" style="1" pixels="false">Default Bold</opifont.name>
+        </y_axis_title_font>
+        <y_axis_visible>false</y_axis_visible>
+      </widget>
+      <widget typeId="org.csstudio.opibuilder.widgets.intensityGraph" version="1.0.0">
+        <actions hook="false" hook_all="false" />
+        <alarm_pulsing>false</alarm_pulsing>
+        <backcolor_alarm_sensitive>false</backcolor_alarm_sensitive>
+        <background_color>
+          <color red="240" green="240" blue="240" />
+        </background_color>
+        <border_alarm_sensitive>false</border_alarm_sensitive>
+        <border_color>
+          <color red="0" green="128" blue="255" />
+        </border_color>
+        <border_style>0</border_style>
+        <border_width>1</border_width>
+        <color_map>
+          <interpolate>true</interpolate>
+          <autoscale>true</autoscale>
+          <map>3</map>
+        </color_map>
+        <crop_bottom>0</crop_bottom>
+        <crop_left>0</crop_left>
+        <crop_right>0</crop_right>
+        <crop_top>0</crop_top>
+        <data_height>1</data_height>
+        <data_width>1</data_width>
+        <enabled>true</enabled>
+        <font>
+          <opifont.name fontName="Nimbus Sans L" height="10" style="0" pixels="false">Default</opifont.name>
+        </font>
+        <forecolor_alarm_sensitive>false</forecolor_alarm_sensitive>
+        <foreground_color>
+          <color red="0" green="0" blue="0" />
+        </foreground_color>
+        <graph_area_height>126</graph_area_height>
+        <graph_area_width>131</graph_area_width>
+        <height>135</height>
+        <horizon_profile_x_pv_name></horizon_profile_x_pv_name>
+        <horizon_profile_x_pv_value />
+        <horizon_profile_y_pv_name></horizon_profile_y_pv_name>
+        <horizon_profile_y_pv_value />
+        <maximum>1.0</maximum>
+        <minimum>0.0</minimum>
+        <name>Intensity Graph</name>
+        <pixel_info_pv_name></pixel_info_pv_name>
+        <pixel_info_pv_value />
+        <pv_name>BEAST:CLAWS:CH2</pv_name>
+        <pv_value />
+        <rgb_mode>false</rgb_mode>
+        <roi_color>
+          <color red="0" green="255" blue="255" />
+        </roi_color>
+        <roi_count>0</roi_count>
+        <rules />
+        <scale_options>
+          <width_scalable>true</width_scalable>
+          <height_scalable>true</height_scalable>
+          <keep_wh_ratio>true</keep_wh_ratio>
+        </scale_options>
+        <scripts />
+        <show_ramp>false</show_ramp>
+        <single_line_profiling>false</single_line_profiling>
+        <tooltip>$(pv_name)</tooltip>
+        <vertial_profile_x_pv_value />
+        <vertial_profile_y_pv_value />
+        <vertical_profile_x_pv_name></vertical_profile_x_pv_name>
+        <vertical_profile_y_pv_name></vertical_profile_y_pv_name>
+        <visible>true</visible>
+        <widget_type>Intensity Graph</widget_type>
+        <width>135</width>
+        <wuid>4ed3b009:1604b0f3e04:-7c4e</wuid>
+        <x>1104</x>
+        <x_axis_axis_color>
+          <color red="0" green="0" blue="0" />
+        </x_axis_axis_color>
+        <x_axis_axis_title>X Axis</x_axis_axis_title>
+        <x_axis_major_tick_step_hint>50</x_axis_major_tick_step_hint>
+        <x_axis_maximum>8.0</x_axis_maximum>
+        <x_axis_minimum>0.0</x_axis_minimum>
+        <x_axis_scale_font>
+          <opifont.name fontName="Nimbus Sans L" height="10" style="0" pixels="false">Default</opifont.name>
+        </x_axis_scale_font>
+        <x_axis_show_minor_ticks>false</x_axis_show_minor_ticks>
+        <x_axis_title_font>
+          <opifont.name fontName="Nimbus Sans L" height="10" style="1" pixels="false">Default Bold</opifont.name>
+        </x_axis_title_font>
+        <x_axis_visible>false</x_axis_visible>
+        <y>42</y>
+        <y_axis_axis_color>
+          <color red="0" green="0" blue="0" />
+        </y_axis_axis_color>
+        <y_axis_axis_title>Y Axis</y_axis_axis_title>
+        <y_axis_major_tick_step_hint>100</y_axis_major_tick_step_hint>
+        <y_axis_maximum>2.0</y_axis_maximum>
+        <y_axis_minimum>0.0</y_axis_minimum>
+        <y_axis_scale_font>
+          <opifont.name fontName="Nimbus Sans L" height="10" style="0" pixels="false">Default</opifont.name>
+        </y_axis_scale_font>
+        <y_axis_show_minor_ticks>false</y_axis_show_minor_ticks>
+        <y_axis_title_font>
+          <opifont.name fontName="Nimbus Sans L" height="10" style="1" pixels="false">Default Bold</opifont.name>
+        </y_axis_title_font>
+        <y_axis_visible>false</y_axis_visible>
+      </widget>
+      <widget typeId="org.csstudio.opibuilder.widgets.intensityGraph" version="1.0.0">
+        <actions hook="false" hook_all="false" />
+        <alarm_pulsing>false</alarm_pulsing>
+        <backcolor_alarm_sensitive>false</backcolor_alarm_sensitive>
+        <background_color>
+          <color red="240" green="240" blue="240" />
+        </background_color>
+        <border_alarm_sensitive>false</border_alarm_sensitive>
+        <border_color>
+          <color red="0" green="128" blue="255" />
+        </border_color>
+        <border_style>0</border_style>
+        <border_width>1</border_width>
+        <color_map>
+          <interpolate>true</interpolate>
+          <autoscale>true</autoscale>
+          <map>3</map>
+        </color_map>
+        <crop_bottom>0</crop_bottom>
+        <crop_left>0</crop_left>
+        <crop_right>0</crop_right>
+        <crop_top>0</crop_top>
+        <data_height>1</data_height>
+        <data_width>1</data_width>
+        <enabled>true</enabled>
+        <font>
+          <opifont.name fontName="Nimbus Sans L" height="10" style="0" pixels="false">Default</opifont.name>
+        </font>
+        <forecolor_alarm_sensitive>false</forecolor_alarm_sensitive>
+        <foreground_color>
+          <color red="0" green="0" blue="0" />
+        </foreground_color>
+        <graph_area_height>126</graph_area_height>
+        <graph_area_width>131</graph_area_width>
+        <height>135</height>
+        <horizon_profile_x_pv_name></horizon_profile_x_pv_name>
+        <horizon_profile_x_pv_value />
+        <horizon_profile_y_pv_name></horizon_profile_y_pv_name>
+        <horizon_profile_y_pv_value />
+        <maximum>1.0</maximum>
+        <minimum>0.0</minimum>
+        <name>Intensity Graph_1</name>
+        <pixel_info_pv_name></pixel_info_pv_name>
+        <pixel_info_pv_value />
+        <pv_name>BEAST:CLAWS:CH1</pv_name>
+        <pv_value />
+        <rgb_mode>false</rgb_mode>
+        <roi_color>
+          <color red="0" green="255" blue="255" />
+        </roi_color>
+        <roi_count>0</roi_count>
+        <rules />
+        <scale_options>
+          <width_scalable>true</width_scalable>
+          <height_scalable>true</height_scalable>
+          <keep_wh_ratio>true</keep_wh_ratio>
+        </scale_options>
+        <scripts />
+        <show_ramp>false</show_ramp>
+        <single_line_profiling>false</single_line_profiling>
+        <tooltip>$(pv_name)</tooltip>
+        <vertial_profile_x_pv_value />
+        <vertial_profile_y_pv_value />
+        <vertical_profile_x_pv_name></vertical_profile_x_pv_name>
+        <vertical_profile_y_pv_name></vertical_profile_y_pv_name>
+        <visible>true</visible>
+        <widget_type>Intensity Graph</widget_type>
+        <width>135</width>
+        <wuid>4ed3b009:1604b0f3e04:-7c4d</wuid>
+        <x>970</x>
+        <x_axis_axis_color>
+          <color red="0" green="0" blue="0" />
+        </x_axis_axis_color>
+        <x_axis_axis_title>X Axis</x_axis_axis_title>
+        <x_axis_major_tick_step_hint>50</x_axis_major_tick_step_hint>
+        <x_axis_maximum>8.0</x_axis_maximum>
+        <x_axis_minimum>0.0</x_axis_minimum>
+        <x_axis_scale_font>
+          <opifont.name fontName="Nimbus Sans L" height="10" style="0" pixels="false">Default</opifont.name>
+        </x_axis_scale_font>
+        <x_axis_show_minor_ticks>false</x_axis_show_minor_ticks>
+        <x_axis_title_font>
+          <opifont.name fontName="Nimbus Sans L" height="10" style="1" pixels="false">Default Bold</opifont.name>
+        </x_axis_title_font>
+        <x_axis_visible>false</x_axis_visible>
+        <y>42</y>
+        <y_axis_axis_color>
+          <color red="0" green="0" blue="0" />
+        </y_axis_axis_color>
+        <y_axis_axis_title>Y Axis</y_axis_axis_title>
+        <y_axis_major_tick_step_hint>100</y_axis_major_tick_step_hint>
+        <y_axis_maximum>2.0</y_axis_maximum>
+        <y_axis_minimum>0.0</y_axis_minimum>
+        <y_axis_scale_font>
+          <opifont.name fontName="Nimbus Sans L" height="10" style="0" pixels="false">Default</opifont.name>
+        </y_axis_scale_font>
+        <y_axis_show_minor_ticks>false</y_axis_show_minor_ticks>
+        <y_axis_title_font>
+          <opifont.name fontName="Nimbus Sans L" height="10" style="1" pixels="false">Default Bold</opifont.name>
+        </y_axis_title_font>
+        <y_axis_visible>false</y_axis_visible>
+      </widget>
+      <widget typeId="org.csstudio.opibuilder.widgets.intensityGraph" version="1.0.0">
+        <actions hook="false" hook_all="false" />
+        <alarm_pulsing>false</alarm_pulsing>
+        <backcolor_alarm_sensitive>false</backcolor_alarm_sensitive>
+        <background_color>
+          <color red="240" green="240" blue="240" />
+        </background_color>
+        <border_alarm_sensitive>false</border_alarm_sensitive>
+        <border_color>
+          <color red="0" green="128" blue="255" />
+        </border_color>
+        <border_style>0</border_style>
+        <border_width>1</border_width>
+        <color_map>
+          <interpolate>true</interpolate>
+          <autoscale>true</autoscale>
+          <map>3</map>
+        </color_map>
+        <crop_bottom>0</crop_bottom>
+        <crop_left>0</crop_left>
+        <crop_right>0</crop_right>
+        <crop_top>0</crop_top>
+        <data_height>1</data_height>
+        <data_width>1</data_width>
+        <enabled>true</enabled>
+        <font>
+          <opifont.name fontName="Nimbus Sans L" height="10" style="0" pixels="false">Default</opifont.name>
+        </font>
+        <forecolor_alarm_sensitive>false</forecolor_alarm_sensitive>
+        <foreground_color>
+          <color red="0" green="0" blue="0" />
+        </foreground_color>
+        <graph_area_height>126</graph_area_height>
+        <graph_area_width>131</graph_area_width>
+        <height>135</height>
+        <horizon_profile_x_pv_name></horizon_profile_x_pv_name>
+        <horizon_profile_x_pv_value />
+        <horizon_profile_y_pv_name></horizon_profile_y_pv_name>
+        <horizon_profile_y_pv_value />
+        <maximum>1.0</maximum>
+        <minimum>0.0</minimum>
+        <name>Intensity Graph</name>
+        <pixel_info_pv_name></pixel_info_pv_name>
+        <pixel_info_pv_value />
+        <pv_name>BEAST:CLAWS:CH1</pv_name>
+        <pv_value />
+        <rgb_mode>false</rgb_mode>
+        <roi_color>
+          <color red="0" green="255" blue="255" />
+        </roi_color>
+        <roi_count>0</roi_count>
+        <rules />
+        <scale_options>
+          <width_scalable>true</width_scalable>
+          <height_scalable>true</height_scalable>
+          <keep_wh_ratio>true</keep_wh_ratio>
+        </scale_options>
+        <scripts />
+        <show_ramp>false</show_ramp>
+        <single_line_profiling>false</single_line_profiling>
+        <tooltip>$(pv_name)</tooltip>
+        <vertial_profile_x_pv_value />
+        <vertial_profile_y_pv_value />
+        <vertical_profile_x_pv_name></vertical_profile_x_pv_name>
+        <vertical_profile_y_pv_name></vertical_profile_y_pv_name>
+        <visible>true</visible>
+        <widget_type>Intensity Graph</widget_type>
+        <width>135</width>
+        <wuid>4ed3b009:1604b0f3e04:-7c3f</wuid>
+        <x>836</x>
+        <x_axis_axis_color>
+          <color red="0" green="0" blue="0" />
+        </x_axis_axis_color>
+        <x_axis_axis_title>X Axis</x_axis_axis_title>
+        <x_axis_major_tick_step_hint>50</x_axis_major_tick_step_hint>
+        <x_axis_maximum>8.0</x_axis_maximum>
+        <x_axis_minimum>0.0</x_axis_minimum>
+        <x_axis_scale_font>
+          <opifont.name fontName="Nimbus Sans L" height="10" style="0" pixels="false">Default</opifont.name>
+        </x_axis_scale_font>
+        <x_axis_show_minor_ticks>false</x_axis_show_minor_ticks>
+        <x_axis_title_font>
+          <opifont.name fontName="Nimbus Sans L" height="10" style="1" pixels="false">Default Bold</opifont.name>
+        </x_axis_title_font>
+        <x_axis_visible>false</x_axis_visible>
+        <y>42</y>
+        <y_axis_axis_color>
+          <color red="0" green="0" blue="0" />
+        </y_axis_axis_color>
+        <y_axis_axis_title>Y Axis</y_axis_axis_title>
+        <y_axis_major_tick_step_hint>100</y_axis_major_tick_step_hint>
+        <y_axis_maximum>2.0</y_axis_maximum>
+        <y_axis_minimum>0.0</y_axis_minimum>
+        <y_axis_scale_font>
+          <opifont.name fontName="Nimbus Sans L" height="10" style="0" pixels="false">Default</opifont.name>
+        </y_axis_scale_font>
+        <y_axis_show_minor_ticks>false</y_axis_show_minor_ticks>
+        <y_axis_title_font>
+          <opifont.name fontName="Nimbus Sans L" height="10" style="1" pixels="false">Default Bold</opifont.name>
+        </y_axis_title_font>
+        <y_axis_visible>false</y_axis_visible>
+      </widget>
+      <widget typeId="org.csstudio.opibuilder.widgets.intensityGraph" version="1.0.0">
+        <actions hook="false" hook_all="false" />
+        <alarm_pulsing>false</alarm_pulsing>
+        <backcolor_alarm_sensitive>false</backcolor_alarm_sensitive>
+        <background_color>
+          <color red="240" green="240" blue="240" />
+        </background_color>
+        <border_alarm_sensitive>false</border_alarm_sensitive>
+        <border_color>
+          <color red="0" green="128" blue="255" />
+        </border_color>
+        <border_style>0</border_style>
+        <border_width>1</border_width>
+        <color_map>
+          <interpolate>true</interpolate>
+          <autoscale>true</autoscale>
+          <map>3</map>
+        </color_map>
+        <crop_bottom>0</crop_bottom>
+        <crop_left>0</crop_left>
+        <crop_right>0</crop_right>
+        <crop_top>0</crop_top>
+        <data_height>1</data_height>
+        <data_width>1</data_width>
+        <enabled>true</enabled>
+        <font>
+          <opifont.name fontName="Nimbus Sans L" height="10" style="0" pixels="false">Default</opifont.name>
+        </font>
+        <forecolor_alarm_sensitive>false</forecolor_alarm_sensitive>
+        <foreground_color>
+          <color red="0" green="0" blue="0" />
+        </foreground_color>
+        <graph_area_height>126</graph_area_height>
+        <graph_area_width>131</graph_area_width>
+        <height>135</height>
+        <horizon_profile_x_pv_name></horizon_profile_x_pv_name>
+        <horizon_profile_x_pv_value />
+        <horizon_profile_y_pv_name></horizon_profile_y_pv_name>
+        <horizon_profile_y_pv_value />
+        <maximum>1.0</maximum>
+        <minimum>0.0</minimum>
+        <name>Intensity Graph_1</name>
+        <pixel_info_pv_name></pixel_info_pv_name>
+        <pixel_info_pv_value />
+        <pv_name>BEAST:CLAWS:CH2</pv_name>
+        <pv_value />
+        <rgb_mode>false</rgb_mode>
+        <roi_color>
+          <color red="0" green="255" blue="255" />
+        </roi_color>
+        <roi_count>0</roi_count>
+        <rules />
+        <scale_options>
+          <width_scalable>true</width_scalable>
+          <height_scalable>true</height_scalable>
+          <keep_wh_ratio>true</keep_wh_ratio>
+        </scale_options>
+        <scripts />
+        <show_ramp>false</show_ramp>
+        <single_line_profiling>false</single_line_profiling>
+        <tooltip>$(pv_name)</tooltip>
+        <vertial_profile_x_pv_value />
+        <vertial_profile_y_pv_value />
+        <vertical_profile_x_pv_name></vertical_profile_x_pv_name>
+        <vertical_profile_y_pv_name></vertical_profile_y_pv_name>
+        <visible>true</visible>
+        <widget_type>Intensity Graph</widget_type>
+        <width>135</width>
+        <wuid>4ed3b009:1604b0f3e04:-7c3e</wuid>
+        <x>702</x>
+        <x_axis_axis_color>
+          <color red="0" green="0" blue="0" />
+        </x_axis_axis_color>
+        <x_axis_axis_title>X Axis</x_axis_axis_title>
+        <x_axis_major_tick_step_hint>50</x_axis_major_tick_step_hint>
+        <x_axis_maximum>8.0</x_axis_maximum>
+        <x_axis_minimum>0.0</x_axis_minimum>
+        <x_axis_scale_font>
+          <opifont.name fontName="Nimbus Sans L" height="10" style="0" pixels="false">Default</opifont.name>
+        </x_axis_scale_font>
+        <x_axis_show_minor_ticks>false</x_axis_show_minor_ticks>
+        <x_axis_title_font>
+          <opifont.name fontName="Nimbus Sans L" height="10" style="1" pixels="false">Default Bold</opifont.name>
+        </x_axis_title_font>
+        <x_axis_visible>false</x_axis_visible>
+        <y>42</y>
+        <y_axis_axis_color>
+          <color red="0" green="0" blue="0" />
+        </y_axis_axis_color>
+        <y_axis_axis_title>Y Axis</y_axis_axis_title>
+        <y_axis_major_tick_step_hint>100</y_axis_major_tick_step_hint>
+        <y_axis_maximum>2.0</y_axis_maximum>
+        <y_axis_minimum>0.0</y_axis_minimum>
+        <y_axis_scale_font>
+          <opifont.name fontName="Nimbus Sans L" height="10" style="0" pixels="false">Default</opifont.name>
+        </y_axis_scale_font>
+        <y_axis_show_minor_ticks>false</y_axis_show_minor_ticks>
+        <y_axis_title_font>
+          <opifont.name fontName="Nimbus Sans L" height="10" style="1" pixels="false">Default Bold</opifont.name>
+        </y_axis_title_font>
+        <y_axis_visible>false</y_axis_visible>
+      </widget>
+      <widget typeId="org.csstudio.opibuilder.widgets.intensityGraph" version="1.0.0">
+        <actions hook="false" hook_all="false" />
+        <alarm_pulsing>false</alarm_pulsing>
+        <backcolor_alarm_sensitive>false</backcolor_alarm_sensitive>
+        <background_color>
+          <color red="240" green="240" blue="240" />
+        </background_color>
+        <border_alarm_sensitive>false</border_alarm_sensitive>
+        <border_color>
+          <color red="0" green="128" blue="255" />
+        </border_color>
+        <border_style>0</border_style>
+        <border_width>1</border_width>
+        <color_map>
+          <interpolate>true</interpolate>
+          <autoscale>true</autoscale>
+          <map>3</map>
+        </color_map>
+        <crop_bottom>0</crop_bottom>
+        <crop_left>0</crop_left>
+        <crop_right>0</crop_right>
+        <crop_top>0</crop_top>
+        <data_height>1</data_height>
+        <data_width>1</data_width>
+        <enabled>true</enabled>
+        <font>
+          <opifont.name fontName="Nimbus Sans L" height="10" style="0" pixels="false">Default</opifont.name>
+        </font>
+        <forecolor_alarm_sensitive>false</forecolor_alarm_sensitive>
+        <foreground_color>
+          <color red="0" green="0" blue="0" />
+        </foreground_color>
+        <graph_area_height>126</graph_area_height>
+        <graph_area_width>131</graph_area_width>
+        <height>135</height>
+        <horizon_profile_x_pv_name></horizon_profile_x_pv_name>
+        <horizon_profile_x_pv_value />
+        <horizon_profile_y_pv_name></horizon_profile_y_pv_name>
+        <horizon_profile_y_pv_value />
+        <maximum>1.0</maximum>
+        <minimum>0.0</minimum>
+        <name>Intensity Graph_2</name>
+        <pixel_info_pv_name></pixel_info_pv_name>
+        <pixel_info_pv_value />
+        <pv_name>BEAST:CLAWS:CH1</pv_name>
+        <pv_value />
+        <rgb_mode>false</rgb_mode>
+        <roi_color>
+          <color red="0" green="255" blue="255" />
+        </roi_color>
+        <roi_count>0</roi_count>
+        <rules />
+        <scale_options>
+          <width_scalable>true</width_scalable>
+          <height_scalable>true</height_scalable>
+          <keep_wh_ratio>true</keep_wh_ratio>
+        </scale_options>
+        <scripts />
+        <show_ramp>false</show_ramp>
+        <single_line_profiling>false</single_line_profiling>
+        <tooltip>$(pv_name)</tooltip>
+        <vertial_profile_x_pv_value />
+        <vertial_profile_y_pv_value />
+        <vertical_profile_x_pv_name></vertical_profile_x_pv_name>
+        <vertical_profile_y_pv_name></vertical_profile_y_pv_name>
+        <visible>true</visible>
+        <widget_type>Intensity Graph</widget_type>
+        <width>135</width>
+        <wuid>4ed3b009:1604b0f3e04:-7c3d</wuid>
+        <x>568</x>
+        <x_axis_axis_color>
+          <color red="0" green="0" blue="0" />
+        </x_axis_axis_color>
+        <x_axis_axis_title>X Axis</x_axis_axis_title>
+        <x_axis_major_tick_step_hint>50</x_axis_major_tick_step_hint>
+        <x_axis_maximum>8.0</x_axis_maximum>
+        <x_axis_minimum>0.0</x_axis_minimum>
+        <x_axis_scale_font>
+          <opifont.name fontName="Nimbus Sans L" height="10" style="0" pixels="false">Default</opifont.name>
+        </x_axis_scale_font>
+        <x_axis_show_minor_ticks>false</x_axis_show_minor_ticks>
+        <x_axis_title_font>
+          <opifont.name fontName="Nimbus Sans L" height="10" style="1" pixels="false">Default Bold</opifont.name>
+        </x_axis_title_font>
+        <x_axis_visible>false</x_axis_visible>
+        <y>42</y>
+        <y_axis_axis_color>
+          <color red="0" green="0" blue="0" />
+        </y_axis_axis_color>
+        <y_axis_axis_title>Y Axis</y_axis_axis_title>
+        <y_axis_major_tick_step_hint>100</y_axis_major_tick_step_hint>
+        <y_axis_maximum>2.0</y_axis_maximum>
+        <y_axis_minimum>0.0</y_axis_minimum>
+        <y_axis_scale_font>
+          <opifont.name fontName="Nimbus Sans L" height="10" style="0" pixels="false">Default</opifont.name>
+        </y_axis_scale_font>
+        <y_axis_show_minor_ticks>false</y_axis_show_minor_ticks>
+        <y_axis_title_font>
+          <opifont.name fontName="Nimbus Sans L" height="10" style="1" pixels="false">Default Bold</opifont.name>
+        </y_axis_title_font>
+        <y_axis_visible>false</y_axis_visible>
+      </widget>
+      <widget typeId="org.csstudio.opibuilder.widgets.intensityGraph" version="1.0.0">
+        <actions hook="false" hook_all="false" />
+        <alarm_pulsing>false</alarm_pulsing>
+        <backcolor_alarm_sensitive>false</backcolor_alarm_sensitive>
+        <background_color>
+          <color red="240" green="240" blue="240" />
+        </background_color>
+        <border_alarm_sensitive>false</border_alarm_sensitive>
+        <border_color>
+          <color red="0" green="128" blue="255" />
+        </border_color>
+        <border_style>0</border_style>
+        <border_width>1</border_width>
+        <color_map>
+          <interpolate>true</interpolate>
+          <autoscale>true</autoscale>
+          <map>3</map>
+        </color_map>
+        <crop_bottom>0</crop_bottom>
+        <crop_left>0</crop_left>
+        <crop_right>0</crop_right>
+        <crop_top>0</crop_top>
+        <data_height>1</data_height>
+        <data_width>1</data_width>
+        <enabled>true</enabled>
+        <font>
+          <opifont.name fontName="Nimbus Sans L" height="10" style="0" pixels="false">Default</opifont.name>
+        </font>
+        <forecolor_alarm_sensitive>false</forecolor_alarm_sensitive>
+        <foreground_color>
+          <color red="0" green="0" blue="0" />
+        </foreground_color>
+        <graph_area_height>126</graph_area_height>
+        <graph_area_width>121</graph_area_width>
+        <height>135</height>
+        <horizon_profile_x_pv_name></horizon_profile_x_pv_name>
+        <horizon_profile_x_pv_value />
+        <horizon_profile_y_pv_name></horizon_profile_y_pv_name>
+        <horizon_profile_y_pv_value />
+        <maximum>1.0</maximum>
+        <minimum>0.0</minimum>
+        <name>Intensity Graph</name>
+        <pixel_info_pv_name></pixel_info_pv_name>
+        <pixel_info_pv_value />
+        <pv_name>BEAST:CLAWS:CH3</pv_name>
+        <pv_value />
+        <rgb_mode>false</rgb_mode>
+        <roi_color>
+          <color red="0" green="255" blue="255" />
+        </roi_color>
+        <roi_count>0</roi_count>
+        <rules />
+        <scale_options>
+          <width_scalable>true</width_scalable>
+          <height_scalable>true</height_scalable>
+          <keep_wh_ratio>true</keep_wh_ratio>
+        </scale_options>
+        <scripts />
+        <show_ramp>true</show_ramp>
+        <single_line_profiling>false</single_line_profiling>
+        <tooltip>$(pv_name)</tooltip>
+        <vertial_profile_x_pv_value />
+        <vertial_profile_y_pv_value />
+        <vertical_profile_x_pv_name></vertical_profile_x_pv_name>
+        <vertical_profile_y_pv_name></vertical_profile_y_pv_name>
+        <visible>true</visible>
+        <widget_type>Intensity Graph</widget_type>
+        <width>175</width>
+        <wuid>4ed3b009:1604b0f3e04:-7c20</wuid>
+        <x>1506</x>
+        <x_axis_axis_color>
+          <color red="0" green="0" blue="0" />
+        </x_axis_axis_color>
+        <x_axis_axis_title>X Axis</x_axis_axis_title>
+        <x_axis_major_tick_step_hint>50</x_axis_major_tick_step_hint>
+        <x_axis_maximum>8.0</x_axis_maximum>
+        <x_axis_minimum>0.0</x_axis_minimum>
+        <x_axis_scale_font>
+          <opifont.name fontName="Nimbus Sans L" height="10" style="0" pixels="false">Default</opifont.name>
+        </x_axis_scale_font>
+        <x_axis_show_minor_ticks>false</x_axis_show_minor_ticks>
+        <x_axis_title_font>
+          <opifont.name fontName="Nimbus Sans L" height="10" style="1" pixels="false">Default Bold</opifont.name>
+        </x_axis_title_font>
+        <x_axis_visible>false</x_axis_visible>
+        <y>180</y>
+        <y_axis_axis_color>
+          <color red="0" green="0" blue="0" />
+        </y_axis_axis_color>
+        <y_axis_axis_title>Y Axis</y_axis_axis_title>
+        <y_axis_major_tick_step_hint>100</y_axis_major_tick_step_hint>
+        <y_axis_maximum>2.0</y_axis_maximum>
+        <y_axis_minimum>0.0</y_axis_minimum>
+        <y_axis_scale_font>
+          <opifont.name fontName="Nimbus Sans L" height="10" style="0" pixels="false">Default</opifont.name>
+        </y_axis_scale_font>
+        <y_axis_show_minor_ticks>false</y_axis_show_minor_ticks>
+        <y_axis_title_font>
+          <opifont.name fontName="Nimbus Sans L" height="10" style="1" pixels="false">Default Bold</opifont.name>
+        </y_axis_title_font>
+        <y_axis_visible>false</y_axis_visible>
+      </widget>
+      <widget typeId="org.csstudio.opibuilder.widgets.intensityGraph" version="1.0.0">
+        <actions hook="false" hook_all="false" />
+        <alarm_pulsing>false</alarm_pulsing>
+        <backcolor_alarm_sensitive>false</backcolor_alarm_sensitive>
+        <background_color>
+          <color red="240" green="240" blue="240" />
+        </background_color>
+        <border_alarm_sensitive>false</border_alarm_sensitive>
+        <border_color>
+          <color red="0" green="128" blue="255" />
+        </border_color>
+        <border_style>0</border_style>
+        <border_width>1</border_width>
+        <color_map>
+          <interpolate>true</interpolate>
+          <autoscale>true</autoscale>
+          <map>3</map>
+        </color_map>
+        <crop_bottom>0</crop_bottom>
+        <crop_left>0</crop_left>
+        <crop_right>0</crop_right>
+        <crop_top>0</crop_top>
+        <data_height>1</data_height>
+        <data_width>1</data_width>
+        <enabled>true</enabled>
+        <font>
+          <opifont.name fontName="Nimbus Sans L" height="10" style="0" pixels="false">Default</opifont.name>
+        </font>
+        <forecolor_alarm_sensitive>false</forecolor_alarm_sensitive>
+        <foreground_color>
+          <color red="0" green="0" blue="0" />
+        </foreground_color>
+        <graph_area_height>126</graph_area_height>
+        <graph_area_width>131</graph_area_width>
+        <height>135</height>
+        <horizon_profile_x_pv_name></horizon_profile_x_pv_name>
+        <horizon_profile_x_pv_value />
+        <horizon_profile_y_pv_name></horizon_profile_y_pv_name>
+        <horizon_profile_y_pv_value />
+        <maximum>1.0</maximum>
+        <minimum>0.0</minimum>
+        <name>Intensity Graph_1</name>
+        <pixel_info_pv_name></pixel_info_pv_name>
+        <pixel_info_pv_value />
+        <pv_name>BEAST:CLAWS:CH2</pv_name>
+        <pv_value />
+        <rgb_mode>false</rgb_mode>
+        <roi_color>
+          <color red="0" green="255" blue="255" />
+        </roi_color>
+        <roi_count>0</roi_count>
+        <rules />
+        <scale_options>
+          <width_scalable>true</width_scalable>
+          <height_scalable>true</height_scalable>
+          <keep_wh_ratio>true</keep_wh_ratio>
+        </scale_options>
+        <scripts />
+        <show_ramp>false</show_ramp>
+        <single_line_profiling>false</single_line_profiling>
+        <tooltip>$(pv_name)</tooltip>
+        <vertial_profile_x_pv_value />
+        <vertial_profile_y_pv_value />
+        <vertical_profile_x_pv_name></vertical_profile_x_pv_name>
+        <vertical_profile_y_pv_name></vertical_profile_y_pv_name>
+        <visible>true</visible>
+        <widget_type>Intensity Graph</widget_type>
+        <width>135</width>
+        <wuid>4ed3b009:1604b0f3e04:-7c1f</wuid>
+        <x>1372</x>
+        <x_axis_axis_color>
+          <color red="0" green="0" blue="0" />
+        </x_axis_axis_color>
+        <x_axis_axis_title>X Axis</x_axis_axis_title>
+        <x_axis_major_tick_step_hint>50</x_axis_major_tick_step_hint>
+        <x_axis_maximum>8.0</x_axis_maximum>
+        <x_axis_minimum>0.0</x_axis_minimum>
+        <x_axis_scale_font>
+          <opifont.name fontName="Nimbus Sans L" height="10" style="0" pixels="false">Default</opifont.name>
+        </x_axis_scale_font>
+        <x_axis_show_minor_ticks>false</x_axis_show_minor_ticks>
+        <x_axis_title_font>
+          <opifont.name fontName="Nimbus Sans L" height="10" style="1" pixels="false">Default Bold</opifont.name>
+        </x_axis_title_font>
+        <x_axis_visible>false</x_axis_visible>
+        <y>180</y>
+        <y_axis_axis_color>
+          <color red="0" green="0" blue="0" />
+        </y_axis_axis_color>
+        <y_axis_axis_title>Y Axis</y_axis_axis_title>
+        <y_axis_major_tick_step_hint>100</y_axis_major_tick_step_hint>
+        <y_axis_maximum>2.0</y_axis_maximum>
+        <y_axis_minimum>0.0</y_axis_minimum>
+        <y_axis_scale_font>
+          <opifont.name fontName="Nimbus Sans L" height="10" style="0" pixels="false">Default</opifont.name>
+        </y_axis_scale_font>
+        <y_axis_show_minor_ticks>false</y_axis_show_minor_ticks>
+        <y_axis_title_font>
+          <opifont.name fontName="Nimbus Sans L" height="10" style="1" pixels="false">Default Bold</opifont.name>
+        </y_axis_title_font>
+        <y_axis_visible>false</y_axis_visible>
+      </widget>
+      <widget typeId="org.csstudio.opibuilder.widgets.intensityGraph" version="1.0.0">
+        <actions hook="false" hook_all="false" />
+        <alarm_pulsing>false</alarm_pulsing>
+        <backcolor_alarm_sensitive>false</backcolor_alarm_sensitive>
+        <background_color>
+          <color red="240" green="240" blue="240" />
+        </background_color>
+        <border_alarm_sensitive>false</border_alarm_sensitive>
+        <border_color>
+          <color red="0" green="128" blue="255" />
+        </border_color>
+        <border_style>0</border_style>
+        <border_width>1</border_width>
+        <color_map>
+          <interpolate>true</interpolate>
+          <autoscale>true</autoscale>
+          <map>3</map>
+        </color_map>
+        <crop_bottom>0</crop_bottom>
+        <crop_left>0</crop_left>
+        <crop_right>0</crop_right>
+        <crop_top>0</crop_top>
+        <data_height>1</data_height>
+        <data_width>1</data_width>
+        <enabled>true</enabled>
+        <font>
+          <opifont.name fontName="Nimbus Sans L" height="10" style="0" pixels="false">Default</opifont.name>
+        </font>
+        <forecolor_alarm_sensitive>false</forecolor_alarm_sensitive>
+        <foreground_color>
+          <color red="0" green="0" blue="0" />
+        </foreground_color>
+        <graph_area_height>126</graph_area_height>
+        <graph_area_width>131</graph_area_width>
+        <height>135</height>
+        <horizon_profile_x_pv_name></horizon_profile_x_pv_name>
+        <horizon_profile_x_pv_value />
+        <horizon_profile_y_pv_name></horizon_profile_y_pv_name>
+        <horizon_profile_y_pv_value />
+        <maximum>1.0</maximum>
+        <minimum>0.0</minimum>
+        <name>Intensity Graph_2</name>
+        <pixel_info_pv_name></pixel_info_pv_name>
+        <pixel_info_pv_value />
+        <pv_name>BEAST:CLAWS:CH1</pv_name>
+        <pv_value />
+        <rgb_mode>false</rgb_mode>
+        <roi_color>
+          <color red="0" green="255" blue="255" />
+        </roi_color>
+        <roi_count>0</roi_count>
+        <rules />
+        <scale_options>
+          <width_scalable>true</width_scalable>
+          <height_scalable>true</height_scalable>
+          <keep_wh_ratio>true</keep_wh_ratio>
+        </scale_options>
+        <scripts />
+        <show_ramp>false</show_ramp>
+        <single_line_profiling>false</single_line_profiling>
+        <tooltip>$(pv_name)</tooltip>
+        <vertial_profile_x_pv_value />
+        <vertial_profile_y_pv_value />
+        <vertical_profile_x_pv_name></vertical_profile_x_pv_name>
+        <vertical_profile_y_pv_name></vertical_profile_y_pv_name>
+        <visible>true</visible>
+        <widget_type>Intensity Graph</widget_type>
+        <width>135</width>
+        <wuid>4ed3b009:1604b0f3e04:-7c1e</wuid>
+        <x>1238</x>
+        <x_axis_axis_color>
+          <color red="0" green="0" blue="0" />
+        </x_axis_axis_color>
+        <x_axis_axis_title>X Axis</x_axis_axis_title>
+        <x_axis_major_tick_step_hint>50</x_axis_major_tick_step_hint>
+        <x_axis_maximum>8.0</x_axis_maximum>
+        <x_axis_minimum>0.0</x_axis_minimum>
+        <x_axis_scale_font>
+          <opifont.name fontName="Nimbus Sans L" height="10" style="0" pixels="false">Default</opifont.name>
+        </x_axis_scale_font>
+        <x_axis_show_minor_ticks>false</x_axis_show_minor_ticks>
+        <x_axis_title_font>
+          <opifont.name fontName="Nimbus Sans L" height="10" style="1" pixels="false">Default Bold</opifont.name>
+        </x_axis_title_font>
+        <x_axis_visible>false</x_axis_visible>
+        <y>180</y>
+        <y_axis_axis_color>
+          <color red="0" green="0" blue="0" />
+        </y_axis_axis_color>
+        <y_axis_axis_title>Y Axis</y_axis_axis_title>
+        <y_axis_major_tick_step_hint>100</y_axis_major_tick_step_hint>
+        <y_axis_maximum>2.0</y_axis_maximum>
+        <y_axis_minimum>0.0</y_axis_minimum>
+        <y_axis_scale_font>
+          <opifont.name fontName="Nimbus Sans L" height="10" style="0" pixels="false">Default</opifont.name>
+        </y_axis_scale_font>
+        <y_axis_show_minor_ticks>false</y_axis_show_minor_ticks>
+        <y_axis_title_font>
+          <opifont.name fontName="Nimbus Sans L" height="10" style="1" pixels="false">Default Bold</opifont.name>
+        </y_axis_title_font>
+        <y_axis_visible>false</y_axis_visible>
+      </widget>
+      <widget typeId="org.csstudio.opibuilder.widgets.intensityGraph" version="1.0.0">
+        <actions hook="false" hook_all="false" />
+        <alarm_pulsing>false</alarm_pulsing>
+        <backcolor_alarm_sensitive>false</backcolor_alarm_sensitive>
+        <background_color>
+          <color red="240" green="240" blue="240" />
+        </background_color>
+        <border_alarm_sensitive>false</border_alarm_sensitive>
+        <border_color>
+          <color red="0" green="128" blue="255" />
+        </border_color>
+        <border_style>0</border_style>
+        <border_width>1</border_width>
+        <color_map>
+          <interpolate>true</interpolate>
+          <autoscale>true</autoscale>
+          <map>3</map>
+        </color_map>
+        <crop_bottom>0</crop_bottom>
+        <crop_left>0</crop_left>
+        <crop_right>0</crop_right>
+        <crop_top>0</crop_top>
+        <data_height>1</data_height>
+        <data_width>1</data_width>
+        <enabled>true</enabled>
+        <font>
+          <opifont.name fontName="Nimbus Sans L" height="10" style="0" pixels="false">Default</opifont.name>
+        </font>
+        <forecolor_alarm_sensitive>false</forecolor_alarm_sensitive>
+        <foreground_color>
+          <color red="0" green="0" blue="0" />
+        </foreground_color>
+        <graph_area_height>126</graph_area_height>
+        <graph_area_width>131</graph_area_width>
+        <height>135</height>
+        <horizon_profile_x_pv_name></horizon_profile_x_pv_name>
+        <horizon_profile_x_pv_value />
+        <horizon_profile_y_pv_name></horizon_profile_y_pv_name>
+        <horizon_profile_y_pv_value />
+        <maximum>1.0</maximum>
+        <minimum>0.0</minimum>
+        <name>Intensity Graph_3</name>
+        <pixel_info_pv_name></pixel_info_pv_name>
+        <pixel_info_pv_value />
+        <pv_name>BEAST:CLAWS:CH2</pv_name>
+        <pv_value />
+        <rgb_mode>false</rgb_mode>
+        <roi_color>
+          <color red="0" green="255" blue="255" />
+        </roi_color>
+        <roi_count>0</roi_count>
+        <rules />
+        <scale_options>
+          <width_scalable>true</width_scalable>
+          <height_scalable>true</height_scalable>
+          <keep_wh_ratio>true</keep_wh_ratio>
+        </scale_options>
+        <scripts />
+        <show_ramp>false</show_ramp>
+        <single_line_profiling>false</single_line_profiling>
+        <tooltip>$(pv_name)</tooltip>
+        <vertial_profile_x_pv_value />
+        <vertial_profile_y_pv_value />
+        <vertical_profile_x_pv_name></vertical_profile_x_pv_name>
+        <vertical_profile_y_pv_name></vertical_profile_y_pv_name>
+        <visible>true</visible>
+        <widget_type>Intensity Graph</widget_type>
+        <width>135</width>
+        <wuid>4ed3b009:1604b0f3e04:-7c1d</wuid>
+        <x>1104</x>
+        <x_axis_axis_color>
+          <color red="0" green="0" blue="0" />
+        </x_axis_axis_color>
+        <x_axis_axis_title>X Axis</x_axis_axis_title>
+        <x_axis_major_tick_step_hint>50</x_axis_major_tick_step_hint>
+        <x_axis_maximum>8.0</x_axis_maximum>
+        <x_axis_minimum>0.0</x_axis_minimum>
+        <x_axis_scale_font>
+          <opifont.name fontName="Nimbus Sans L" height="10" style="0" pixels="false">Default</opifont.name>
+        </x_axis_scale_font>
+        <x_axis_show_minor_ticks>false</x_axis_show_minor_ticks>
+        <x_axis_title_font>
+          <opifont.name fontName="Nimbus Sans L" height="10" style="1" pixels="false">Default Bold</opifont.name>
+        </x_axis_title_font>
+        <x_axis_visible>false</x_axis_visible>
+        <y>180</y>
+        <y_axis_axis_color>
+          <color red="0" green="0" blue="0" />
+        </y_axis_axis_color>
+        <y_axis_axis_title>Y Axis</y_axis_axis_title>
+        <y_axis_major_tick_step_hint>100</y_axis_major_tick_step_hint>
+        <y_axis_maximum>2.0</y_axis_maximum>
+        <y_axis_minimum>0.0</y_axis_minimum>
+        <y_axis_scale_font>
+          <opifont.name fontName="Nimbus Sans L" height="10" style="0" pixels="false">Default</opifont.name>
+        </y_axis_scale_font>
+        <y_axis_show_minor_ticks>false</y_axis_show_minor_ticks>
+        <y_axis_title_font>
+          <opifont.name fontName="Nimbus Sans L" height="10" style="1" pixels="false">Default Bold</opifont.name>
+        </y_axis_title_font>
+        <y_axis_visible>false</y_axis_visible>
+      </widget>
+      <widget typeId="org.csstudio.opibuilder.widgets.intensityGraph" version="1.0.0">
+        <actions hook="false" hook_all="false" />
+        <alarm_pulsing>false</alarm_pulsing>
+        <backcolor_alarm_sensitive>false</backcolor_alarm_sensitive>
+        <background_color>
+          <color red="240" green="240" blue="240" />
+        </background_color>
+        <border_alarm_sensitive>false</border_alarm_sensitive>
+        <border_color>
+          <color red="0" green="128" blue="255" />
+        </border_color>
+        <border_style>0</border_style>
+        <border_width>1</border_width>
+        <color_map>
+          <interpolate>true</interpolate>
+          <autoscale>true</autoscale>
+          <map>3</map>
+        </color_map>
+        <crop_bottom>0</crop_bottom>
+        <crop_left>0</crop_left>
+        <crop_right>0</crop_right>
+        <crop_top>0</crop_top>
+        <data_height>1</data_height>
+        <data_width>1</data_width>
+        <enabled>true</enabled>
+        <font>
+          <opifont.name fontName="Nimbus Sans L" height="10" style="0" pixels="false">Default</opifont.name>
+        </font>
+        <forecolor_alarm_sensitive>false</forecolor_alarm_sensitive>
+        <foreground_color>
+          <color red="0" green="0" blue="0" />
+        </foreground_color>
+        <graph_area_height>126</graph_area_height>
+        <graph_area_width>131</graph_area_width>
+        <height>135</height>
+        <horizon_profile_x_pv_name></horizon_profile_x_pv_name>
+        <horizon_profile_x_pv_value />
+        <horizon_profile_y_pv_name></horizon_profile_y_pv_name>
+        <horizon_profile_y_pv_value />
+        <maximum>1.0</maximum>
+        <minimum>0.0</minimum>
+        <name>Intensity Graph_4</name>
+        <pixel_info_pv_name></pixel_info_pv_name>
+        <pixel_info_pv_value />
+        <pv_name>BEAST:CLAWS:CH1</pv_name>
+        <pv_value />
+        <rgb_mode>false</rgb_mode>
+        <roi_color>
+          <color red="0" green="255" blue="255" />
+        </roi_color>
+        <roi_count>0</roi_count>
+        <rules />
+        <scale_options>
+          <width_scalable>true</width_scalable>
+          <height_scalable>true</height_scalable>
+          <keep_wh_ratio>true</keep_wh_ratio>
+        </scale_options>
+        <scripts />
+        <show_ramp>false</show_ramp>
+        <single_line_profiling>false</single_line_profiling>
+        <tooltip>$(pv_name)</tooltip>
+        <vertial_profile_x_pv_value />
+        <vertial_profile_y_pv_value />
+        <vertical_profile_x_pv_name></vertical_profile_x_pv_name>
+        <vertical_profile_y_pv_name></vertical_profile_y_pv_name>
+        <visible>true</visible>
+        <widget_type>Intensity Graph</widget_type>
+        <width>135</width>
+        <wuid>4ed3b009:1604b0f3e04:-7c1c</wuid>
+        <x>970</x>
+        <x_axis_axis_color>
+          <color red="0" green="0" blue="0" />
+        </x_axis_axis_color>
+        <x_axis_axis_title>X Axis</x_axis_axis_title>
+        <x_axis_major_tick_step_hint>50</x_axis_major_tick_step_hint>
+        <x_axis_maximum>8.0</x_axis_maximum>
+        <x_axis_minimum>0.0</x_axis_minimum>
+        <x_axis_scale_font>
+          <opifont.name fontName="Nimbus Sans L" height="10" style="0" pixels="false">Default</opifont.name>
+        </x_axis_scale_font>
+        <x_axis_show_minor_ticks>false</x_axis_show_minor_ticks>
+        <x_axis_title_font>
+          <opifont.name fontName="Nimbus Sans L" height="10" style="1" pixels="false">Default Bold</opifont.name>
+        </x_axis_title_font>
+        <x_axis_visible>false</x_axis_visible>
+        <y>180</y>
+        <y_axis_axis_color>
+          <color red="0" green="0" blue="0" />
+        </y_axis_axis_color>
+        <y_axis_axis_title>Y Axis</y_axis_axis_title>
+        <y_axis_major_tick_step_hint>100</y_axis_major_tick_step_hint>
+        <y_axis_maximum>2.0</y_axis_maximum>
+        <y_axis_minimum>0.0</y_axis_minimum>
+        <y_axis_scale_font>
+          <opifont.name fontName="Nimbus Sans L" height="10" style="0" pixels="false">Default</opifont.name>
+        </y_axis_scale_font>
+        <y_axis_show_minor_ticks>false</y_axis_show_minor_ticks>
+        <y_axis_title_font>
+          <opifont.name fontName="Nimbus Sans L" height="10" style="1" pixels="false">Default Bold</opifont.name>
+        </y_axis_title_font>
+        <y_axis_visible>false</y_axis_visible>
+      </widget>
+      <widget typeId="org.csstudio.opibuilder.widgets.intensityGraph" version="1.0.0">
+        <actions hook="false" hook_all="false" />
+        <alarm_pulsing>false</alarm_pulsing>
+        <backcolor_alarm_sensitive>false</backcolor_alarm_sensitive>
+        <background_color>
+          <color red="240" green="240" blue="240" />
+        </background_color>
+        <border_alarm_sensitive>false</border_alarm_sensitive>
+        <border_color>
+          <color red="0" green="128" blue="255" />
+        </border_color>
+        <border_style>0</border_style>
+        <border_width>1</border_width>
+        <color_map>
+          <interpolate>true</interpolate>
+          <autoscale>true</autoscale>
+          <map>3</map>
+        </color_map>
+        <crop_bottom>0</crop_bottom>
+        <crop_left>0</crop_left>
+        <crop_right>0</crop_right>
+        <crop_top>0</crop_top>
+        <data_height>1</data_height>
+        <data_width>1</data_width>
+        <enabled>true</enabled>
+        <font>
+          <opifont.name fontName="Nimbus Sans L" height="10" style="0" pixels="false">Default</opifont.name>
+        </font>
+        <forecolor_alarm_sensitive>false</forecolor_alarm_sensitive>
+        <foreground_color>
+          <color red="0" green="0" blue="0" />
+        </foreground_color>
+        <graph_area_height>126</graph_area_height>
+        <graph_area_width>131</graph_area_width>
+        <height>135</height>
+        <horizon_profile_x_pv_name></horizon_profile_x_pv_name>
+        <horizon_profile_x_pv_value />
+        <horizon_profile_y_pv_name></horizon_profile_y_pv_name>
+        <horizon_profile_y_pv_value />
+        <maximum>1.0</maximum>
+        <minimum>0.0</minimum>
+        <name>Intensity Graph_5</name>
+        <pixel_info_pv_name></pixel_info_pv_name>
+        <pixel_info_pv_value />
+        <pv_name>BEAST:CLAWS:CH1</pv_name>
+        <pv_value />
+        <rgb_mode>false</rgb_mode>
+        <roi_color>
+          <color red="0" green="255" blue="255" />
+        </roi_color>
+        <roi_count>0</roi_count>
+        <rules />
+        <scale_options>
+          <width_scalable>true</width_scalable>
+          <height_scalable>true</height_scalable>
+          <keep_wh_ratio>true</keep_wh_ratio>
+        </scale_options>
+        <scripts />
+        <show_ramp>false</show_ramp>
+        <single_line_profiling>false</single_line_profiling>
+        <tooltip>$(pv_name)</tooltip>
+        <vertial_profile_x_pv_value />
+        <vertial_profile_y_pv_value />
+        <vertical_profile_x_pv_name></vertical_profile_x_pv_name>
+        <vertical_profile_y_pv_name></vertical_profile_y_pv_name>
+        <visible>true</visible>
+        <widget_type>Intensity Graph</widget_type>
+        <width>135</width>
+        <wuid>4ed3b009:1604b0f3e04:-7c1b</wuid>
+        <x>836</x>
+        <x_axis_axis_color>
+          <color red="0" green="0" blue="0" />
+        </x_axis_axis_color>
+        <x_axis_axis_title>X Axis</x_axis_axis_title>
+        <x_axis_major_tick_step_hint>50</x_axis_major_tick_step_hint>
+        <x_axis_maximum>8.0</x_axis_maximum>
+        <x_axis_minimum>0.0</x_axis_minimum>
+        <x_axis_scale_font>
+          <opifont.name fontName="Nimbus Sans L" height="10" style="0" pixels="false">Default</opifont.name>
+        </x_axis_scale_font>
+        <x_axis_show_minor_ticks>false</x_axis_show_minor_ticks>
+        <x_axis_title_font>
+          <opifont.name fontName="Nimbus Sans L" height="10" style="1" pixels="false">Default Bold</opifont.name>
+        </x_axis_title_font>
+        <x_axis_visible>false</x_axis_visible>
+        <y>180</y>
+        <y_axis_axis_color>
+          <color red="0" green="0" blue="0" />
+        </y_axis_axis_color>
+        <y_axis_axis_title>Y Axis</y_axis_axis_title>
+        <y_axis_major_tick_step_hint>100</y_axis_major_tick_step_hint>
+        <y_axis_maximum>2.0</y_axis_maximum>
+        <y_axis_minimum>0.0</y_axis_minimum>
+        <y_axis_scale_font>
+          <opifont.name fontName="Nimbus Sans L" height="10" style="0" pixels="false">Default</opifont.name>
+        </y_axis_scale_font>
+        <y_axis_show_minor_ticks>false</y_axis_show_minor_ticks>
+        <y_axis_title_font>
+          <opifont.name fontName="Nimbus Sans L" height="10" style="1" pixels="false">Default Bold</opifont.name>
+        </y_axis_title_font>
+        <y_axis_visible>false</y_axis_visible>
+      </widget>
+      <widget typeId="org.csstudio.opibuilder.widgets.intensityGraph" version="1.0.0">
+        <actions hook="false" hook_all="false" />
+        <alarm_pulsing>false</alarm_pulsing>
+        <backcolor_alarm_sensitive>false</backcolor_alarm_sensitive>
+        <background_color>
+          <color red="240" green="240" blue="240" />
+        </background_color>
+        <border_alarm_sensitive>false</border_alarm_sensitive>
+        <border_color>
+          <color red="0" green="128" blue="255" />
+        </border_color>
+        <border_style>0</border_style>
+        <border_width>1</border_width>
+        <color_map>
+          <interpolate>true</interpolate>
+          <autoscale>true</autoscale>
+          <map>3</map>
+        </color_map>
+        <crop_bottom>0</crop_bottom>
+        <crop_left>0</crop_left>
+        <crop_right>0</crop_right>
+        <crop_top>0</crop_top>
+        <data_height>1</data_height>
+        <data_width>1</data_width>
+        <enabled>true</enabled>
+        <font>
+          <opifont.name fontName="Nimbus Sans L" height="10" style="0" pixels="false">Default</opifont.name>
+        </font>
+        <forecolor_alarm_sensitive>false</forecolor_alarm_sensitive>
+        <foreground_color>
+          <color red="0" green="0" blue="0" />
+        </foreground_color>
+        <graph_area_height>126</graph_area_height>
+        <graph_area_width>131</graph_area_width>
+        <height>135</height>
+        <horizon_profile_x_pv_name></horizon_profile_x_pv_name>
+        <horizon_profile_x_pv_value />
+        <horizon_profile_y_pv_name></horizon_profile_y_pv_name>
+        <horizon_profile_y_pv_value />
+        <maximum>1.0</maximum>
+        <minimum>0.0</minimum>
+        <name>Intensity Graph_6</name>
+        <pixel_info_pv_name></pixel_info_pv_name>
+        <pixel_info_pv_value />
+        <pv_name>BEAST:CLAWS:CH2</pv_name>
+        <pv_value />
+        <rgb_mode>false</rgb_mode>
+        <roi_color>
+          <color red="0" green="255" blue="255" />
+        </roi_color>
+        <roi_count>0</roi_count>
+        <rules />
+        <scale_options>
+          <width_scalable>true</width_scalable>
+          <height_scalable>true</height_scalable>
+          <keep_wh_ratio>true</keep_wh_ratio>
+        </scale_options>
+        <scripts />
+        <show_ramp>false</show_ramp>
+        <single_line_profiling>false</single_line_profiling>
+        <tooltip>$(pv_name)</tooltip>
+        <vertial_profile_x_pv_value />
+        <vertial_profile_y_pv_value />
+        <vertical_profile_x_pv_name></vertical_profile_x_pv_name>
+        <vertical_profile_y_pv_name></vertical_profile_y_pv_name>
+        <visible>true</visible>
+        <widget_type>Intensity Graph</widget_type>
+        <width>135</width>
+        <wuid>4ed3b009:1604b0f3e04:-7c1a</wuid>
+        <x>702</x>
+        <x_axis_axis_color>
+          <color red="0" green="0" blue="0" />
+        </x_axis_axis_color>
+        <x_axis_axis_title>X Axis</x_axis_axis_title>
+        <x_axis_major_tick_step_hint>50</x_axis_major_tick_step_hint>
+        <x_axis_maximum>8.0</x_axis_maximum>
+        <x_axis_minimum>0.0</x_axis_minimum>
+        <x_axis_scale_font>
+          <opifont.name fontName="Nimbus Sans L" height="10" style="0" pixels="false">Default</opifont.name>
+        </x_axis_scale_font>
+        <x_axis_show_minor_ticks>false</x_axis_show_minor_ticks>
+        <x_axis_title_font>
+          <opifont.name fontName="Nimbus Sans L" height="10" style="1" pixels="false">Default Bold</opifont.name>
+        </x_axis_title_font>
+        <x_axis_visible>false</x_axis_visible>
+        <y>180</y>
+        <y_axis_axis_color>
+          <color red="0" green="0" blue="0" />
+        </y_axis_axis_color>
+        <y_axis_axis_title>Y Axis</y_axis_axis_title>
+        <y_axis_major_tick_step_hint>100</y_axis_major_tick_step_hint>
+        <y_axis_maximum>2.0</y_axis_maximum>
+        <y_axis_minimum>0.0</y_axis_minimum>
+        <y_axis_scale_font>
+          <opifont.name fontName="Nimbus Sans L" height="10" style="0" pixels="false">Default</opifont.name>
+        </y_axis_scale_font>
+        <y_axis_show_minor_ticks>false</y_axis_show_minor_ticks>
+        <y_axis_title_font>
+          <opifont.name fontName="Nimbus Sans L" height="10" style="1" pixels="false">Default Bold</opifont.name>
+        </y_axis_title_font>
+        <y_axis_visible>false</y_axis_visible>
+      </widget>
+      <widget typeId="org.csstudio.opibuilder.widgets.intensityGraph" version="1.0.0">
+        <actions hook="false" hook_all="false" />
+        <alarm_pulsing>false</alarm_pulsing>
+        <backcolor_alarm_sensitive>false</backcolor_alarm_sensitive>
+        <background_color>
+          <color red="240" green="240" blue="240" />
+        </background_color>
+        <border_alarm_sensitive>false</border_alarm_sensitive>
+        <border_color>
+          <color red="0" green="128" blue="255" />
+        </border_color>
+        <border_style>0</border_style>
+        <border_width>1</border_width>
+        <color_map>
+          <interpolate>true</interpolate>
+          <autoscale>true</autoscale>
+          <map>3</map>
+        </color_map>
+        <crop_bottom>0</crop_bottom>
+        <crop_left>0</crop_left>
+        <crop_right>0</crop_right>
+        <crop_top>0</crop_top>
+        <data_height>1</data_height>
+        <data_width>1</data_width>
+        <enabled>true</enabled>
+        <font>
+          <opifont.name fontName="Nimbus Sans L" height="10" style="0" pixels="false">Default</opifont.name>
+        </font>
+        <forecolor_alarm_sensitive>false</forecolor_alarm_sensitive>
+        <foreground_color>
+          <color red="0" green="0" blue="0" />
+        </foreground_color>
+        <graph_area_height>126</graph_area_height>
+        <graph_area_width>131</graph_area_width>
+        <height>135</height>
+        <horizon_profile_x_pv_name></horizon_profile_x_pv_name>
+        <horizon_profile_x_pv_value />
+        <horizon_profile_y_pv_name></horizon_profile_y_pv_name>
+        <horizon_profile_y_pv_value />
+        <maximum>1.0</maximum>
+        <minimum>0.0</minimum>
+        <name>Intensity Graph_7</name>
+        <pixel_info_pv_name></pixel_info_pv_name>
+        <pixel_info_pv_value />
+        <pv_name>BEAST:CLAWS:CH1</pv_name>
+        <pv_value />
+        <rgb_mode>false</rgb_mode>
+        <roi_color>
+          <color red="0" green="255" blue="255" />
+        </roi_color>
+        <roi_count>0</roi_count>
+        <rules />
+        <scale_options>
+          <width_scalable>true</width_scalable>
+          <height_scalable>true</height_scalable>
+          <keep_wh_ratio>true</keep_wh_ratio>
+        </scale_options>
+        <scripts />
+        <show_ramp>false</show_ramp>
+        <single_line_profiling>false</single_line_profiling>
+        <tooltip>$(pv_name)</tooltip>
+        <vertial_profile_x_pv_value />
+        <vertial_profile_y_pv_value />
+        <vertical_profile_x_pv_name></vertical_profile_x_pv_name>
+        <vertical_profile_y_pv_name></vertical_profile_y_pv_name>
+        <visible>true</visible>
+        <widget_type>Intensity Graph</widget_type>
+        <width>135</width>
+        <wuid>4ed3b009:1604b0f3e04:-7c19</wuid>
+        <x>568</x>
+        <x_axis_axis_color>
+          <color red="0" green="0" blue="0" />
+        </x_axis_axis_color>
+        <x_axis_axis_title>X Axis</x_axis_axis_title>
+        <x_axis_major_tick_step_hint>50</x_axis_major_tick_step_hint>
+        <x_axis_maximum>8.0</x_axis_maximum>
+        <x_axis_minimum>0.0</x_axis_minimum>
+        <x_axis_scale_font>
+          <opifont.name fontName="Nimbus Sans L" height="10" style="0" pixels="false">Default</opifont.name>
+        </x_axis_scale_font>
+        <x_axis_show_minor_ticks>false</x_axis_show_minor_ticks>
+        <x_axis_title_font>
+          <opifont.name fontName="Nimbus Sans L" height="10" style="1" pixels="false">Default Bold</opifont.name>
+        </x_axis_title_font>
+        <x_axis_visible>false</x_axis_visible>
+        <y>180</y>
+        <y_axis_axis_color>
+          <color red="0" green="0" blue="0" />
+        </y_axis_axis_color>
+        <y_axis_axis_title>Y Axis</y_axis_axis_title>
+        <y_axis_major_tick_step_hint>100</y_axis_major_tick_step_hint>
+        <y_axis_maximum>2.0</y_axis_maximum>
+        <y_axis_minimum>0.0</y_axis_minimum>
+        <y_axis_scale_font>
+          <opifont.name fontName="Nimbus Sans L" height="10" style="0" pixels="false">Default</opifont.name>
+        </y_axis_scale_font>
+        <y_axis_show_minor_ticks>false</y_axis_show_minor_ticks>
+        <y_axis_title_font>
+          <opifont.name fontName="Nimbus Sans L" height="10" style="1" pixels="false">Default Bold</opifont.name>
+        </y_axis_title_font>
+        <y_axis_visible>false</y_axis_visible>
+      </widget>
+    </widget>
+  </widget>
+</display>
