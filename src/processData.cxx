@@ -209,16 +209,16 @@ void ProcessData::syncSaveRapid( unsigned int& subRunNum )
         switch( cha )
         {
             case PS6000_CHANNEL_A:
-                output = "1";
+                output = "A";
                 break;
             case PS6000_CHANNEL_B:
-                output = "2";
+                output = "B";
                 break;
             case PS6000_CHANNEL_C:
-                output = "3";
+                output = "C";
                 break;
             case PS6000_CHANNEL_D:
-                output = "4";
+                output = "D";
                 break;
             default:
                 output = "XY";

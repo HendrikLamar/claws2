@@ -1,12 +1,11 @@
 // =====================================================================================
 // 
-//
-//       Filename:  client_put.cpp
+//       Filename:  main.cpp
 // 
 //    Description:  
 // 
 //        Version:  1.0
-//        Created:  21.10.2017 16:15:10
+//        Created:  24.07.2017 15:33:05
 //       Revision:  none
 //       Compiler:  g++
 // 
@@ -16,91 +15,335 @@
 // 
 // =====================================================================================
 
-#include "cadef.h"
-#include <unistd.h>
 
+#include "statemachine.h"
 
-//#include <chrono>
-//#include <thread>
 #include <iostream>
 #include <string>
+#include <cstdlib>
+#include <cstring>
 #include <vector>
+#include <memory>
+
+//#include "clawsRun.h"
+
+#include <chrono>
+#include <thread>
+#include <libps6000-1.4/PicoStatus.h>
+#include <libps6000-1.4/ps6000Api.h>
+
+#include <boost/date_time/gregorian/gregorian.hpp>
+#include <boost/filesystem.hpp>
+
+#include <TROOT.h>
+
 
 int main()
 {
 
 
-// Kanalinstance
-chid  var1;
-chid  var2;
-chid  var3;
+    ROOT::EnableThreadSafety();
+//    gROOT->ProcessLine("gErrorIgnoreLevel = 6000");
 
-chid ch1;
-chid ch2;
-chid ch3;
+    MyState* mystate;
 
-// beim start:
-
-    std::string system_prefix{"BEAST:"};
-    std::string host_prefix{"CLAWS:"};
-    std::string var{"RC:STATUS"};
-    std::string nvar2{"GRAPH"};
-    std::string nvar3{"GRAPH2D"};
-
-    std::string nch1{"CH1"};
-    std::string nch2{"CH2"};
-    std::string nch3{"CH3"};
-
-  SEVCHK(ca_context_create(ca_disable_preemptive_callback),"ca_context_create");
-
-  std::string tmpVar{system_prefix + host_prefix + var};
-  SEVCHK(ca_create_channel(tmpVar.c_str(),NULL,NULL,10,&var1),"ca_create_channel failure");
-  tmpVar = system_prefix + host_prefix + nvar2;
-  SEVCHK(ca_create_channel(tmpVar.c_str(),NULL,NULL,10,&var2),"ca_create_channel failure");
-  tmpVar = system_prefix + host_prefix + nvar3;
-  SEVCHK(ca_create_channel(tmpVar.c_str(),NULL,NULL,10,&var3),"ca_create_channel failure");
-
-  tmpVar = system_prefix + host_prefix + nch1;
-  SEVCHK(ca_create_channel(tmpVar.c_str(),NULL,NULL,10,&ch1),"ca_create_channel failure");
-  tmpVar = system_prefix + host_prefix + nch2;
-  SEVCHK(ca_create_channel(tmpVar.c_str(),NULL,NULL,10,&ch2),"ca_create_channel failure");
-  tmpVar = system_prefix + host_prefix + nch3;
-  SEVCHK(ca_create_channel(tmpVar.c_str(),NULL,NULL,10,&ch3),"ca_create_channel failure");
-
-  SEVCHK(ca_pend_io(5.0),"ca_pend_io failure");
-
-// bei jedem update
+    try
+    {
+        mystate = new MyState();
+        mystate->run();
+    }
+    catch(...)
+    {
+        std::cout << "Unknown error occured. Exiting..." << std::endl;
+    }
 
 
-  std::vector< std::string > data{"IDLE", "INTERMEDIATE","PHYSICS","OFFLINE"};
-  std::vector< int > data2{1,5,1,2,2,2,3,3,3,4,4,4,5,5,5,6,6,6,7,7,7,8,8,8,9,9,9};
-  SEVCHK(ca_array_put(DBF_INT,data2.size(),var2,(void*)&data2.at(0)),"ca_set failure");
-  SEVCHK(ca_pend_io(5.0),"ca_pend_io failure");
+    delete mystate;
+    mystate = nullptr;
+
+
+    
+/*     unsigned int starter = 0;
+ *     unsigned int ender = 0;
+ *     unsigned int stepSize = 4;
+ * 
+ *     ender += stepSize;
+ *     std::vector< int > w1{0,1,2,3,4,5,6,7,8,9,10};
+ *     std::vector< int > w2{w1.begin()+starter, w1.begin()+ender};
+ *     starter = ender;
+ *     ender += stepSize;
+ * 
+ *     std::vector< int > w3;
+ *     if( ender > w1.size() )
+ *     {
+ *         std::vector< int > dummy{w1.begin()+starter, w1.end()};
+ *         w3 = dummy;
+ *     }
+ *     else 
+ *     {
+ *         std::vector< int > dummy{w1.begin()+starter, w1.begin()+ender};
+ *         w3 = dummy;
+ *     };
+ * 
+ *     std::cout << "w1: " << std::flush;
+ *     for( auto& tmp : w1 )
+ *     {
+ *         std::cout << tmp << " ";
+ *     }
+ *     std::cout << "\n";
+ * 
+ *     std::cout << "w2: " << std::flush; 
+ *     for( auto& tmp : w2 )
+ *     {
+ *         std::cout << tmp << " ";
+ *     }
+ *     std::cout << "\n";
+ * 
+ *     std::cout << "w3: " << std::flush;
+ *     for( auto& tmp : w3 )
+ *     {
+ *         std::cout << tmp << " ";
+ *     }
+ *     std::cout << "\n";
+ */
 
 
 
-//  std::vector< float > data3{0.1,0.1,0.1,0.2,0.0,0.5};
-  std::vector< float > data3{0.1,0,1.,0.5,0.3,0};
-  SEVCHK(ca_array_put(DBF_FLOAT,data3.size(),var3,(void*)&data3.at(0)),"ca_set failure");
-  SEVCHK(ca_pend_io(5.0),"ca_pend_io failure");
+/*     unsigned int loop = 5;
+ *     unsigned int samples = 5;
+ * 
+ *     std::shared_ptr< std::vector< std::shared_ptr< 
+ *         std::vector< int16_t >>>> m_buffer_inter_data;
+ * 
+ *     m_buffer_inter_data = std::make_shared< std::vector<
+ *         std::shared_ptr< std::vector< int16_t>>>>();
+ * //    m_buffer_inter_data->reserve(loop);
+ *     m_buffer_inter_data->resize(
+ *             loop, 
+ *             std::make_shared< std::vector< int16_t >>(samples+3, 2));
+ * 
+ * //    for( unsigned int i = 0; i < loop; ++i )
+ * //    {
+ * //        std::shared_ptr< std::vector< int16_t >> tmp{
+ * //            std::make_shared< std::vector< int16_t>>()};
+ * //        tmp->reserve(samples);
+ * //        tmp->resize(samples, 0);
+ * //        m_buffer_inter_data->push_back(tmp);
+ * //    }
+ * 
+ *     std::cout << "Buffer capacity: " << m_buffer_inter_data->capacity() << std::endl;
+ *     std::cout << "Buffer Size: " << m_buffer_inter_data->size() << "\n" << std::endl;
+ * 
+ * //    for( auto& tmp1 : *m_buffer_inter_data )
+ * //    {
+ * //        for( auto& tmp2 : *tmp1 )
+ * //        {
+ * //            tmp2 = 2;
+ * //        }
+ * //    }
+ * 
+ *     std::cout << "Buffer capacity: " << m_buffer_inter_data->capacity() << std::endl;
+ *     std::cout << "Buffer Size: " << m_buffer_inter_data->size() << "\n" << std::endl;
+ * 
+ *     m_buffer_inter_data->resize(
+ *             loop+1, 
+ *             std::make_shared< std::vector< int16_t >>(samples, 0));
+ *     m_buffer_inter_data->shrink_to_fit();
+ * 
+ *     std::cout << "Buffer capacity: " << m_buffer_inter_data->capacity() << std::endl;
+ *     std::cout << "Buffer Size: " << m_buffer_inter_data->at(0)->size() << std::endl;
+ * 
+ *     int count1{0};
+ *     int count2{0};
+ *     for( auto& tmp1 : *m_buffer_inter_data )
+ *     {
+ * //        for( int16_t& tmp2 : *tmp1 )
+ *         for( unsigned int i = 0; i < tmp1->size(); ++i )
+ *         {
+ *             int16_t tmp2 = tmp1->at(i);
+ *             std::cout << count1 << ":" << count2 << " -> " << tmp2 <<  "\n";
+ *             ++count2;
+ *         }
+ *         count2 = 0;
+ *         ++count1;
+ *     }
+ */
 
-  float dch1 = 0.1;
-  float dch2 = 0.5;
-  float dch3 = 0.9;
-  
-    SEVCHK(ca_put(DBF_FLOAT,ch1,(void*)&dch1),"ca_set failure");
-    SEVCHK(ca_put(DBF_FLOAT,ch2,(void*)&dch2),"ca_set failure");
-    SEVCHK(ca_put(DBF_FLOAT,ch3,(void*)&dch3),"ca_set failure");
-    SEVCHK(ca_pend_io(5.0),"ca_pend_io failure");
 
-  for( auto& tmp : data )
-  {
-    SEVCHK(ca_put(DBR_STRING,var1,(void*)tmp.c_str()),"ca_set failure");
-    SEVCHK(ca_pend_io(5.0),"ca_pend_io failure");
+/*     boost::gregorian::date current_date(boost::gregorian::day_clock::local_day());
+ * 
+ *     std::cout << to_iso_extended_string(current_date) << std::endl;
+ * 
+ *     boost::filesystem::path dir{boost::filesystem::canonical(
+ *             boost::filesystem::current_path())};
+ * 
+ *     std::cout << dir.string() << std::endl;
+ * 
+ *     dir += boost::filesystem::path("/abcd/efz");
+ * 
+ *     if( boost::filesystem::create_directories(dir))
+ *     {
+ *         std::cout << "success!\n";
+ *     }
+ * 
+ *     std::cout << sizeof(unsigned long) << std::endl;
+ * 
+ * 
+ * 
+ * 
+ * 
+ *     std::string m_location_save{"/mnt/claws_disk_7"};
+ *     unsigned long runNum{4001443};
+ *     std::string tsubdir{"/int"};
+ * 
+ *     // get the current date in YYYY-MM-DD format
+ *     std::string curDay{to_iso_extended_string(
+ *             boost::gregorian::day_clock::local_day())};
+ * 
+ *     // create the final path
+ *     std::string finalPathStr = 
+ *         m_location_save +
+ *         "/data/" +
+ *         curDay +
+ *         "/run-" +
+ *         std::to_string(runNum) +
+ *         "/raw" +
+ *         tsubdir;
+ * 
+ *     boost::filesystem::path finalPath{finalPathStr};
+ * 
+ * 
+ *     boost::filesystem::create_directories(finalPath);
+ * 
+ */
 
-    sleep(3);
-//    std::this_thread::sleep_for(std::chrono::seconds(1));
-  ;}
 
-  return 0;
-}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* 
+ *     PICO_STATUS pstatus;
+ * 
+ * //    int16_t counts;
+ * //    int8_t  serials[100];
+ * //    int16_t serialL;
+ * //
+ * //    pstatus = ps6000EnumerateUnits(&counts, serials, &serialL);
+ * //
+ * //    std::cout << "Counts: " << counts;
+ * //    std::cout << "\tSerials: " << serials;
+ * //    std::cout << "\tlength: " << serialL << std::endl;
+ * 
+ * 
+ * 
+ * 
+ *     int16_t handle_1 = 0;
+ *     int16_t handle_2 = 0;
+ * 
+ *     // 6404D
+ * //    int8_t serial_1[]{'E','Q','2','3','2','/','0','0','4','\0'};
+ * //    int8_t serial_2[]{'D','V','0','2','7','/','0','4','3','\0'};
+ * //    int8_t serial_2[]{'C','X','7','4','3','/','0','2','4','\0'};
+ * 
+ *     // 6403
+ *     int8_t serial_1[]{'A', 'Y', '1', '6', '6', '/', '0', '4', '7','\0'};
+ *     int8_t serial_2[]{'A', 'Y', '1', '6', '6', '/', '0', '3', '2','\0'};
+ * 
+ *     pstatus = ps6000OpenUnit(&handle_1, serial_1);
+ * 
+ *     std::cout << "Status: " << pstatus << "\t" << "Handle: " << handle_1 << 
+ *         std::endl;
+ * 
+ *     int8_t pstring[10];
+ *     int16_t stringL = 9;
+ *     int16_t stringR;
+ *     PICO_INFO info = 4;
+ * 
+ *     pstatus = ps6000GetUnitInfo(handle_1, pstring, stringL, &stringR, info);
+ *     std::cout << pstring << std::endl;
+ *     std::cout << stringR << std::endl;
+ * 
+ *     std::string str_serial = "";
+ *     for( int tt = 0; tt < stringR-1; ++tt )
+ *     {
+ *         str_serial += pstring[tt];
+ *     }
+ *     std::cout << "Transformed string: " << str_serial << std::endl;
+ * 
+ * //    pstatus = ps6000OpenUnit(&handle_2, serial_2);
+ *     pstatus = ps6000OpenUnit(&handle_2, serial_2);
+ * 
+ *     std::cout << "status: " << pstatus << "\t" << "handle: " << handle_2 << 
+ *         std::endl;
+ * 
+ *     pstatus = ps6000GetUnitInfo(handle_2, pstring, stringL, &stringR, info);
+ *     std::cout << pstring << std::endl;
+ *     std::cout << stringR << std::endl;
+ * 
+ * 
+ * 
+ *     pstatus = ps6000SetChannel(handle_1, PS6000_CHANNEL_A, true, PS6000_DC_50R, 
+ *             PS6000_50MV, 0, PS6000_BW_FULL);
+ *     pstatus = ps6000SetChannel(handle_1, PS6000_CHANNEL_B, true, PS6000_DC_50R, 
+ *             PS6000_50MV, 0, PS6000_BW_FULL);
+ *     pstatus = ps6000SetChannel(handle_1, PS6000_CHANNEL_C, true, PS6000_DC_50R, 
+ *             PS6000_50MV, 0, PS6000_BW_FULL);
+ *     pstatus = ps6000SetChannel(handle_1, PS6000_CHANNEL_D, true, PS6000_DC_50R, 
+ *             PS6000_50MV, 0, PS6000_BW_FULL);
+ * 
+ *     float       timeInterval_ns = 0;
+ *     uint32_t    maxSamples = 200;
+ *     pstatus = ps6000GetTimebase2(handle_1, 2, 200, &timeInterval_ns, 0, &maxSamples,0);
+ * 
+ *     std::cout << "Time interval: " << timeInterval_ns << " ns\n";
+ * 
+ * 
+ * 
+ * //
+ * //    pstatus = ps6000OpenUnit(&handle_3, serial_3);
+ * //
+ * //    std::cout << "status: " << pstatus << "\t" << "handle: " << handle_3 << 
+ * //        std::endl;
+ * 
+ * 
+ * 
+ *     std::cout << "Exiting handle_1\n";
+ *     ps6000CloseUnit(handle_1);
+ * 
+ *     std::cout << "Exiting handle_2\n";
+ *     ps6000CloseUnit(handle_2);
+ * //    ps6000CloseUnit(handle_3);
+ * 
+ * 
+ */
+
+    
+    return 0;
+};

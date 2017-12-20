@@ -263,7 +263,7 @@ namespace Utility{
 
 
     ///////////////////////////////////////////////////////////////////////////
-    //                  START Hist Structures
+    //                  START Data Structures
     //
 
 
@@ -272,7 +272,7 @@ namespace Utility{
     struct Pico_Hist_Channel
     {
         Pico_Hist_Channel( PS6000_CHANNEL cha );
-        Pico_Hist_Channel( int cha );
+        Pico_Hist_Channel( int cha );   //!> Goes from 0 to 3.
         Pico_Hist_Channel( PS6000_CHANNEL cha, std::shared_ptr<TH1I> hist );
         Pico_Hist_Channel( int cha, std::shared_ptr<TH1I> hist );
         ~Pico_Hist_Channel();
@@ -287,13 +287,11 @@ namespace Utility{
         std::shared_ptr<TH1I>    get();
 
         //! Returns the channel number.
-        PS6000_CHANNEL getCh();
+        PS6000_CHANNEL getID();
 
 
         private:
             PS6000_CHANNEL  channel;
-
-            PS6000_CHANNEL  intToCh( int ch );
 
             void set( 
                     int cha, 
@@ -353,7 +351,107 @@ namespace Utility{
             std::shared_ptr< std::vector< std::shared_ptr<Pico_Hist_Channel> > > data;
             std::string location;
 
-            PS6000_CHANNEL  intToCh( int ch );
+    };
+
+
+
+
+
+
+
+
+///////////////////////////////////////////////////////////////////////////////
+
+
+
+
+
+
+
+
+    struct Pico_Data_Analyzed_Channel
+    {
+        Pico_Data_Analyzed_Channel( int cha );
+        Pico_Data_Analyzed_Channel( PS6000_CHANNEL cha );
+        virtual ~Pico_Data_Analyzed_Channel();
+
+        PS6000_CHANNEL getID();
+
+        //! Normalized 1pe integral. Normalized against vertical range and
+        //! preamp.
+        double          cal_1pe_normalized;
+
+        //! Gives the fraction of the number of 1pe wf in the acquired data.
+        //! This gives hints about the radiation damagage of the SiPM.
+        double          cal_1peVStotal_fraction;
+
+        //! Absolute number of MIPs in the waveform.
+        unsigned int    data_mip_absolute;
+
+        //! Holds the reconstructed waveform.
+        std::shared_ptr< std::vector< unsigned int > > data_wf_reconstructed;
+
+        //! Holds the reconstructed and downsampled waveform which is suitable for
+        //! epics.
+        std::shared_ptr< std::vector< unsigned long > > 
+            data_wf_reconstructedANDdownsampled;
+
+        //! Bin size value of reconstructed and downsampled data.
+        float           info_value_binSize_reconstructedANDdownsampled;
+
+        //! Unit of the bins of reconstructed and downsampled waveform.
+        std::string     info_unit_binSize_reconstructedANDdownsampled;
+
+        //! CDF of the waveform.
+        std::shared_ptr< std::vector< double > > data_cdf;
+
+        //! Bin size value of the cdf.
+        float           info_value_binSize_cdf;
+
+        //! Unit of the cdf bins.
+        std::string     info_unit_binSize_cdf;
+
+        private:
+            PS6000_CHANNEL      channel;
+    };
+
+
+
+
+
+
+
+
+
+///////////////////////////////////////////////////////////////////////////////
+
+
+
+
+
+
+
+
+
+    struct Pico_Data_Analyzed_Pico
+    {
+
+        Pico_Data_Analyzed_Pico( std::string location );
+        virtual ~Pico_Data_Analyzed_Pico();
+
+        //! Returns the channel data.
+        std::shared_ptr< Pico_Data_Analyzed_Channel > get( PS6000_CHANNEL ch );
+
+        //! Returns the channel data.
+        std::shared_ptr< Pico_Data_Analyzed_Channel > get( int ch );
+
+        //! Returns the pico location.
+        std::string getLocation();
+
+        private:
+            std::shared_ptr< std::vector< std::shared_ptr< 
+                Pico_Data_Analyzed_Channel> > > data;
+            std::string location;
 
     };
 
@@ -365,9 +463,8 @@ namespace Utility{
 
 
 
-
     //
-    //                   END Hist Structures 
+    //                   END Data Structures 
     ///////////////////////////////////////////////////////////////////////////
 
 
@@ -747,6 +844,10 @@ namespace Utility{
 
     //! String to enum for Utility::Claws_Gain
     Utility::Claws_Gain         Pico_StringToEnum_gain( std::string& enumerator );
+
+    //! Transforms a integer channel number (1-4) to a PS6000_CHANNEL enum.
+    PS6000_CHANNEL Pico_intToCh( int ch );
+
 
     //
     //                      END Pico_StringToEnum functions

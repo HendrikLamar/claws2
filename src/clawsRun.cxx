@@ -1199,17 +1199,6 @@ void ClawsRun::StopRun()
         std::shared_ptr<ProcessData> dataProcessor{
             std::make_shared<ProcessData>( 
                     m_picos, m_database->Claws_getCounter() )};
-        try
-        {
-            dataProcessor->save()->setSaveLocation(
-                    m_database->Claws_getConfig()->path_saveData);
-        }
-        catch( ClawsException& excep )
-        {
-            std::cout << excep.what() << "\n";
-            std::cout << "Stopping current run...\n";
-            return;
-        }
 
 
         // let each pico acquire data in its own thread
@@ -1232,12 +1221,25 @@ void ClawsRun::StopRun()
             }
         }
         workers.clear();
-
+    
 
         auto time1{std::chrono::system_clock::now()};
         // check if data should be saved
         if( m_database->Claws_getConfig()->isSaved )
         {
+            try
+            {
+                dataProcessor->save()->setSaveLocation(
+                        m_database->Claws_getConfig()->path_saveData);
+            }
+            catch( ClawsException& excep )
+            {
+                std::cout << excep.what() << "\n";
+                std::cout << "Stopping current run...\n";
+                return;
+            }
+
+
             unsigned int loops = m_database->Claws_getConfig()->loops_Intermediate;
             dataProcessor->syncSaveRapid(loops);
         }
