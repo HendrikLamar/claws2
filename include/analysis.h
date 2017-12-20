@@ -25,19 +25,26 @@
 #include <utility.h>
 
 #include <vector>
-#include <numeric>
 
 
 class Analysis
 {
     private:
 
+
+
+
     public:
 
         //! Default constructor.
         Analysis();
         virtual ~Analysis();
-}
+
+
+        void intermediate( std::shared_ptr<Pico> tpico );
+
+        void physics();
+};
 
 
 
