@@ -118,7 +118,7 @@ namespace Utility{
     };
     Pico_Hist_Channel::Pico_Hist_Channel( int cha )
     {
-        channel = Utility::Pico_intToCh(cha);
+        channel = Utility::Pico_intToEnum_channel(cha);
     };
     Pico_Hist_Channel::Pico_Hist_Channel( PS6000_CHANNEL cha, std::shared_ptr<TH1I> hist )
     {
@@ -155,7 +155,7 @@ namespace Utility{
     void    Pico_Hist_Channel::set( int cha, std::shared_ptr<TH1I> hist )
     {
         
-        channel = Utility::Pico_intToCh(cha);
+        channel = Utility::Pico_intToEnum_channel(cha);
         data = hist;
         
         return;
@@ -244,7 +244,7 @@ namespace Utility{
 
     std::shared_ptr<TH1I>  Pico_Hist_Pico::get( int ch )
     {
-        PS6000_CHANNEL tch = Utility::Pico_intToCh( ch );
+        PS6000_CHANNEL tch = Utility::Pico_intToEnum_channel( ch );
         std::shared_ptr<TH1I> tdata;
         for( auto& tmp : *data )
         {
@@ -291,27 +291,14 @@ namespace Utility{
     //              START Pico_Data_Analyzed_Channel
 
 
-    Pico_Data_Analyzed_Channel::Pico_Data_Analyzed_Channel( int cha ) :
-        channel( Utility::Pico_intToCh(cha) )
-    {
-    }
-
-
-///////////////////////////////////////////////////////////////////////////////
-
-
-    Pico_Data_Analyzed_Channel::Pico_Data_Analyzed_Channel( PS6000_CHANNEL cha ) :
-        channel( cha )
-    {
-    }
-
-///////////////////////////////////////////////////////////////////////////////
 
 
     PS6000_CHANNEL Pico_Data_Analyzed_Channel::getID()
     {
         return channel;
     }
+
+
 
     //              END Pico_Data_Analyzed_Channel
     ///////////////////////////////////////////////////////////////////////////
@@ -326,24 +313,6 @@ namespace Utility{
 
     ///////////////////////////////////////////////////////////////////////////
     //              START Pico_Data_Analyzed_Pico
-
-
-    Pico_Data_Analyzed_Pico::Pico_Data_Analyzed_Pico( std::string loc ) :
-        data( std::make_shared< std::vector< std::shared_ptr< 
-                Pico_Data_Analyzed_Channel > > >() ),
-        location( loc )
-    {
-        data->emplace_back( PS6000_CHANNEL_A );
-        data->emplace_back( PS6000_CHANNEL_B );
-        data->emplace_back( PS6000_CHANNEL_C );
-        data->emplace_back( PS6000_CHANNEL_D );
-    }
-
-
-
-
-///////////////////////////////////////////////////////////////////////////////
-
 
 
 
@@ -375,7 +344,7 @@ namespace Utility{
     {
         for( auto& tmp : *data )
         {
-            if( tmp->getID() == Utility::Pico_intToCh(cha) )
+            if( tmp->getID() == Utility::Pico_intToEnum_channel(cha) )
             {
                 return tmp;
             }
@@ -1004,7 +973,7 @@ namespace Utility{
 
 
 
-    PS6000_CHANNEL Pico_intToCh( int cha )
+    PS6000_CHANNEL Pico_intToEnum_channel( int cha )
     {
         switch( cha )
         {
@@ -1019,6 +988,8 @@ namespace Utility{
             default:
                 throw PicoException("No known channel conversion available!");
         }
+
+        return PS6000_CHANNEL_A;
     }
 
 

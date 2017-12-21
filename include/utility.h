@@ -228,6 +228,103 @@ namespace Utility{
 
 
 
+
+
+
+
+
+
+
+    ///////////////////////////////////////////////////////////////////////////
+    //                  Pico_StringToEnum functions
+    //
+
+    //! String to enum for PS6000_COUPLING
+    PS6000_COUPLING     Pico_StringToEnum_coupling( std::string& enumerator );
+
+    //! String to enum for PS600_RANGE
+    PS6000_RANGE        Pico_StringToEnum_range( std::string& enumerator );
+
+    //! String to enum for PS6000_BANDWIDTH_LIMITER
+    PS6000_BANDWIDTH_LIMITER    Pico_StringToEnum_bandwidth( std::string& enumerator );
+
+    //! String to enum for PS6000_RATIO_MODE
+    PS6000_RATIO_MODE           Pico_StringToEnum_ratio( std::string& enumerator );
+
+    //! String to enum for PS6000_CHANNEL
+    PS6000_CHANNEL      Pico_StringToEnum_channel( std::string& enumerator );
+
+    //! String to enum for PS6000_THRESHOLD_DIRECTION
+    PS6000_THRESHOLD_DIRECTION  Pico_StringToEnum_thresDir(std::string& enumerator );
+
+    //! String to enum for Utility::Pico_RunMode
+    Utility::Pico_RunMode       Pico_StringToEnum_runMode( std::string& enumerator );
+
+    //! String to enum for Utility::Pico_Trigger_Mode
+    Utility::Pico_Trigger_Mode  Pico_StringToEnum_trigger( std::string& enumerator );
+
+    //! String to enum for Utility::Collection_Mode
+    Utility::Collection_Mode    Pico_StringToEnum_collection( std::string& enumerator );
+
+    //! String to enum for Utility::Claws_Gain
+    Utility::Claws_Gain         Pico_StringToEnum_gain( std::string& enumerator );
+
+    //! Transforms a integer channel number (1-4) to a PS6000_CHANNEL enum.
+    PS6000_CHANNEL              Pico_intToEnum_channel( int ch );
+
+
+    //
+    //                      END Pico_StringToEnum functions
+    ///////////////////////////////////////////////////////////////////////////
+
+
+
+
+
+
+    ///////////////////////////////////////////////////////////////////////////
+    //                  Pico_EnumToString functions
+    //
+    // The following functions are needed for readbility of std::cout and
+    // saving of the ini files.
+    //
+
+    //! Enum to string for PS6000_COUPLING
+    std::string     Pico_EnumToString_coupling( PS6000_COUPLING& var );
+
+    //! Enum to string for PS6000_RANGE 
+    std::string     Pico_EnumToString_range( PS6000_RANGE& var );
+
+    //! Enum to string for PS6000_BANDWIDTH_LIMITER_
+    std::string     Pico_EnumToString_bandwidth( PS6000_BANDWIDTH_LIMITER& var );
+
+    //! Enum to string for PS6000_RATIO_MODE
+    std::string     Pico_EnumToString_ratio( PS6000_RATIO_MODE& var );
+
+    //! Enum to string for PS6000_CHANNEL
+    std::string     Pico_EnumToString_channel( PS6000_CHANNEL var );
+
+    //! Enum to string for PS6000_THRESHOLD_DIRECTION
+    std::string     Pico_EnumToString_thresDir( PS6000_THRESHOLD_DIRECTION& var );
+
+    //! Enum to string for Utility::Pico_runMode
+    std::string     Pico_EnumToString_runMode( Utility::Pico_RunMode& mode );
+
+    //! Enum to string for Utility::Pico_Trigger_Mode
+    std::string     Pico_EnumToString_trigger( Utility::Pico_Trigger_Mode& mode );
+
+    //! Enum to string for Utility::Collection_Mode
+    std::string     Pico_EnumToString_collection( Utility::Collection_Mode& mode );
+
+    //
+    //                  END Pico_EnumToString functions
+    ///////////////////////////////////////////////////////////////////////////
+
+
+
+
+
+
     //
     //                      END Pico Enums
     ///////////////////////////////////////////////////////////////////////////
@@ -371,8 +468,10 @@ namespace Utility{
 
     struct Pico_Data_Analyzed_Channel
     {
-        Pico_Data_Analyzed_Channel( int cha );
-        Pico_Data_Analyzed_Channel( PS6000_CHANNEL cha );
+        Pico_Data_Analyzed_Channel( int cha ) :
+            channel( Utility::Pico_intToEnum_channel(cha)) {};
+        Pico_Data_Analyzed_Channel( PS6000_CHANNEL cha ) :
+            channel( cha ) {};
         virtual ~Pico_Data_Analyzed_Channel();
 
         PS6000_CHANNEL getID();
@@ -436,7 +535,24 @@ namespace Utility{
     struct Pico_Data_Analyzed_Pico
     {
 
-        Pico_Data_Analyzed_Pico( std::string location );
+        Pico_Data_Analyzed_Pico( std::string loc ) :
+            data( std::make_shared< std::vector< std::shared_ptr< 
+                    Pico_Data_Analyzed_Channel > > >() ),
+            location( loc )
+        {
+            data->push_back( 
+                    std::make_shared<Utility::Pico_Data_Analyzed_Channel>(
+                        PS6000_CHANNEL_A) );
+            data->push_back( 
+                    std::make_shared<Utility::Pico_Data_Analyzed_Channel>(
+                        PS6000_CHANNEL_B) );
+            data->push_back( 
+                    std::make_shared<Utility::Pico_Data_Analyzed_Channel>(
+                        PS6000_CHANNEL_C) );
+            data->push_back( 
+                    std::make_shared<Utility::Pico_Data_Analyzed_Channel>(
+                        PS6000_CHANNEL_D) );
+        }
         virtual ~Pico_Data_Analyzed_Pico();
 
         //! Returns the channel data.
@@ -798,103 +914,6 @@ namespace Utility{
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-    ///////////////////////////////////////////////////////////////////////////
-    //                  Pico_StringToEnum functions
-    //
-
-    //! String to enum for PS6000_COUPLING
-    PS6000_COUPLING     Pico_StringToEnum_coupling( std::string& enumerator );
-
-    //! String to enum for PS600_RANGE
-    PS6000_RANGE        Pico_StringToEnum_range( std::string& enumerator );
-
-    //! String to enum for PS6000_BANDWIDTH_LIMITER
-    PS6000_BANDWIDTH_LIMITER    Pico_StringToEnum_bandwidth( std::string& enumerator );
-
-    //! String to enum for PS6000_RATIO_MODE
-    PS6000_RATIO_MODE           Pico_StringToEnum_ratio( std::string& enumerator );
-
-    //! String to enum for PS6000_CHANNEL
-    PS6000_CHANNEL      Pico_StringToEnum_channel( std::string& enumerator );
-
-    //! String to enum for PS6000_THRESHOLD_DIRECTION
-    PS6000_THRESHOLD_DIRECTION  Pico_StringToEnum_thresDir(std::string& enumerator );
-
-    //! String to enum for Utility::Pico_RunMode
-    Utility::Pico_RunMode       Pico_StringToEnum_runMode( std::string& enumerator );
-
-    //! String to enum for Utility::Pico_Trigger_Mode
-    Utility::Pico_Trigger_Mode  Pico_StringToEnum_trigger( std::string& enumerator );
-
-    //! String to enum for Utility::Collection_Mode
-    Utility::Collection_Mode    Pico_StringToEnum_collection( std::string& enumerator );
-
-    //! String to enum for Utility::Claws_Gain
-    Utility::Claws_Gain         Pico_StringToEnum_gain( std::string& enumerator );
-
-    //! Transforms a integer channel number (1-4) to a PS6000_CHANNEL enum.
-    PS6000_CHANNEL Pico_intToCh( int ch );
-
-
-    //
-    //                      END Pico_StringToEnum functions
-    ///////////////////////////////////////////////////////////////////////////
-
-
-
-
-
-
-    ///////////////////////////////////////////////////////////////////////////
-    //                  Pico_EnumToString functions
-    //
-    // The following functions are needed for readbility of std::cout and
-    // saving of the ini files.
-    //
-
-    //! Enum to string for PS6000_COUPLING
-    std::string     Pico_EnumToString_coupling( PS6000_COUPLING& var );
-
-    //! Enum to string for PS6000_RANGE 
-    std::string     Pico_EnumToString_range( PS6000_RANGE& var );
-
-    //! Enum to string for PS6000_BANDWIDTH_LIMITER_
-    std::string     Pico_EnumToString_bandwidth( PS6000_BANDWIDTH_LIMITER& var );
-
-    //! Enum to string for PS6000_RATIO_MODE
-    std::string     Pico_EnumToString_ratio( PS6000_RATIO_MODE& var );
-
-    //! Enum to string for PS6000_CHANNEL
-    std::string     Pico_EnumToString_channel( PS6000_CHANNEL var );
-
-    //! Enum to string for PS6000_THRESHOLD_DIRECTION
-    std::string     Pico_EnumToString_thresDir( PS6000_THRESHOLD_DIRECTION& var );
-
-    //! Enum to string for Utility::Pico_runMode
-    std::string     Pico_EnumToString_runMode( Utility::Pico_RunMode& mode );
-
-    //! Enum to string for Utility::Pico_Trigger_Mode
-    std::string     Pico_EnumToString_trigger( Utility::Pico_Trigger_Mode& mode );
-
-    //! Enum to string for Utility::Collection_Mode
-    std::string     Pico_EnumToString_collection( Utility::Collection_Mode& mode );
-
-    //
-    //                  END Pico_EnumToString functions
-    ///////////////////////////////////////////////////////////////////////////
 
 
 ///////////////////////////////////////////////////////////////////////////////
