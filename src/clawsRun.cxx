@@ -258,9 +258,9 @@ void            ClawsRun::loadConfig()
 
     try
     {
-        std::cout << "Reading Pico high gain settings...";
+        std::cout << "Reading physics settings...";
         // load pico configs for the set run mode...
-        m_database->Pico_readSettings( m_database->Claws_getConfig()->runMode_HighGain );
+        m_database->Pico_readSettings();
         std::cout << "done!\n";
     }
     catch( UtilityException& excep )
@@ -269,16 +269,16 @@ void            ClawsRun::loadConfig()
     }
 
 
-    try
-    {
-        std::cout << "Reading low gain settings...";
-        m_database->Pico_readSettings( m_database->Claws_getConfig()->runMode_LowGain );
-        std::cout << "done!\n";
-    }
-    catch( UtilityException& excep )
-    {
-        std::cout << "\n" << excep.what() << std::endl;
-    }
+//    try
+//    {
+//        std::cout << "Reading low gain settings...";
+//        m_database->Pico_readSettings( m_database->Claws_getConfig()->runMode_LowGain );
+//        std::cout << "done!\n";
+//    }
+//    catch( UtilityException& excep )
+//    {
+//        std::cout << "\n" << excep.what() << std::endl;
+//    }
 
     try
     {

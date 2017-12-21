@@ -22,6 +22,7 @@
 #include "clawsException.h"
 #include "readini.h"
 
+#include <boost/filesystem.hpp>
 #include <boost/property_tree/exceptions.hpp>
 #include <boost/property_tree/ptree.hpp>
 #include <boost/property_tree/ini_parser.hpp>
@@ -237,36 +238,18 @@ void Database::Claws_readConfig()
     
     root = "RunMode.";
 
-    // read in current runmode
-    tpath = root + "current";
-    tmp = 
+    // read in intermedaite config file path
+    tpath = root + "intermediate";
+    Claws_getConfig()->path_config_intermediate = 
         m_initReader->getKey< std::string >(m_initReader->getInitstruct().ClawsConfig, tpath);
-    Claws_getConfig()->gain_current = Utility::Pico_StringToEnum_gain( tmp );
 
-    // read in High Gain Mode
-    tpath = root + "highGain";
-    tmp = 
+    // read in physics config file path
+    tpath = root + "physics";
+    Claws_getConfig()->path_config_physics = 
         m_initReader->getKey< std::string >(m_initReader->getInitstruct().ClawsConfig, tpath );
-    Claws_getConfig()->runMode_HighGain = Utility::Pico_StringToEnum_runMode( tmp );
-
-
-    // read in Low Gain Mode
-    tpath = root + "lowGain";
-    tmp = m_initReader->getKey< std::string >(m_initReader->getInitstruct().ClawsConfig, tpath );
-    Claws_getConfig()->runMode_LowGain = Utility::Pico_StringToEnum_runMode( tmp );
 
 
 
-    // after all values are read-in, define a default run mode
-    if( Claws_getConfig()->gain_current == Utility::Claws_Gain::LOW_GAIN )
-    {
-        Claws_getConfig()->runMode_current = Claws_getConfig()->runMode_LowGain;
-    }
-    else if( Claws_getConfig()->gain_current == Utility::Claws_Gain::HIGH_GAIN )
-    {
-        Claws_getConfig()->runMode_current = Claws_getConfig()->runMode_HighGain;
-    }
-    else throw PicoException("Wrong 'current run mode' entered!");
 
     return;
 }
@@ -702,7 +685,11 @@ void Database::Pico_readTriggerSimpleSettings( Utility::Pico_RunMode mode, int p
     std::string iKey;      // intermediate path
     std::string fKey;      // final path
 
-    std::string tmp;
+    
+    std::string tmp = ptree.get< std::string >( "General.lowGain");
+    Utility::Claws_Gain tmpGain{ tmp.compare("true")==0 ? Utility::Claws_Gain::LOW_GAIN : Utility::Claws_Gain::HIGH_GAIN };
+    tmpDataStruct->gain = tmpGain;
+
     rKey = headBegin + m_picoData->at(picoNo)->val_location + headEnd + ".";
     iKey = rKey;
 
@@ -927,27 +914,22 @@ void Database::Pico_readIntermediateSettings( int picoNo )
 std::string Database::Pico_returnPathToRunMode( Utility::Pico_RunMode mode )
 {
 
-    std::string output;
+    std::string tmp;
     switch( mode )
     {
-        case Utility::Pico_RunMode::OBERMAIER_HG:
-            output = m_initReader->getInitstruct().Obermaier_HG;
+        case Utility::Pico_RunMode::PHYSICS:
+            tmp = Claws_getConfig()->path_config_physics;
             break;
-        case Utility::Pico_RunMode::MERKEL_HG:
-            output = m_initReader->getInitstruct().Merkel_HG;
-            break;
-        case Utility::Pico_RunMode::SCHIFFER_LG:
-            output = m_initReader->getInitstruct().Schiffer_LG;
-            break;
-        case Utility::Pico_RunMode::KLUM_LG:
-            output = m_initReader->getInitstruct().Klum_LG;
-            break;
-        case Utility::Pico_RunMode::GARRN:
-            output = m_initReader->getInitstruct().Garrn;
+        case Utility::Pico_RunMode::INTERMEDIATE:
+            tmp = Claws_getConfig()->path_config_intermediate;
             break;
         default:
             throw PicoException("Wrong Pico_RunMode input!");
     };
+
+    std::string output{boost::filesystem::canonical(
+            boost::filesystem::current_path()).string() + "/ini_files/" +
+            tmp};
 
     return output;
 }
@@ -983,23 +965,11 @@ std::shared_ptr<Utility::Pico_Conf_HL_Gain> Database::Pico_getHLGainStruct(
     switch( mode )
     {
         // return the high gain data structure
-        case Utility::Pico_RunMode::MERKEL_HG:
-            return m_picoData->at(picoNo)->data_highGain;
+        case Utility::Pico_RunMode::PHYSICS:
+            return m_picoData->at(picoNo)->data_physics;
 
-        case Utility::Pico_RunMode::OBERMAIER_HG:
-            return m_picoData->at(picoNo)->data_highGain;
-
-        // return the low gain data structure
-        case Utility::Pico_RunMode::KLUM_LG:
-            return m_picoData->at(picoNo)->data_lowGain;
-
-        case Utility::Pico_RunMode::SCHIFFER_LG:
-            return m_picoData->at(picoNo)->data_lowGain;
-
-        // if garrn is specified, use the high gain version as default
-        case Utility::Pico_RunMode::GARRN:
-            return m_picoData->at(picoNo)->data_highGain;            
-
+        case Utility::Pico_RunMode::INTERMEDIATE:
+            return m_picoData->at(picoNo)->data_inter;
         default:
             throw PicoException("Utility::Pico_RunMode does not exist!");
     }

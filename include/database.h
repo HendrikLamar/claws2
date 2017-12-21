@@ -86,9 +86,11 @@ class Database
 
         //! Reads in the pico settings for a specific run mode. The
         //! intermediate settings are read-in standardly.
-        void Pico_readSettings( Utility::Pico_RunMode mode );
+        void Pico_readSettings( Utility::Pico_RunMode mode = 
+                Utility::Pico_RunMode::PHYSICS);
 
-        std::unique_ptr<std::vector< std::shared_ptr<Utility::Pico_Conf_Pico> > >     m_picoData;     
+        std::unique_ptr<std::vector< 
+            std::shared_ptr<Utility::Pico_Conf_Pico> > >     m_picoData;     
 
 
         ///////////////////////////////////////////////////////////////////

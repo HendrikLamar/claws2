@@ -108,11 +108,7 @@ namespace Utility{
     {
         INTERMEDIATE,
 
-        MERKEL_HG,
-        OBERMAIER_HG,
-        SCHIFFER_LG,
-        KLUM_LG,
-        GARRN
+        PHYSICS
     };
     
 
@@ -141,9 +137,6 @@ namespace Utility{
 
     enum class Claws_Gain
     {
-        INTERMEDIATE,
-        HL_GAIN,
-
         HIGH_GAIN,
         LOW_GAIN
     };
@@ -221,17 +214,11 @@ namespace Utility{
     //! String to enum for PS6000_THRESHOLD_DIRECTION
     PS6000_THRESHOLD_DIRECTION  Pico_StringToEnum_thresDir(std::string& enumerator );
 
-    //! String to enum for Utility::Pico_RunMode
-    Utility::Pico_RunMode       Pico_StringToEnum_runMode( std::string& enumerator );
-
     //! String to enum for Utility::Pico_Trigger_Mode
     Utility::Pico_Trigger_Mode  Pico_StringToEnum_trigger( std::string& enumerator );
 
     //! String to enum for Utility::Collection_Mode
     Utility::Collection_Mode    Pico_StringToEnum_collection( std::string& enumerator );
-
-    //! String to enum for Utility::Claws_Gain
-    Utility::Claws_Gain         Pico_StringToEnum_gain( std::string& enumerator );
 
     //! Transforms a integer channel number (1-4) to a PS6000_CHANNEL enum.
     PS6000_CHANNEL              Pico_intToEnum_channel( int ch );
@@ -625,8 +612,6 @@ namespace Utility{
         PS6000_RANGE                range;
         PS6000_BANDWIDTH_LIMITER    bandwidth;
 
-        friend std::ostream& operator<<(
-                std::ostream& out, Utility::Pico_Conf_Channel& data );
     };
 
 
@@ -709,8 +694,6 @@ namespace Utility{
         uint32_t                    delay;
         int16_t                     autoTriggerTime;
 
-        friend std::ostream& operator<<(
-                std::ostream& out, Utility::Pico_Conf_Trigger_Simple& data );
     };
 
     //! Data structure for an entire picoscope. All the data need to be read-in.
@@ -745,8 +728,8 @@ namespace Utility{
     struct Pico_Conf_HL_Gain
     {
         //! Constructor takes care about the channels.
-        Pico_Conf_HL_Gain( Utility::Claws_Gain tgain ) : 
-            gain( tgain ),
+        Pico_Conf_HL_Gain( Utility::Pico_RunMode tmode ) : 
+            runMode( tmode ),
             channels( new std::vector< std::shared_ptr<Utility::Pico_Conf_Channel> >
                         {
                             std::make_shared<Utility::Pico_Conf_Channel>(PS6000_CHANNEL_A),
@@ -765,7 +748,8 @@ namespace Utility{
             data_trigger.reset();
         };
 
-        Utility::Claws_Gain      gain;
+        Utility::Claws_Gain     gain;
+        Utility::Pico_RunMode   runMode;
 
 
         std::shared_ptr<std::vector< std::shared_ptr<Utility::Pico_Conf_Channel> > > channels;
@@ -786,9 +770,6 @@ namespace Utility{
 
         uint32_t                loops_inter;
 
-        friend std::ostream& operator<<(
-                std::ostream& out, Utility::Pico_Conf_HL_Gain& data );
-
     };
 
 
@@ -800,9 +781,10 @@ namespace Utility{
     struct Pico_Conf_Pico
     {
         Pico_Conf_Pico( std::string tserial, std::string tlocation ) :
-            data_lowGain( new Utility::Pico_Conf_HL_Gain( Utility::Claws_Gain::LOW_GAIN ) ),
-            data_highGain( new Utility:: Pico_Conf_HL_Gain( Utility::Claws_Gain::HIGH_GAIN ) ),
-            data_inter( new Utility::Pico_Conf_HL_Gain( Utility::Claws_Gain::INTERMEDIATE ) )
+            data_physics( new Utility::Pico_Conf_HL_Gain( 
+                        Utility::Pico_RunMode::PHYSICS) ),
+            data_inter( new Utility::Pico_Conf_HL_Gain( 
+                        Utility::Pico_RunMode::INTERMEDIATE) )
         {
             // check if the serial is longer than 100 chars.
             if ( tserial.size() > 100 )
@@ -842,8 +824,7 @@ namespace Utility{
         ~Pico_Conf_Pico()
         {
             // delete data pointers
-            data_lowGain.reset();
-            data_highGain.reset();
+            data_physics.reset();
             data_inter.reset();
         }
 
@@ -853,13 +834,10 @@ namespace Utility{
         int8_t                  val_serial[100];
         std::string             val_location;
 
-        std::shared_ptr<Pico_Conf_HL_Gain>      data_lowGain;
-        std::shared_ptr<Pico_Conf_HL_Gain>      data_highGain;
+        std::shared_ptr<Pico_Conf_HL_Gain>      data_physics;
 
         std::shared_ptr<Pico_Conf_HL_Gain>      data_inter;
 
-        friend std::ostream& operator<<(
-                std::ostream& out, Utility::Pico_Conf_Pico& data );
     };
 
 
@@ -926,12 +904,14 @@ namespace Utility{
     
     struct Steering_Data
     {
-        Claws_Gain              gain_current;
+//       Claws_Gain              gain_current;
 
-        Pico_RunMode            runMode_current;
-        Pico_RunMode            runMode_HighGain;
-        Pico_RunMode            runMode_LowGain;
+//        Pico_RunMode            runMode_current;
+//        Pico_RunMode            runMode_HighGain;
+//        Pico_RunMode            runMode_LowGain;
 
+        std::string             path_config_intermediate;
+        std::string             path_config_physics;
 
         unsigned int            loops_Physics;
         unsigned int            loops_Intermediate;
@@ -940,8 +920,6 @@ namespace Utility{
         std::string             path_saveData;
 
 
-        friend std::ostream& operator<<(
-                std::ostream& out, Utility::Steering_Data& data );
     };
 
 
