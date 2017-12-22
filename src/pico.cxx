@@ -98,7 +98,7 @@ Pico::Pico( std::shared_ptr<Utility::Pico_Conf_Pico> picoData, int16_t handle ) 
     m_handle( handle ),
     m_serial( m_data_pico->val_serial ),
     m_location( &m_data_pico->val_location ),
-    m_data_current( new Utility::Pico_Conf_HL_Gain( Utility::Claws_Gain::INTERMEDIATE ) ),
+    m_data_current( new Utility::Pico_Conf_HL_Gain( Utility::Pico_RunMode::PHYSICS) ),
     m_channels( 
             std::make_shared<std::vector< std::shared_ptr<Channel> > >() )
 {
@@ -217,23 +217,19 @@ void Pico::pingUnit()
 
 
 
-void Pico::setConfig( Utility::Claws_Gain gain )
+void Pico::setConfig( Utility::Pico_RunMode mode )
 {
 
     m_noChannelsEnabled = 0;
 
-    switch( gain )
+    switch( mode )
     {
-        case Utility::Claws_Gain::INTERMEDIATE:
+        case Utility::Pico_RunMode::INTERMEDIATE:
             *m_data_current = *m_data_pico->data_inter;
             break;
-        case Utility::Claws_Gain::HIGH_GAIN:
-            *m_data_current = *m_data_pico->data_highGain;
+        case Utility::Pico_RunMode::PHYSICS:
+            *m_data_current = *m_data_pico->data_physics;
             break;
-        case Utility::Claws_Gain::LOW_GAIN:
-            *m_data_current = *m_data_pico->data_lowGain;
-            break;
-
         default:
             throw PicoException("Wrong gain input!");
     }

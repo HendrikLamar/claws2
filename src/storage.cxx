@@ -126,7 +126,7 @@ void Storage::intermediate(
 {
     std::string tpath = makePath( *m_runNum, Utility::Dir_Struct::INTER );
     
-    save( *m_runNum, subRunNum, tpath, Utility::Claws_Gain::INTERMEDIATE, hists );
+    save( *m_runNum, subRunNum, tpath, Utility::Pico_RunMode::INTERMEDIATE, hists );
 
 
     return;
@@ -147,7 +147,7 @@ void Storage::physics( unsigned int& subRunNum )
 {
 
     std::string tpath = makePath( *m_runNum, Utility::Dir_Struct::PHYSICS );
-    save( *m_runNum, subRunNum, tpath, Utility::Claws_Gain::HL_GAIN, nullptr );
+    save( *m_runNum, subRunNum, tpath, Utility::Pico_RunMode::PHYSICS, nullptr );
 
 
     return;
@@ -300,14 +300,14 @@ void Storage::save(
         unsigned long& runNum, 
         unsigned int& subRunNum, 
         std::string& tpath,
-        Utility::Claws_Gain gain,
+        Utility::Pico_RunMode mode,
         std::shared_ptr<std::vector<std::shared_ptr<TH1I>>> hists )
 {
 
     std::string tfileName;
-    switch( gain )
+    switch( mode )
     {
-        case Utility::Claws_Gain::INTERMEDIATE:
+        case Utility::Pico_RunMode::INTERMEDIATE:
             tfileName = "inter-";
             break;
         default:

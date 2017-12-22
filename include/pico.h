@@ -363,7 +363,7 @@ class Pico
         std::string     getLocation();
 
         //! Loads the in the argument demanded settings from the Database and stores it in member variables.
-        void setConfig( Utility::Claws_Gain gain );
+        void setConfig( Utility::Pico_RunMode mode );
 
         //! Prepares the Pico to get ready for block mode. Should be called before
         //! block mode.

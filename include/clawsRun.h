@@ -54,7 +54,7 @@ class ClawsRun
 
         void Pico_close();
 
-        void Pico_runBlock( Utility::Claws_Gain gain );
+        void Pico_runBlock( Utility::Pico_RunMode mode );
 
         void Pico_runRapid();
 

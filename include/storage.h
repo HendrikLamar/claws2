@@ -47,7 +47,7 @@ class Storage
                 unsigned long& runNum,
                 unsigned int& subRunNum, 
                 std::string& fpath,
-                Utility::Claws_Gain gain,
+                Utility::Pico_RunMode mode,
                 std::shared_ptr<std::vector<std::shared_ptr<TH1I>>> hists );
 
 
