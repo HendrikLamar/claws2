@@ -155,10 +155,6 @@ void        ClawsRun::initialize()
 void    ClawsRun::run()
 {
 
-    m_psu->sendConf( Utility::Claws_Gain::HIGH_GAIN);
-    m_psu->start();
-    std::this_thread::sleep_for(std::chrono::seconds(3));
-
 //    for( int i = 0; i < 1; ++i )
     while( !m_stopRun )
     {
@@ -200,8 +196,6 @@ void    ClawsRun::run()
         diff = std::chrono::duration_cast<std::chrono::seconds>(time3 - time2);
 //        std::cout << "Physics: " << diff.count() << "sec\n";
     }
-
-    m_psu->stop();
 
     m_stopRun = false;
 
@@ -902,11 +896,19 @@ void ClawsRun::StopRun()
 
         // load each pico with a config and make it ready before running in the
         // loop
+        bool isUsed{false};
         for( auto& tmp : *m_picos )
         {
             tmp->setConfig( mode );
             tmp->setReadyBlock();
+            if( !isUsed )
+            {
+                m_psu->sendConf( tmp->getConfig()->gain );
+                isUsed = true;
+            }
         }
+
+        m_psu->start();
 
         // define work
         auto work = [](
@@ -1004,6 +1006,9 @@ void ClawsRun::StopRun()
 
 //            std::cout << "Pico closed\n";
         }
+
+
+        m_psu->stop();
 
         return;
     }
@@ -1175,11 +1180,21 @@ void ClawsRun::StopRun()
 
         // load each pico with a config and make it ready before running in the
         // loop
+        bool isUsed{false};
         for( auto& tmp : *m_picos )
         {
             tmp->setConfig( Utility::Pico_RunMode::INTERMEDIATE );
             tmp->setReadyRapid();
+            
+            if( !isUsed )
+            {
+                m_psu->sendConf( tmp->getConfig()->gain );
+                isUsed = true;
+            }
         }
+
+        m_psu->start();
+
 
         // define work
         auto work = [](
@@ -1264,6 +1279,8 @@ void ClawsRun::StopRun()
                 std::cout << excep.what() << std::endl;
             }
         }
+
+        m_psu->stop();
 
         return;
     }

@@ -211,7 +211,6 @@ void N6700::sendCommand( std::string cmd )
 void N6700::sendConf( Utility::Claws_Gain HIGH_LOW_GAIN )
 {
 
-    std::this_thread::sleep_for(std::chrono::seconds(1));
     switch( HIGH_LOW_GAIN )
     {
         case Utility::Claws_Gain::LOW_GAIN:
@@ -251,6 +250,7 @@ void N6700::sendConf( Utility::Claws_Gain HIGH_LOW_GAIN )
     }
     sendCommand( cmd );
 
+    std::this_thread::sleep_for(std::chrono::seconds(1));
 
     return;
 

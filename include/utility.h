@@ -752,7 +752,8 @@ namespace Utility{
         Utility::Pico_RunMode   runMode;
 
 
-        std::shared_ptr<std::vector< std::shared_ptr<Utility::Pico_Conf_Channel> > > channels;
+        std::shared_ptr<std::vector< 
+            std::shared_ptr<Utility::Pico_Conf_Channel> > > channels;
 
 
         std::shared_ptr<Pico_Conf_Trigger_Simple> data_trigger;

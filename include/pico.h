@@ -365,6 +365,9 @@ class Pico
         //! Loads the in the argument demanded settings from the Database and stores it in member variables.
         void setConfig( Utility::Pico_RunMode mode );
 
+        //! Returns the config currently loaded.
+        std::shared_ptr< Utility::Pico_Conf_HL_Gain > getConfig();
+
         //! Prepares the Pico to get ready for block mode. Should be called before
         //! block mode.
         void setReadyBlock();
