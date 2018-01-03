@@ -22,7 +22,7 @@
 
 
 #include <pico.h>
-#include <utility.h>
+//#include <utility.h>
 
 #include <vector>
 
@@ -41,6 +41,15 @@ class Analysis
         virtual ~Analysis();
 
 
+        //! Calculates the average 1pe value and total 1pe fraction per channel.
+        //! First, the waveform containing 1pe values are extracted. 
+        //! If a value higher as 1.5 times the average waveform is found, 
+        //! the waveform is rejected.
+        //! Afterwards, the integral of the second half is subtracted by the integral
+        //! of the first (pedestal) part which yields the pedestal subtracted
+        //! integral. This is done waveform by waveform.
+        //! As the last step, the arithmetic mean of all  pedestal subtracted 
+        //! integral is calculated.
         void intermediate( std::shared_ptr<Pico> tpico );
 
         void physics();

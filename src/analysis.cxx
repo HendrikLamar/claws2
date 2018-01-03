@@ -17,8 +17,10 @@
 
 
 #include "analysis.h"
+#include "clawsException.h"
 
 #include <numeric>
+#include <algorithm>
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -69,6 +71,9 @@ Analysis::~Analysis()
 void Analysis::intermediate( std::shared_ptr<Pico> tpico )
 {
 
+    int16_t maxVal{
+        static_cast<int16_t>(tpico->getConfig()->average_1pe_height*1.5)};
+
     for( int i = 0; i < 4; ++i )
     {
         if( !tpico->getCh(i)->getEnabled() ) continue;
@@ -80,8 +85,19 @@ void Analysis::intermediate( std::shared_ptr<Pico> tpico )
         auto tmpdata = tpico->getCh(i)->getBufferRapid();
 
         // loop through each waveform and calculate
+        double maxCount{static_cast<double>(tmpdata->at(0)->size())};
         for( auto& tmp : *tmpdata )
         {
+            // checks if it is an 1pe or higher
+            // looks only in the second half of the waveform where the
+            // waveform is expected
+            if( maxVal < *(std::max_element(
+                            tmp->begin()+tmp->size()/2.,tmp->end())) )
+            {
+                --maxCount;
+                continue;
+            }
+
             integrals->push_back( 
                     std::accumulate(
                         tmp->begin()+tmp->size()/2.,
@@ -97,6 +113,37 @@ void Analysis::intermediate( std::shared_ptr<Pico> tpico )
         double mean{std::accumulate(integrals->begin(),integrals->end(),0.0)/
             static_cast<double>(integrals->size())};
 
+        // lambda function to transform pico enum to value for normalization
+        auto enumToDouble = [](PS6000_RANGE range)->double
+        {
+            switch( range )
+            {
+                case PS6000_50MV:
+                    return 50.;
+                case PS6000_100MV:
+                    return 100.;
+                case PS6000_200MV:
+                    return 200.;
+                case PS6000_500MV:
+                    return 500.;
+                case PS6000_1V:
+                    return 1000.;
+                case PS6000_2V:
+                    return 2000.;
+                case PS6000_5V:
+                    return 5000.;
+                default:
+                    throw ProcessDataException("Inter range not covered");
+            }
+        };
+
+        // normalize also by preamp factor 10
+        mean /= (10. * enumToDouble(tpico->getConfig()->channels->at(i)->range));
+
+
+        tpico->getAnalyzed()->get(i)->cal_1pe_normalized = mean;
+        tpico->getAnalyzed()->get(i)->cal_1peVStotal_fraction =
+                maxCount/static_cast<double>(tmpdata->at(0)->size());
 
 
     }

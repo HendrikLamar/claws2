@@ -423,7 +423,7 @@ namespace Utility{
             channel( Utility::Pico_intToEnum_channel(cha)) {};
         Pico_Data_Analyzed_Channel( PS6000_CHANNEL cha ) :
             channel( cha ) {};
-        virtual ~Pico_Data_Analyzed_Channel();
+        virtual ~Pico_Data_Analyzed_Channel(){};
 
         PS6000_CHANNEL getID();
 
@@ -504,7 +504,7 @@ namespace Utility{
                     std::make_shared<Utility::Pico_Data_Analyzed_Channel>(
                         PS6000_CHANNEL_D) );
         }
-        virtual ~Pico_Data_Analyzed_Pico();
+        virtual ~Pico_Data_Analyzed_Pico(){};
 
         //! Returns the channel data.
         std::shared_ptr< Pico_Data_Analyzed_Channel > get( PS6000_CHANNEL ch );
