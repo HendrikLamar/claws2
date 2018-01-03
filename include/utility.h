@@ -220,7 +220,7 @@ namespace Utility{
     //! String to enum for Utility::Collection_Mode
     Utility::Collection_Mode    Pico_StringToEnum_collection( std::string& enumerator );
 
-    //! Transforms a integer channel number (1-4) to a PS6000_CHANNEL enum.
+    //! Transforms a integer channel number (0-3) to a PS6000_CHANNEL enum.
     PS6000_CHANNEL              Pico_intToEnum_channel( int ch );
 
 
