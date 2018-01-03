@@ -46,12 +46,6 @@ class ReadIni
             std::string intermediate;
             std::string constant_config;
 
-            std::string Obermaier_HG;
-            std::string Merkel_HG;
-            std::string Schiffer_LG;
-            std::string Klum_LG;
-            std::string Garrn;
-
             std::string PowerSupply;
             std::string initPico;
 

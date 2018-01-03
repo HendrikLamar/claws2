@@ -71,17 +71,11 @@ void ReadIni::initialize(){
     
     // uniform initilization of the Initstruct structure
     m_initstruct = {\
-//                ptree.get<std::string>("Initializer.ConfigFile_Path"),            
 
-        m_pathIniDir.string() + ptree.get<std::string>("Path.ClawsDAQ_config"),        \
-        m_pathIniDir.string() + ptree.get<std::string>("Path.intermediate"),      \
-        m_pathIniDir.string() + ptree.get<std::string>("Path.constant_config"),      \
-        m_pathIniDir.string() + ptree.get<std::string>("Path.physics_Obermaier"), \
-        m_pathIniDir.string() + ptree.get<std::string>("Path.physics_Merkel"),    \
-        m_pathIniDir.string() + ptree.get<std::string>("Path.physics_Schiffer"),  \
-        m_pathIniDir.string() + ptree.get<std::string>("Path.physics_Klum"),      \
-        m_pathIniDir.string() + ptree.get<std::string>("Path.physics_Garrn"),     \
-        m_pathIniDir.string() + ptree.get<std::string>("Path.powerSupply"),     \
+        m_pathIniDir.string() + ptree.get<std::string>("Path.ClawsDAQ_config"),
+        m_pathIniDir.string() + ptree.get<std::string>("Path.intermediate"),      
+        m_pathIniDir.string() + ptree.get<std::string>("Path.constant_config"), 
+        m_pathIniDir.string() + ptree.get<std::string>("Path.powerSupply"),     
         m_pathIniDir.string() + ptree.get<std::string>("Path.picoInit"),
         m_pathIniDir.string() + ptree.get<std::string>("Path.runNumber")
     };
