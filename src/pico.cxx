@@ -99,6 +99,7 @@ Pico::Pico( std::shared_ptr<Utility::Pico_Conf_Pico> picoData, int16_t handle ) 
     m_serial( m_data_pico->val_serial ),
     m_location( &m_data_pico->val_location ),
     m_data_current( new Utility::Pico_Conf_HL_Gain( Utility::Pico_RunMode::PHYSICS) ),
+    m_data_analyzed( std::make_shared<Utility::Pico_Data_Analyzed_Pico>(m_location)),
     m_channels( 
             std::make_shared<std::vector< std::shared_ptr<Channel> > >() )
 {
@@ -267,6 +268,26 @@ std::shared_ptr< Utility::Pico_Conf_HL_Gain > Pico::getConfig()
 {
     return m_data_current;
 }
+
+
+
+
+
+
+
+///////////////////////////////////////////////////////////////////////////////
+
+
+
+
+
+
+
+std::shared_ptr< Utility::Pico_Data_Analyzed_Pico > Pico::getAnalyzed()
+{
+    return m_data_analyzed;
+}
+
 
 
 

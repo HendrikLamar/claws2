@@ -74,6 +74,9 @@ class Pico
         // run mode
         std::shared_ptr<Utility::Pico_Conf_HL_Gain>             m_data_current;
 
+
+        std::shared_ptr< Utility::Pico_Data_Analyzed_Pico >     m_data_analyzed;
+
         
         // Vector holding the four channels of the pico
         std::shared_ptr<std::vector< std::shared_ptr<Channel> > > m_channels;
@@ -367,6 +370,10 @@ class Pico
 
         //! Returns the config currently loaded.
         std::shared_ptr< Utility::Pico_Conf_HL_Gain > getConfig();
+        
+
+        //! Returns the moste recent analyzed data.
+        std::shared_ptr< Utility::Pico_Data_Analyzed_Pico > getAnalyzed();
 
         //! Prepares the Pico to get ready for block mode. Should be called before
         //! block mode.

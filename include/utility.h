@@ -771,6 +771,8 @@ namespace Utility{
 
         uint32_t                loops_inter;
 
+        int                     average_1pe_height;
+
     };
 
 

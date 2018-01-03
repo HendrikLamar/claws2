@@ -829,6 +829,8 @@ void Database::Pico_readIntermediateSettings( int picoNo )
         ++counter;
     }
 
+    fKey = iKey + "average_1pe_height";
+    tmpDataStruct->average_1pe_height = ptree.get< long >( int );
 
 
 
