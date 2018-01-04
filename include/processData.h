@@ -22,6 +22,7 @@
 #include "utility.h"
 #include "pico.h"
 #include "pico_channel.h"
+#include "analysis.h"
 
 #include <TH1I.h>
 
@@ -44,6 +45,7 @@ class ProcessData : public std::enable_shared_from_this< ProcessData >
     private:
 
         std::shared_ptr<Storage>    m_save;
+        std::shared_ptr<Analysis>   m_analysis;
         std::shared_ptr<std::vector< std::shared_ptr< Pico > > >    m_picos;
 
         // very complicated data structure to store data
@@ -66,8 +68,11 @@ class ProcessData : public std::enable_shared_from_this< ProcessData >
         ProcessData( std::shared_ptr<std::vector< std::shared_ptr< Pico > > > vPicos, std::shared_ptr<unsigned long> runNum );
         ~ProcessData();
 
-        //! Returns
+        //! Returns the storage class.
         std::shared_ptr< Storage >  save();
+
+        //! Returns the analysis class.
+        std::shared_ptr<Analysis>   analysis();
 
         //! Syncs the histograms of the given pico threadsafe. 
         void syncBlock( 

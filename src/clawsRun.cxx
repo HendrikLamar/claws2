@@ -1198,9 +1198,12 @@ void ClawsRun::StopRun()
 
         // define work
         auto work = [](
-                std::shared_ptr<Pico> tpico)
+                std::shared_ptr<Pico> tpico,
+                std::shared_ptr<ProcessData> dataProcessor)
                 {
                     tpico->runIntermediate();
+                    dataProcessor->analysis()->intermediate(tpico);
+
                 };
 
 
@@ -1218,7 +1221,8 @@ void ClawsRun::StopRun()
         {
                 workers.emplace_back(
                                     work, 
-                                    tpico);
+                                    tpico,
+                                    dataProcessor);
 
         };
 

@@ -20,6 +20,7 @@
 #include "storage.h"
 #include "pico.h"
 #include "pico_channel.h"
+#include "analysis.h"
 
 #include <map>
 #include <memory>
@@ -52,6 +53,7 @@ ProcessData::ProcessData( std::shared_ptr<std::vector< std::shared_ptr< Pico > >
 
     m_picos_hist = std::make_shared< std::vector< std::shared_ptr< Utility::Pico_Hist_Pico > > >();
     m_save = std::make_shared<Storage>(m_picos_hist, m_runNum );
+    m_analysis = std::make_shared<Analysis>();
 
     makePicoHist();
 }
@@ -157,6 +159,26 @@ std::shared_ptr< Storage >  ProcessData::save()
 {
     return m_save;
 }
+
+
+
+
+
+
+
+///////////////////////////////////////////////////////////////////////////////
+
+
+
+
+
+
+
+std::shared_ptr< Analysis> ProcessData::analysis()
+{
+    return m_analysis;
+}
+
 
 
 
