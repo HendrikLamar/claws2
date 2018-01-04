@@ -107,7 +107,6 @@ namespace Utility{
     enum class Pico_RunMode
     {
         INTERMEDIATE,
-
         PHYSICS
     };
     
@@ -528,6 +527,33 @@ namespace Utility{
 
 
 
+///////////////////////////////////////////////////////////////////////////////
+
+
+
+
+
+
+
+
+    struct Pico_Conf_Analysis
+    {
+        float       inter_factor1pe;
+
+        int         physics_signalCut;
+    };
+
+
+
+
+
+
+
+
+
+
+
+
 
 
     //
@@ -787,7 +813,8 @@ namespace Utility{
             data_physics( new Utility::Pico_Conf_HL_Gain( 
                         Utility::Pico_RunMode::PHYSICS) ),
             data_inter( new Utility::Pico_Conf_HL_Gain( 
-                        Utility::Pico_RunMode::INTERMEDIATE) )
+                        Utility::Pico_RunMode::INTERMEDIATE) ),
+            conf_analysis( std::make_shared<Pico_Conf_Analysis>())
         {
             // check if the serial is longer than 100 chars.
             if ( tserial.size() > 100 )
@@ -840,6 +867,8 @@ namespace Utility{
         std::shared_ptr<Pico_Conf_HL_Gain>      data_physics;
 
         std::shared_ptr<Pico_Conf_HL_Gain>      data_inter;
+
+        std::shared_ptr<Pico_Conf_Analysis>     conf_analysis;
 
     };
 

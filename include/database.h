@@ -168,20 +168,25 @@ class Database
                 Utility::Pico_RunMode mode, 
                 int picoNo
                 );
+        
         void Pico_readAquisitionSettings( 
                 Utility::Pico_RunMode mode, 
                 int picoNo
                 );
+        
         void Pico_readTriggerSimpleSettings( 
                 Utility::Pico_RunMode mode, 
                 int picoNo
                 );
+
         void Pico_readTriggerAdvSettings( 
                 Utility::Pico_RunMode mode, 
                 int picoNo
                 );
 
         void Pico_readIntermediateSettings( int picoNo );
+
+        void Pico_readMiscSettings( int picoNo );
 
         std::shared_ptr<Utility::Pico_Conf_HL_Gain> Pico_getHLGainStruct( 
                 Utility::Pico_RunMode mode,

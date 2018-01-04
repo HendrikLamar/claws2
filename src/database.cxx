@@ -500,6 +500,27 @@ void Database::Pico_readSettings( Utility::Pico_RunMode mode )
         }
 
 
+        // reading in simple trigger settings
+        try
+        {
+            Pico_readMiscSettings( i );
+        }
+        catch( boost::property_tree::ptree_error& excep )
+        {
+            std::cout << "\nAnalysis settings couldn't be read-in for Pico# ";
+            std::cout << i+1 << "\n";
+            std::cout << "Please check the ini-file arguments and Claws docs.\n";
+            std::cout << excep.what() << "\n" << std::endl;
+            continue;
+        }
+        catch( PicoException& excep )
+        {
+            std::cout << "\nAnalysis settings couldn't be read-in for Pico# ";
+            std::cout << i+1 << "\n";
+            std::cout << "Please check the ini-file arguments and Claws docs.\n";
+            std::cout << excep.what() << "\n" << std::endl;
+            continue;
+        }
 
 
         // reading in advanced trigger settings
@@ -607,20 +628,21 @@ void Database::Pico_readAquisitionSettings( Utility::Pico_RunMode mode, int pico
         Pico_getHLGainStruct( mode, picoNo )};
 
     ///////////////////////////////////////////////////////////////////////////
-
-    std::string headBegin{"Pico_"};
-    std::string headEnd{"_Aquisition"};
-
     // preparation variables for the loop read-in
     std::string pathToIniFile{Pico_returnPathToRunMode(mode)};
 
     boost::property_tree::ptree ptree;
     boost::property_tree::ini_parser::read_ini(pathToIniFile.c_str(), ptree);
-
+    
+    std::string tmp;
     std::string rKey;      // root path
     std::string fKey;      // final path
 
-    std::string tmp;
+
+    std::string headBegin{"Pico_"};
+    std::string headEnd{"_Aquisition"};
+
+
     rKey = headBegin + m_picoData->at(picoNo)->val_location + headEnd + ".";
 
     
@@ -765,7 +787,8 @@ void Database::Pico_readTriggerAdvSettings( Utility::Pico_RunMode mode, int pico
 void Database::Pico_readIntermediateSettings( int picoNo )
 {
 
-    std::shared_ptr<Utility::Pico_Conf_HL_Gain>   tmpDataStruct = m_picoData->at(picoNo)->data_inter;
+    std::shared_ptr<Utility::Pico_Conf_HL_Gain>   tmpDataStruct = 
+        m_picoData->at(picoNo)->data_inter;
 
     ///////////////////////////////////////////////////////////////////////////
 
@@ -777,7 +800,8 @@ void Database::Pico_readIntermediateSettings( int picoNo )
     std::string headEnd{"_Intermediate_Mode_Settings"};
 
     // preparation variables for the loop read-in
-    std::string pathToIniFile{m_initReader->getInitstruct().intermediate};
+    std::string pathToIniFile{Pico_returnPathToRunMode(
+            Utility::Pico_RunMode::INTERMEDIATE)};
 
     boost::property_tree::ptree ptree;
     boost::property_tree::ini_parser::read_ini(pathToIniFile.c_str(), ptree);
@@ -902,6 +926,62 @@ void Database::Pico_readIntermediateSettings( int picoNo )
 
 
 ///////////////////////////////////////////////////////////////////////////////
+
+
+
+
+
+
+void Database::Pico_readMiscSettings( int picoNo )
+{
+
+    std::shared_ptr<Utility::Pico_Conf_Analysis>   tmp_conf = 
+        m_picoData->at(picoNo)->conf_analysis;
+
+
+    ///////////////////////////////////////////////////////////////////////////
+
+
+    // reade variable stuff
+    //
+    
+    std::string headBegin{"Analysis"};
+
+    // preparation variables for the loop read-in
+    std::string pathToIniFile{Pico_returnPathToRunMode(
+            Utility::Pico_RunMode::PHYSICS)};
+
+    boost::property_tree::ptree ptree;
+    boost::property_tree::ini_parser::read_ini(pathToIniFile.c_str(), ptree);
+
+    std::string rKey;      // root path
+    std::string iKey;      // intermediate path
+    std::string fKey;      // final path
+
+    std::string tmp;
+    rKey = headBegin + ".";
+    iKey = rKey;
+
+    fKey = iKey + "signalCut";
+    tmp_conf->physics_signalCut = ptree.get< int >( fKey );
+
+
+    return;
+}
+
+
+
+
+
+
+///////////////////////////////////////////////////////////////////////////////
+
+
+
+
+
+
+
 
 
 
