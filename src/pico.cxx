@@ -284,6 +284,25 @@ std::shared_ptr< Utility::Pico_Conf_HL_Gain > Pico::getConfig()
 
 
 
+std::shared_ptr< Utility::Pico_Conf_Analysis > Pico::getConfigAnalysis()
+{
+    return m_data_pico->conf_analysis;
+}
+
+
+
+
+
+
+
+///////////////////////////////////////////////////////////////////////////////
+
+
+
+
+
+
+
 std::shared_ptr< Utility::Pico_Data_Analyzed_Pico > Pico::getAnalyzed()
 {
     return m_data_analyzed;

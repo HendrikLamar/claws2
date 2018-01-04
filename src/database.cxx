@@ -941,8 +941,7 @@ void Database::Pico_readMiscSettings( int picoNo )
 
     ///////////////////////////////////////////////////////////////////////////
 
-
-    // reade variable stuff
+    // PHYSICS
     //
     
     std::string headBegin{"Analysis"};
@@ -965,6 +964,15 @@ void Database::Pico_readMiscSettings( int picoNo )
     fKey = iKey + "signalCut";
     tmp_conf->physics_signalCut = ptree.get< int >( fKey );
 
+
+    // INTERMEDIATE
+    //
+
+    pathToIniFile = Pico_returnPathToRunMode(Utility::Pico_RunMode::INTERMEDIATE);
+    boost::property_tree::ini_parser::read_ini(pathToIniFile.c_str(), ptree);
+
+    fKey = iKey + "factor_1pe";
+    tmp_conf->inter_factor1pe = ptree.get< float >( fKey );
 
     return;
 }

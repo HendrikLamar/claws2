@@ -72,7 +72,9 @@ void Analysis::intermediate( std::shared_ptr<Pico> tpico )
 {
 
     int16_t maxVal{
-        static_cast<int16_t>(tpico->getConfig()->average_1pe_height*1.5)};
+        static_cast<int16_t>(
+                tpico->getConfig()->average_1pe_height * 
+                tpico->getConfigAnalysis()->inter_factor1pe)};
 
     for( int i = 0; i < 4; ++i )
     {

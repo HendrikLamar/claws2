@@ -371,6 +371,8 @@ class Pico
         //! Returns the config currently loaded.
         std::shared_ptr< Utility::Pico_Conf_HL_Gain > getConfig();
         
+        //! Returns the analysis config file.
+        std::shared_ptr< Utility::Pico_Conf_Analysis > getConfigAnalysis();
 
         //! Returns the moste recent analyzed data.
         std::shared_ptr< Utility::Pico_Data_Analyzed_Pico > getAnalyzed();
