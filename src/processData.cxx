@@ -46,12 +46,14 @@
 
 
 
-ProcessData::ProcessData( std::shared_ptr<std::vector< std::shared_ptr< Pico > > > vPicos, std::shared_ptr<unsigned long> runNum ) :
+ProcessData::ProcessData( std::shared_ptr<std::vector< 
+        std::shared_ptr< Pico > > > vPicos, std::shared_ptr<unsigned long> runNum ) :
     m_picos( vPicos ),
     m_runNum( runNum )
 {
 
-    m_picos_hist = std::make_shared< std::vector< std::shared_ptr< Utility::Pico_Hist_Pico > > >();
+    m_picos_hist = std::make_shared< std::vector< 
+        std::shared_ptr< Utility::Pico_Hist_Pico > > >();
     m_save = std::make_shared<Storage>(m_picos_hist, m_runNum );
     m_analysis = std::make_shared<Analysis>();
 
