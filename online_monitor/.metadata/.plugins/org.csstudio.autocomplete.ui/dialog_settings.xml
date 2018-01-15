@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<section name="Workbench">
+	<section name="auto_complete_history">
+		<list key="Formula">
+			<item value="BEAST:CLAWS:WF:BOTTOM_FORWARD_1"/>
+			<item value="BEAST:CLAWS:RATE:MIP:BOTTOM_FORWARD_1"/>
+			<item value="BEAST:CLAWS:RATE:MIP:BOTTOM_FORWARD_2"/>
+			<item value="BEAST:CLAWS:RATE:MIP:TOP_FORWARD_4"/>
+			<item value="BEAST:CLAWS:RATE:MIP:TOP_FORWARD_3"/>
+			<item value="BEAST:CLAWS:RATE:MIP:TOP_FORWARD_2"/>
+			<item value="BEAST:CLAWS:RATE:MIP:TOP_FORWARD_1"/>
+			<item value="BEAST:CLAWS:RATE:MIP:TOP_BACKWARD_4"/>
+			<item value="BEAST:CLAWS:RATE:MIP:TOP_BACKWARD_3"/>
+			<item value="BEAST:CLAWS:RATE:MIP:TOP_BACKWARD_2"/>
+			<item value="BEAST:CLAWS:RATE:MIP:TOP_BACKWARD_1"/>
+			<item value="BEAST:CLAWS:RATE:MIP:BOTTOM_BACKWARD_4"/>
+			<item value="BEAST:CLAWS:RATE:MIP:BOTTOM_BACKWARD_3"/>
+			<item value="BEAST:CLAWS:RATE:MIP:BOTTOM_BACKWARD_2"/>
+			<item value="BEAST:CLAWS:RATE:MIP:BOTTOM_BACKWARD_1"/>
+			<item value="BEAST:CLAWS:RATE:MIP:BOTTOM_FORWARD_4"/>
+			<item value="BEAST:CLAWS:RATE:MIP:BOTTOM_FORWARD_3"/>
+			<item value="BEAST:CLAWS:TOP_FORWARD_4"/>
+			<item value="BEAST:CLAWS:TOP_FORWARD_3"/>
+			<item value="BEAST:CLAWS:TOP_FORWARD_2"/>
+			<item value="BEAST:CLAWS:TOP_BACKWARD_2"/>
+			<item value="BEAST:CLAWS:TOP_FORWARD_1"/>
+			<item value="BEAST:CLAWS:TOP_BACKWARD_4"/>
+			<item value="BEAST:CLAWS:TOP_BACKWARD_3"/>
+			<item value="BEAST:CLAWS:TOP_BACKWARD_1"/>
+			<item value="BEAST:CLAWS:BOTTOM_BACKWARD_4"/>
+			<item value="BEAST:CLAWS:BOTTOM_BACKWARD_3"/>
+			<item value="Y PV&#x09;BEAST:CLAWS:BOTTOM_BACKWARD_3"/>
+			<item value="Y PV&#x09;BEAST:CLAWS:BOTTOM_BACKWARD_2"/>
+			<item value="BEAST:CLAWS:BOTTOM_BACKWARD_1"/>
+			<item value="BEAST:CLAWS:BOTTOM_FORWARD_4"/>
+			<item value="BEAST:CLAWS:BOTTOM_FORWARD_2"/>
+			<item value="BEAST:CLAWS:BOTTOM_FORWARD_1"/>
+		</list>
+	</section>
+</section>

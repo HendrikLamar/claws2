@@ -1,0 +1,2 @@
+eclipse.preferences.version=1
+jaas_prefs_config=com.sun.security.auth.module.JndiLoginModule|required|debug\="true"|user.provider.url\="ldap\://titan-terrier.sns.ornl.gov\:389/ou\=People,dc\=test,dc\=ics"|group.provider.url\="ldap\://titan-terrier.sns.ornl.gov\:389/ou\=People,dc\=test,dc\=ics";

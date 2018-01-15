@@ -78,20 +78,20 @@ class PVcreator:
             if isinstance(value[0], str):
                 self.pv_dict[name]={'type' : 'enum', 'enums' : value, 'value' : 0, 'asyn' : asyn }
                 self.pv_dict[name].update(overload)
-                print('Adding enum PV:   ' + name + 'value: ' + str(value))
+                print('Adding enum PV:   ' + name + ' value: ' + str(value))
                 return
                 
             elif isinstance(value[0], int):
                 self.pv_dict[name]={'value' : value, 'type' : 'int', 'unit' : unit, 'asyn' : asyn, 'asg' : asg }
                 self.pv_dict[name].update(overload)
-                print('Adding int PV:   ' + name + 'value: ' + str(value))
+                print('Adding int PV:   ' + name + ' value: ' + str(value))
                 return
             else:
                 print ('List variable type not implemented yet')
                 return
         elif isinstance(value, int):
             self.pv_dict[name]={'value' : value, 'type' : 'int', 'unit' : unit, 'asyn' : asyn, 'asg' : asg }
-            print('Adding int PV:   ' + name + 'value: ' + str(value))
+            print('Adding int PV:   ' + name + ' value: ' + str(value))
             return
 
         else:
@@ -113,6 +113,32 @@ class PVcreator:
         self.addPV('GRAPH',{'count' : 27, 'unit' : '16bit int', 'scan' : 1.})
         self.addPV('GRAPH2D',{'count' : 6, 'unit' : '16bit int', 'scan' : 1.})
         self.addPV('',{'prec' : 3})
-        self.addPV('CH2',{'prec' : 3})
-        self.addPV('CH3',{'prec' : 3})
+
+
+
+        # MIP RATE
+        self.addPV('RATE:MIP:BOTTOM_FORWARD_1',{'prec' : 0, 'unit' : '1pe Integral [a.u.]'})
+        self.addPV('RATE:MIP:BOTTOM_FORWARD_2',{'prec' : 0, 'unit' : '1pe Integral [a.u.]'})
+        self.addPV('RATE:MIP:BOTTOM_FORWARD_3',{'prec' : 0, 'unit' : '1pe Integral [a.u.]'})
+        self.addPV('RATE:MIP:BOTTOM_FORWARD_4',{'prec' : 0, 'unit' : '1pe Integral [a.u.]'})
+        self.addPV('RATE:MIP:BOTTOM_BACKWARD_1',{'prec' : 0, 'unit' : '1pe Integral [a.u.]'})
+        self.addPV('RATE:MIP:BOTTOM_BACKWARD_2',{'prec' : 0, 'unit' : '1pe Integral [a.u.]'})
+        self.addPV('RATE:MIP:BOTTOM_BACKWARD_3',{'prec' : 0, 'unit' : '1pe Integral [a.u.]'})
+        self.addPV('RATE:MIP:BOTTOM_BACKWARD_4',{'prec' : 0, 'unit' : '1pe Integral [a.u.]'})
+        self.addPV('RATE:MIP:TOP_FORWARD_1',{'prec' : 0, 'unit' : '1pe Integral [a.u.]'})
+        self.addPV('RATE:MIP:TOP_FORWARD_2',{'prec' : 0, 'unit' : '1pe Integral [a.u.]'})
+        self.addPV('RATE:MIP:TOP_FORWARD_3',{'prec' : 0, 'unit' : '1pe Integral [a.u.]'})
+        self.addPV('RATE:MIP:TOP_FORWARD_4',{'prec' : 0, 'unit' : '1pe Integral [a.u.]'})
+        self.addPV('RATE:MIP:TOP_BACKWARD_1',{'prec' : 0, 'unit' : '1pe Integral [a.u.]'})
+        self.addPV('RATE:MIP:TOP_BACKWARD_2',{'prec' : 0, 'unit' : '1pe Integral [a.u.]'})
+        self.addPV('RATE:MIP:TOP_BACKWARD_3',{'prec' : 0, 'unit' : '1pe Integral [a.u.]'})
+        self.addPV('RATE:MIP:TOP_BACKWARD_4',{'prec' : 0, 'unit' : '1pe Integral [a.u.]'})
+
+
+        wfSize = 1000
+        # Waveform
+        self.addPV('WF:BOTTOM_FORWARD_1',{'count' : wfSize, 'type' : 'int', 'unit' : 'ADC [a.u.]', 'scan' : 1.})
+        self.addPV('WF:BOTTOM_FORWARD_X',{'count' : wfSize, 'unit' : 'Time [ns]', 'scan' : 1.})
+#        self.addPV('WF:BOTTOM_FORWARD_1',{'value' : 0, 'count' : wfSize, 'type' : 'int', 'unit' : 'ADC [a.u.]'})
+
 
