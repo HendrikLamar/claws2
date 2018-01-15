@@ -1438,6 +1438,25 @@ void ClawsRun::StopRun()
         tmpVars.push_back("RATE:MIP:FRAC:TOP_FORWARD_2");
         tmpVars.push_back("RATE:MIP:FRAC:TOP_FORWARD_3");
         tmpVars.push_back("RATE:MIP:FRAC:TOP_FORWARD_4");
+        
+        // 1pe VS total rate
+        tmpVars.push_back("RATE:1PEVSTOTAL:BOTTOM_FORWARD_1");
+        tmpVars.push_back("RATE:1PEVSTOTAL:BOTTOM_FORWARD_2");
+        tmpVars.push_back("RATE:1PEVSTOTAL:BOTTOM_FORWARD_3");
+        tmpVars.push_back("RATE:1PEVSTOTAL:BOTTOM_FORWARD_4");
+        tmpVars.push_back("RATE:1PEVSTOTAL:BOTTOM_BACKWARD_1");
+        tmpVars.push_back("RATE:1PEVSTOTAL:BOTTOM_BACKWARD_2");
+        tmpVars.push_back("RATE:1PEVSTOTAL:BOTTOM_BACKWARD_3");
+        tmpVars.push_back("RATE:1PEVSTOTAL:BOTTOM_BACKWARD_4");
+        tmpVars.push_back("RATE:1PEVSTOTAL:TOP_BACKWARD_1");
+        tmpVars.push_back("RATE:1PEVSTOTAL:TOP_BACKWARD_2");
+        tmpVars.push_back("RATE:1PEVSTOTAL:TOP_BACKWARD_3");
+        tmpVars.push_back("RATE:1PEVSTOTAL:TOP_BACKWARD_4");
+        tmpVars.push_back("RATE:1PEVSTOTAL:TOP_FORWARD_1");
+        tmpVars.push_back("RATE:1PEVSTOTAL:TOP_FORWARD_2");
+        tmpVars.push_back("RATE:1PEVSTOTAL:TOP_FORWARD_3");
+        tmpVars.push_back("RATE:1PEVSTOTAL:TOP_FORWARD_4");
+
 
         // waveforms reconstructed physics
         tmpVars.push_back("WF:PHYSICS:RECO:BOTTOM_FORWARD_1");
@@ -1460,10 +1479,10 @@ void ClawsRun::StopRun()
         tmpVars.push_back("WF:PHYSICS:RECO:TOP_FORWARD_3");
         tmpVars.push_back("WF:PHYSICS:RECO:TOP_FORWARD_4");
         tmpVars.push_back("WF:PHYSICS:RECO:TOP_FORWARD_X");
-        tmpVars.push_back("WF:PHYSICS:RECO:BINSIZE:BOTTOM_FORWARD");
-        tmpVars.push_back("WF:PHYSICS:RECO:BINSIZE:BOTTOM_BACKWARD");
-        tmpVars.push_back("WF:PHYSICS:RECO:BINSIZE:TOP_FORWARD");
-        tmpVars.push_back("WF:PHYSICS:RECO:BINSIZE:TOP_BACKWARD");
+        tmpVars.push_back("WF:PHYSICS:RECO:UNIT:BOTTOM_FORWARD");
+        tmpVars.push_back("WF:PHYSICS:RECO:UNIT:BOTTOM_BACKWARD");
+        tmpVars.push_back("WF:PHYSICS:RECO:UNIT:TOP_FORWARD");
+        tmpVars.push_back("WF:PHYSICS:RECO:UNIT:TOP_BACKWARD");
 
         // waveforms intermediate raw
         tmpVars.push_back("WF:INTERMEDIATE:RAW:BOTTOM_FORWARD_1");
@@ -1487,24 +1506,6 @@ void ClawsRun::StopRun()
         tmpVars.push_back("WF:INTERMEDIATE:RAW:TOP_FORWARD_4");
         tmpVars.push_back("WF:INTERMEDIATE:RAW:TOP_FORWARD_X");
 
-        // 1pe VS total rate
-        tmpVars.push_back("RATE:1PEVSTOTAL:BOTTOM_FORWARD_1");
-        tmpVars.push_back("RATE:1PEVSTOTAL:BOTTOM_FORWARD_2");
-        tmpVars.push_back("RATE:1PEVSTOTAL:BOTTOM_FORWARD_3");
-        tmpVars.push_back("RATE:1PEVSTOTAL:BOTTOM_FORWARD_4");
-        tmpVars.push_back("RATE:1PEVSTOTAL:BOTTOM_BACKWARD_1");
-        tmpVars.push_back("RATE:1PEVSTOTAL:BOTTOM_BACKWARD_2");
-        tmpVars.push_back("RATE:1PEVSTOTAL:BOTTOM_BACKWARD_3");
-        tmpVars.push_back("RATE:1PEVSTOTAL:BOTTOM_BACKWARD_4");
-        tmpVars.push_back("RATE:1PEVSTOTAL:TOP_BACKWARD_1");
-        tmpVars.push_back("RATE:1PEVSTOTAL:TOP_BACKWARD_2");
-        tmpVars.push_back("RATE:1PEVSTOTAL:TOP_BACKWARD_3");
-        tmpVars.push_back("RATE:1PEVSTOTAL:TOP_BACKWARD_4");
-        tmpVars.push_back("RATE:1PEVSTOTAL:TOP_FORWARD_1");
-        tmpVars.push_back("RATE:1PEVSTOTAL:TOP_FORWARD_2");
-        tmpVars.push_back("RATE:1PEVSTOTAL:TOP_FORWARD_3");
-        tmpVars.push_back("RATE:1PEVSTOTAL:TOP_FORWARD_4");
-
         // cdf
         tmpVars.push_back("WF:CDF:BOTTOM_FORWARD_1");
         tmpVars.push_back("WF:CDF:BOTTOM_FORWARD_2");
@@ -1526,10 +1527,10 @@ void ClawsRun::StopRun()
         tmpVars.push_back("WF:CDF:TOP_FORWARD_3");
         tmpVars.push_back("WF:CDF:TOP_FORWARD_4");
         tmpVars.push_back("WF:CDF:TOP_FORWARD_X");
-        tmpVars.push_back("WF:BINSIZE:BOTTOM_FORWARD");
-        tmpVars.push_back("WF:BINSIZE:BOTTOM_BACKWARD");
-        tmpVars.push_back("WF:BINSIZE:TOP_FORWARD");
-        tmpVars.push_back("WF:BINSIZE:TOP_BACKWARD");
+        tmpVars.push_back("WF:CDF:UNIT:BOTTOM_FORWARD");
+        tmpVars.push_back("WF:CDF:UNIT:BOTTOM_BACKWARD");
+        tmpVars.push_back("WF:CDF:UNIT:TOP_FORWARD");
+        tmpVars.push_back("WF:CDF:UNIT:TOP_BACKWARD");
 
 
         std::vector< chid > ids{tmpVars.size()};

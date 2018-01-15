@@ -116,29 +116,147 @@ class PVcreator:
 
 
 
-        # MIP RATE
-        self.addPV('RATE:MIP:BOTTOM_FORWARD_1',{'prec' : 0, 'unit' : '1pe Integral [a.u.]'})
-        self.addPV('RATE:MIP:BOTTOM_FORWARD_2',{'prec' : 0, 'unit' : '1pe Integral [a.u.]'})
-        self.addPV('RATE:MIP:BOTTOM_FORWARD_3',{'prec' : 0, 'unit' : '1pe Integral [a.u.]'})
-        self.addPV('RATE:MIP:BOTTOM_FORWARD_4',{'prec' : 0, 'unit' : '1pe Integral [a.u.]'})
-        self.addPV('RATE:MIP:BOTTOM_BACKWARD_1',{'prec' : 0, 'unit' : '1pe Integral [a.u.]'})
-        self.addPV('RATE:MIP:BOTTOM_BACKWARD_2',{'prec' : 0, 'unit' : '1pe Integral [a.u.]'})
-        self.addPV('RATE:MIP:BOTTOM_BACKWARD_3',{'prec' : 0, 'unit' : '1pe Integral [a.u.]'})
-        self.addPV('RATE:MIP:BOTTOM_BACKWARD_4',{'prec' : 0, 'unit' : '1pe Integral [a.u.]'})
-        self.addPV('RATE:MIP:TOP_FORWARD_1',{'prec' : 0, 'unit' : '1pe Integral [a.u.]'})
-        self.addPV('RATE:MIP:TOP_FORWARD_2',{'prec' : 0, 'unit' : '1pe Integral [a.u.]'})
-        self.addPV('RATE:MIP:TOP_FORWARD_3',{'prec' : 0, 'unit' : '1pe Integral [a.u.]'})
-        self.addPV('RATE:MIP:TOP_FORWARD_4',{'prec' : 0, 'unit' : '1pe Integral [a.u.]'})
-        self.addPV('RATE:MIP:TOP_BACKWARD_1',{'prec' : 0, 'unit' : '1pe Integral [a.u.]'})
-        self.addPV('RATE:MIP:TOP_BACKWARD_2',{'prec' : 0, 'unit' : '1pe Integral [a.u.]'})
-        self.addPV('RATE:MIP:TOP_BACKWARD_3',{'prec' : 0, 'unit' : '1pe Integral [a.u.]'})
-        self.addPV('RATE:MIP:TOP_BACKWARD_4',{'prec' : 0, 'unit' : '1pe Integral [a.u.]'})
+        # MIP rate absolute
+        self.addPV('RATE:MIP:ABS:BOTTOM_FORWARD_1',{'prec' : 0, 'unit' : 'MIPs/sec'})
+        self.addPV('RATE:MIP:ABS:BOTTOM_FORWARD_2',{'prec' : 0, 'unit' : 'MIPs/sec'})
+        self.addPV('RATE:MIP:ABS:BOTTOM_FORWARD_3',{'prec' : 0, 'unit' : 'MIPs/sec'})
+        self.addPV('RATE:MIP:ABS:BOTTOM_FORWARD_4',{'prec' : 0, 'unit' : 'MIPs/sec'})
+        self.addPV('RATE:MIP:ABS:BOTTOM_BACKWARD_1',{'prec' : 0, 'unit' : 'MIPs/sec'})
+        self.addPV('RATE:MIP:ABS:BOTTOM_BACKWARD_2',{'prec' : 0, 'unit' : 'MIPs/sec'})
+        self.addPV('RATE:MIP:ABS:BOTTOM_BACKWARD_3',{'prec' : 0, 'unit' : 'MIPs/sec'})
+        self.addPV('RATE:MIP:ABS:BOTTOM_BACKWARD_4',{'prec' : 0, 'unit' : 'MIPs/sec'})
+        self.addPV('RATE:MIP:ABS:TOP_FORWARD_1',{'prec' : 0, 'unit' : 'MIPs/sec'})
+        self.addPV('RATE:MIP:ABS:TOP_FORWARD_2',{'prec' : 0, 'unit' : 'MIPs/sec'})
+        self.addPV('RATE:MIP:ABS:TOP_FORWARD_3',{'prec' : 0, 'unit' : 'MIPs/sec'})
+        self.addPV('RATE:MIP:ABS:TOP_FORWARD_4',{'prec' : 0, 'unit' : 'MIPs/sec'})
+        self.addPV('RATE:MIP:ABS:TOP_BACKWARD_1',{'prec' : 0, 'unit' : 'MIPs/sec'})
+        self.addPV('RATE:MIP:ABS:TOP_BACKWARD_2',{'prec' : 0, 'unit' : 'MIPs/sec'})
+        self.addPV('RATE:MIP:ABS:TOP_BACKWARD_3',{'prec' : 0, 'unit' : 'MIPs/sec'})
+        self.addPV('RATE:MIP:ABS:TOP_BACKWARD_4',{'prec' : 0, 'unit' : 'MIPs/sec'})
+        self.addPV('RATE:MIP:TOTAL',{'prec' : 0, 'unit' : 'MIPs/sec'})
+
+        # MIP rate ratio of total over all channels
+        self.addPV('RATE:MIP:FRAC:BOTTOM_FORWARD_1',{'prec' : 0, 'unit' : ''})
+        self.addPV('RATE:MIP:FRAC:BOTTOM_FORWARD_2',{'prec' : 0, 'unit' : ''})
+        self.addPV('RATE:MIP:FRAC:BOTTOM_FORWARD_3',{'prec' : 0, 'unit' : ''})
+        self.addPV('RATE:MIP:FRAC:BOTTOM_FORWARD_4',{'prec' : 0, 'unit' : ''})
+        self.addPV('RATE:MIP:FRAC:BOTTOM_BACKWARD_1',{'prec' : 0, 'unit' : ''})
+        self.addPV('RATE:MIP:FRAC:BOTTOM_BACKWARD_2',{'prec' : 0, 'unit' : ''})
+        self.addPV('RATE:MIP:FRAC:BOTTOM_BACKWARD_3',{'prec' : 0, 'unit' : ''})
+        self.addPV('RATE:MIP:FRAC:BOTTOM_BACKWARD_4',{'prec' : 0, 'unit' : ''})
+        self.addPV('RATE:MIP:FRAC:TOP_FORWARD_1',{'prec' : 0, 'unit' : ''})
+        self.addPV('RATE:MIP:FRAC:TOP_FORWARD_2',{'prec' : 0, 'unit' : ''})
+        self.addPV('RATE:MIP:FRAC:TOP_FORWARD_3',{'prec' : 0, 'unit' : ''})
+        self.addPV('RATE:MIP:FRAC:TOP_FORWARD_4',{'prec' : 0, 'unit' : ''})
+        self.addPV('RATE:MIP:FRAC:TOP_BACKWARD_1',{'prec' : 0, 'unit' : ''})
+        self.addPV('RATE:MIP:FRAC:TOP_BACKWARD_2',{'prec' : 0, 'unit' : ''})
+        self.addPV('RATE:MIP:FRAC:TOP_BACKWARD_3',{'prec' : 0, 'unit' : ''})
+        self.addPV('RATE:MIP:FRAC:TOP_BACKWARD_4',{'prec' : 0, 'unit' : ''})
+
+        # 1pe VS total rate
+        self.addPV('RATE:1PEVSTOTAL:BOTTOM_FORWARD_1',{'prec' : 0, 'unit' : ''})
+        self.addPV('RATE:1PEVSTOTAL:BOTTOM_FORWARD_2',{'prec' : 0, 'unit' : ''})
+        self.addPV('RATE:1PEVSTOTAL:BOTTOM_FORWARD_3',{'prec' : 0, 'unit' : ''})
+        self.addPV('RATE:1PEVSTOTAL:BOTTOM_FORWARD_4',{'prec' : 0, 'unit' : ''})
+        self.addPV('RATE:1PEVSTOTAL:BOTTOM_BACKWARD_1',{'prec' : 0, 'unit' : ''})
+        self.addPV('RATE:1PEVSTOTAL:BOTTOM_BACKWARD_2',{'prec' : 0, 'unit' : ''})
+        self.addPV('RATE:1PEVSTOTAL:BOTTOM_BACKWARD_3',{'prec' : 0, 'unit' : ''})
+        self.addPV('RATE:1PEVSTOTAL:BOTTOM_BACKWARD_4',{'prec' : 0, 'unit' : ''})
+        self.addPV('RATE:1PEVSTOTAL:TOP_FORWARD_1',{'prec' : 0, 'unit' : ''})
+        self.addPV('RATE:1PEVSTOTAL:TOP_FORWARD_2',{'prec' : 0, 'unit' : ''})
+        self.addPV('RATE:1PEVSTOTAL:TOP_FORWARD_3',{'prec' : 0, 'unit' : ''})
+        self.addPV('RATE:1PEVSTOTAL:TOP_FORWARD_4',{'prec' : 0, 'unit' : ''})
+        self.addPV('RATE:1PEVSTOTAL:TOP_BACKWARD_1',{'prec' : 0, 'unit' : ''})
+        self.addPV('RATE:1PEVSTOTAL:TOP_BACKWARD_2',{'prec' : 0, 'unit' : ''})
+        self.addPV('RATE:1PEVSTOTAL:TOP_BACKWARD_3',{'prec' : 0, 'unit' : ''})
+        self.addPV('RATE:1PEVSTOTAL:TOP_BACKWARD_4',{'prec' : 0, 'unit' : ''})
 
 
         wfSize = 1000
-        # Waveform
-        self.addPV('WF:BOTTOM_FORWARD_1',{'count' : wfSize, 'type' : 'int', 'unit' : 'ADC [a.u.]', 'scan' : 1.})
-        self.addPV('WF:BOTTOM_FORWARD_X',{'count' : wfSize, 'unit' : 'Time [ns]', 'scan' : 1.})
-#        self.addPV('WF:BOTTOM_FORWARD_1',{'value' : 0, 'count' : wfSize, 'type' : 'int', 'unit' : 'ADC [a.u.]'})
+        # Waveform reconstructed physics
+        self.addPV('WF:PHYSICS:RECO:BOTTOM_FORWARD_1',{'count' : wfSize, 'type' : 'int', 'unit' : 'ADC [a.u.]', 'scan' : 1.})
+        self.addPV('WF:PHYSICS:RECO:BOTTOM_FORWARD_2',{'count' : wfSize, 'type' : 'int', 'unit' : 'ADC [a.u.]', 'scan' : 1.})
+        self.addPV('WF:PHYSICS:RECO:BOTTOM_FORWARD_3',{'count' : wfSize, 'type' : 'int', 'unit' : 'ADC [a.u.]', 'scan' : 1.})
+        self.addPV('WF:PHYSICS:RECO:BOTTOM_FORWARD_4',{'count' : wfSize, 'type' : 'int', 'unit' : 'ADC [a.u.]', 'scan' : 1.})
+        self.addPV('WF:PHYSICS:RECO:BOTTOM_FORWARD_X',{'count' : wfSize, 'type' : 'float', 'scan' : 1.})
 
+        self.addPV('WF:PHYSICS:RECO:BOTTOM_BACKWARD_1',{'count' : wfSize, 'type' : 'int', 'unit' : 'ADC [a.u.]', 'scan' : 1.})
+        self.addPV('WF:PHYSICS:RECO:BOTTOM_BACKWARD_2',{'count' : wfSize, 'type' : 'int', 'unit' : 'ADC [a.u.]', 'scan' : 1.})
+        self.addPV('WF:PHYSICS:RECO:BOTTOM_BACKWARD_3',{'count' : wfSize, 'type' : 'int', 'unit' : 'ADC [a.u.]', 'scan' : 1.})
+        self.addPV('WF:PHYSICS:RECO:BOTTOM_BACKWARD_4',{'count' : wfSize, 'type' : 'int', 'unit' : 'ADC [a.u.]', 'scan' : 1.})
+        self.addPV('WF:PHYSICS:RECO:BOTTOM_BACKWARD_X',{'count' : wfSize, 'type' : 'float', 'scan' : 1.})
+
+        self.addPV('WF:PHYSICS:RECO:TOP_FORWARD_1',{'count' : wfSize, 'type' : 'int', 'unit' : 'ADC [a.u.]', 'scan' : 1.})
+        self.addPV('WF:PHYSICS:RECO:TOP_FORWARD_2',{'count' : wfSize, 'type' : 'int', 'unit' : 'ADC [a.u.]', 'scan' : 1.})
+        self.addPV('WF:PHYSICS:RECO:TOP_FORWARD_3',{'count' : wfSize, 'type' : 'int', 'unit' : 'ADC [a.u.]', 'scan' : 1.})
+        self.addPV('WF:PHYSICS:RECO:TOP_FORWARD_4',{'count' : wfSize, 'type' : 'int', 'unit' : 'ADC [a.u.]', 'scan' : 1.})
+        self.addPV('WF:PHYSICS:RECO:TOP_FORWARD_X',{'count' : wfSize, 'type' : 'float', 'scan' : 1.})
+
+        self.addPV('WF:PHYSICS:RECO:TOP_BACKWARD_1',{'count' : wfSize, 'type' : 'int', 'unit' : 'ADC [a.u.]', 'scan' : 1.})
+        self.addPV('WF:PHYSICS:RECO:TOP_BACKWARD_2',{'count' : wfSize, 'type' : 'int', 'unit' : 'ADC [a.u.]', 'scan' : 1.})
+        self.addPV('WF:PHYSICS:RECO:TOP_BACKWARD_3',{'count' : wfSize, 'type' : 'int', 'unit' : 'ADC [a.u.]', 'scan' : 1.})
+        self.addPV('WF:PHYSICS:RECO:TOP_BACKWARD_4',{'count' : wfSize, 'type' : 'int', 'unit' : 'ADC [a.u.]', 'scan' : 1.})
+        self.addPV('WF:PHYSICS:RECO:TOP_BACKWARD_X',{'count' : wfSize, 'type' : 'float', 'scan' : 1.})
+
+        self.addPV('WF:PHYSICS:RECO:UNIT:TOP_BACKWARD',{'type' : 'string', 'scan' : 1.})
+        self.addPV('WF:PHYSICS:RECO:UNIT:TOP_FORWARD',{'type' : 'string', 'scan' : 1.})
+        self.addPV('WF:PHYSICS:RECO:UNIT:BOTTOM_BACKWARD',{'type' : 'string', 'scan' : 1.})
+        self.addPV('WF:PHYSICS:RECO:UNIT:BOTTOM_FORWARD',{'type' : 'string', 'scan' : 1.})
+
+
+        # waveform intermediate raw
+        self.addPV('WF:INTERMEDIATE:RAW:BOTTOM_FORWARD_1',{'count' : wfSize, 'type' : 'int', 'unit' : 'ADC [a.u.]', 'scan' : 1.})
+        self.addPV('WF:INTERMEDIATE:RAW:BOTTOM_FORWARD_2',{'count' : wfSize, 'type' : 'int', 'unit' : 'ADC [a.u.]', 'scan' : 1.})
+        self.addPV('WF:INTERMEDIATE:RAW:BOTTOM_FORWARD_3',{'count' : wfSize, 'type' : 'int', 'unit' : 'ADC [a.u.]', 'scan' : 1.})
+        self.addPV('WF:INTERMEDIATE:RAW:BOTTOM_FORWARD_4',{'count' : wfSize, 'type' : 'int', 'unit' : 'ADC [a.u.]', 'scan' : 1.})
+        self.addPV('WF:INTERMEDIATE:RAW:BOTTOM_FORWARD_X',{'count' : wfSize, 'type' : 'float', 'scan' : 1.})
+
+        self.addPV('WF:INTERMEDIATE:RAW:BOTTOM_BACKWARD_1',{'count' : wfSize, 'type' : 'int', 'unit' : 'ADC [a.u.]', 'scan' : 1.})
+        self.addPV('WF:INTERMEDIATE:RAW:BOTTOM_BACKWARD_2',{'count' : wfSize, 'type' : 'int', 'unit' : 'ADC [a.u.]', 'scan' : 1.})
+        self.addPV('WF:INTERMEDIATE:RAW:BOTTOM_BACKWARD_3',{'count' : wfSize, 'type' : 'int', 'unit' : 'ADC [a.u.]', 'scan' : 1.})
+        self.addPV('WF:INTERMEDIATE:RAW:BOTTOM_BACKWARD_4',{'count' : wfSize, 'type' : 'int', 'unit' : 'ADC [a.u.]', 'scan' : 1.})
+        self.addPV('WF:INTERMEDIATE:RAW:BOTTOM_BACKWARD_X',{'count' : wfSize, 'type' : 'float', 'scan' : 1.})
+
+        self.addPV('WF:INTERMEDIATE:RAW:TOP_FORWARD_1',{'count' : wfSize, 'type' : 'int', 'unit' : 'ADC [a.u.]', 'scan' : 1.})
+        self.addPV('WF:INTERMEDIATE:RAW:TOP_FORWARD_2',{'count' : wfSize, 'type' : 'int', 'unit' : 'ADC [a.u.]', 'scan' : 1.})
+        self.addPV('WF:INTERMEDIATE:RAW:TOP_FORWARD_3',{'count' : wfSize, 'type' : 'int', 'unit' : 'ADC [a.u.]', 'scan' : 1.})
+        self.addPV('WF:INTERMEDIATE:RAW:TOP_FORWARD_4',{'count' : wfSize, 'type' : 'int', 'unit' : 'ADC [a.u.]', 'scan' : 1.})
+        self.addPV('WF:INTERMEDIATE:RAW:TOP_FORWARD_X',{'count' : wfSize, 'type' : 'float', 'scan' : 1.})
+
+        self.addPV('WF:INTERMEDIATE:RAW:TOP_BACKWARD_1',{'count' : wfSize, 'type' : 'int', 'unit' : 'ADC [a.u.]', 'scan' : 1.})
+        self.addPV('WF:INTERMEDIATE:RAW:TOP_BACKWARD_2',{'count' : wfSize, 'type' : 'int', 'unit' : 'ADC [a.u.]', 'scan' : 1.})
+        self.addPV('WF:INTERMEDIATE:RAW:TOP_BACKWARD_3',{'count' : wfSize, 'type' : 'int', 'unit' : 'ADC [a.u.]', 'scan' : 1.})
+        self.addPV('WF:INTERMEDIATE:RAW:TOP_BACKWARD_4',{'count' : wfSize, 'type' : 'int', 'unit' : 'ADC [a.u.]', 'scan' : 1.})
+        self.addPV('WF:INTERMEDIATE:RAW:TOP_BACKWARD_X',{'count' : wfSize, 'type' : 'float', 'scan' : 1.})
+
+
+        # cdf
+        self.addPV('WF:CDF:BOTTOM_FORWARD_1',{'count' : wfSize, 'type' : 'int', 'unit' : '', 'scan' : 1.})
+        self.addPV('WF:CDF:BOTTOM_FORWARD_2',{'count' : wfSize, 'type' : 'int', 'unit' : '', 'scan' : 1.})
+        self.addPV('WF:CDF:BOTTOM_FORWARD_3',{'count' : wfSize, 'type' : 'int', 'unit' : '', 'scan' : 1.})
+        self.addPV('WF:CDF:BOTTOM_FORWARD_4',{'count' : wfSize, 'type' : 'int', 'unit' : '', 'scan' : 1.})
+        self.addPV('WF:CDF:BOTTOM_FORWARD_X',{'count' : wfSize, 'type' : 'float', 'scan' : 1.})
+
+        self.addPV('WF:CDF:BOTTOM_BACKWARD_1',{'count' : wfSize, 'type' : 'int', 'unit' : '', 'scan' : 1.})
+        self.addPV('WF:CDF:BOTTOM_BACKWARD_2',{'count' : wfSize, 'type' : 'int', 'unit' : '', 'scan' : 1.})
+        self.addPV('WF:CDF:BOTTOM_BACKWARD_3',{'count' : wfSize, 'type' : 'int', 'unit' : '', 'scan' : 1.})
+        self.addPV('WF:CDF:BOTTOM_BACKWARD_4',{'count' : wfSize, 'type' : 'int', 'unit' : '', 'scan' : 1.})
+        self.addPV('WF:CDF:BOTTOM_BACKWARD_X',{'count' : wfSize, 'type' : 'float', 'scan' : 1.})
+
+        self.addPV('WF:CDF:TOP_FORWARD_1',{'count' : wfSize, 'type' : 'int', 'unit' : '', 'scan' : 1.})
+        self.addPV('WF:CDF:TOP_FORWARD_2',{'count' : wfSize, 'type' : 'int', 'unit' : '', 'scan' : 1.})
+        self.addPV('WF:CDF:TOP_FORWARD_3',{'count' : wfSize, 'type' : 'int', 'unit' : '', 'scan' : 1.})
+        self.addPV('WF:CDF:TOP_FORWARD_4',{'count' : wfSize, 'type' : 'int', 'unit' : '', 'scan' : 1.})
+        self.addPV('WF:CDF:TOP_FORWARD_X',{'count' : wfSize, 'type' : 'float', 'scan' : 1.})
+
+        self.addPV('WF:CDF:TOP_BACKWARD_1',{'count' : wfSize, 'type' : 'int', 'unit' : '', 'scan' : 1.})
+        self.addPV('WF:CDF:TOP_BACKWARD_2',{'count' : wfSize, 'type' : 'int', 'unit' : '', 'scan' : 1.})
+        self.addPV('WF:CDF:TOP_BACKWARD_3',{'count' : wfSize, 'type' : 'int', 'unit' : '', 'scan' : 1.})
+        self.addPV('WF:CDF:TOP_BACKWARD_4',{'count' : wfSize, 'type' : 'int', 'unit' : '', 'scan' : 1.})
+        self.addPV('WF:CDF:TOP_BACKWARD_X',{'count' : wfSize, 'type' : 'float', 'scan' : 1.})
+
+        self.addPV('WF:CDF:UNIT:TOP_BACKWARD',{'type' : 'string', 'scan' : 1.})
+        self.addPV('WF:CDF:UNIT:TOP_FORWARD',{'type' : 'string', 'scan' : 1.})
+        self.addPV('WF:CDF:UNIT:BOTTOM_BACKWARD',{'type' : 'string', 'scan' : 1.})
+        self.addPV('WF:CDF:UNIT:BOTTOM_FORWARD',{'type' : 'string', 'scan' : 1.})
 
