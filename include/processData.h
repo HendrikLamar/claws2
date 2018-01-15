@@ -36,6 +36,7 @@
 #include <mutex>
 
 
+#include "cadef.h"
 
 
 //! Compines the responisbility to save and analyze the data.
@@ -66,7 +67,10 @@ class ProcessData : public std::enable_shared_from_this< ProcessData >
 
     public:
 
-        ProcessData( std::shared_ptr<std::vector< std::shared_ptr< Pico > > > vPicos, std::shared_ptr<unsigned long> runNum );
+        ProcessData( 
+                std::shared_ptr<std::vector< std::shared_ptr< Pico > > > vPicos, 
+                std::shared_ptr<unsigned long> runNum,
+                std::shared_ptr< std::vector<std::pair<std::string,chid>>> epicsVars);
         ~ProcessData();
 
         //! Returns the storage class.

@@ -28,6 +28,7 @@
 #include "n6700.h"
 #include "database.h"
 
+#include "cadef.h"
 
 
 
@@ -117,6 +118,8 @@ class ClawsRun
         //
         ///////////////////////////////////////////////////////////////////////
 
+        void Epics_init(
+                std::shared_ptr<std::vector<std::pair<std::string,chid>>> epicsVars );
 
 
 

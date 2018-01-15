@@ -25,6 +25,8 @@
 #include "clawsException.h"
 //#include "utime.h"
 
+#include "cadef.h"
+
 #include <boost/property_tree/exceptions.hpp>
 
 #include <numeric>
@@ -34,6 +36,7 @@
 #include <utility>
 #include <thread>
 #include <mutex>
+#include <chrono>
 
 #include <TROOT.h>
 
@@ -1369,6 +1372,198 @@ void ClawsRun::StopRun()
     ///////////////////////////////////////////////////////////////////////////
     //
     //          END PSU Member Functions
+    //
+    ///////////////////////////////////////////////////////////////////////////
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    ///////////////////////////////////////////////////////////////////////////
+    //
+    //          START General
+    //
+    ///////////////////////////////////////////////////////////////////////////
+
+
+    void ClawsRun::Epics_init( 
+            std::shared_ptr< std::vector< std::pair<std::string,chid>>> epicsVars )
+    {
+        if( epicsVars->size() ) epicsVars->clear();
+
+        std::vector<std::string> tmpVars;
+        // MIP rates absolute
+        tmpVars.push_back("RATE:MIP:ABS:BOTTOM_FORWARD_1");
+        tmpVars.push_back("RATE:MIP:ABS:BOTTOM_FORWARD_2");
+        tmpVars.push_back("RATE:MIP:ABS:BOTTOM_FORWARD_3");
+        tmpVars.push_back("RATE:MIP:ABS:BOTTOM_FORWARD_4");
+        tmpVars.push_back("RATE:MIP:ABS:BOTTOM_BACKWARD_1");
+        tmpVars.push_back("RATE:MIP:ABS:BOTTOM_BACKWARD_2");
+        tmpVars.push_back("RATE:MIP:ABS:BOTTOM_BACKWARD_3");
+        tmpVars.push_back("RATE:MIP:ABS:BOTTOM_BACKWARD_4");
+        tmpVars.push_back("RATE:MIP:ABS:TOP_BACKWARD_1");
+        tmpVars.push_back("RATE:MIP:ABS:TOP_BACKWARD_2");
+        tmpVars.push_back("RATE:MIP:ABS:TOP_BACKWARD_3");
+        tmpVars.push_back("RATE:MIP:ABS:TOP_BACKWARD_4");
+        tmpVars.push_back("RATE:MIP:ABS:TOP_FORWARD_1");
+        tmpVars.push_back("RATE:MIP:ABS:TOP_FORWARD_2");
+        tmpVars.push_back("RATE:MIP:ABS:TOP_FORWARD_3");
+        tmpVars.push_back("RATE:MIP:ABS:TOP_FORWARD_4");
+        tmpVars.push_back("RATE:MIP:TOTAL");
+
+        // MIP rates ratio of total
+        tmpVars.push_back("RATE:MIP:FRAC:BOTTOM_FORWARD_1");
+        tmpVars.push_back("RATE:MIP:FRAC:BOTTOM_FORWARD_2");
+        tmpVars.push_back("RATE:MIP:FRAC:BOTTOM_FORWARD_3");
+        tmpVars.push_back("RATE:MIP:FRAC:BOTTOM_FORWARD_4");
+        tmpVars.push_back("RATE:MIP:FRAC:BOTTOM_BACKWARD_1");
+        tmpVars.push_back("RATE:MIP:FRAC:BOTTOM_BACKWARD_2");
+        tmpVars.push_back("RATE:MIP:FRAC:BOTTOM_BACKWARD_3");
+        tmpVars.push_back("RATE:MIP:FRAC:BOTTOM_BACKWARD_4");
+        tmpVars.push_back("RATE:MIP:FRAC:TOP_BACKWARD_1");
+        tmpVars.push_back("RATE:MIP:FRAC:TOP_BACKWARD_2");
+        tmpVars.push_back("RATE:MIP:FRAC:TOP_BACKWARD_3");
+        tmpVars.push_back("RATE:MIP:FRAC:TOP_BACKWARD_4");
+        tmpVars.push_back("RATE:MIP:FRAC:TOP_FORWARD_1");
+        tmpVars.push_back("RATE:MIP:FRAC:TOP_FORWARD_2");
+        tmpVars.push_back("RATE:MIP:FRAC:TOP_FORWARD_3");
+        tmpVars.push_back("RATE:MIP:FRAC:TOP_FORWARD_4");
+
+        // waveforms reconstructed physics
+        tmpVars.push_back("WF:PHYSICS:RECO:BOTTOM_FORWARD_1");
+        tmpVars.push_back("WF:PHYSICS:RECO:BOTTOM_FORWARD_2");
+        tmpVars.push_back("WF:PHYSICS:RECO:BOTTOM_FORWARD_3");
+        tmpVars.push_back("WF:PHYSICS:RECO:BOTTOM_FORWARD_4");
+        tmpVars.push_back("WF:PHYSICS:RECO:BOTTOM_FORWARD_X");
+        tmpVars.push_back("WF:PHYSICS:RECO:BOTTOM_BACKWARD_1");
+        tmpVars.push_back("WF:PHYSICS:RECO:BOTTOM_BACKWARD_2");
+        tmpVars.push_back("WF:PHYSICS:RECO:BOTTOM_BACKWARD_3");
+        tmpVars.push_back("WF:PHYSICS:RECO:BOTTOM_BACKWARD_4");
+        tmpVars.push_back("WF:PHYSICS:RECO:BOTTOM_BACKWARD_X");
+        tmpVars.push_back("WF:PHYSICS:RECO:TOP_BACKWARD_1");
+        tmpVars.push_back("WF:PHYSICS:RECO:TOP_BACKWARD_2");
+        tmpVars.push_back("WF:PHYSICS:RECO:TOP_BACKWARD_3");
+        tmpVars.push_back("WF:PHYSICS:RECO:TOP_BACKWARD_4");
+        tmpVars.push_back("WF:PHYSICS:RECO:TOP_BACKWARD_X");
+        tmpVars.push_back("WF:PHYSICS:RECO:TOP_FORWARD_1");
+        tmpVars.push_back("WF:PHYSICS:RECO:TOP_FORWARD_2");
+        tmpVars.push_back("WF:PHYSICS:RECO:TOP_FORWARD_3");
+        tmpVars.push_back("WF:PHYSICS:RECO:TOP_FORWARD_4");
+        tmpVars.push_back("WF:PHYSICS:RECO:TOP_FORWARD_X");
+        tmpVars.push_back("WF:PHYSICS:RECO:BINSIZE:BOTTOM_FORWARD");
+        tmpVars.push_back("WF:PHYSICS:RECO:BINSIZE:BOTTOM_BACKWARD");
+        tmpVars.push_back("WF:PHYSICS:RECO:BINSIZE:TOP_FORWARD");
+        tmpVars.push_back("WF:PHYSICS:RECO:BINSIZE:TOP_BACKWARD");
+
+        // waveforms intermediate raw
+        tmpVars.push_back("WF:INTERMEDIATE:RAW:BOTTOM_FORWARD_1");
+        tmpVars.push_back("WF:INTERMEDIATE:RAW:BOTTOM_FORWARD_2");
+        tmpVars.push_back("WF:INTERMEDIATE:RAW:BOTTOM_FORWARD_3");
+        tmpVars.push_back("WF:INTERMEDIATE:RAW:BOTTOM_FORWARD_4");
+        tmpVars.push_back("WF:INTERMEDIATE:RAW:BOTTOM_FORWARD_X");
+        tmpVars.push_back("WF:INTERMEDIATE:RAW:BOTTOM_BACKWARD_1");
+        tmpVars.push_back("WF:INTERMEDIATE:RAW:BOTTOM_BACKWARD_2");
+        tmpVars.push_back("WF:INTERMEDIATE:RAW:BOTTOM_BACKWARD_3");
+        tmpVars.push_back("WF:INTERMEDIATE:RAW:BOTTOM_BACKWARD_4");
+        tmpVars.push_back("WF:INTERMEDIATE:RAW:BOTTOM_BACKWARD_X");
+        tmpVars.push_back("WF:INTERMEDIATE:RAW:TOP_BACKWARD_1");
+        tmpVars.push_back("WF:INTERMEDIATE:RAW:TOP_BACKWARD_2");
+        tmpVars.push_back("WF:INTERMEDIATE:RAW:TOP_BACKWARD_3");
+        tmpVars.push_back("WF:INTERMEDIATE:RAW:TOP_BACKWARD_4");
+        tmpVars.push_back("WF:INTERMEDIATE:RAW:TOP_BACKWARD_X");
+        tmpVars.push_back("WF:INTERMEDIATE:RAW:TOP_FORWARD_1");
+        tmpVars.push_back("WF:INTERMEDIATE:RAW:TOP_FORWARD_2");
+        tmpVars.push_back("WF:INTERMEDIATE:RAW:TOP_FORWARD_3");
+        tmpVars.push_back("WF:INTERMEDIATE:RAW:TOP_FORWARD_4");
+        tmpVars.push_back("WF:INTERMEDIATE:RAW:TOP_FORWARD_X");
+
+        // 1pe VS total rate
+        tmpVars.push_back("RATE:1PEVSTOTAL:BOTTOM_FORWARD_1");
+        tmpVars.push_back("RATE:1PEVSTOTAL:BOTTOM_FORWARD_2");
+        tmpVars.push_back("RATE:1PEVSTOTAL:BOTTOM_FORWARD_3");
+        tmpVars.push_back("RATE:1PEVSTOTAL:BOTTOM_FORWARD_4");
+        tmpVars.push_back("RATE:1PEVSTOTAL:BOTTOM_BACKWARD_1");
+        tmpVars.push_back("RATE:1PEVSTOTAL:BOTTOM_BACKWARD_2");
+        tmpVars.push_back("RATE:1PEVSTOTAL:BOTTOM_BACKWARD_3");
+        tmpVars.push_back("RATE:1PEVSTOTAL:BOTTOM_BACKWARD_4");
+        tmpVars.push_back("RATE:1PEVSTOTAL:TOP_BACKWARD_1");
+        tmpVars.push_back("RATE:1PEVSTOTAL:TOP_BACKWARD_2");
+        tmpVars.push_back("RATE:1PEVSTOTAL:TOP_BACKWARD_3");
+        tmpVars.push_back("RATE:1PEVSTOTAL:TOP_BACKWARD_4");
+        tmpVars.push_back("RATE:1PEVSTOTAL:TOP_FORWARD_1");
+        tmpVars.push_back("RATE:1PEVSTOTAL:TOP_FORWARD_2");
+        tmpVars.push_back("RATE:1PEVSTOTAL:TOP_FORWARD_3");
+        tmpVars.push_back("RATE:1PEVSTOTAL:TOP_FORWARD_4");
+
+        // cdf
+        tmpVars.push_back("WF:CDF:BOTTOM_FORWARD_1");
+        tmpVars.push_back("WF:CDF:BOTTOM_FORWARD_2");
+        tmpVars.push_back("WF:CDF:BOTTOM_FORWARD_3");
+        tmpVars.push_back("WF:CDF:BOTTOM_FORWARD_4");
+        tmpVars.push_back("WF:CDF:BOTTOM_FORWARD_X");
+        tmpVars.push_back("WF:CDF:BOTTOM_BACKWARD_1");
+        tmpVars.push_back("WF:CDF:BOTTOM_BACKWARD_2");
+        tmpVars.push_back("WF:CDF:BOTTOM_BACKWARD_3");
+        tmpVars.push_back("WF:CDF:BOTTOM_BACKWARD_4");
+        tmpVars.push_back("WF:CDF:BOTTOM_BACKWARD_X");
+        tmpVars.push_back("WF:CDF:TOP_BACKWARD_1");
+        tmpVars.push_back("WF:CDF:TOP_BACKWARD_2");
+        tmpVars.push_back("WF:CDF:TOP_BACKWARD_3");
+        tmpVars.push_back("WF:CDF:TOP_BACKWARD_4");
+        tmpVars.push_back("WF:CDF:TOP_BACKWARD_X");
+        tmpVars.push_back("WF:CDF:TOP_FORWARD_1");
+        tmpVars.push_back("WF:CDF:TOP_FORWARD_2");
+        tmpVars.push_back("WF:CDF:TOP_FORWARD_3");
+        tmpVars.push_back("WF:CDF:TOP_FORWARD_4");
+        tmpVars.push_back("WF:CDF:TOP_FORWARD_X");
+        tmpVars.push_back("WF:BINSIZE:BOTTOM_FORWARD");
+        tmpVars.push_back("WF:BINSIZE:BOTTOM_BACKWARD");
+        tmpVars.push_back("WF:BINSIZE:TOP_FORWARD");
+        tmpVars.push_back("WF:BINSIZE:TOP_BACKWARD");
+
+
+        std::vector< chid > ids{tmpVars.size()};
+
+        // create epics client instance
+        SEVCHK(ca_context_create(
+                    ca_disable_preemptive_callback),"ca_context_create");
+
+        // prefix used by IOC
+        std::string prefix{"BEAST:CLAWS"};
+
+        // fill data structure holding the epics chids and push it to IOC
+        for( unsigned int i = 0; i < tmpVars.size(); ++i )
+        {
+            epicsVars->push_back( std::make_pair(tmpVars.at(i), ids.at(i)) );
+            SEVCHK(ca_create_channel(
+                        std::string(prefix + epicsVars->at(i).first).c_str(),
+                        nullptr,
+                        nullptr,
+                        10,
+                        &epicsVars->at(i).second),
+                    "ca_create_channel failure");
+            SEVCHK(ca_pend_io(5.0),"ca_pend_io failure");
+
+            std::this_thread::sleep_for(std::chrono::milliseconds(10));
+        }
+
+        return;
+    }
+
+
+    ///////////////////////////////////////////////////////////////////////////
+    //
+    //          END General 
     //
     ///////////////////////////////////////////////////////////////////////////
 
