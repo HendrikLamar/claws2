@@ -425,6 +425,12 @@ struct SystemRun : sc::state< SystemRun, Active::orthogonal<1> >
 
             }
             else context< ClawsDAQ >().m_workers.emplace_back(work);
+            std::cout << "+++++++\n";
+            std::cout << "      +\n";
+            std::cout << "      -------> Claws DAQ Stopped!\n";
+            std::cout << "      +\n";
+            std::cout << "+++++++\n";
+
 
             post_event( EvStartStop() );
             // Initialize PSU with the database as parameter.

@@ -413,6 +413,32 @@ namespace Utility{
 
 
 
+
+///////////////////////////////////////////////////////////////////////////////
+
+
+
+
+/*     std::string coutColor( std::string text, std::string color, std::string other)
+ *     {
+ *         std::string output;
+ * 
+ *         if( !color.compare("red") )
+ *         {
+ *             output = "\033[1;31mbold"
+ *         }
+ *     }
+ */
+
+
+
+
+
+
+
+
+
+
     ///////////////////////////////////////////////////////////////////////////
     //
     //                          START

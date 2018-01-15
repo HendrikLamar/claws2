@@ -61,6 +61,8 @@ namespace Utility{
     void        Pico_preClose( int16_t handle );
     
 
+    std::string coutColor(std::string text, std::string color, 
+            std::string other = "none");
     
 
 
