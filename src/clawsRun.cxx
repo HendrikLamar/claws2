@@ -120,6 +120,12 @@ std::shared_ptr<Database> ClawsRun::getDatabase()
 
 void        ClawsRun::initialize()
 {
+    if( m_database->Claws_getConfig()->useEpics )
+    {
+        std::cout << "Creating epics pv's...\n" << 
+            "If an error shows up, press CRTL+C and check if the server is running!\n";
+        Epics_init(m_database->Epics_getVars());
+    }
 
 //    Pico_init_bySerial();
     Pico_init_byNullptr();
@@ -137,6 +143,7 @@ void        ClawsRun::initialize()
     {
         std::cout << "\nUnknown error. Config could not be loaded...\n";
     }
+
 
 
 
@@ -309,13 +316,13 @@ void ClawsRun::SaveOnOff()
 {
 
     auto translate = [this]()->std::string
-        {return m_database->Claws_getConfig()->isSaved ? "ON" : "OFF";};
+        {return m_database->Claws_getConfig()->isSaved_raw ? "ON" : "OFF";};
 
-    if( m_database->Claws_getConfig()->isSaved )
+    if( m_database->Claws_getConfig()->isSaved_raw )
     {
-        m_database->Claws_getConfig()->isSaved = false;
+        m_database->Claws_getConfig()->isSaved_raw = false;
     }
-    else m_database->Claws_getConfig()->isSaved = true;
+    else m_database->Claws_getConfig()->isSaved_raw = true;
 
     std::cout << "Data Saving ";
     std::cout <<  translate() << std::endl;
@@ -935,7 +942,8 @@ void ClawsRun::StopRun()
         // and the claws-global counter
         std::shared_ptr<ProcessData> dataProcessor{
             std::make_shared<ProcessData>( 
-                    m_picos, m_database->Claws_getCounter() )};
+                    m_picos, m_database->Claws_getCounter(),
+                    m_database->Epics_getVars() )};
         try
         {
             dataProcessor->save()->setSaveLocation(
@@ -975,7 +983,7 @@ void ClawsRun::StopRun()
             }
             workers.clear();
 
-            if( m_database->Claws_getConfig()->isSaved )
+            if( m_database->Claws_getConfig()->isSaved_raw )
             {
                 dataProcessor->save()->physics(counter1);
             }
@@ -1240,9 +1248,9 @@ void ClawsRun::StopRun()
         workers.clear();
     
 
-        auto time1{std::chrono::system_clock::now()};
+      
         // check if data should be saved
-        if( m_database->Claws_getConfig()->isSaved )
+        if( m_database->Claws_getConfig()->isSaved_raw )
         {
             try
             {
@@ -1260,11 +1268,6 @@ void ClawsRun::StopRun()
             unsigned int loops = m_database->Claws_getConfig()->loops_Intermediate;
             dataProcessor->syncSaveRapid(loops);
         }
-
-        auto time2{std::chrono::system_clock::now()};
-        auto diff{std::chrono::duration_cast<
-            std::chrono::milliseconds>(time2 - time1)};
-//        std::cout << "SaveDataInter: " << diff.count() << "msec\n";
         
         // tell pico that data taking is done
         for( auto& tmp : *m_picos )
@@ -1540,7 +1543,7 @@ void ClawsRun::StopRun()
                     ca_disable_preemptive_callback),"ca_context_create");
 
         // prefix used by IOC
-        std::string prefix{"BEAST:CLAWS"};
+        std::string prefix{"BEAST:CLAWS:"};
 
         // fill data structure holding the epics chids and push it to IOC
         for( unsigned int i = 0; i < tmpVars.size(); ++i )
@@ -1548,8 +1551,8 @@ void ClawsRun::StopRun()
             epicsVars->push_back( std::make_pair(tmpVars.at(i), ids.at(i)) );
             SEVCHK(ca_create_channel(
                         std::string(prefix + epicsVars->at(i).first).c_str(),
-                        nullptr,
-                        nullptr,
+                        NULL,
+                        NULL,
                         10,
                         &epicsVars->at(i).second),
                     "ca_create_channel failure");

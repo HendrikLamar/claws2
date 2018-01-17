@@ -950,7 +950,10 @@ namespace Utility{
         unsigned int            loops_Physics;
         unsigned int            loops_Intermediate;
 
-        std::atomic<bool>       isSaved;
+        std::atomic<bool>       isSaved_raw;
+        std::atomic<bool>       isSaved_online;
+
+        bool                    useEpics;
         std::string             path_saveData;
 
 

@@ -26,6 +26,7 @@
 #include "utility.h"
 #include "n6700_channels.h"
 
+#include "cadef.h"
 
 ///////////////////////////////////////////////////////////////////////////////
 //
@@ -118,6 +119,8 @@ class Database
         void                                        Claws_readConfig();
 
 
+
+        std::shared_ptr< std::vector< std::pair<std::string,chid>>> Epics_getVars();
 
 
 
@@ -223,6 +226,7 @@ class Database
         ///////////////////////////////////////////////////////////////////
 
 
+        std::shared_ptr< std::vector< std::pair<std::string,chid>>> m_epicsVars;
         std::shared_ptr<unsigned long> m_runNumber;
 
 

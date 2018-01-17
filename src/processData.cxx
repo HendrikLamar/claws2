@@ -35,6 +35,7 @@
 #include <TGraph.h>
 #include <TROOT.h>
 
+#include "cadef.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -47,7 +48,8 @@
 
 
 ProcessData::ProcessData( std::shared_ptr<std::vector< 
-        std::shared_ptr< Pico > > > vPicos, std::shared_ptr<unsigned long> runNum ) :
+        std::shared_ptr< Pico > > > vPicos, std::shared_ptr<unsigned long> runNum,
+        std::shared_ptr<std::vector<std::pair<std::string,chid>>> epicsVars ) :
     m_picos( vPicos ),
     m_runNum( runNum )
 {

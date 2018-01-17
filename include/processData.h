@@ -70,7 +70,7 @@ class ProcessData : public std::enable_shared_from_this< ProcessData >
         ProcessData( 
                 std::shared_ptr<std::vector< std::shared_ptr< Pico > > > vPicos, 
                 std::shared_ptr<unsigned long> runNum,
-                std::shared_ptr< std::vector<std::pair<std::string,chid>>> epicsVars);
+                std::shared_ptr< std::vector<std::pair<std::string,chid>>> epicsVars = nullptr);
         ~ProcessData();
 
         //! Returns the storage class.

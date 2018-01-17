@@ -31,6 +31,7 @@
 #include <string>
 #include <mutex>
 
+#include "cadef.h"
 ///////////////////////////////////////////////////////////////////////////////
 //
 ///////////////////////////////////////////////////////////////////////////////
@@ -42,6 +43,7 @@ Database::Database() try :
     m_initReader( std::make_shared<ReadIni>() ),
     m_steeringData( std::make_shared<Utility::Steering_Data>() ),
     m_N6700_Channels( std::make_shared<N6700_Channels>() ),
+    m_epicsVars(std::make_shared<std::vector<std::pair<std::string,chid>>>()),
     m_runNumber(std::make_shared<unsigned long>())
 {
     ///////////////////////////////////////////////////////////////////////////
@@ -223,11 +225,46 @@ void Database::Claws_readConfig()
     Claws_getConfig()->loops_Intermediate = m_initReader->getKey<unsigned int>(
             m_initReader->getInitstruct().ClawsConfig, tpath );
 
-    // read in isSaved 
-    tpath  = root + "saveData";
-    tmp = m_initReader->getKey<std::string>(
-            m_initReader->getInitstruct().ClawsConfig, tpath );
-    tmp.compare("yes") == 0 ? Claws_getConfig()->isSaved = true : Claws_getConfig()->isSaved = false; 
+    try
+    {
+        // read in isSaved 
+        tpath  = root + "saveData_raw";
+        tmp = m_initReader->getKey<std::string>(
+                m_initReader->getInitstruct().ClawsConfig, tpath );
+        tmp.compare("yes") == 0 ? Claws_getConfig()->isSaved_raw = true : Claws_getConfig()->isSaved_raw = false; 
+    }
+    catch( boost::property_tree::ptree_error& excep )
+    {
+        Claws_getConfig()->isSaved_raw = false;
+        std::cout << "saveData_raw not found -> set to 'false'\n";
+    }
+
+    try
+    {
+        tpath  = root + "saveData_online";
+        tmp = m_initReader->getKey<std::string>(
+                m_initReader->getInitstruct().ClawsConfig, tpath );
+        tmp.compare("yes") == 0 ? Claws_getConfig()->isSaved_online = true : Claws_getConfig()->isSaved_online = false; 
+    }
+    catch(  boost::property_tree::ptree_error& excep )
+    {
+        Claws_getConfig()->isSaved_online = false;
+        std::cout << "saveData_online not found -> set to 'false'\n";
+    }
+
+
+    try
+    {
+        tpath  = root + "epics";
+        tmp = m_initReader->getKey<std::string>(
+                m_initReader->getInitstruct().ClawsConfig, tpath );
+        tmp.compare("yes") == 0 ? Claws_getConfig()->useEpics = true : Claws_getConfig()->useEpics = false; 
+    }
+    catch( boost::property_tree::ptree_error& excep )
+    {
+        Claws_getConfig()->useEpics = false;
+        std::cout << "epics not found -> set to 'false'\n";
+    }
 
     // read in save path # 1
     tpath  = root + "path_saveData";
@@ -252,6 +289,28 @@ void Database::Claws_readConfig()
 
 
     return;
+}
+
+
+
+
+
+
+
+
+
+
+///////////////////////////////////////////////////////////////////////////////
+
+
+
+
+
+
+std::shared_ptr< std::vector< std::pair<std::string,chid>>> 
+    Database::Epics_getVars()
+{
+   return m_epicsVars; 
 }
 
 
