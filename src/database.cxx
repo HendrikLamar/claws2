@@ -44,6 +44,7 @@ Database::Database() try :
     m_steeringData( std::make_shared<Utility::Steering_Data>() ),
     m_N6700_Channels( std::make_shared<N6700_Channels>() ),
     m_epicsVars(std::make_shared<std::vector<std::pair<std::string,chid>>>()),
+    m_epicsContext( nullptr ),
     m_runNumber(std::make_shared<unsigned long>())
 {
     ///////////////////////////////////////////////////////////////////////////
@@ -311,6 +312,47 @@ std::shared_ptr< std::vector< std::pair<std::string,chid>>>
     Database::Epics_getVars()
 {
    return m_epicsVars; 
+}
+
+
+
+
+
+
+
+
+///////////////////////////////////////////////////////////////////////////////
+
+
+
+
+
+
+ca_client_context* Database::Epics_getContext()
+{
+    return m_epicsContext;
+}
+
+
+
+
+
+
+
+
+///////////////////////////////////////////////////////////////////////////////
+
+
+
+
+
+
+
+
+void Database::Epics_setContext( ca_client_context* context )
+{
+    m_epicsContext = context;
+    return;
 }
 
 

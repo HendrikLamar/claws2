@@ -152,7 +152,7 @@ $(pv_value)</tooltip>
       <color red="192" green="192" blue="192" />
     </foreground_color>
     <height>1080</height>
-    <horizontal_tabs>false</horizontal_tabs>
+    <horizontal_tabs>true</horizontal_tabs>
     <macros>
       <include_parent_macros>true</include_parent_macros>
     </macros>
@@ -177,7 +177,19 @@ $(pv_value)</tooltip>
     </tab_0_foreground_color>
     <tab_0_icon_path></tab_0_icon_path>
     <tab_0_title>Tab 0</tab_0_title>
-    <tab_count>1</tab_count>
+    <tab_1_background_color>
+      <color red="255" green="255" blue="255" />
+    </tab_1_background_color>
+    <tab_1_enabled>true</tab_1_enabled>
+    <tab_1_font>
+      <opifont.name fontName="Nimbus Sans L" height="10" style="0" pixels="false">Default</opifont.name>
+    </tab_1_font>
+    <tab_1_foreground_color>
+      <color red="0" green="0" blue="0" />
+    </tab_1_foreground_color>
+    <tab_1_icon_path></tab_1_icon_path>
+    <tab_1_title>Tab 1</tab_1_title>
+    <tab_count>2</tab_count>
     <tooltip></tooltip>
     <visible>true</visible>
     <widget_type>Tabbed Container</widget_type>
@@ -203,7 +215,7 @@ $(pv_value)</tooltip>
       <foreground_color>
         <color red="192" green="192" blue="192" />
       </foreground_color>
-      <height>1078</height>
+      <height>1049</height>
       <lock_children>false</lock_children>
       <macros>
         <include_parent_macros>true</include_parent_macros>
@@ -219,9 +231,9 @@ $(pv_value)</tooltip>
       <show_scrollbar>true</show_scrollbar>
       <tooltip></tooltip>
       <transparent>true</transparent>
-      <visible>true</visible>
+      <visible>false</visible>
       <widget_type>Grouping Container</widget_type>
-      <width>1873</width>
+      <width>1918</width>
       <wuid>-2dec5856:160e097b933:-7fe0</wuid>
       <x>1</x>
       <y>1</y>
@@ -319,7 +331,7 @@ $(pv_value)</tooltip>
           <color red="200" green="200" blue="200" />
         </axis_1_grid_color>
         <axis_1_log_scale>false</axis_1_log_scale>
-        <axis_1_maximum>20.0</axis_1_maximum>
+        <axis_1_maximum>1.0</axis_1_maximum>
         <axis_1_minimum>0.0</axis_1_minimum>
         <axis_1_scale_font>
           <opifont.name fontName="Nimbus Sans L" height="10" style="0" pixels="false">Default</opifont.name>
@@ -347,12 +359,12 @@ $(pv_value)</tooltip>
         <foreground_color>
           <color red="0" green="0" blue="255" />
         </foreground_color>
-        <height>508</height>
+        <height>697</height>
         <name>XY Graph</name>
         <plot_area_background_color>
           <color red="255" green="255" blue="255" />
         </plot_area_background_color>
-        <pv_name>BEAST:CLAWS:RATE:MIP:BOTTOM_FORWARD_1</pv_name>
+        <pv_name>BEAST:CLAWS:RATE:1PEVSTOTAL:TOP_FORWARD_1</pv_name>
         <pv_value />
         <rules />
         <scale_options>
@@ -712,10 +724,10 @@ $(trace_0_y_pv_value)</tooltip>
         <trigger_pv_value />
         <visible>true</visible>
         <widget_type>XY Graph</widget_type>
-        <width>823</width>
+        <width>997</width>
         <wuid>-2dec5856:160e097b933:-7fd8</wuid>
-        <x>1032</x>
-        <y>510</y>
+        <x>846</x>
+        <y>360</y>
       </widget>
       <widget typeId="org.csstudio.opibuilder.widgets.TextUpdate" version="1.0.0">
         <actions hook="false" hook_all="false" />
@@ -797,7 +809,7 @@ $(pv_value)</tooltip>
         <name>Text Update_2</name>
         <precision>0</precision>
         <precision_from_pv>true</precision_from_pv>
-        <pv_name>BEAST:CLAWS:RATE:MIP:FRAC:BOTTOM_FORWARD_2</pv_name>
+        <pv_name>BEAST:CLAWS:RATE:1PEVSTOTAL:TOP_BACKWARD_2</pv_name>
         <pv_value />
         <rotation_angle>0.0</rotation_angle>
         <rules />
@@ -886,7 +898,7 @@ $(pv_value)</tooltip>
         <foreground_color>
           <color red="0" green="0" blue="255" />
         </foreground_color>
-        <height>619</height>
+        <height>355</height>
         <name>XY Graph_1</name>
         <plot_area_background_color>
           <color red="255" green="255" blue="255" />
@@ -936,10 +948,250 @@ $(trace_0_y_pv_value)</tooltip>
         <trigger_pv_value />
         <visible>true</visible>
         <widget_type>XY Graph</widget_type>
-        <width>823</width>
+        <width>613</width>
         <wuid>6cf65dde:160e52be7a2:-7ee9</wuid>
         <x>72</x>
-        <y>438</y>
+        <y>702</y>
+      </widget>
+    </widget>
+    <widget typeId="org.csstudio.opibuilder.widgets.groupingContainer" version="1.0.0">
+      <actions hook="false" hook_all="false" />
+      <background_color>
+        <color red="240" green="240" blue="240" />
+      </background_color>
+      <border_color>
+        <color red="0" green="128" blue="255" />
+      </border_color>
+      <border_style>0</border_style>
+      <border_width>1</border_width>
+      <enabled>true</enabled>
+      <fc>false</fc>
+      <font>
+        <opifont.name fontName="Nimbus Sans L" height="10" style="0" pixels="false">Default</opifont.name>
+      </font>
+      <foreground_color>
+        <color red="192" green="192" blue="192" />
+      </foreground_color>
+      <height>1049</height>
+      <lock_children>false</lock_children>
+      <macros>
+        <include_parent_macros>true</include_parent_macros>
+      </macros>
+      <name>Tab 1</name>
+      <rules />
+      <scale_options>
+        <width_scalable>true</width_scalable>
+        <height_scalable>true</height_scalable>
+        <keep_wh_ratio>false</keep_wh_ratio>
+      </scale_options>
+      <scripts />
+      <show_scrollbar>true</show_scrollbar>
+      <tooltip></tooltip>
+      <transparent>true</transparent>
+      <visible>true</visible>
+      <widget_type>Grouping Container</widget_type>
+      <width>1918</width>
+      <wuid>-22dae100:160ff6edc0e:-7f6a</wuid>
+      <x>1</x>
+      <y>1</y>
+      <widget typeId="org.csstudio.opibuilder.widgets.xyGraph" version="1.0.0">
+        <actions hook="false" hook_all="false" />
+        <alarm_pulsing>false</alarm_pulsing>
+        <axis_0_auto_scale>true</axis_0_auto_scale>
+        <axis_0_auto_scale_threshold>0.0</axis_0_auto_scale_threshold>
+        <axis_0_axis_color>
+          <color red="0" green="0" blue="0" />
+        </axis_0_axis_color>
+        <axis_0_axis_title>Primary X Axis (0)</axis_0_axis_title>
+        <axis_0_dash_grid_line>true</axis_0_dash_grid_line>
+        <axis_0_grid_color>
+          <color red="200" green="200" blue="200" />
+        </axis_0_grid_color>
+        <axis_0_log_scale>false</axis_0_log_scale>
+        <axis_0_maximum>100.0</axis_0_maximum>
+        <axis_0_minimum>0.0</axis_0_minimum>
+        <axis_0_scale_font>
+          <opifont.name fontName="Nimbus Sans L" height="10" style="0" pixels="false">Default</opifont.name>
+        </axis_0_scale_font>
+        <axis_0_scale_format></axis_0_scale_format>
+        <axis_0_show_grid>true</axis_0_show_grid>
+        <axis_0_time_format>3</axis_0_time_format>
+        <axis_0_title_font>
+          <opifont.name fontName="Nimbus Sans L" height="10" style="1" pixels="false">Default Bold</opifont.name>
+        </axis_0_title_font>
+        <axis_0_visible>true</axis_0_visible>
+        <axis_1_auto_scale>true</axis_1_auto_scale>
+        <axis_1_auto_scale_threshold>0.0</axis_1_auto_scale_threshold>
+        <axis_1_axis_color>
+          <color red="0" green="0" blue="0" />
+        </axis_1_axis_color>
+        <axis_1_axis_title>Primary Y Axis (1)</axis_1_axis_title>
+        <axis_1_dash_grid_line>true</axis_1_dash_grid_line>
+        <axis_1_grid_color>
+          <color red="200" green="200" blue="200" />
+        </axis_1_grid_color>
+        <axis_1_log_scale>false</axis_1_log_scale>
+        <axis_1_maximum>1.0</axis_1_maximum>
+        <axis_1_minimum>0.0</axis_1_minimum>
+        <axis_1_scale_font>
+          <opifont.name fontName="Nimbus Sans L" height="10" style="0" pixels="false">Default</opifont.name>
+        </axis_1_scale_font>
+        <axis_1_scale_format></axis_1_scale_format>
+        <axis_1_show_grid>true</axis_1_show_grid>
+        <axis_1_time_format>0</axis_1_time_format>
+        <axis_1_title_font>
+          <opifont.name fontName="Nimbus Sans L" height="10" style="1" pixels="false">Default Bold</opifont.name>
+        </axis_1_title_font>
+        <axis_1_visible>true</axis_1_visible>
+        <axis_count>2</axis_count>
+        <backcolor_alarm_sensitive>false</backcolor_alarm_sensitive>
+        <background_color>
+          <color red="240" green="240" blue="240" />
+        </background_color>
+        <border_alarm_sensitive>true</border_alarm_sensitive>
+        <border_color>
+          <color red="0" green="128" blue="255" />
+        </border_color>
+        <border_style>0</border_style>
+        <border_width>1</border_width>
+        <enabled>true</enabled>
+        <forecolor_alarm_sensitive>false</forecolor_alarm_sensitive>
+        <foreground_color>
+          <color red="0" green="0" blue="255" />
+        </foreground_color>
+        <height>613</height>
+        <name>XY Graph</name>
+        <plot_area_background_color>
+          <color red="255" green="255" blue="255" />
+        </plot_area_background_color>
+        <pv_name>BEAST:CLAWS:RATE:1PEVSTOTAL:TOP_BACKWARD_2</pv_name>
+        <pv_value />
+        <rules />
+        <scale_options>
+          <width_scalable>true</width_scalable>
+          <height_scalable>true</height_scalable>
+          <keep_wh_ratio>false</keep_wh_ratio>
+        </scale_options>
+        <scripts />
+        <show_legend>true</show_legend>
+        <show_plot_area_border>false</show_plot_area_border>
+        <show_toolbar>true</show_toolbar>
+        <title></title>
+        <title_font>
+          <opifont.name fontName="Nimbus Sans L" height="10" style="1" pixels="false">Default Bold</opifont.name>
+        </title_font>
+        <tooltip>$(trace_0_y_pv)
+$(trace_0_y_pv_value)</tooltip>
+        <trace_0_anti_alias>true</trace_0_anti_alias>
+        <trace_0_buffer_size>100</trace_0_buffer_size>
+        <trace_0_concatenate_data>true</trace_0_concatenate_data>
+        <trace_0_line_width>1</trace_0_line_width>
+        <trace_0_name>$(trace_0_y_pv)</trace_0_name>
+        <trace_0_plot_mode>0</trace_0_plot_mode>
+        <trace_0_point_size>4</trace_0_point_size>
+        <trace_0_point_style>0</trace_0_point_style>
+        <trace_0_trace_color>
+          <color red="21" green="21" blue="196" />
+        </trace_0_trace_color>
+        <trace_0_trace_type>0</trace_0_trace_type>
+        <trace_0_update_delay>100</trace_0_update_delay>
+        <trace_0_update_mode>1</trace_0_update_mode>
+        <trace_0_visible>true</trace_0_visible>
+        <trace_0_x_axis_index>0</trace_0_x_axis_index>
+        <trace_0_x_pv></trace_0_x_pv>
+        <trace_0_x_pv_value />
+        <trace_0_y_axis_index>1</trace_0_y_axis_index>
+        <trace_0_y_pv>$(pv_name)</trace_0_y_pv>
+        <trace_0_y_pv_value />
+        <trace_count>1</trace_count>
+        <transparent>false</transparent>
+        <trigger_pv></trigger_pv>
+        <trigger_pv_value />
+        <visible>true</visible>
+        <widget_type>XY Graph</widget_type>
+        <width>900</width>
+        <wuid>-22dae100:160ff6edc0e:-7f66</wuid>
+        <x>276</x>
+        <y>270</y>
+      </widget>
+      <widget typeId="org.csstudio.opibuilder.widgets.meter" version="1.0.0">
+        <actions hook="false" hook_all="false" />
+        <alarm_pulsing>false</alarm_pulsing>
+        <backcolor_alarm_sensitive>false</backcolor_alarm_sensitive>
+        <background_color>
+          <color red="255" green="255" blue="255" />
+        </background_color>
+        <border_alarm_sensitive>true</border_alarm_sensitive>
+        <border_color>
+          <color red="0" green="128" blue="255" />
+        </border_color>
+        <border_style>5</border_style>
+        <border_width>1</border_width>
+        <color_hi>
+          <color red="255" green="255" blue="0" />
+        </color_hi>
+        <color_hihi>
+          <color red="255" green="0" blue="0" />
+        </color_hihi>
+        <color_lo>
+          <color red="255" green="255" blue="0" />
+        </color_lo>
+        <color_lolo>
+          <color red="255" green="0" blue="0" />
+        </color_lolo>
+        <enabled>true</enabled>
+        <font>
+          <opifont.name fontName="Nimbus Sans L" height="10" style="0" pixels="false">Default</opifont.name>
+        </font>
+        <forecolor_alarm_sensitive>false</forecolor_alarm_sensitive>
+        <foreground_color>
+          <color red="0" green="0" blue="0" />
+        </foreground_color>
+        <height>155</height>
+        <level_hi>0.94</level_hi>
+        <level_hihi>0.97</level_hihi>
+        <level_lo>0.93</level_lo>
+        <level_lolo>0.75</level_lolo>
+        <limits_from_pv>false</limits_from_pv>
+        <log_scale>false</log_scale>
+        <major_tick_step_hint>50</major_tick_step_hint>
+        <maximum>1.0</maximum>
+        <minimum>0.7</minimum>
+        <name>Meter</name>
+        <needle_color>
+          <color red="255" green="0" blue="0" />
+        </needle_color>
+        <pv_name>BEAST:CLAWS:RATE:1PEVSTOTAL:TOP_BACKWARD_1</pv_name>
+        <pv_value />
+        <ramp_gradient>true</ramp_gradient>
+        <rules />
+        <scale_font>
+          <opifont.name fontName="Nimbus Sans L" height="10" style="0" pixels="false">Default</opifont.name>
+        </scale_font>
+        <scale_format></scale_format>
+        <scale_options>
+          <width_scalable>true</width_scalable>
+          <height_scalable>true</height_scalable>
+          <keep_wh_ratio>true</keep_wh_ratio>
+        </scale_options>
+        <scripts />
+        <show_hi>true</show_hi>
+        <show_hihi>true</show_hihi>
+        <show_lo>true</show_lo>
+        <show_lolo>true</show_lolo>
+        <show_markers>true</show_markers>
+        <show_minor_ticks>true</show_minor_ticks>
+        <show_scale>true</show_scale>
+        <show_value_label>true</show_value_label>
+        <tooltip>$(pv_name)
+$(pv_value)</tooltip>
+        <value_label_format></value_label_format>
+        <visible>true</visible>
+        <widget_type>Meter</widget_type>
+        <width>341</width>
+        <wuid>-22dae100:160ff6edc0e:-7f26</wuid>
+        <x>132</x>
+        <y>96</y>
       </widget>
     </widget>
   </widget>

@@ -21,7 +21,7 @@
 #define ANALYSIS_H
 
 
-#include <pico.h>
+#include "pico.h"
 //#include <utility.h>
 
 #include <vector>
@@ -32,12 +32,14 @@ class Analysis
     private:
 
 
+        std::shared_ptr< std::vector<std::pair<std::string,chid>>> m_epicsVars;
+
 
 
     public:
 
         //! Default constructor.
-        Analysis();
+        Analysis(std::shared_ptr< std::vector<std::pair<std::string,chid>>> epicsVars );
         virtual ~Analysis();
 
 

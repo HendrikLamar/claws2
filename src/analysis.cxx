@@ -19,17 +19,22 @@
 #include "analysis.h"
 #include "clawsException.h"
 
+#include <thread>
+#include <chrono>
 #include <numeric>
 #include <algorithm>
 
+#include <boost/algorithm/string.hpp>
 
 ///////////////////////////////////////////////////////////////////////////////
 //
 //                  START Con-Destructor
 
+                //std::shared_ptr< std::vector<std::pair<std::string,chid>>> epicsVars = nullptr);
 
 
-Analysis::Analysis()
+Analysis::Analysis(std::shared_ptr< std::vector<std::pair<std::string,chid>>> epicsVars) :
+    m_epicsVars{epicsVars}
 {}
 
 
@@ -70,11 +75,11 @@ Analysis::~Analysis()
 
 void Analysis::intermediate( std::shared_ptr<Pico> tpico )
 {
+    std::string pico_location{boost::to_upper_copy(tpico->getLocation())};
 
-    int16_t maxVal{
-        static_cast<int16_t>(
+    double maxVal{
                 tpico->getConfig()->average_1pe_height * 
-                tpico->getConfigAnalysis()->inter_factor1pe)};
+                tpico->getConfigAnalysis()->inter_factor1pe};
 
     for( int i = 0; i < 4; ++i )
     {
@@ -87,16 +92,21 @@ void Analysis::intermediate( std::shared_ptr<Pico> tpico )
         auto tmpdata = tpico->getCh(i)->getBufferRapid();
 
         // loop through each waveform and calculate
-        double maxCount{static_cast<double>(tmpdata->at(0)->size())};
+        double maxCount{static_cast<double>(tmpdata->size())};
         for( auto& tmp : *tmpdata )
         {
             // checks if it is an 1pe or higher
             // looks only in the second half of the waveform where the
             // waveform is expected
-            if( maxVal < *(std::max_element(
+            if( maxVal > *(std::min_element(
                             tmp->begin()+tmp->size()/2.,tmp->end())) )
             {
+//                std::cout << *(std::min_element(
+//                                tmp->begin()+tmp->size()/2.,tmp->end()))
+//                    << std::endl;
+//                   
                 --maxCount;
+
                 continue;
             }
 
@@ -143,12 +153,53 @@ void Analysis::intermediate( std::shared_ptr<Pico> tpico )
         mean /= (10. * enumToDouble(tpico->getConfig()->channels->at(i)->range));
 
 
+        // save analyzed data 
         tpico->getAnalyzed()->get(i)->cal_1pe_normalized = mean;
         tpico->getAnalyzed()->get(i)->cal_1peVStotal_fraction =
-                maxCount/static_cast<double>(tmpdata->at(0)->size());
+                maxCount/static_cast<double>(tmpdata->size());
 
 
+
+
+        // epics starts here
+        std::string epics_1pe_ratio{"RATE:1PEVSTOTAL:" + 
+            pico_location + "_" + std::to_string(i+1)};
+/*         std::string epics_1pe_normalized{"RATE:1PEVSTOTAL:" + 
+ *             pico_location + "_" + std::to_string(i+1)};
+ *         int breakCounter{0};
+ */
+
+
+        if( !m_epicsVars ) 
+        {
+            std::cout << "is Empty\n";
+            continue;
+        }
+        for( auto& tmp : *m_epicsVars ) 
+        {
+            if( tmp.first.find(epics_1pe_ratio) != std::string::npos )
+            {
+                ca_put(DBR_DOUBLE,tmp.second,
+                        &tpico->getAnalyzed()->get(i)->cal_1peVStotal_fraction);
+
+                break;
+            }
+/*                 ++breakCounter;
+ *                 if( breakCounter > 1) break;
+ *             }
+ *             else if( tmp.first.find(epics_1pe_normalized) != std::string::npos )
+ *             {
+ *                 ca_put(DBR_DOUBLE, tmp.second,
+ *                         &tpico->getAnalyzed()->get(i)->cal_1pe_normalized);
+ * 
+ *                 ++breakCounter;
+ *                 if( breakCounter > 1) break;
+ *             }
+ */
+
+        }
     }
+    ca_poll();
 
     return;
 }
@@ -170,6 +221,7 @@ void Analysis::intermediate( std::shared_ptr<Pico> tpico )
 
 void Analysis::physics()
 {
+
 
 
 

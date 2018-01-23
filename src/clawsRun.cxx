@@ -1210,8 +1210,10 @@ void ClawsRun::StopRun()
         // define work
         auto work = [](
                 std::shared_ptr<Pico> tpico,
-                std::shared_ptr<ProcessData> dataProcessor)
+                std::shared_ptr<ProcessData> dataProcessor,
+                ca_client_context* epicsContext)
                 {
+                    ca_attach_context(epicsContext);
                     tpico->runIntermediate();
                     dataProcessor->analysis()->intermediate(tpico);
 
@@ -1222,7 +1224,9 @@ void ClawsRun::StopRun()
         // and the claws-global counter
         std::shared_ptr<ProcessData> dataProcessor{
             std::make_shared<ProcessData>( 
-                    m_picos, m_database->Claws_getCounter() )};
+                    m_picos,
+                    m_database->Claws_getCounter(),
+                    m_database->Epics_getVars() )};
 
 
         // let each pico acquire data in its own thread
@@ -1233,7 +1237,8 @@ void ClawsRun::StopRun()
                 workers.emplace_back(
                                     work, 
                                     tpico,
-                                    dataProcessor);
+                                    dataProcessor,
+                                    m_database->Epics_getContext());
 
         };
 
@@ -1248,6 +1253,33 @@ void ClawsRun::StopRun()
         workers.clear();
     
 
+/*         auto tpico{m_picos->at(0)};
+ *         std::cout << "Fraction:\t" << tpico->getAnalyzed()->get(0)->cal_1peVStotal_fraction << std::endl;
+ *         std::string epics_root_rate{"RATE:1PEVSTOTAL:TOP_BACKWARD_" + std::to_string(1)};
+ * 
+ * 
+ *         if( !m_database->Epics_getVars() ) 
+ *         {
+ *             std::cout << "is Empty\n";
+ *             return;
+ *         }
+ *         for( auto& tmp : *m_database->Epics_getVars() ) 
+ *         {
+ *             if( tmp.first.find(epics_root_rate) != std::string::npos )
+ *             {
+ *                 std::cout << tmp.first << "\tEpics starts: " << &tmp.second  << "\t" << tmp.second << std::endl;
+ *                 SEVCHK(ca_put(DBR_DOUBLE,tmp.second,
+ *                             &tpico->getAnalyzed()->get(0)->cal_1peVStotal_fraction),
+ * //                        &dfraction),
+ *                         "ca_set failure");
+ *                 ca_poll();
+ * //                SEVCHK(ca_pend_io(1.0),"ca_pend_io failure");
+ * 
+ * //                std::this_thread::sleep_for(std::chrono::seconds(1));
+ *                 break;
+ *             }
+ *         }
+ */
       
         // check if data should be saved
         if( m_database->Claws_getConfig()->isSaved_raw )
@@ -1433,14 +1465,17 @@ void ClawsRun::StopRun()
         tmpVars.push_back("RATE:MIP:FRAC:BOTTOM_BACKWARD_2");
         tmpVars.push_back("RATE:MIP:FRAC:BOTTOM_BACKWARD_3");
         tmpVars.push_back("RATE:MIP:FRAC:BOTTOM_BACKWARD_4");
+
         tmpVars.push_back("RATE:MIP:FRAC:TOP_BACKWARD_1");
         tmpVars.push_back("RATE:MIP:FRAC:TOP_BACKWARD_2");
         tmpVars.push_back("RATE:MIP:FRAC:TOP_BACKWARD_3");
         tmpVars.push_back("RATE:MIP:FRAC:TOP_BACKWARD_4");
+
         tmpVars.push_back("RATE:MIP:FRAC:TOP_FORWARD_1");
         tmpVars.push_back("RATE:MIP:FRAC:TOP_FORWARD_2");
         tmpVars.push_back("RATE:MIP:FRAC:TOP_FORWARD_3");
         tmpVars.push_back("RATE:MIP:FRAC:TOP_FORWARD_4");
+
         
         // 1pe VS total rate
         tmpVars.push_back("RATE:1PEVSTOTAL:BOTTOM_FORWARD_1");
@@ -1451,6 +1486,7 @@ void ClawsRun::StopRun()
         tmpVars.push_back("RATE:1PEVSTOTAL:BOTTOM_BACKWARD_2");
         tmpVars.push_back("RATE:1PEVSTOTAL:BOTTOM_BACKWARD_3");
         tmpVars.push_back("RATE:1PEVSTOTAL:BOTTOM_BACKWARD_4");
+
         tmpVars.push_back("RATE:1PEVSTOTAL:TOP_BACKWARD_1");
         tmpVars.push_back("RATE:1PEVSTOTAL:TOP_BACKWARD_2");
         tmpVars.push_back("RATE:1PEVSTOTAL:TOP_BACKWARD_3");
@@ -1459,6 +1495,7 @@ void ClawsRun::StopRun()
         tmpVars.push_back("RATE:1PEVSTOTAL:TOP_FORWARD_2");
         tmpVars.push_back("RATE:1PEVSTOTAL:TOP_FORWARD_3");
         tmpVars.push_back("RATE:1PEVSTOTAL:TOP_FORWARD_4");
+
 
 
         // waveforms reconstructed physics
@@ -1536,11 +1573,14 @@ void ClawsRun::StopRun()
         tmpVars.push_back("WF:CDF:UNIT:TOP_BACKWARD");
 
 
+
+
         std::vector< chid > ids{tmpVars.size()};
 
-        // create epics client instance
+        // create epics context
         SEVCHK(ca_context_create(
-                    ca_disable_preemptive_callback),"ca_context_create");
+                    ca_enable_preemptive_callback),"ca_context_create");
+        m_database->Epics_setContext( ca_current_context() );
 
         // prefix used by IOC
         std::string prefix{"BEAST:CLAWS:"};
@@ -1556,11 +1596,12 @@ void ClawsRun::StopRun()
                         10,
                         &epicsVars->at(i).second),
                     "ca_create_channel failure");
-            SEVCHK(ca_pend_io(5.0),"ca_pend_io failure");
 
             std::this_thread::sleep_for(std::chrono::milliseconds(10));
         }
+        SEVCHK(ca_pend_io(1.0),"ca_pend_io failure");
 
+        std::cout << "EpicsVars: " << epicsVars->size() << "\n";
         return;
     }
 

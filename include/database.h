@@ -121,6 +121,8 @@ class Database
 
 
         std::shared_ptr< std::vector< std::pair<std::string,chid>>> Epics_getVars();
+        ca_client_context*  Epics_getContext();
+        void                Epics_setContext( ca_client_context* context );    
 
 
 
@@ -227,6 +229,7 @@ class Database
 
 
         std::shared_ptr< std::vector< std::pair<std::string,chid>>> m_epicsVars;
+        ca_client_context*  m_epicsContext;
         std::shared_ptr<unsigned long> m_runNumber;
 
 

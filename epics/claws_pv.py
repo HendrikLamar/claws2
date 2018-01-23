@@ -110,11 +110,6 @@ class PVcreator:
 
     def load_claws_variables(self):
         self.addPV('RC:STATUS', {}, ['IDLE','INTERMEDIATE','PHYSICS','OFFLINE'])
-        self.addPV('GRAPH',{'count' : 27, 'unit' : '16bit int', 'scan' : 1.})
-        self.addPV('GRAPH2D',{'count' : 6, 'unit' : '16bit int', 'scan' : 1.})
-        self.addPV('',{'prec' : 3})
-
-
 
         # MIP rate absolute
         self.addPV('RATE:MIP:ABS:BOTTOM_FORWARD_1',{'prec' : 0, 'unit' : 'MIPs/sec'})
@@ -154,10 +149,10 @@ class PVcreator:
         self.addPV('RATE:MIP:FRAC:TOP_BACKWARD_4',{'prec' : 0, 'unit' : ''})
 
         # 1pe VS total rate
-        self.addPV('RATE:1PEVSTOTAL:BOTTOM_FORWARD_1',{'prec' : 0, 'unit' : ''})
-        self.addPV('RATE:1PEVSTOTAL:BOTTOM_FORWARD_2',{'prec' : 0, 'unit' : ''})
-        self.addPV('RATE:1PEVSTOTAL:BOTTOM_FORWARD_3',{'prec' : 0, 'unit' : ''})
-        self.addPV('RATE:1PEVSTOTAL:BOTTOM_FORWARD_4',{'prec' : 0, 'unit' : ''})
+        self.addPV('RATE:1PEVSTOTAL:BOTTOM_FORWARD_1',{'prec':0,'unit':'','scan' : 1.})
+        self.addPV('RATE:1PEVSTOTAL:BOTTOM_FORWARD_2',{'prec' : 0, 'unit' : '', 'scan' : 1.})
+        self.addPV('RATE:1PEVSTOTAL:BOTTOM_FORWARD_3',{'prec' : 0, 'unit' : '', 'scan' : 1.})
+        self.addPV('RATE:1PEVSTOTAL:BOTTOM_FORWARD_4',{'prec' : 0, 'unit' : '', 'scan' : 1.})
         self.addPV('RATE:1PEVSTOTAL:BOTTOM_BACKWARD_1',{'prec' : 0, 'unit' : ''})
         self.addPV('RATE:1PEVSTOTAL:BOTTOM_BACKWARD_2',{'prec' : 0, 'unit' : ''})
         self.addPV('RATE:1PEVSTOTAL:BOTTOM_BACKWARD_3',{'prec' : 0, 'unit' : ''})
@@ -166,10 +161,10 @@ class PVcreator:
         self.addPV('RATE:1PEVSTOTAL:TOP_FORWARD_2',{'prec' : 0, 'unit' : ''})
         self.addPV('RATE:1PEVSTOTAL:TOP_FORWARD_3',{'prec' : 0, 'unit' : ''})
         self.addPV('RATE:1PEVSTOTAL:TOP_FORWARD_4',{'prec' : 0, 'unit' : ''})
-        self.addPV('RATE:1PEVSTOTAL:TOP_BACKWARD_1',{'prec' : 0, 'unit' : ''})
-        self.addPV('RATE:1PEVSTOTAL:TOP_BACKWARD_2',{'prec' : 0, 'unit' : ''})
-        self.addPV('RATE:1PEVSTOTAL:TOP_BACKWARD_3',{'prec' : 0, 'unit' : ''})
-        self.addPV('RATE:1PEVSTOTAL:TOP_BACKWARD_4',{'prec' : 0, 'unit' : ''})
+        self.addPV('RATE:1PEVSTOTAL:TOP_BACKWARD_1',{'prec' : 0, 'unit' : '','scan':1.})
+        self.addPV('RATE:1PEVSTOTAL:TOP_BACKWARD_2',{'prec' : 0, 'unit' : '','scan':1.})
+        self.addPV('RATE:1PEVSTOTAL:TOP_BACKWARD_3',{'prec' : 0, 'unit' : '','scan':1.})
+        self.addPV('RATE:1PEVSTOTAL:TOP_BACKWARD_4',{'prec' : 0, 'unit' : '','scan':1.})
 
 
         wfSize = 1000
