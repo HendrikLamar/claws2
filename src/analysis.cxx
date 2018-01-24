@@ -18,11 +18,15 @@
 
 #include "analysis.h"
 #include "clawsException.h"
+#include "utility.h"
 
+#include <vector>
+#include <map>
 #include <thread>
 #include <chrono>
 #include <numeric>
 #include <algorithm>
+#include <cmath>
 
 #include <boost/algorithm/string.hpp>
 
@@ -30,7 +34,6 @@
 //
 //                  START Con-Destructor
 
-                //std::shared_ptr< std::vector<std::pair<std::string,chid>>> epicsVars = nullptr);
 
 
 Analysis::Analysis(std::shared_ptr< std::vector<std::pair<std::string,chid>>> epicsVars) :
@@ -219,11 +222,152 @@ void Analysis::intermediate( std::shared_ptr<Pico> tpico )
 
 
 
-void Analysis::physics()
+void Analysis::physics( std::shared_ptr<Pico> tpico )
 {
 
+    std::string pico_location{boost::to_upper_copy(tpico->getLocation())};
 
+    std::vector< std::pair< unsigned long, unsigned long > > vSignal;
 
+    unsigned long   wfBegin;
+    unsigned long   wfEnd;
+    bool            inSignal{false}; 
+    bool            isHighEnough{false};
+    bool            isSearchingForSignalStart{false};
+
+    // define comparison functions for high and low gain mode aka. positive
+    // and negative signals
+    auto negativSignals = [](
+            int16_t* binData,
+            int* cutLevel )->bool
+    {
+        return *binData < *cutLevel ? true : false;
+    };
+    auto positiveSignals = [](
+            int16_t* binData,
+            int* cutLevel )->bool
+    {
+        return *binData > *cutLevel ? true : false;
+    };
+
+    bool (*fctPtrPosNegSignal)(int16_t*, int* );
+
+    // now, let the fctPtr point to the corresponding function
+    switch( tpico->getConfig()->gain )
+    {
+        case Utility::Claws_Gain::LOW_GAIN:
+            fctPtrPosNegSignal = positiveSignals;
+            break;
+        case Utility::Claws_Gain::HIGH_GAIN:
+            fctPtrPosNegSignal = negativSignals;
+            break;
+    }
+
+    std::shared_ptr<Utility::Pico_Conf_Analysis> config{tpico->getConfigAnalysis()};
+
+    for( int i = 0; i < 4; ++i )
+    {
+        if( !tpico->getCh(i)->getEnabled() ) continue;
+
+        // get channel i's data
+        auto tmpdata{tpico->getCh(i)->getBufferBlock()};
+
+        // check for signals in the waveform and integrate those
+        for( unsigned long k = config->physics_preSamplesBeforeThreshold; 
+                k < tmpdata->size(); ++k )
+        {
+            // check if current bin is over threshold
+            isHighEnough = fctPtrPosNegSignal( &tmpdata->at(k), 
+                    &config->physics_signalCut );
+
+            if( isHighEnough )
+            {
+                if( !inSignal )
+                {
+                    if( !isSearchingForSignalStart )
+                    {
+                        isSearchingForSignalStart = true;
+                        if (k > static_cast<unsigned long>(
+                                config->physics_wfScanStepSize) )
+                            k -= config->physics_wfScanStepSize;
+                        continue;
+                    }
+                    wfBegin = k - config->physics_preSamplesBeforeThreshold;
+                    inSignal = true;
+                }
+                else continue;
+            }
+            else
+            {
+                if( inSignal )
+                {
+                    bool wfIsEnded{false};
+                    unsigned long loopEnd{ k +
+                        config->physics_postSamplesAfterThreshold};
+                    if( loopEnd > tmpdata->size() ) loopEnd = tmpdata->size(); 
+                    for( unsigned long t = k; 
+                            t < loopEnd; 
+                            ++t )
+                    {
+
+                        if( fctPtrPosNegSignal( &tmpdata->at(t), 
+                                    &config->physics_signalCut ) )
+                        {
+                            k = t-1;
+                            break;
+                        }
+                        else if( t + 1 == loopEnd )
+                        {
+                            wfIsEnded = true;
+                        }
+                    }
+
+                    if( wfIsEnded )
+                    {
+                        wfEnd = loopEnd;
+                        if( wfEnd -
+                                wfBegin -
+                                config->physics_postSamplesAfterThreshold -
+                                config->physics_preSamplesBeforeThreshold
+                                > config->physics_minSignalLength )
+                        {
+                            vSignal.emplace_back(wfBegin, wfEnd);
+                        }
+                        inSignal = false;
+                        isSearchingForSignalStart = false;
+                        k += config->physics_wfScanStepSize;
+                        continue;
+
+                    }
+                }
+                // jump over the next 10 bins for faster scan, if it is not searching
+                // for the begin of a waveform
+                else 
+                {
+                    if( !isSearchingForSignalStart ) 
+                        k += config->physics_wfScanStepSize;
+                    continue;
+                }
+            }
+        }
+
+        ///////////////////////////////////////////////////////////////////////
+        //
+        // here integration will happen
+        //
+        ///////////////////////////////////////////////////////////////////////
+        
+/*         std::cout << "\nSignal borders:\n";
+ *         for( auto& tmp : vSignal )
+ *         {
+ *             std::cout << tmp.first << " -> " << tmp.second << "\n";
+ *         }
+ *         std::cout << std::endl;
+ */
+        
+        // clear signal vector if done with waveform
+        vSignal.clear();
+    }
 
     return;
 }

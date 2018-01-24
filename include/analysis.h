@@ -25,6 +25,8 @@
 //#include <utility.h>
 
 #include <vector>
+#include <memory>
+#include <map>
 
 
 class Analysis
@@ -54,7 +56,7 @@ class Analysis
         //! integral is calculated.
         void intermediate( std::shared_ptr<Pico> tpico );
 
-        void physics();
+        void physics( std::shared_ptr<Pico> tpico );
 };
 
 

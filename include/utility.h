@@ -540,9 +540,15 @@ namespace Utility{
 
     struct Pico_Conf_Analysis
     {
+        // intermediate
         float       inter_factor1pe;
 
+        // physics
         int         physics_signalCut;
+        unsigned long   physics_minSignalLength;
+        unsigned long   physics_preSamplesBeforeThreshold;
+        unsigned long   physics_postSamplesAfterThreshold;
+        int             physics_wfScanStepSize;
     };
 
 

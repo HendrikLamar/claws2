@@ -1065,6 +1065,26 @@ void Database::Pico_readMiscSettings( int picoNo )
     fKey = iKey + "signalCut";
     tmp_conf->physics_signalCut = ptree.get< int >( fKey );
 
+    fKey = iKey + "minSignalLength";
+    tmp_conf->physics_minSignalLength = 
+        ptree.get< unsigned long >( fKey );
+
+    fKey = iKey + "preSamplesBeforeThreshold";
+    tmp_conf->physics_preSamplesBeforeThreshold
+        = ptree.get< unsigned long >( fKey );
+
+    fKey = iKey + "postSamplesAfterThreshold";
+    tmp_conf->physics_postSamplesAfterThreshold
+        = ptree.get< unsigned long >( fKey );
+
+    fKey = iKey + "wfScanStepSize";
+    tmp_conf->physics_wfScanStepSize
+        = ptree.get< int >( fKey );
+
+
+
+
+
 
     // INTERMEDIATE
     //

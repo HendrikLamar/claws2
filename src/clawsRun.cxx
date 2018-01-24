@@ -929,6 +929,7 @@ void ClawsRun::StopRun()
                     try
                     {
                         tpico->runBlock();
+                        dataProcessor->analysis()->physics(tpico);
                         dataProcessor->syncBlock(subRunNum, tpico);
                     }
                     catch( PicoException& excep )
